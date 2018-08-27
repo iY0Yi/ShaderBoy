@@ -14,7 +14,7 @@ ShaderBoy is a *PWA(Progressive Web Apps).*
 You can install ShaderBoy app from [here](https://shaderboy.net/).  
   
   
-# TODO
+# Todo
 - [ ] Shortcuts for PC
 - [ ] Active line highlight
 - [ ] Splash screen for iOS
