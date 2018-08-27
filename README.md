@@ -10,8 +10,8 @@ Your power to go.</br>
   
 
 # App
+ShaderBoy is a *PWA(Progressive Web Apps).*  
 You can install ShaderBoy app from [here](https://shaderboy.net/).  
-*ShaderBoy is a PWA(Progressive Web Apps).*
   
   
 # TODO
