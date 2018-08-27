@@ -74,7 +74,7 @@ $ gulp
   
 ### Upload
 And upload files in "dest" directory to your server.  
-That's all!
+That's it! Good luck!  
   
 ___
   
