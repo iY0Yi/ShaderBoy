@@ -26,9 +26,6 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
   
   
 # Screenshots
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots0.png">  
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots1.png">  
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots2.png">  
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots3.png">  
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots4.png">  
   
