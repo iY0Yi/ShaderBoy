@@ -1,0 +1,48 @@
+{
+    "name": "ShaderBoy",
+    "short_name": "ShaderBoy",
+    "description": "A shader editor for mobile devices with keyboard.",
+    "scope": ".",
+    "theme_color": "#1e1e1e",
+    "background_color": "#1e1e1e",
+    "start_url": "https://shaderboy.net/app/",
+    "display": "fullscreen",
+    "orientation": "landscape",
+    "icons": [
+        {
+            "src": "/img/boy_logo_c_48x48px.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "/img/boy_logo_c_72x72px.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "/img/boy_logo_c_144x144px.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "/img/boy_logo_c_192x192px.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/img/boy_logo_c_512x512px.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "/img/sb_logo_620x300px.png",
+            "sizes": "620x300",
+            "type": "image/png"
+        },
+        {
+            "src": "/img/sb_logo_1240x600.png",
+            "sizes": "1240x600",
+            "type": "image/png"
+        }
+    ]
+}
