@@ -4,8 +4,6 @@ I love writing shaders.
 And I also love Shadertoy.  
 I want to write it everytime, everywhere.  
 So, I made this one.  
--iY0Yi  
-</br>
 </br>
 </br>
 <strong>ShaderBoy</strong> is a tiny shader editor for mobile devices.</br>
@@ -22,7 +20,8 @@ Your power to go.</br>
 *Official assets are not supported, yet.  
   
 # App
-You can install ShaderBoy app(as PWA) from [here](https://shaderboy.net/app/).  
+You can install ShaderBoy app from [here](https://shaderboy.net/).  
+*ShaderBoy is a PWA(Progressive Web Apps).
   
 # Screenshots
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots0.png">  
