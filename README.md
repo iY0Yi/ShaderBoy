@@ -20,10 +20,13 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 </br>
   
 # Todo
+- [ ] Shortcuts for text size
 - [ ] Shortcuts for PC
 - [ ] Active line highlight
 - [ ] Splash screen for iOS
 - [ ] GUI for some useful settings
+- [ ] Some Themes
+- [ ] Shadertoy compatibility(Some shader does not work properly.)
 - [ ] Multipass shader
 - [ ] Sound shader
 - [ ] Official assets(textures)
