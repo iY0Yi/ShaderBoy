@@ -66,8 +66,6 @@ If you want to change, edit "editor.js", and build it.
 </br>
 </br>
   
-___
-  
 # Build Your ShaderBoy
 ### Install dependencies
 If you want have your own ShaderBoy,  
@@ -85,9 +83,6 @@ $ gulp
 ### Upload
 And upload files in "dest" directory to your server.  
 That's it! Good luck!  
-  
-___
-  
 </br>
 </br>
 </br>
@@ -99,7 +94,6 @@ So, I made this one for me.
 If anybody happy with this, it's my plesure.  
 
 Auther: [iY0Yi](https://twitter.com/iY0Yi/)
-  
 </br>
 </br>
 </br>
