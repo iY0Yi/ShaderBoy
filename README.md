@@ -27,7 +27,7 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 - [ ] Splash screen for iOS
 - [ ] GUI for some useful settings
 - [ ] Some Themes
-- [ ] Shadertoy compatibility(Some shader does not work properly.)
+- [ ] Raise Shadertoy compatibility(Some shader does not work properly.)
 - [ ] Multipass shader
 - [ ] Sound shader
 - [ ] Official assets(textures)
