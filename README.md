@@ -27,6 +27,7 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 - [ ] Multipass shader
 - [ ] Sound shader
 - [ ] Official assets(textures)
+- [ ] Dropbox integration
 </br>
 </br>
 </br>
