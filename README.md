@@ -1,5 +1,4 @@
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/_index/img/sb_logo_1240x600.png"></br>
-###### *This is "NOT" Shadertoy official!*  
 <strong>ShaderBoy</strong> is a tiny shader editor for mobile devices.</br>
 This is intended to use [physical keyboards](https://www.google.co.jp/search?q=smartphone+bluetooth+keyboard&source=lnms&tbm=isch&sa=X&ved=0ahUKEwi-kZzK_4fdAhXRdd4KHSp3BOcQ_AUICigB&biw=1440&bih=781) to write shaders in small screen.</br>
 It has compatible uniforms with <a href="https://www.shadertoy.com/"><em>Shadertoy</em></a>.</br>
@@ -8,7 +7,9 @@ Enjoy writing your shaders in everywhere.</br>
 in Bed, Toilet, Train, Camping, Fishing...
 Your power to go.</br>
   
-
+###### *This is "NOT" Shadertoy official!*    
+  
+  
 # App
 ShaderBoy is a *PWA(Progressive Web Apps).*  
 You can install ShaderBoy app from [here](https://shaderboy.net/).  
