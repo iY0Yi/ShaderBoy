@@ -1,10 +1,10 @@
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/_index/img/sb_logo_1240x600.png"></br>
 
-I love writing shaders.  
-And I also love Shadertoy.  
-I want to write it everytime, everywhere.  
-So, I made this one.  
--iY0Yi.  
+###### I love writing shaders.  
+###### And I also love Shadertoy.  
+###### I want to write it everytime, everywhere.  
+###### So, I made this one.  
+###### -iY0Yi  
   
   
   
