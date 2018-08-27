@@ -3,7 +3,8 @@
 I love writing shaders.  
 And I also love Shadertoy.  
 I want to write it everytime, everywhere.  
-So, I made this one.  
+So, I made this one for me.  
+If anybody happy with this, it's my plesure.
 </br>
 </br>
 <strong>ShaderBoy</strong> is a tiny shader editor for mobile devices.</br>
