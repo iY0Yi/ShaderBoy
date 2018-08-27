@@ -25,15 +25,15 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 - [ ] Kill software keyboards(refocus)
 - [ ] Fix broken uniforms
 - [ ] Active line highlight
-- [ ] Splash screen for iOS
-- [ ] GUI for some useful settings
-- [ ] Some Themes
 - [ ] Raise Shadertoy compatibility(Some shader does not work properly.)
+- [ ] GUI for some useful settings
 - [ ] Multipass shader
 - [ ] Sound shader
 - [ ] Official assets(textures)
 - [ ] Dropbox integration
 - [ ] Shadertoy API integration
+- [ ] Splash screen for iOS
+- [ ] Some Themes
 </br>
 </br>
 </br>
