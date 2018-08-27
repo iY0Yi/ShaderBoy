@@ -20,6 +20,7 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 </br>
   
 # Todo
+Any pull requests welcome( ༎ຶ‿༎ຶ )
 - [ ] Shortcuts for text size
 - [ ] Shortcuts for PC
 - [ ] Kill software keyboards(refocus)
