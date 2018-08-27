@@ -41,8 +41,7 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 # Shortcuts
 ShaderBoy has no GUI. Works with shortcuts.  
 These are default shortcuts.  
-If you want to change,  
-edit "editor.js", and build it.  
+If you want to change, edit "editor.js", and build it.  
   
 | Key | Func |
 |:---|:---|
