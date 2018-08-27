@@ -11,12 +11,14 @@ Your power to go.</br>
 </br>
 </br>
 </br>
+  
 # App
 ShaderBoy is a *PWA(Progressive Web Apps).*  
 You can install ShaderBoy app from [here](https://shaderboy.net/).  
 </br>
 </br>
 </br>
+  
 # Todo
 - [ ] Shortcuts for PC
 - [ ] Active line highlight
@@ -28,12 +30,14 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 </br>
 </br>
 </br>
+  
 # Screenshots
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots3.png">  
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots4.png">  
 </br>
 </br>
 </br>
+  
 # Shortcuts
 ShaderBoy has no GUI. Works with shortcuts.  
 These are default shortcuts. 　
@@ -61,6 +65,7 @@ If you want to change, edit "editor.js", and build it.
 </br>
 </br>
 </br>
+  
 ___
   
 # Build Your ShaderBoy
@@ -82,9 +87,11 @@ And upload files in "dest" directory to your server.
 That's it! Good luck!  
   
 ___
+  
 </br>
 </br>
 </br>
+  
 I love writing shaders.  
 And I also love Shadertoy.  
 I want to write it everytime, everywhere.  
@@ -92,6 +99,7 @@ So, I made this one for me.
 If anybody happy with this, it's my plesure.  
 
 Auther: [iY0Yi](https://twitter.com/iY0Yi/)
+  
 </br>
 </br>
 </br>
