@@ -32,6 +32,7 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 - [ ] Sound shader
 - [ ] Official assets(textures)
 - [ ] Dropbox integration
+- [ ] Shadertoy API integration
 </br>
 </br>
 </br>
