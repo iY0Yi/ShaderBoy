@@ -22,6 +22,7 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 # Todo
 - [ ] Shortcuts for text size
 - [ ] Shortcuts for PC
+- [ ] Fix broken uniforms
 - [ ] Active line highlight
 - [ ] Splash screen for iOS
 - [ ] GUI for some useful settings
