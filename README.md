@@ -1,13 +1,13 @@
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/_index/img/sb_logo_1240x600.png"></br>
 
-###### I love writing shaders.  
-###### And I also love Shadertoy.  
-###### I want to write it everytime, everywhere.  
-###### So, I made this one.  
-###### -iY0Yi  
-  
-  
-  
+I love writing shaders.  
+And I also love Shadertoy.  
+I want to write it everytime, everywhere.  
+So, I made this one.  
+-iY0Yi  
+</br>
+</br>
+</br>
 <strong>ShaderBoy</strong> is a tiny shader editor for mobile devices.</br>
 This is intended to use [physical keyboards](https://www.google.co.jp/search?q=smartphone+bluetooth+keyboard&source=lnms&tbm=isch&sa=X&ved=0ahUKEwi-kZzK_4fdAhXRdd4KHSp3BOcQ_AUICigB&biw=1440&bih=781) to write shaders in small screen.</br>
 It has compatible uniforms with <a href="https://www.shadertoy.com/"><em>Shadertoy</em></a>.</br>
