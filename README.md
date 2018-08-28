@@ -99,7 +99,7 @@ I love writing shaders.
 And I also love Shadertoy.  
 I want to write it everytime, everywhere.  
 So, I made this one for me.  
-If anybody happy with this, it's my plesure.  
+If anybody happy with this, it's my pleasure.  
   
 [iY0Yi](https://twitter.com/iY0Yi/)
 </br>
