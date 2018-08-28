@@ -20,20 +20,23 @@ export default ShaderBoy.renderer = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	init: function () {
 		gl = ShaderBoy.gl;
-		console.log("Float32Filter=" + gl.getExtension('OES_texture_float_linear'));
-		console.log("Float16Filter=" + gl.getExtension('OES_texture_half_float_linear'));
-		console.log("Anisotropic=" + gl.getExtension('EXT_texture_filter_anisotropic'));
-		console.log("RenderToFloat32F=" + gl.getExtension('EXT_color_buffer_float'));
 
 		this.shaders = {};
 
 		let mainFragCode = '';
 		mainFragCode =
+			ShaderBoy.shaderHeader[1] +
 			ShaderLib.shader.uniformFS +
 			ShaderLib.shader.commonFS +
 			ShaderLib.shader.imageFS +
 			ShaderLib.shader.commonfooterFS;
-		this.shaders.main = new Shader(gl, ShaderLib.shader.commonVS, mainFragCode);
+		let vsSource = null;
+		if (ShaderBoy.glVersion === 2.0)
+			vsSource = ShaderBoy.shaderHeader[0] + "in vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }";
+		else
+			vsSource = ShaderBoy.shaderHeader[0] + "attribute vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }";
+
+		this.shaders.main = new Shader(gl, vsSource, mainFragCode);
 		this.shaders.main.uniforms = {
 			'iResolution': ShaderBoy.uniforms.iResolution,           // viewport resolution (in pixels)
 			'iTime': ShaderBoy.uniforms.iTime,                 // shader playback time (in seconds)
@@ -49,7 +52,13 @@ export default ShaderBoy.renderer = {
 			// 'iChannel3': 3,             // input channel. XX = 2D/Cube
 		};
 
-		this.shaders.screen = new Shader(gl, ShaderLib.shader.commonVS, ShaderLib.shader.screenFS + ShaderLib.shader.commonfooterFS);
+		let screenFsHeader = '';
+		if (ShaderBoy.glVersion === 2.0) {
+		}
+		else {
+			screenFsHeader += '#define outColor gl_FragColor\n';
+		}
+		this.shaders.screen = new Shader(gl, vsSource, screenFsHeader + ShaderBoy.shaderHeader[1] + ShaderLib.shader.screenFS + ShaderLib.shader.commonfooterFS);
 		this.shaders.screen.uniforms = {
 			'iResolution': ShaderBoy.uniforms.iResolution,
 			'frameTexture': 0
@@ -61,7 +70,8 @@ export default ShaderBoy.renderer = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	recompile: function (commonCode, fragmentCode) {
 		let mainFragCode = '';
-		mainFragCode =
+		mainFragCode +=
+			ShaderBoy.shaderHeader[1] +
 			ShaderLib.shader.uniformFS +
 			commonCode +
 			fragmentCode +
@@ -98,11 +108,32 @@ export default ShaderBoy.renderer = {
 			gl.deleteTexture(this.mainTextures[1]);
 		}
 
+		function getPowerOf2(val) {
+			let res;
+			if (val >= 2048) res = 2048;
+			else if (val < 2048 && val >= 1024) res = 1024;
+			else if (val < 1024 && val >= 512) res = 512;
+			else if (val < 512 && val >= 256) res = 256;
+			else if (val < 256 && val >= 128) res = 128;
+			else if (val < 128 && val >= 64) res = 64;
+			else if (val < 64 && val >= 16) res = 16;
+			else res = 16;
+			return res;
+		}
 		// create textures
 		this.mainTextures = [];
 		for (let i = 0; i < 2; i++) {
 			this.mainTextures.push(gl.createTexture());
-			setFloatTextureParams(gl, this.mainTextures[i], window.innerWidth / ShaderBoy.renderScale, window.innerHeight / ShaderBoy.renderScale);
+			if (ShaderBoy.glVersion === 2.0) {
+				setFloatTextureParams(gl, this.mainTextures[i], window.innerWidth / ShaderBoy.renderScale, window.innerHeight / ShaderBoy.renderScale);
+			}
+			else {
+				let width = window.innerWidth / ShaderBoy.renderScale;
+				let height = window.innerHeight / ShaderBoy.renderScale;
+				let res = (width > height) ? width : height;
+				res = getPowerOf2(res);
+				setUnsignedByteTextureParams(gl, this.mainTextures[i], width, height);
+			}
 		}
 		gl.bindFramebuffer(gl.FRAMEBUFFER, this.mainFramebuffer);
 		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.mainTextures[0], 0);

@@ -64,24 +64,92 @@ webpackJsonp([0,1],[
 		_shaderboy2.default.canvas.width = window.innerWidth;
 		_shaderboy2.default.canvas.height = window.innerHeight;
 		_shaderboy2.default.gl = null;
+		_shaderboy2.default.glVersion = 0.0;
 		try {
 			var opts = {
-				alpha: true,
-				depth: true,
+				alpha: false,
+				depth: false,
 				stencil: false,
-				styleActiveLine: true,
 				premultipliedAlpha: false,
 				antialias: true,
 				preserveDrawingBuffer: true,
 				powerPreference: 'high-performance'
 			}; // 'low_power', 'high_performance', 'default'
-			if (_shaderboy2.default.gl == null) _shaderboy2.default.gl = _shaderboy2.default.canvas.getContext('webgl2', opts);
-			if (_shaderboy2.default.gl == null) _shaderboy2.default.gl = _shaderboy2.default.canvas.getContext('experimental-webgl2', opts);
-			if (_shaderboy2.default.gl == null) _shaderboy2.default.gl = _shaderboy2.default.canvas.getContext('webgl', opts);
-			if (_shaderboy2.default.gl == null) _shaderboy2.default.gl = _shaderboy2.default.canvas.getContext('experimental-webgl', opts);
+			if (_shaderboy2.default.gl == null) {
+				_shaderboy2.default.gl = _shaderboy2.default.canvas.getContext('webgl2', opts);_shaderboy2.default.glVersion = 2.0;
+			}
+			if (_shaderboy2.default.gl == null) {
+				_shaderboy2.default.gl = _shaderboy2.default.canvas.getContext('experimental-webgl2', opts);_shaderboy2.default.glVersion = 2.0;
+			}
+			if (_shaderboy2.default.gl == null) {
+				_shaderboy2.default.gl = _shaderboy2.default.canvas.getContext('webgl', opts);_shaderboy2.default.glVersion = 1.0;
+			}
+			if (_shaderboy2.default.gl == null) {
+				_shaderboy2.default.gl = _shaderboy2.default.canvas.getContext('experimental-webgl', opts);_shaderboy2.default.glVersion = 1.0;
+			}
+
+			_shaderboy2.default.glExt = {};
+			if (_shaderboy2.default.glVersion === 2.0) {
+				_shaderboy2.default.glExt.Float32Textures = true;
+				_shaderboy2.default.glExt.Float32Filter = _shaderboy2.default.gl.getExtension('OES_texture_float_linear');
+				_shaderboy2.default.glExt.Float16Textures = true;
+				_shaderboy2.default.glExt.Float16Filter = _shaderboy2.default.gl.getExtension('OES_texture_half_float_linear');
+				_shaderboy2.default.glExt.Derivatives = true;
+				_shaderboy2.default.glExt.DrawBuffers = true;
+				_shaderboy2.default.glExt.DepthTextures = true;
+				_shaderboy2.default.glExt.ShaderTextureLOD = true;
+				_shaderboy2.default.glExt.Anisotropic = _shaderboy2.default.gl.getExtension('EXT_texture_filter_anisotropic');
+				_shaderboy2.default.glExt.RenderToFloat32F = _shaderboy2.default.gl.getExtension('EXT_color_buffer_float');
+			} else {
+				_shaderboy2.default.glExt.Float32Textures = _shaderboy2.default.gl.getExtension('OES_texture_float');
+				_shaderboy2.default.glExt.Float32Filter = _shaderboy2.default.gl.getExtension('OES_texture_float_linear');
+				_shaderboy2.default.glExt.Float16Textures = _shaderboy2.default.gl.getExtension('OES_texture_half_float');
+				_shaderboy2.default.glExt.Float16Filter = _shaderboy2.default.gl.getExtension('OES_texture_half_float_linear');
+				_shaderboy2.default.glExt.Derivatives = _shaderboy2.default.gl.getExtension('OES_standard_derivatives');
+				_shaderboy2.default.glExt.DrawBuffers = _shaderboy2.default.gl.getExtension('WEBGL_draw_buffers');
+				_shaderboy2.default.glExt.DepthTextures = _shaderboy2.default.gl.getExtension('WEBGL_depth_texture');
+				_shaderboy2.default.glExt.ShaderTextureLOD = _shaderboy2.default.gl.getExtension('EXT_shader_texture_lod');
+				_shaderboy2.default.glExt.Anisotropic = _shaderboy2.default.gl.getExtension('EXT_texture_filter_anisotropic');
+				_shaderboy2.default.glExt.RenderToFloat32F = _shaderboy2.default.glExt.Float32Textures;
+			}
+
+			_shaderboy2.default.shaderHeader = [];
+			_shaderboy2.default.shaderHeaderLines = [];
+			_shaderboy2.default.shaderHeader[0] = '';
+			_shaderboy2.default.shaderHeaderLines[0] = 0;
+			if (_shaderboy2.default.glVersion === 2.0) {
+				_shaderboy2.default.shaderHeader[0] += "#version 300 es\n" + "#ifdef GL_ES\n" + "precision highp float;\n" + "precision highp int;\n" + "precision mediump sampler3D;\n" + "#endif\n";
+				_shaderboy2.default.shaderHeaderLines[0] += 6;
+			} else {
+				_shaderboy2.default.shaderHeader[0] += "#ifdef GL_ES\n" + "precision highp float;\n" + "precision highp int;\n" + "#endif\n" + "float round( float x ) { return floor(x+0.5); }\n" + "vec2 round(vec2 x) { return floor(x + 0.5); }\n" + "vec3 round(vec3 x) { return floor(x + 0.5); }\n" + "vec4 round(vec4 x) { return floor(x + 0.5); }\n" + "float trunc( float x, float n ) { return floor(x*n)/n; }\n" + "mat3 transpose(mat3 m) { return mat3(m[0].x, m[1].x, m[2].x, m[0].y, m[1].y, m[2].y, m[0].z, m[1].z, m[2].z); }\n" + "float determinant( in mat2 m ) { return m[0][0]*m[1][1] - m[0][1]*m[1][0]; }\n" + "float determinant( mat4 m ) { float b00 = m[0][0] * m[1][1] - m[0][1] * m[1][0], b01 = m[0][0] * m[1][2] - m[0][2] * m[1][0], b02 = m[0][0] * m[1][3] - m[0][3] * m[1][0], b03 = m[0][1] * m[1][2] - m[0][2] * m[1][1], b04 = m[0][1] * m[1][3] - m[0][3] * m[1][1], b05 = m[0][2] * m[1][3] - m[0][3] * m[1][2], b06 = m[2][0] * m[3][1] - m[2][1] * m[3][0], b07 = m[2][0] * m[3][2] - m[2][2] * m[3][0], b08 = m[2][0] * m[3][3] - m[2][3] * m[3][0], b09 = m[2][1] * m[3][2] - m[2][2] * m[3][1], b10 = m[2][1] * m[3][3] - m[2][3] * m[3][1], b11 = m[2][2] * m[3][3] - m[2][3] * m[3][2];  return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;}\n" + "mat2 inverse(mat2 m) { float det = determinant(m); return mat2(m[1][1], -m[0][1], -m[1][0], m[0][0]) / det; }\n" + "mat4 inverse(mat4 m ) { float inv0 = m[1].y*m[2].z*m[3].w - m[1].y*m[2].w*m[3].z - m[2].y*m[1].z*m[3].w + m[2].y*m[1].w*m[3].z + m[3].y*m[1].z*m[2].w - m[3].y*m[1].w*m[2].z; float inv4 = -m[1].x*m[2].z*m[3].w + m[1].x*m[2].w*m[3].z + m[2].x*m[1].z*m[3].w - m[2].x*m[1].w*m[3].z - m[3].x*m[1].z*m[2].w + m[3].x*m[1].w*m[2].z; float inv8 = m[1].x*m[2].y*m[3].w - m[1].x*m[2].w*m[3].y - m[2].x  * m[1].y * m[3].w + m[2].x  * m[1].w * m[3].y + m[3].x * m[1].y * m[2].w - m[3].x * m[1].w * m[2].y; float inv12 = -m[1].x  * m[2].y * m[3].z + m[1].x  * m[2].z * m[3].y +m[2].x  * m[1].y * m[3].z - m[2].x  * m[1].z * m[3].y - m[3].x * m[1].y * m[2].z + m[3].x * m[1].z * m[2].y; float inv1 = -m[0].y*m[2].z * m[3].w + m[0].y*m[2].w * m[3].z + m[2].y  * m[0].z * m[3].w - m[2].y  * m[0].w * m[3].z - m[3].y * m[0].z * m[2].w + m[3].y * m[0].w * m[2].z; float inv5 = m[0].x  * m[2].z * m[3].w - m[0].x  * m[2].w * m[3].z - m[2].x  * m[0].z * m[3].w + m[2].x  * m[0].w * m[3].z + m[3].x * m[0].z * m[2].w - m[3].x * m[0].w * m[2].z; float inv9 = -m[0].x  * m[2].y * m[3].w +  m[0].x  * m[2].w * m[3].y + m[2].x  * m[0].y * m[3].w - m[2].x  * m[0].w * m[3].y - m[3].x * m[0].y * m[2].w + m[3].x * m[0].w * m[2].y; float inv13 = m[0].x  * m[2].y * m[3].z - m[0].x  * m[2].z * m[3].y - m[2].x  * m[0].y * m[3].z + m[2].x  * m[0].z * m[3].y + m[3].x * m[0].y * m[2].z - m[3].x * m[0].z * m[2].y; float inv2 = m[0].y  * m[1].z * m[3].w - m[0].y  * m[1].w * m[3].z - m[1].y  * m[0].z * m[3].w + m[1].y  * m[0].w * m[3].z + m[3].y * m[0].z * m[1].w - m[3].y * m[0].w * m[1].z; float inv6 = -m[0].x  * m[1].z * m[3].w + m[0].x  * m[1].w * m[3].z + m[1].x  * m[0].z * m[3].w - m[1].x  * m[0].w * m[3].z - m[3].x * m[0].z * m[1].w + m[3].x * m[0].w * m[1].z; float inv10 = m[0].x  * m[1].y * m[3].w - m[0].x  * m[1].w * m[3].y - m[1].x  * m[0].y * m[3].w + m[1].x  * m[0].w * m[3].y + m[3].x * m[0].y * m[1].w - m[3].x * m[0].w * m[1].y; float inv14 = -m[0].x  * m[1].y * m[3].z + m[0].x  * m[1].z * m[3].y + m[1].x  * m[0].y * m[3].z - m[1].x  * m[0].z * m[3].y - m[3].x * m[0].y * m[1].z + m[3].x * m[0].z * m[1].y; float inv3 = -m[0].y * m[1].z * m[2].w + m[0].y * m[1].w * m[2].z + m[1].y * m[0].z * m[2].w - m[1].y * m[0].w * m[2].z - m[2].y * m[0].z * m[1].w + m[2].y * m[0].w * m[1].z; float inv7 = m[0].x * m[1].z * m[2].w - m[0].x * m[1].w * m[2].z - m[1].x * m[0].z * m[2].w + m[1].x * m[0].w * m[2].z + m[2].x * m[0].z * m[1].w - m[2].x * m[0].w * m[1].z; float inv11 = -m[0].x * m[1].y * m[2].w + m[0].x * m[1].w * m[2].y + m[1].x * m[0].y * m[2].w - m[1].x * m[0].w * m[2].y - m[2].x * m[0].y * m[1].w + m[2].x * m[0].w * m[1].y; float inv15 = m[0].x * m[1].y * m[2].z - m[0].x * m[1].z * m[2].y - m[1].x * m[0].y * m[2].z + m[1].x * m[0].z * m[2].y + m[2].x * m[0].y * m[1].z - m[2].x * m[0].z * m[1].y; float det = m[0].x * inv0 + m[0].y * inv4 + m[0].z * inv8 + m[0].w * inv12; det = 1.0 / det; return det*mat4( inv0, inv1, inv2, inv3,inv4, inv5, inv6, inv7,inv8, inv9, inv10, inv11,inv12, inv13, inv14, inv15);}\n" + "float sinh(float x)  { return (exp(x)-exp(-x))/2.; }\n" + "float cosh(float x)  { return (exp(x)+exp(-x))/2.; }\n" + "float tanh(float x)  { return sinh(x)/cosh(x); }\n" + "float coth(float x)  { return cosh(x)/sinh(x); }\n" + "float sech(float x)  { return 1./cosh(x); }\n" + "float csch(float x)  { return 1./sinh(x); }\n" + "float asinh(float x) { return    log(x+sqrt(x*x+1.)); }\n" + "float acosh(float x) { return    log(x+sqrt(x*x-1.)); }\n" + "float atanh(float x) { return .5*log((1.+x)/(1.-x)); }\n" + "float acoth(float x) { return .5*log((x+1.)/(x-1.)); }\n" + "float asech(float x) { return    log((1.+sqrt(1.-x*x))/x); }\n" + "float acsch(float x) { return    log((1.+sqrt(1.+x*x))/x); }\n";
+				_shaderboy2.default.shaderHeaderLines[0] += 26;
+			}
+
+			_shaderboy2.default.shaderHeader[1] = "";
+			_shaderboy2.default.shaderHeaderLines[1] = 0;
+			if (_shaderboy2.default.glVersion === 2.0) {
+				_shaderboy2.default.shaderHeader[1] += "#version 300 es\n" + "#ifdef GL_ES\n" + "precision highp float;\n" + "precision highp int;\n" + "precision mediump sampler3D;\n" + "#endif\n" + "out vec4 outColor;\n";
+				_shaderboy2.default.shaderHeaderLines[1] += 6;
+			} else {
+				if (_shaderboy2.default.glExt.Derivatives) {
+					_shaderboy2.default.shaderHeader[1] += "#ifdef GL_OES_standard_derivatives\n#extension GL_OES_standard_derivatives : enable\n#endif\n";_shaderboy2.default.shaderHeaderLines[1] += 3;
+				}
+				if (_shaderboy2.default.glExt.ShaderTextureLOD) {
+					_shaderboy2.default.shaderHeader[1] += "#extension GL_EXT_shader_texture_lod : enable\n";_shaderboy2.default.shaderHeaderLines[1]++;
+				}
+				_shaderboy2.default.shaderHeader[1] += "#ifdef GL_ES\n" + "precision highp float;\n" + "precision highp int;\n" + "#endif\n" + "vec4 texture(     sampler2D   s, vec2 c)                   { return texture2D(s,c); }\n" + "vec4 texture(     sampler2D   s, vec2 c, float b)          { return texture2D(s,c,b); }\n" + "vec4 texture(     samplerCube s, vec3 c )                  { return textureCube(s,c); }\n" + "vec4 texture(     samplerCube s, vec3 c, float b)          { return textureCube(s,c,b); }\n" + "float round( float x ) { return floor(x+0.5); }\n" + "vec2 round(vec2 x) { return floor(x + 0.5); }\n" + "vec3 round(vec3 x) { return floor(x + 0.5); }\n" + "vec4 round(vec4 x) { return floor(x + 0.5); }\n" + "float trunc( float x, float n ) { return floor(x*n)/n; }\n" + "mat3 transpose(mat3 m) { return mat3(m[0].x, m[1].x, m[2].x, m[0].y, m[1].y, m[2].y, m[0].z, m[1].z, m[2].z); }\n" + "float determinant( in mat2 m ) { return m[0][0]*m[1][1] - m[0][1]*m[1][0]; }\n" + "float determinant( mat4 m ) { float b00 = m[0][0] * m[1][1] - m[0][1] * m[1][0], b01 = m[0][0] * m[1][2] - m[0][2] * m[1][0], b02 = m[0][0] * m[1][3] - m[0][3] * m[1][0], b03 = m[0][1] * m[1][2] - m[0][2] * m[1][1], b04 = m[0][1] * m[1][3] - m[0][3] * m[1][1], b05 = m[0][2] * m[1][3] - m[0][3] * m[1][2], b06 = m[2][0] * m[3][1] - m[2][1] * m[3][0], b07 = m[2][0] * m[3][2] - m[2][2] * m[3][0], b08 = m[2][0] * m[3][3] - m[2][3] * m[3][0], b09 = m[2][1] * m[3][2] - m[2][2] * m[3][1], b10 = m[2][1] * m[3][3] - m[2][3] * m[3][1], b11 = m[2][2] * m[3][3] - m[2][3] * m[3][2];  return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;}\n" + "mat2 inverse(mat2 m) { float det = determinant(m); return mat2(m[1][1], -m[0][1], -m[1][0], m[0][0]) / det; }\n" + "mat4 inverse(mat4 m ) { float inv0 = m[1].y*m[2].z*m[3].w - m[1].y*m[2].w*m[3].z - m[2].y*m[1].z*m[3].w + m[2].y*m[1].w*m[3].z + m[3].y*m[1].z*m[2].w - m[3].y*m[1].w*m[2].z; float inv4 = -m[1].x*m[2].z*m[3].w + m[1].x*m[2].w*m[3].z + m[2].x*m[1].z*m[3].w - m[2].x*m[1].w*m[3].z - m[3].x*m[1].z*m[2].w + m[3].x*m[1].w*m[2].z; float inv8 = m[1].x*m[2].y*m[3].w - m[1].x*m[2].w*m[3].y - m[2].x  * m[1].y * m[3].w + m[2].x  * m[1].w * m[3].y + m[3].x * m[1].y * m[2].w - m[3].x * m[1].w * m[2].y; float inv12 = -m[1].x  * m[2].y * m[3].z + m[1].x  * m[2].z * m[3].y +m[2].x  * m[1].y * m[3].z - m[2].x  * m[1].z * m[3].y - m[3].x * m[1].y * m[2].z + m[3].x * m[1].z * m[2].y; float inv1 = -m[0].y*m[2].z * m[3].w + m[0].y*m[2].w * m[3].z + m[2].y  * m[0].z * m[3].w - m[2].y  * m[0].w * m[3].z - m[3].y * m[0].z * m[2].w + m[3].y * m[0].w * m[2].z; float inv5 = m[0].x  * m[2].z * m[3].w - m[0].x  * m[2].w * m[3].z - m[2].x  * m[0].z * m[3].w + m[2].x  * m[0].w * m[3].z + m[3].x * m[0].z * m[2].w - m[3].x * m[0].w * m[2].z; float inv9 = -m[0].x  * m[2].y * m[3].w +  m[0].x  * m[2].w * m[3].y + m[2].x  * m[0].y * m[3].w - m[2].x  * m[0].w * m[3].y - m[3].x * m[0].y * m[2].w + m[3].x * m[0].w * m[2].y; float inv13 = m[0].x  * m[2].y * m[3].z - m[0].x  * m[2].z * m[3].y - m[2].x  * m[0].y * m[3].z + m[2].x  * m[0].z * m[3].y + m[3].x * m[0].y * m[2].z - m[3].x * m[0].z * m[2].y; float inv2 = m[0].y  * m[1].z * m[3].w - m[0].y  * m[1].w * m[3].z - m[1].y  * m[0].z * m[3].w + m[1].y  * m[0].w * m[3].z + m[3].y * m[0].z * m[1].w - m[3].y * m[0].w * m[1].z; float inv6 = -m[0].x  * m[1].z * m[3].w + m[0].x  * m[1].w * m[3].z + m[1].x  * m[0].z * m[3].w - m[1].x  * m[0].w * m[3].z - m[3].x * m[0].z * m[1].w + m[3].x * m[0].w * m[1].z; float inv10 = m[0].x  * m[1].y * m[3].w - m[0].x  * m[1].w * m[3].y - m[1].x  * m[0].y * m[3].w + m[1].x  * m[0].w * m[3].y + m[3].x * m[0].y * m[1].w - m[3].x * m[0].w * m[1].y; float inv14 = -m[0].x  * m[1].y * m[3].z + m[0].x  * m[1].z * m[3].y + m[1].x  * m[0].y * m[3].z - m[1].x  * m[0].z * m[3].y - m[3].x * m[0].y * m[1].z + m[3].x * m[0].z * m[1].y; float inv3 = -m[0].y * m[1].z * m[2].w + m[0].y * m[1].w * m[2].z + m[1].y * m[0].z * m[2].w - m[1].y * m[0].w * m[2].z - m[2].y * m[0].z * m[1].w + m[2].y * m[0].w * m[1].z; float inv7 = m[0].x * m[1].z * m[2].w - m[0].x * m[1].w * m[2].z - m[1].x * m[0].z * m[2].w + m[1].x * m[0].w * m[2].z + m[2].x * m[0].z * m[1].w - m[2].x * m[0].w * m[1].z; float inv11 = -m[0].x * m[1].y * m[2].w + m[0].x * m[1].w * m[2].y + m[1].x * m[0].y * m[2].w - m[1].x * m[0].w * m[2].y - m[2].x * m[0].y * m[1].w + m[2].x * m[0].w * m[1].y; float inv15 = m[0].x * m[1].y * m[2].z - m[0].x * m[1].z * m[2].y - m[1].x * m[0].y * m[2].z + m[1].x * m[0].z * m[2].y + m[2].x * m[0].y * m[1].z - m[2].x * m[0].z * m[1].y; float det = m[0].x * inv0 + m[0].y * inv4 + m[0].z * inv8 + m[0].w * inv12; det = 1.0 / det; return det*mat4( inv0, inv1, inv2, inv3,inv4, inv5, inv6, inv7,inv8, inv9, inv10, inv11,inv12, inv13, inv14, inv15);}\n" + "float sinh(float x)  { return (exp(x)-exp(-x))/2.; }\n" + "float cosh(float x)  { return (exp(x)+exp(-x))/2.; }\n" + "float tanh(float x)  { return sinh(x)/cosh(x); }\n" + "float coth(float x)  { return cosh(x)/sinh(x); }\n" + "float sech(float x)  { return 1./cosh(x); }\n" + "float csch(float x)  { return 1./sinh(x); }\n" + "float asinh(float x) { return    log(x+sqrt(x*x+1.)); }\n" + "float acosh(float x) { return    log(x+sqrt(x*x-1.)); }\n" + "float atanh(float x) { return .5*log((1.+x)/(1.-x)); }\n" + "float acoth(float x) { return .5*log((x+1.)/(x-1.)); }\n" + "float asech(float x) { return    log((1.+sqrt(1.-x*x))/x); }\n" + "float acsch(float x) { return    log((1.+sqrt(1.+x*x))/x); }\n" + "#define outColor gl_FragColor\n";
+				_shaderboy2.default.shaderHeaderLines[1] += 30;
+				if (_shaderboy2.default.glExt.ShaderTextureLOD) {
+					_shaderboy2.default.shaderHeader[1] += "vec4 textureLod(  sampler2D   s, vec2 c, float b)          { return texture2DLodEXT(s,c,b); }\n";
+					_shaderboy2.default.shaderHeader[1] += "vec4 textureGrad( sampler2D   s, vec2 c, vec2 dx, vec2 dy) { return texture2DGradEXT(s,c,dx,dy); }\n";
+					_shaderboy2.default.shaderHeaderLines[1] += 2;
+				}
+			}
 		} catch (e) {
 			throw e;
 		}
+
+		console.log(_shaderboy2.default.glVersion);
 
 		if (_shaderboy2.default.gl) {
 			_shaderboy2.default.buffers['Common'] = new _buffer_data_container2.default(false);
@@ -483,7 +551,6 @@ webpackJsonp([0,1],[
 			for (var i = 0; i < this.shaderNum; i++) {
 				var name = ref[i].name;
 				var url = "/app" + ref[i].url;
-				console.log(url);
 				this.loadShader(name, url);
 			}
 		}
@@ -1020,16 +1087,15 @@ webpackJsonp([0,1],[
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		init: function init() {
 			gl = _shaderboy2.default.gl;
-			console.log("Float32Filter=" + gl.getExtension('OES_texture_float_linear'));
-			console.log("Float16Filter=" + gl.getExtension('OES_texture_half_float_linear'));
-			console.log("Anisotropic=" + gl.getExtension('EXT_texture_filter_anisotropic'));
-			console.log("RenderToFloat32F=" + gl.getExtension('EXT_color_buffer_float'));
 
 			this.shaders = {};
 
 			var mainFragCode = '';
-			mainFragCode = _shaderlib2.default.shader.uniformFS + _shaderlib2.default.shader.commonFS + _shaderlib2.default.shader.imageFS + _shaderlib2.default.shader.commonfooterFS;
-			this.shaders.main = new _shader2.default(gl, _shaderlib2.default.shader.commonVS, mainFragCode);
+			mainFragCode = _shaderboy2.default.shaderHeader[1] + _shaderlib2.default.shader.uniformFS + _shaderlib2.default.shader.commonFS + _shaderlib2.default.shader.imageFS + _shaderlib2.default.shader.commonfooterFS;
+			var vsSource = null;
+			if (_shaderboy2.default.glVersion === 2.0) vsSource = _shaderboy2.default.shaderHeader[0] + "in vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }";else vsSource = _shaderboy2.default.shaderHeader[0] + "attribute vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }";
+
+			this.shaders.main = new _shader2.default(gl, vsSource, mainFragCode);
 			this.shaders.main.uniforms = {
 				'iResolution': _shaderboy2.default.uniforms.iResolution, // viewport resolution (in pixels)
 				'iTime': _shaderboy2.default.uniforms.iTime, // shader playback time (in seconds)
@@ -1045,7 +1111,11 @@ webpackJsonp([0,1],[
 				// 'iChannel3': 3,             // input channel. XX = 2D/Cube
 			};
 
-			this.shaders.screen = new _shader2.default(gl, _shaderlib2.default.shader.commonVS, _shaderlib2.default.shader.screenFS + _shaderlib2.default.shader.commonfooterFS);
+			var screenFsHeader = '';
+			if (_shaderboy2.default.glVersion === 2.0) {} else {
+				screenFsHeader += '#define outColor gl_FragColor\n';
+			}
+			this.shaders.screen = new _shader2.default(gl, vsSource, screenFsHeader + _shaderboy2.default.shaderHeader[1] + _shaderlib2.default.shader.screenFS + _shaderlib2.default.shader.commonfooterFS);
 			this.shaders.screen.uniforms = {
 				'iResolution': _shaderboy2.default.uniforms.iResolution,
 				'frameTexture': 0
@@ -1057,7 +1127,7 @@ webpackJsonp([0,1],[
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		recompile: function recompile(commonCode, fragmentCode) {
 			var mainFragCode = '';
-			mainFragCode = _shaderlib2.default.shader.uniformFS + commonCode + fragmentCode + _shaderlib2.default.shader.commonfooterFS;
+			mainFragCode += _shaderboy2.default.shaderHeader[1] + _shaderlib2.default.shader.uniformFS + commonCode + fragmentCode + _shaderlib2.default.shader.commonfooterFS;
 			this.shaders.main.recompileFragment(mainFragCode);
 		},
 
@@ -1090,11 +1160,24 @@ webpackJsonp([0,1],[
 				gl.deleteTexture(this.mainTextures[1]);
 			}
 
+			function getPowerOf2(val) {
+				var res = void 0;
+				if (val >= 2048) res = 2048;else if (val < 2048 && val >= 1024) res = 1024;else if (val < 1024 && val >= 512) res = 512;else if (val < 512 && val >= 256) res = 256;else if (val < 256 && val >= 128) res = 128;else if (val < 128 && val >= 64) res = 64;else if (val < 64 && val >= 16) res = 16;else res = 16;
+				return res;
+			}
 			// create textures
 			this.mainTextures = [];
 			for (var i = 0; i < 2; i++) {
 				this.mainTextures.push(gl.createTexture());
-				setFloatTextureParams(gl, this.mainTextures[i], window.innerWidth / _shaderboy2.default.renderScale, window.innerHeight / _shaderboy2.default.renderScale);
+				if (_shaderboy2.default.glVersion === 2.0) {
+					setFloatTextureParams(gl, this.mainTextures[i], window.innerWidth / _shaderboy2.default.renderScale, window.innerHeight / _shaderboy2.default.renderScale);
+				} else {
+					var width = window.innerWidth / _shaderboy2.default.renderScale;
+					var height = window.innerHeight / _shaderboy2.default.renderScale;
+					var res = width > height ? width : height;
+					res = getPowerOf2(res);
+					setUnsignedByteTextureParams(gl, this.mainTextures[i], width, height);
+				}
 			}
 			gl.bindFramebuffer(gl.FRAMEBUFFER, this.mainFramebuffer);
 			gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.mainTextures[0], 0);
@@ -1180,6 +1263,7 @@ webpackJsonp([0,1],[
 				gl.shaderSource(shader, source);
 				gl.compileShader(shader);
 				if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+					console.log(source);
 					throw new Error('compile error: ' + gl.getShaderInfoLog(shader));
 				}
 				return shader;
@@ -1206,7 +1290,7 @@ webpackJsonp([0,1],[
 			gl.attachShader(this.program, compileSource(gl, gl.VERTEX_SHADER, vertexSource));
 			gl.attachShader(this.program, compileSource(gl, gl.FRAGMENT_SHADER, fragmentSource));
 			gl.linkProgram(this.program);
-			this.vertAttLocation = gl.getAttribLocation(this.program, 'a_position');
+			this.vertAttLocation = gl.getAttribLocation(this.program, 'pos');
 			gl.enableVertexAttribArray(this.vertAttLocation);
 
 			if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
@@ -1268,7 +1352,7 @@ webpackJsonp([0,1],[
 				gl.attachShader(this.program, compileSource(gl, gl.VERTEX_SHADER, this.vertexSource));
 				gl.attachShader(this.program, compileSource(gl, gl.FRAGMENT_SHADER, this.fragmentSource));
 				gl.linkProgram(this.program);
-				this.vertAttLocation = gl.getAttribLocation(this.program, 'a_position');
+				this.vertAttLocation = gl.getAttribLocation(this.program, 'pos');
 				gl.enableVertexAttribArray(this.vertAttLocation);
 
 				if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
@@ -1280,8 +1364,8 @@ webpackJsonp([0,1],[
 			value: function begin() {
 				gl.useProgram(this.program);
 				// gl.clearColor(1.0, 1.0, 1.0, 1.0);
-				gl.clearDepth(1.0);
-				gl.clear(gl.COLOR_BUFFER_BIT);
+				// gl.clearDepth(1.0);
+				// gl.clear(gl.COLOR_BUFFER_BIT);
 			}
 		}, {
 			key: 'end',

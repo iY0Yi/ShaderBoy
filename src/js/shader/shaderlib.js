@@ -63,7 +63,6 @@ var ShaderLib = {
 		for (let i = 0; i < this.shaderNum; i++) {
 			let name = ref[i].name;
 			let url = "/app" + ref[i].url;
-			console.log(url);
 			this.loadShader(name, url);
 		}
 	}

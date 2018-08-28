@@ -1,7 +1,3 @@
-#version 300 es
-precision highp float;
-out vec4 outColor;
-
 uniform vec2      iResolution;           // viewport resolution (in pixels)
 uniform float     iTime;                 // shader playback time (in seconds)
 uniform float     iTimeDelta;            // render time (in seconds)

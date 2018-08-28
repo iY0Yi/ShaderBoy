@@ -16,6 +16,7 @@ export default class Shader {
 			gl.shaderSource(shader, source);
 			gl.compileShader(shader);
 			if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+				console.log(source);
 				throw new Error('compile error: ' + gl.getShaderInfoLog(shader));
 			}
 			return shader;
@@ -42,7 +43,7 @@ export default class Shader {
 		gl.attachShader(this.program, compileSource(gl, gl.VERTEX_SHADER, vertexSource));
 		gl.attachShader(this.program, compileSource(gl, gl.FRAGMENT_SHADER, fragmentSource));
 		gl.linkProgram(this.program);
-		this.vertAttLocation = gl.getAttribLocation(this.program, 'a_position');
+		this.vertAttLocation = gl.getAttribLocation(this.program, 'pos');
 		gl.enableVertexAttribArray(this.vertAttLocation);
 
 		if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
@@ -103,7 +104,7 @@ export default class Shader {
 		gl.attachShader(this.program, compileSource(gl, gl.VERTEX_SHADER, this.vertexSource));
 		gl.attachShader(this.program, compileSource(gl, gl.FRAGMENT_SHADER, this.fragmentSource));
 		gl.linkProgram(this.program);
-		this.vertAttLocation = gl.getAttribLocation(this.program, 'a_position');
+		this.vertAttLocation = gl.getAttribLocation(this.program, 'pos');
 		gl.enableVertexAttribArray(this.vertAttLocation);
 
 		if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
@@ -114,8 +115,8 @@ export default class Shader {
 	begin() {
 		gl.useProgram(this.program);
 		// gl.clearColor(1.0, 1.0, 1.0, 1.0);
-		gl.clearDepth(1.0);
-		gl.clear(gl.COLOR_BUFFER_BIT);
+		// gl.clearDepth(1.0);
+		// gl.clear(gl.COLOR_BUFFER_BIT);
 	}
 
 	end() {
