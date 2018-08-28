@@ -100,8 +100,8 @@ And I also love Shadertoy.
 I want to write it everytime, everywhere.  
 So, I made this one for me.  
 If anybody happy with this, it's my plesure.  
-
-Auther: [iY0Yi](https://twitter.com/iY0Yi/)
+  
+[iY0Yi](https://twitter.com/iY0Yi/)
 </br>
 </br>
 </br>
