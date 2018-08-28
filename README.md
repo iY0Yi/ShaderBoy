@@ -25,6 +25,7 @@ Any pull requests welcome.( ༎ຶ‿༎ຶ )
 - [X] ~~Add WebGL "1.0" fallback~~(2018.8.29)
 - [ ] Shortcuts for text size
 - [ ] Shortcuts for PC
+- [ ] Wordwrapping or scrolling
 - [ ] Kill software keyboards(refocus)
 - [ ] Fix broken uniforms
 - [ ] Active line highlight
