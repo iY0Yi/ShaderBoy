@@ -22,7 +22,7 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
   
 # Todo
 Any pull requests welcome.( ༎ຶ‿༎ຶ )
-- [X] Add WebGL "1.0" fallback(2018.8.29)
+- [X] ~~Add WebGL "1.0" fallback~~(2018.8.29)
 - [ ] Shortcuts for text size
 - [ ] Shortcuts for PC
 - [ ] Kill software keyboards(refocus)
