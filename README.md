@@ -1,41 +1,55 @@
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/_index/img/sb_logo_1240x600.png"></br>
-###### *This is "NOT" Shadertoy official!*  
 <strong>ShaderBoy</strong> is a tiny shader editor for mobile devices.</br>
-This is intended to use [physical keyboards](https://www.google.co.jp/search?q=smartphone+bluetooth+keyboard&source=lnms&tbm=isch&sa=X&ved=0ahUKEwi-kZzK_4fdAhXRdd4KHSp3BOcQ_AUICigB&biw=1440&bih=781) to write shaders in small screen.</br>
+It is intended to use [physical keyboards](https://www.google.co.jp/search?q=smartphone+bluetooth+keyboard&source=lnms&tbm=isch&sa=X&ved=0ahUKEwi-kZzK_4fdAhXRdd4KHSp3BOcQ_AUICigB&biw=1440&bih=781) to write shaders on a small screen.</br>
 It has compatible uniforms with <a href="https://www.shadertoy.com/"><em>Shadertoy</em></a>.</br>
 
 Enjoy writing your shaders in everywhere.</br>
 in Bed, Toilet, Train, Camping, Fishing...
 Your power to go.</br>
   
-
+###### *This is "NOT" Shadertoy official!*    
+</br>
+</br>
+</br>
+  
 # App
 ShaderBoy is a *PWA(Progressive Web Apps).*  
 You can install ShaderBoy app from [here](https://shaderboy.net/).  
-  
+</br>
+</br>
+</br>
   
 # Todo
+Any pull requests welcome.( ༎ຶ‿༎ຶ )
+- [ ] Shortcuts for text size
 - [ ] Shortcuts for PC
+- [ ] Kill software keyboards(refocus)
+- [ ] Fix broken uniforms
 - [ ] Active line highlight
-- [ ] Splash screen for iOS
+- [ ] Raise Shadertoy compatibility(Some shader does not work properly.)
 - [ ] GUI for some useful settings
 - [ ] Multipass shader
 - [ ] Sound shader
 - [ ] Official assets(textures)
-  
+- [ ] Dropbox integration
+- [ ] Shadertoy API integration
+- [ ] Splash screen for iOS
+- [ ] Some Themes
+</br>
+</br>
+</br>
   
 # Screenshots
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots0.png">  
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots1.png">  
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots2.png">  
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots3.png">  
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots4.png">  
-  
+</br>
+</br>
+</br>
   
 # Shortcuts
-ShaderBoy has no GUI. Works with shortcuts.
-These are default shortcuts.
-If you want to change, edit "editor.js", and build it.
+ShaderBoy has no GUI. Works with shortcuts.  
+These are default shortcuts.  
+If you want to change, edit "editor.js", and build it.  
   
 | Key | Func |
 |:---|:---|
@@ -56,9 +70,9 @@ If you want to change, edit "editor.js", and build it.
 | Alt-J | Unfold single gutter |
 | Ctrl-K | Fold all gutters |
 | Alt-K | Unfold all gutters |
-  
-  
-___
+</br>
+</br>
+</br>
   
 # Build Your ShaderBoy
 ### Install dependencies
@@ -77,14 +91,17 @@ $ gulp
 ### Upload
 And upload files in "dest" directory to your server.  
 That's it! Good luck!  
-  
-___
+</br>
+</br>
+</br>
   
 I love writing shaders.  
 And I also love Shadertoy.  
 I want to write it everytime, everywhere.  
 So, I made this one for me.  
-If anybody happy with this, it's my plesure.  
-
-Auther: [iY0Yi](https://twitter.com/iY0Yi/)
+If anybody happy with this, it's my pleasure.  
   
+[iY0Yi](https://twitter.com/iY0Yi/)
+</br>
+</br>
+</br>
