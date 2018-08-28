@@ -45,6 +45,7 @@ a{
 	position: relative;
 	width:60vw;
 	height:13.4vw;
+	margin-left: -0.2vw;
 	background-image:url(./img/sb_logo.svg);
 	background-size:100%;
 }
@@ -60,6 +61,19 @@ margin-top: 3vw;
 width:59vw;
 height:35vw;
 font-size: 2.75vw;
+}
+
+.alert_ios
+{
+	margin-top: -3.0vw;
+	line-height: 3.5vw;
+	margin-left: 0.0vw;
+	display: flex;
+	text-align: justify;
+	letter-spacing: 0.03vw;
+	font-size: 2.5vw;
+	width:59vw;
+	height:3vw;
 }
 
 .btn
@@ -127,12 +141,13 @@ position: relative;
 margin-top: 0vw;
 height: 0px;
 opacity: 0.0;
+display: none;
 }
 
 #btn_github
 {
 position: relative;
-margin-top: 12vw;
+margin-top: 12.0vw;
 /* top: 44vh; */
 }
 .icon_install
@@ -221,6 +236,10 @@ background-size:100%;
 	font-size: 12px;
 	}
 
+	.alert_ios
+	{
+		display: none;
+	}
 	.btn
 	{
 	width:295px;
@@ -286,6 +305,7 @@ background-size:100%;
 	margin-top: 10px;
 	height: 45px;
 	opacity: 1.0;
+	display: flex;
 	}
 
 	#btn_github
