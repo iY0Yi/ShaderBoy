@@ -28,13 +28,14 @@ Any pull requests welcome.( ༎ຶ‿༎ຶ )
 - [ ] Kill software keyboards(refocus)
 - [ ] Fix broken uniforms
 - [ ] Active line highlight
+- [ ] Inline error display
 - [X] ~~Add WebGL "1.0" fallback~~(2018.8.29)
   
 ### Manipulations
-- [ ] Shortcuts for text size
-- [ ] Shortcuts for PC
 - [ ] GUI for some useful settings
 - [ ] Auto compile
+- [X] ~~Shortcuts for text size~~(2018.8.30)
+- [X] ~~Shortcuts for PC~~(2018.8.30)
   
 ### Compatibility
 - [ ] Multipass shader
@@ -67,7 +68,7 @@ If you want to change, edit "editor.js", and build it.
   
 |   | Smartphone | Windows | Mac |
 |:---|:---|:---|:---|
-| **Compile** | ⌥+space | ⌥+Enter | ⇢ |
+| **Compile** | ⌥+space | ⌥+enter | ⇢ |
 | **Save** | ctrl+s | ⇢ | ⌘+s |
 | **Load** | ctrl+⌥+l | ⇢ | ⌘+⌥+l |
 | **New** | ctrl+⌥+N | ctrl+⇧+n | ⌘+⇧+n |
@@ -80,9 +81,13 @@ If you want to change, edit "editor.js", and build it.
 | **Replace** | ctrl+⇧+f | ⇢ | ⌘+⇧+f |
 | **Auto complete** | ctrl+space | ⇢ | ⇢ |
 | **Resolution** | ctrl+1-4 | ⇢ | ⇢ |
+| **Font size** | ctrl+⌥+ +/- | ⇢ | ⌘+⌥+ +/- |
 | **Format** lines | ctrl+⌥+f | ⇢ | ⇢ |
-| **Fold/Unfold single** | ctrl+j | ⇢ | ⇢ |
-| **Fold/Unfold all** | ctrl+k | ⇢ | ⇢ |
+| **Fold single** | ctrl+j | ⇢ | ⇢ |
+| **Unfold single** | ⌥+j | ⇢ | ⇢ |
+| **Fold all** | ctrl+k | ⇢ | ⇢ |
+| **Unfold all** | ⌥+k | ⇢ | ⇢ |
+*And many of Sublime Text bindings by Codemirror.
 </br>
 </br>
 </br>
