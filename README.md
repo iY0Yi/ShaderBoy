@@ -24,25 +24,25 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 Any pull requests welcome.( ༎ຶ‿༎ຶ )
   
 ### General
-- [ ] Wordwrapping or scrolling
 - [ ] Kill software keyboards(refocus)
 - [ ] Fix broken uniforms
-- [ ] Active line highlight
 - [ ] Inline error display
-- [X] ~~Add WebGL "1.0" fallback~~(2018.8.29)
+- [X] ~~Active line highlight~~(2018.8.29)
+- [X] ~~Wordwrapping or scrolling~~(2018.8.29)
+- [X] ~~Add WebGL "1.0" fallback~~(2018.8.28)
   
 ### Manipulations
 - [ ] GUI for some useful settings
 - [ ] Auto compile
-- [X] ~~Shortcuts for text size~~(2018.8.30)
-- [X] ~~Shortcuts for PC~~(2018.8.30)
+- [X] ~~Shortcuts for text size~~(2018.8.29)
+- [X] ~~Shortcuts for PC~~(2018.8.29)
   
 ### Compatibility
 - [ ] Multipass shader
 - [ ] Sound shader
 - [ ] Official assets(textures)
 - [X] ~~Raise Shadertoy compatibility(Some shader does not work properly.)~~  
-(2018.8.29: singlepass and no asset shaders only.)
+(2018.8.28: singlepass and no asset shaders only.)
   
 ### Other
 - [ ] Dropbox integration
@@ -76,9 +76,9 @@ If you want to change, edit "editor.js", and build it.
 | **Reset time** | ⌥+down | ⇢ | ⇢ |
 | **Common tab** | ⌥+right | ⇢ | ⇢ |
 | **Image tab** | ⌥+left | ⇢ | ⇢ |
-| **Hide/Show** | ⌥+h | ctrl+h | ⇢ |
+| **Hide/Show** | ⌥+h | ctrl+⌥+h | ⇢ |
 | **Search** | ctrl+f | ⇢ | ⌘+f |
-| **Replace** | ctrl+⇧+f | ⇢ | ⌘+⇧+f |
+| **Replace** | ctrl+h | ⇢ | ⌘+h |
 | **Auto complete** | ctrl+space | ⇢ | ⇢ |
 | **Resolution** | ctrl+1-4 | ⇢ | ⇢ |
 | **Font size** | ctrl+⌥+ +/- | ⇢ | ⌘+⌥+ +/- |
