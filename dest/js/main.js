@@ -659,6 +659,9 @@ webpackJsonp([0,1],[
 			this.header.contents.style.letterSpacing = '1px';
 			this.header.contents.style.marginTop = '9px';
 			this.header.contents.style.marginLeft = 15 + 'px';
+
+			this.mouseLeftDownCur = false;
+			this.mousePositionCur = [];
 			// this.header.contents.style.marginLeft = ShaderBoy.style.buttonHeight + 5 + 'px';
 		},
 
@@ -698,38 +701,45 @@ webpackJsonp([0,1],[
 
 			var canvasMousePos = function canvasMousePos(event) {
 				var mousePos = eventPos(event);
-				var canvasPos = elementPos(_shaderboy2.default.gl.canvas);
+				var canvasPos = elementPos(document.body);
+				// console.log('mousePos', mousePos);
+				// console.log('canvasPos', canvasPos);
 				return {
 					x: mousePos.x - canvasPos.x,
 					y: mousePos.y - canvasPos.y
 				};
 			};
 
-			_shaderboy2.default.gl.canvas.onmousedown = function (event) {
+			document.body.onmousedown = function (event) {
 				if (event.button == 2) return false;
-
-				var mouse = canvasMousePos(event);
-				if (mouse.x >= 0 && mouse.x < _shaderboy2.default.gl.canvas.clientWidth && mouse.y >= 0 && mouse.y < _shaderboy2.default.gl.canvas.clientHeight) {
-					io.mouseLeftDownCur = true;
-					iMouse[2] = 1;
+				if (_shaderboy2.default.isEditorHide) {
+					var mouse = canvasMousePos(event);
+					if (mouse.x >= 0 && mouse.x < document.body.clientWidth && mouse.y >= 0 && mouse.y < document.body.clientHeight) {
+						this.mouseLeftDownCur = true;
+						_shaderboy2.default.uniforms.iMouse[2] = 1;
+					}
 				}
 			};
 
-			_shaderboy2.default.gl.canvas.onmouseup = function (event) {
-				io.mouseLeftDownCur = false;
-				var mouse = canvasMousePos(event);
-				iMouse[2] = 0;
+			document.body.onmouseup = function (event) {
+				if (_shaderboy2.default.isEditorHide) {
+					this.mouseLeftDownCur = false;
+					var mouse = canvasMousePos(event);
+					_shaderboy2.default.uniforms.iMouse[2] = 0;
+				}
 			};
 
-			_shaderboy2.default.gl.canvas.onmousemove = function (event) {
-				if (!io.mouseLeftDownCur) return;
-				var mouse = canvasMousePos(event);
-				io.mousePositionCur = [mouse.x, mouse.y];
-				iMouse[0] = mouse.x;
-				iMouse[1] = mouse.y;
+			document.body.onmousemove = function (event) {
+				if (!this.mouseLeftDownCur) return;
+				if (_shaderboy2.default.isEditorHide) {
+					var mouse = canvasMousePos(event);
+					this.mousePositionCur = [mouse.x, mouse.y];
+					_shaderboy2.default.uniforms.iMouse[0] = mouse.x;
+					_shaderboy2.default.uniforms.iMouse[1] = mouse.y;
+				}
 			};
 
-			_shaderboy2.default.gl.canvas.contextmenu = function (event) {
+			document.body.contextmenu = function (event) {
 				event.preventDefault();
 			};
 		}
@@ -1419,14 +1429,13 @@ webpackJsonp([0,1],[
 				var location = this.uniformLocations['iChannel0'] || gl.getUniformLocation(this.program, 'iChannel0');
 
 				for (var name in this.uniforms) {
-					// console.log(name);
 					var realName = name.replace(/\"/g, '');
-					var _location2 = this.uniformLocations[realName] || gl.getUniformLocation(this.program, realName);
+					var _location2 = this.uniformLocations[name] || gl.getUniformLocation(this.program, name);
 					if (realName == 'iFrame') {
 						var _value = this.uniforms[name];
 						gl.uniform1i(_location2, _value);
-						return this;
 					}
+
 					if (!_location2) continue;
 					this.uniformLocations[realName] = _location2;
 					var value = this.uniforms[name];
@@ -1453,6 +1462,7 @@ webpackJsonp([0,1],[
 							case 4:
 								v = new Float32Array(value);
 								gl.uniform4fv(_location2, v);
+								console.log(realName);
 								v = null;
 								break;
 							// Matrices are automatically transposed, since WebGL uses column-major

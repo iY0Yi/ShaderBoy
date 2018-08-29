@@ -170,14 +170,13 @@ export default class Shader {
 		let location = this.uniformLocations['iChannel0'] || gl.getUniformLocation(this.program, 'iChannel0');
 
 		for (let name in this.uniforms) {
-			// console.log(name);
 			let realName = name.replace(/\"/g, '');
-			let location = this.uniformLocations[realName] || gl.getUniformLocation(this.program, realName);
+			let location = this.uniformLocations[name] || gl.getUniformLocation(this.program, name);
 			if (realName == 'iFrame') {
 				let value = this.uniforms[name];
 				gl.uniform1i(location, value);
-				return this;
 			}
+
 			if (!location) continue;
 			this.uniformLocations[realName] = location;
 			let value = this.uniforms[name];
@@ -203,6 +202,7 @@ export default class Shader {
 					case 4:
 						v = new Float32Array(value);
 						gl.uniform4fv(location, v);
+						console.log(realName);
 						v = null;
 						break;
 					// Matrices are automatically transposed, since WebGL uses column-major

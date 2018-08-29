@@ -72,6 +72,9 @@ export default ShaderBoy.gui = {
 		this.header.contents.style.letterSpacing = '1px';
 		this.header.contents.style.marginTop = '9px';
 		this.header.contents.style.marginLeft = 15 + 'px';
+
+		this.mouseLeftDownCur = false;
+		this.mousePositionCur = [];
 		// this.header.contents.style.marginLeft = ShaderBoy.style.buttonHeight + 5 + 'px';
 	},
 
@@ -111,38 +114,45 @@ export default ShaderBoy.gui = {
 
 		let canvasMousePos = function (event) {
 			let mousePos = eventPos(event);
-			let canvasPos = elementPos(ShaderBoy.gl.canvas);
+			let canvasPos = elementPos(document.body);
+			// console.log('mousePos', mousePos);
+			// console.log('canvasPos', canvasPos);
 			return {
 				x: mousePos.x - canvasPos.x,
 				y: mousePos.y - canvasPos.y
 			};
 		};
 
-		ShaderBoy.gl.canvas.onmousedown = function (event) {
+		document.body.onmousedown = function (event) {
 			if (event.button == 2) return false;
-
-			let mouse = canvasMousePos(event);
-			if (mouse.x >= 0 && mouse.x < ShaderBoy.gl.canvas.clientWidth && mouse.y >= 0 && mouse.y < ShaderBoy.gl.canvas.clientHeight) {
-				io.mouseLeftDownCur = true;
-				iMouse[2] = 1;
+			if (ShaderBoy.isEditorHide) {
+				let mouse = canvasMousePos(event);
+				if (mouse.x >= 0 && mouse.x < document.body.clientWidth && mouse.y >= 0 && mouse.y < document.body.clientHeight) {
+					this.mouseLeftDownCur = true;
+					ShaderBoy.uniforms.iMouse[2] = 1;
+				}
 			}
 		};
 
-		ShaderBoy.gl.canvas.onmouseup = function (event) {
-			io.mouseLeftDownCur = false;
-			let mouse = canvasMousePos(event);
-			iMouse[2] = 0;
+		document.body.onmouseup = function (event) {
+			if (ShaderBoy.isEditorHide) {
+				this.mouseLeftDownCur = false;
+				let mouse = canvasMousePos(event);
+				ShaderBoy.uniforms.iMouse[2] = 0;
+			}
 		};
 
-		ShaderBoy.gl.canvas.onmousemove = function (event) {
-			if (!io.mouseLeftDownCur) return;
-			let mouse = canvasMousePos(event);
-			io.mousePositionCur = [mouse.x, mouse.y];
-			iMouse[0] = mouse.x;
-			iMouse[1] = mouse.y;
+		document.body.onmousemove = function (event) {
+			if (!this.mouseLeftDownCur) return;
+			if (ShaderBoy.isEditorHide) {
+				let mouse = canvasMousePos(event);
+				this.mousePositionCur = [mouse.x, mouse.y];
+				ShaderBoy.uniforms.iMouse[0] = mouse.x;
+				ShaderBoy.uniforms.iMouse[1] = mouse.y;
+			}
 		};
 
-		ShaderBoy.gl.canvas.contextmenu = function (event) {
+		document.body.contextmenu = function (event) {
 			event.preventDefault();
 		};
 	}
