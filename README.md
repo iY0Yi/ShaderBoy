@@ -29,19 +29,20 @@ Any pull requests welcome.( ༎ຶ‿༎ຶ )
 - [ ] Fix broken uniforms
 - [ ] Active line highlight
 - [X] ~~Add WebGL "1.0" fallback~~(2018.8.29)
-- [X] ~~Raise Shadertoy compatibility(Some shader does not work properly.)~~(2018.8.29: singlepass and no asset shaders only.)
   
 ### Manipulations
 - [ ] Shortcuts for text size
 - [ ] Shortcuts for PC
 - [ ] GUI for some useful settings
 - [ ] Auto compile
-
+  
 ### Compatibility
 - [ ] Multipass shader
 - [ ] Sound shader
 - [ ] Official assets(textures)
-
+- [X] ~~Raise Shadertoy compatibility(Some shader does not work properly.)~~
+(2018.8.29: singlepass and no asset shaders only.)
+  
 ### Other
 - [ ] Dropbox integration
 - [ ] Shadertoy API integration
