@@ -145,38 +145,5 @@ export default ShaderBoy.gui = {
 		ShaderBoy.gl.canvas.contextmenu = function (event) {
 			event.preventDefault();
 		};
-		if (ShaderBoy.needEditor) {
-			let keyHide = '';
-			switch (ShaderBoy.OS) {
-				case 'Windows':
-				case 'MacOS':
-				case 'UNIX':
-				case 'Linux':
-					keyHide = 'ctrl+⌥+h';
-					break;
-
-				case 'iOS':
-				case 'Android':
-					keyHide = 'alt+h';
-					break;
-
-				default:
-					keyHide = 'ctrl+⌥+h';
-					break;
-			}
-			console.log('keyHide', keyHide);
-			key(keyHide, function () {
-				console.log("Hide/Show");
-				ShaderBoy.isEditorHide = !ShaderBoy.isEditorHide;
-				if (ShaderBoy.isEditorHide) {
-					ShaderBoy.editor.domElement.style.opacity = '0.0';
-					this.header.base.domElement.style.opacity = '0.0';
-				}
-				else {
-					ShaderBoy.editor.domElement.style.opacity = '1.0';
-					ShaderBoy.gui.header.base.domElement.style.opacity = '1.0';
-				}
-			});
-		}
 	}
 };

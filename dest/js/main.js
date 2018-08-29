@@ -732,38 +732,6 @@ webpackJsonp([0,1],[
 			_shaderboy2.default.gl.canvas.contextmenu = function (event) {
 				event.preventDefault();
 			};
-			if (_shaderboy2.default.needEditor) {
-				var keyHide = '';
-				switch (_shaderboy2.default.OS) {
-					case 'Windows':
-					case 'MacOS':
-					case 'UNIX':
-					case 'Linux':
-						keyHide = 'ctrl+⌥+h';
-						break;
-
-					case 'iOS':
-					case 'Android':
-						keyHide = 'alt+h';
-						break;
-
-					default:
-						keyHide = 'ctrl+⌥+h';
-						break;
-				}
-				console.log('keyHide', keyHide);
-				(0, _keymaster2.default)(keyHide, function () {
-					console.log("Hide/Show");
-					_shaderboy2.default.isEditorHide = !_shaderboy2.default.isEditorHide;
-					if (_shaderboy2.default.isEditorHide) {
-						_shaderboy2.default.editor.domElement.style.opacity = '0.0';
-						this.header.base.domElement.style.opacity = '0.0';
-					} else {
-						_shaderboy2.default.editor.domElement.style.opacity = '1.0';
-						_shaderboy2.default.gui.header.base.domElement.style.opacity = '1.0';
-					}
-				});
-			}
 		}
 	};
 
@@ -1154,6 +1122,9 @@ webpackJsonp([0,1],[
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		recompile: function recompile(commonCode, fragmentCode) {
 			var mainFragCode = '';
+			_shaderboy2.default.shaderUniformsLines = _shaderlib2.default.shader.uniformFS.split(/\n/).length - 1;
+			_shaderboy2.default.shaderCommonLines = commonCode.split(/\n/).length - 1;
+
 			mainFragCode += _shaderboy2.default.shaderHeader[1] + _shaderlib2.default.shader.uniformFS + commonCode + fragmentCode + _shaderlib2.default.shader.commonfooterFS;
 			this.shaders.main.recompileFragment(mainFragCode);
 		},
@@ -1208,14 +1179,14 @@ webpackJsonp([0,1],[
 			}
 			gl.bindFramebuffer(gl.FRAMEBUFFER, this.mainFramebuffer);
 			gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.mainTextures[0], 0);
-			gl.clearColor(1.0, 1.0, 1.0, 1.0);
+			gl.clearColor(0.0, 0.0, 0.0, 1.0);
 			gl.clearDepth(1.0);
 			gl.clear(gl.COLOR_BUFFER_BIT);
 			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
 			gl.bindFramebuffer(gl.FRAMEBUFFER, this.mainFramebuffer);
 			gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.mainTextures[1], 0);
-			gl.clearColor(1.0, 1.0, 1.0, 1.0);
+			gl.clearColor(0.0, 0.0, 0.0, 1.0);
 			gl.clearDepth(1.0);
 			gl.clear(gl.COLOR_BUFFER_BIT);
 			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -1291,7 +1262,8 @@ webpackJsonp([0,1],[
 				gl.compileShader(shader);
 				if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
 					console.log(source);
-					throw new Error('compile error: ' + gl.getShaderInfoLog(shader));
+					console.log('compile error: ' + gl.getShaderInfoLog(shader));
+					// throw new Error('compile error: ' + gl.getShaderInfoLog(shader));
 				}
 				return shader;
 			}
@@ -1303,6 +1275,7 @@ webpackJsonp([0,1],[
 			this.uniforms = {};
 			this.uniformLocations = {};
 			this.program = gl.createProgram();
+			this.errors = [];
 
 			this.quadVBO = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVBO);
@@ -1321,7 +1294,8 @@ webpackJsonp([0,1],[
 			gl.enableVertexAttribArray(this.vertAttLocation);
 
 			if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
-				throw new Error('link error: ' + gl.getProgramInfoLog(this.program));
+				console.log('link error: ' + gl.getProgramInfoLog(this.program));
+				// throw new Error('link error: ' + gl.getProgramInfoLog(this.program));
 			}
 
 			// Sampler uniforms need to be uploaded using `gl.uniform1i()` instead of `gl.uniform1f()`.
@@ -1346,7 +1320,22 @@ webpackJsonp([0,1],[
 				gl.deleteProgram(this.program);
 				this.program = null;
 				this.program = gl.createProgram();
-				function compileSource(gl, type, source) {
+
+				function splitErrorMsg(str) {
+					var res = [];
+					var errors = str.split(/\n/);
+					for (var i = 0; i < errors.length - 1; i++) {
+						var errorElements = errors[i].split(':');
+						res[i] = {
+							'lineNum': Math.max(1, errorElements[2] - (_shaderboy2.default.shaderHeaderLines[1] + _shaderboy2.default.shaderUniformsLines + _shaderboy2.default.shaderCommonLines + 1)),
+							'element': errorElements[3],
+							'msg': errorElements[4]
+						};
+					}
+					return res;
+				}
+
+				function compileSource(scope, gl, type, source) {
 					var shader = gl.createShader(type);
 					gl.shaderSource(shader, source);
 					gl.compileShader(shader);
@@ -1356,13 +1345,18 @@ webpackJsonp([0,1],[
 							// throw new Error('compile error: ' + gl.getShaderInfoLog(shader));
 
 							_shaderboy2.default.gui.header.needUpdate = true;
-							_shaderboy2.default.gui.header.contents.innerText = 'error: ' + gl.getShaderInfoLog(shader);
+							scope.errors = splitErrorMsg(gl.getShaderInfoLog(shader));
+							console.log(scope.errors);
+							_shaderboy2.default.editor.updateErrorInfo(scope.errors);
+							_shaderboy2.default.gui.header.contents.innerText = '' + 'failed!';
 							_shaderboy2.default.gui.header.base.domElement.style.backgroundColor = '#FF0000';
 							setTimeout(function () {
 								_shaderboy2.default.gui.header.needUpdate = false;
 								_shaderboy2.default.gui.header.base.domElement.style.backgroundColor = '#00000066';
 							}, 6000);
 						} else {
+							scope.errors = [];
+							_shaderboy2.default.editor.updateErrorInfo(scope.errors);
 							_shaderboy2.default.gui.header.needUpdate = true;
 							_shaderboy2.default.gui.header.contents.innerText = 'compiled.';
 							_shaderboy2.default.gui.header.base.domElement.style.backgroundColor = '#3ca403';
@@ -1376,29 +1370,28 @@ webpackJsonp([0,1],[
 				}
 				this.fragmentSource = fragmentSource;
 				this.source = this.vertexSource + fragmentSource;
-				gl.attachShader(this.program, compileSource(gl, gl.VERTEX_SHADER, this.vertexSource));
-				gl.attachShader(this.program, compileSource(gl, gl.FRAGMENT_SHADER, this.fragmentSource));
+				gl.attachShader(this.program, compileSource(this, gl, gl.VERTEX_SHADER, this.vertexSource));
+				gl.attachShader(this.program, compileSource(this, gl, gl.FRAGMENT_SHADER, this.fragmentSource));
 				gl.linkProgram(this.program);
 				this.vertAttLocation = gl.getAttribLocation(this.program, 'pos');
 				gl.enableVertexAttribArray(this.vertAttLocation);
 
 				if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
-					throw new Error('link error: ' + gl.getProgramInfoLog(this.program));
+					// throw new Error('link error: ' + gl.getProgramInfoLog(this.program));
+					console.log('link error: ' + gl.getProgramInfoLog(this.program));
 				}
 			}
 		}, {
 			key: 'begin',
 			value: function begin() {
 				gl.useProgram(this.program);
-				// gl.clearColor(1.0, 1.0, 1.0, 1.0);
-				// gl.clearDepth(1.0);
+				// gl.clearColor(0.0, 0.0, 0.0, 1.0);
 				// gl.clear(gl.COLOR_BUFFER_BIT);
 			}
 		}, {
 			key: 'end',
 			value: function end() {
-				// gl.clearColor(1.0, 1.0, 1.0, 1.0);
-				// gl.clearDepth(1.0);
+				// gl.clearColor(0.0, 0.0, 0.0, 1.0);
 				// gl.clear(gl.COLOR_BUFFER_BIT);
 				gl.disableVertexAttribArray(this.vertAttLocation);
 				gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -1487,7 +1480,8 @@ webpackJsonp([0,1],[
 					} else if (isNumber(value)) {
 						(this.isSampler[name] ? gl.uniform1i : gl.uniform1f).call(gl, _location2, value);
 					} else {
-						throw new Error('attempted to set uniform "' + name + '" to invalid value ' + value);
+						console.log('attempted to set uniform "' + name + '" to invalid value ' + value);
+						// throw new Error('attempted to set uniform "' + name + '" to invalid value ' + value);
 					}
 					_location2 = null;
 					value = null;
@@ -1977,6 +1971,29 @@ webpackJsonp([0,1],[
 	        this.setFontSize = function () {
 	            (0, _jquery2.default)(".CodeMirror").css('font-size', this.fontSize + "pt");
 	        };
+
+	        this.widgets = [];
+
+	        var keyHide = '';
+	        switch (_shaderboy2.default.OS) {
+	            case 'Windows':
+	            case 'MacOS':
+	            case 'UNIX':
+	            case 'Linux':
+	                keyHide = 'ctrl+r';
+	                break;
+
+	            case 'iOS':
+	            case 'Android':
+	                keyHide = 'alt+h';
+	                break;
+
+	            default:
+	                keyHide = 'ctrl+r';
+	                break;
+	        }
+	        console.log('keyHide', keyHide);
+
 	        var keys = {};
 	        switch (_shaderboy2.default.OS) {
 	            case 'Windows':
@@ -2057,6 +2074,16 @@ webpackJsonp([0,1],[
 	                        }
 	                        var range = getSelectedRange();
 	                        cm.autoFormatRange(range.from, range.to);
+	                    },
+	                    'Ctrl-Alt-H': function CtrlAltH() {
+	                        _shaderboy2.default.isEditorHide = !_shaderboy2.default.isEditorHide;
+	                        if (_shaderboy2.default.isEditorHide) {
+	                            _shaderboy2.default.editor.domElement.style.opacity = '0.0';
+	                            _shaderboy2.default.gui.header.base.domElement.style.opacity = '0.0';
+	                        } else {
+	                            _shaderboy2.default.editor.domElement.style.opacity = '1.0';
+	                            _shaderboy2.default.gui.header.base.domElement.style.opacity = '1.0';
+	                        }
 	                    }
 	                };
 	                break;
@@ -2141,6 +2168,16 @@ webpackJsonp([0,1],[
 	                        }
 	                        var range = getSelectedRange();
 	                        cm.autoFormatRange(range.from, range.to);
+	                    },
+	                    'Ctrl-Alt-H': function CtrlAltH() {
+	                        _shaderboy2.default.isEditorHide = !_shaderboy2.default.isEditorHide;
+	                        if (_shaderboy2.default.isEditorHide) {
+	                            _shaderboy2.default.editor.domElement.style.opacity = '0.0';
+	                            _shaderboy2.default.gui.header.base.domElement.style.opacity = '0.0';
+	                        } else {
+	                            _shaderboy2.default.editor.domElement.style.opacity = '1.0';
+	                            _shaderboy2.default.gui.header.base.domElement.style.opacity = '1.0';
+	                        }
 	                    }
 	                };
 	                break;
@@ -2224,6 +2261,16 @@ webpackJsonp([0,1],[
 	                        }
 	                        var range = getSelectedRange();
 	                        cm.autoFormatRange(range.from, range.to);
+	                    },
+	                    'Alt-H': function AltH() {
+	                        _shaderboy2.default.isEditorHide = !_shaderboy2.default.isEditorHide;
+	                        if (_shaderboy2.default.isEditorHide) {
+	                            _shaderboy2.default.editor.domElement.style.opacity = '0.0';
+	                            _shaderboy2.default.gui.header.base.domElement.style.opacity = '0.0';
+	                        } else {
+	                            _shaderboy2.default.editor.domElement.style.opacity = '1.0';
+	                            _shaderboy2.default.gui.header.base.domElement.style.opacity = '1.0';
+	                        }
 	                    }
 	                };
 	                break;
@@ -2295,6 +2342,29 @@ webpackJsonp([0,1],[
 	        this.codemirror.refresh();
 	    },
 
+	    updateErrorInfo: function updateErrorInfo(errors) {
+	        this.codemirror.operation(function () {
+	            var scope = _shaderboy2.default.editor;
+	            for (var i = 0; i < scope.widgets.length; ++i) {
+	                scope.codemirror.removeLineWidget(scope.widgets[i]);
+	            }scope.widgets.length = 0;
+
+	            for (var _i = 0; _i < errors.length; ++_i) {
+	                var err = errors[_i];
+	                if (!err) continue;
+	                var msg = document.createElement("div");
+	                // let icon = msg.appendChild(document.createElement("span"));
+	                // icon.innerHTML = "!";
+	                // icon.className = "error-icon";
+	                msg.appendChild(document.createTextNode(err.element + ': ' + err.msg));
+	                msg.className = "error";
+	                scope.widgets.push(scope.codemirror.addLineWidget(err.lineNum - 1, msg, { coverGutter: false, noHScroll: true }));
+	            }
+	        });
+	        var info = this.codemirror.getScrollInfo();
+	        var after = this.codemirror.charCoords({ line: this.codemirror.getCursor().line + 1, ch: 0 }, "local").top;
+	        if (info.top + info.clientHeight < after) this.codemirror.scrollTo(null, after - info.clientHeight + 3);
+	    },
 	    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	    save: function save() {
 	        this.codemirror.save();

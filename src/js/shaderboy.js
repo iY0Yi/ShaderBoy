@@ -18,7 +18,7 @@ let ShaderBoy = {
     isEditorHide: false,
     needRecompile: false,
     needStatusInfo: false,
-    needEditor:false,
+    needEditor: false,
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     style: {

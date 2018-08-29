@@ -60,6 +60,30 @@ export default ShaderBoy.editor = {
         this.setFontSize = function () {
             $(".CodeMirror").css('font-size', this.fontSize + "pt");
         };
+
+        this.widgets = [];
+
+        let keyHide = '';
+        switch (ShaderBoy.OS) {
+            case 'Windows':
+            case 'MacOS':
+            case 'UNIX':
+            case 'Linux':
+                keyHide = 'ctrl+r';
+                break;
+
+            case 'iOS':
+            case 'Android':
+                keyHide = 'alt+h';
+                break;
+
+            default:
+                keyHide = 'ctrl+r';
+                break;
+        }
+        console.log('keyHide', keyHide);
+
+
         let keys = {};
         switch (ShaderBoy.OS) {
             case 'Windows':
@@ -132,6 +156,17 @@ export default ShaderBoy.editor = {
                         }
                         let range = getSelectedRange();
                         cm.autoFormatRange(range.from, range.to);
+                    },
+                    'Ctrl-Alt-H': function () {
+                        ShaderBoy.isEditorHide = !ShaderBoy.isEditorHide;
+                        if (ShaderBoy.isEditorHide) {
+                            ShaderBoy.editor.domElement.style.opacity = '0.0';
+                            ShaderBoy.gui.header.base.domElement.style.opacity = '0.0';
+                        }
+                        else {
+                            ShaderBoy.editor.domElement.style.opacity = '1.0';
+                            ShaderBoy.gui.header.base.domElement.style.opacity = '1.0';
+                        }
                     },
                 };
                 break;
@@ -209,6 +244,17 @@ export default ShaderBoy.editor = {
                         let range = getSelectedRange();
                         cm.autoFormatRange(range.from, range.to);
                     },
+                    'Ctrl-Alt-H': function () {
+                        ShaderBoy.isEditorHide = !ShaderBoy.isEditorHide;
+                        if (ShaderBoy.isEditorHide) {
+                            ShaderBoy.editor.domElement.style.opacity = '0.0';
+                            ShaderBoy.gui.header.base.domElement.style.opacity = '0.0';
+                        }
+                        else {
+                            ShaderBoy.editor.domElement.style.opacity = '1.0';
+                            ShaderBoy.gui.header.base.domElement.style.opacity = '1.0';
+                        }
+                    },
                 };
                 break;
 
@@ -284,6 +330,17 @@ export default ShaderBoy.editor = {
                         let range = getSelectedRange();
                         cm.autoFormatRange(range.from, range.to);
                     },
+                    'Alt-H': function () {
+                        ShaderBoy.isEditorHide = !ShaderBoy.isEditorHide;
+                        if (ShaderBoy.isEditorHide) {
+                            ShaderBoy.editor.domElement.style.opacity = '0.0';
+                            ShaderBoy.gui.header.base.domElement.style.opacity = '0.0';
+                        }
+                        else {
+                            ShaderBoy.editor.domElement.style.opacity = '1.0';
+                            ShaderBoy.gui.header.base.domElement.style.opacity = '1.0';
+                        }
+                    },
                 };
                 break;
 
@@ -358,6 +415,30 @@ export default ShaderBoy.editor = {
         this.codemirror.refresh();
     },
 
+    updateErrorInfo: function (errors) {
+        this.codemirror.operation(function () {
+            let scope = ShaderBoy.editor;
+            for (let i = 0; i < scope.widgets.length; ++i)
+                scope.codemirror.removeLineWidget(scope.widgets[i]);
+            scope.widgets.length = 0;
+
+            for (let i = 0; i < errors.length; ++i) {
+                let err = errors[i];
+                if (!err) continue;
+                let msg = document.createElement("div");
+                // let icon = msg.appendChild(document.createElement("span"));
+                // icon.innerHTML = "!";
+                // icon.className = "error-icon";
+                msg.appendChild(document.createTextNode(err.element + ': ' + err.msg));
+                msg.className = "error";
+                scope.widgets.push(scope.codemirror.addLineWidget(err.lineNum - 1, msg, { coverGutter: false, noHScroll: true }));
+            }
+        });
+        let info = this.codemirror.getScrollInfo();
+        let after = this.codemirror.charCoords({ line: this.codemirror.getCursor().line + 1, ch: 0 }, "local").top;
+        if (info.top + info.clientHeight < after)
+            this.codemirror.scrollTo(null, after - info.clientHeight + 3);
+    },
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     save: function () {
         this.codemirror.save();

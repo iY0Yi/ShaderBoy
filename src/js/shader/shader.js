@@ -17,7 +17,8 @@ export default class Shader {
 			gl.compileShader(shader);
 			if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
 				console.log(source);
-				throw new Error('compile error: ' + gl.getShaderInfoLog(shader));
+				console.log('compile error: ' + gl.getShaderInfoLog(shader));
+				// throw new Error('compile error: ' + gl.getShaderInfoLog(shader));
 			}
 			return shader;
 		}
@@ -29,6 +30,7 @@ export default class Shader {
 		this.uniforms = {};
 		this.uniformLocations = {};
 		this.program = gl.createProgram();
+		this.errors = [];
 
 		this.quadVBO = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVBO);
@@ -47,7 +49,8 @@ export default class Shader {
 		gl.enableVertexAttribArray(this.vertAttLocation);
 
 		if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
-			throw new Error('link error: ' + gl.getProgramInfoLog(this.program));
+			console.log('link error: ' + gl.getProgramInfoLog(this.program));
+			// throw new Error('link error: ' + gl.getProgramInfoLog(this.program));
 		}
 
 		// Sampler uniforms need to be uploaded using `gl.uniform1i()` instead of `gl.uniform1f()`.
@@ -70,7 +73,22 @@ export default class Shader {
 		gl.deleteProgram(this.program);
 		this.program = null;
 		this.program = gl.createProgram();
-		function compileSource(gl, type, source) {
+
+		function splitErrorMsg(str) {
+			let res = [];
+			let errors = str.split(/\n/);
+			for (let i = 0; i < errors.length - 1; i++) {
+				let errorElements = errors[i].split(':');
+				res[i] = {
+					'lineNum': Math.max(1, errorElements[2] - (ShaderBoy.shaderHeaderLines[1] + ShaderBoy.shaderUniformsLines + ShaderBoy.shaderCommonLines + 1)),
+					'element': errorElements[3],
+					'msg': errorElements[4]
+				};
+			}
+			return res;
+		}
+
+		function compileSource(scope, gl, type, source) {
 			var shader = gl.createShader(type);
 			gl.shaderSource(shader, source);
 			gl.compileShader(shader);
@@ -80,7 +98,10 @@ export default class Shader {
 					// throw new Error('compile error: ' + gl.getShaderInfoLog(shader));
 
 					ShaderBoy.gui.header.needUpdate = true;
-					ShaderBoy.gui.header.contents.innerText = 'error: ' + gl.getShaderInfoLog(shader);
+					scope.errors = splitErrorMsg(gl.getShaderInfoLog(shader));
+					console.log(scope.errors);
+					ShaderBoy.editor.updateErrorInfo(scope.errors);
+					ShaderBoy.gui.header.contents.innerText = '' + 'failed!';
 					ShaderBoy.gui.header.base.domElement.style.backgroundColor = '#FF0000';
 					setTimeout(function () {
 						ShaderBoy.gui.header.needUpdate = false;
@@ -88,6 +109,8 @@ export default class Shader {
 					}, 6000);
 				}
 				else {
+					scope.errors = [];
+					ShaderBoy.editor.updateErrorInfo(scope.errors);
 					ShaderBoy.gui.header.needUpdate = true;
 					ShaderBoy.gui.header.contents.innerText = 'compiled.';
 					ShaderBoy.gui.header.base.domElement.style.backgroundColor = '#3ca403';
@@ -101,27 +124,26 @@ export default class Shader {
 		}
 		this.fragmentSource = fragmentSource;
 		this.source = this.vertexSource + fragmentSource;
-		gl.attachShader(this.program, compileSource(gl, gl.VERTEX_SHADER, this.vertexSource));
-		gl.attachShader(this.program, compileSource(gl, gl.FRAGMENT_SHADER, this.fragmentSource));
+		gl.attachShader(this.program, compileSource(this, gl, gl.VERTEX_SHADER, this.vertexSource));
+		gl.attachShader(this.program, compileSource(this, gl, gl.FRAGMENT_SHADER, this.fragmentSource));
 		gl.linkProgram(this.program);
 		this.vertAttLocation = gl.getAttribLocation(this.program, 'pos');
 		gl.enableVertexAttribArray(this.vertAttLocation);
 
 		if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
-			throw new Error('link error: ' + gl.getProgramInfoLog(this.program));
+			// throw new Error('link error: ' + gl.getProgramInfoLog(this.program));
+			console.log('link error: ' + gl.getProgramInfoLog(this.program));
 		}
 	}
 
 	begin() {
 		gl.useProgram(this.program);
-		// gl.clearColor(1.0, 1.0, 1.0, 1.0);
-		// gl.clearDepth(1.0);
+		// gl.clearColor(0.0, 0.0, 0.0, 1.0);
 		// gl.clear(gl.COLOR_BUFFER_BIT);
 	}
 
 	end() {
-		// gl.clearColor(1.0, 1.0, 1.0, 1.0);
-		// gl.clearDepth(1.0);
+		// gl.clearColor(0.0, 0.0, 0.0, 1.0);
 		// gl.clear(gl.COLOR_BUFFER_BIT);
 		gl.disableVertexAttribArray(this.vertAttLocation);
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -219,7 +241,8 @@ export default class Shader {
 				(this.isSampler[name] ? gl.uniform1i : gl.uniform1f).call(gl, location, value);
 			}
 			else {
-				throw new Error('attempted to set uniform "' + name + '" to invalid value ' + value);
+				console.log('attempted to set uniform "' + name + '" to invalid value ' + value);
+				// throw new Error('attempted to set uniform "' + name + '" to invalid value ' + value);
 			}
 			location = null;
 			value = null;

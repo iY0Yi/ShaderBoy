@@ -70,6 +70,9 @@ export default ShaderBoy.renderer = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	recompile: function (commonCode, fragmentCode) {
 		let mainFragCode = '';
+		ShaderBoy.shaderUniformsLines = ShaderLib.shader.uniformFS.split(/\n/).length - 1;
+		ShaderBoy.shaderCommonLines = commonCode.split(/\n/).length - 1;
+
 		mainFragCode +=
 			ShaderBoy.shaderHeader[1] +
 			ShaderLib.shader.uniformFS +
@@ -137,14 +140,14 @@ export default ShaderBoy.renderer = {
 		}
 		gl.bindFramebuffer(gl.FRAMEBUFFER, this.mainFramebuffer);
 		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.mainTextures[0], 0);
-		gl.clearColor(1.0, 1.0, 1.0, 1.0);
+		gl.clearColor(0.0, 0.0, 0.0, 1.0);
 		gl.clearDepth(1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT);
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
 		gl.bindFramebuffer(gl.FRAMEBUFFER, this.mainFramebuffer);
 		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.mainTextures[1], 0);
-		gl.clearColor(1.0, 1.0, 1.0, 1.0);
+		gl.clearColor(0.0, 0.0, 0.0, 1.0);
 		gl.clearDepth(1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT);
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null);

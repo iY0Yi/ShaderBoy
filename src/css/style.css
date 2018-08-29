@@ -45,7 +45,7 @@ textarea
 #code
 {
 	float: left;
-	overflow: hidden;
+	/* overflow: hidden; */
 	position: absolute;
 	left: 0px;
 	width: 100vw;
@@ -59,7 +59,7 @@ textarea
 
 #editor
 {
-	overflow: hidden;
+	/* overflow: hidden; */
 	float: left;
 	position: absolute;
 	top: 0px;
@@ -157,17 +157,29 @@ textarea
   }
 
   .CodeMirror-dialog input[type=text] {
-    font-size: 16px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    font-size: 14px;
+    margin-left: 5px;
+    margin-top: -2px;
+    background: #1a1a1a;
     transform: scale(1.0);
   }
 
   .CodeMirror-dialog {
     position: absolute;
+    height:35px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
     left: 0; right: 0;
-    background: #000000;
-    z-index: 90;
-    padding: .1em .8em;
-    overflow: hidden;
+    background: #1a1a1a;
+    z-index: 290;
+    padding: 0em 1.0em;
+    /* overflow: hidden; */
     color: #888888;
   }
   
@@ -186,7 +198,8 @@ textarea
     outline: none;
     background: transparent;
     width: 20em;
-    color: #FFFFFF;
+    color: #d8d4c5;
+    background: #1E1E1E;
     font-family: monospace;
   }
   
@@ -195,11 +208,12 @@ textarea
   }
   
   .CodeMirror-search-match {
-    background: #00000055;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
+    background: #FFFFFFFF;
+    border-top: 1px solid #1E1E1E;
+    border-bottom: 1px solid #1E1E1E;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    z-index: 190;
     /* opacity: .5; */
   }
   

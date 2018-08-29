@@ -1,11 +1,6 @@
-import SPT,
-{
-	gl,
-	debug
-}
-	from '../main';
+import ShaderBoy from '../shaderboy';
 
-var glUtil = {
+let glUtil = {
 
 	setUniforms: function (program, uniforms) {
 		for (var name in uniforms) {
