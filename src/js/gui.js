@@ -84,11 +84,6 @@ export default ShaderBoy.gui = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setupInteraction: function () {
 		let scrollMul = 1;
-		ShaderBoy.OS = 'Unknown OS';
-		if (navigator.appVersion.indexOf('Win') != -1) ShaderBoy.OS = 'Windows';
-		if (navigator.appVersion.indexOf('Mac') != -1) ShaderBoy.OS = 'MacOS';
-		if (navigator.appVersion.indexOf('X11') != -1) ShaderBoy.OS = 'UNIX';
-		if (navigator.appVersion.indexOf('Linux') != -1) ShaderBoy.OS = 'Linux';
 		if (ShaderBoy.OS === 'Windows') { scrollMul = 100.0; }
 
 		let elementPos = function (element) {
@@ -151,7 +146,25 @@ export default ShaderBoy.gui = {
 			event.preventDefault();
 		};
 		if (ShaderBoy.needEditor) {
-			key('alt+h', function () {
+			let keyHide = '';
+			switch (ShaderBoy.OS) {
+				case 'Windows':
+				case 'MacOS':
+				case 'UNIX':
+				case 'Linux':
+					keyHide = 'ctrl+h';
+					break;
+
+				case 'iOS':
+				case 'Android':
+					keyHide = 'alt+h';
+					break;
+
+				default:
+					keyHide = 'alt+h';
+					break;
+			}
+			key(keyHide, function () {
 				ShaderBoy.isEditorHide = !ShaderBoy.isEditorHide;
 				if (ShaderBoy.isEditorHide) {
 					ShaderBoy.editor.domElement.style.opacity = '0.0';

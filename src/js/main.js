@@ -24,11 +24,24 @@ import ShaderList from './shader/shaderlist';
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ShaderBoy.init = function () {
+	ShaderBoy.OS = 'Unknown OS';
+	if (navigator.appVersion.indexOf('Win') != -1) ShaderBoy.OS = 'Windows';
+	if (navigator.appVersion.indexOf('Mac') != -1) ShaderBoy.OS = 'MacOS';
+	if (navigator.appVersion.indexOf('X11') != -1) ShaderBoy.OS = 'UNIX';
+	if (navigator.appVersion.indexOf('Linux') != -1) ShaderBoy.OS = 'Linux';
+	if (navigator.appVersion.indexOf('iphone') != -1) ShaderBoy.OS = 'iOS';
+	if (navigator.appVersion.indexOf('android') != -1) ShaderBoy.OS = 'Android';
+
+	console.log('ShaderBoy.OS', ShaderBoy.OS);
+	console.log('navigator.appVersion', navigator.appVersion);
+
 	ShaderBoy.canvas = document.getElementById('gl_canvas');
 	ShaderBoy.canvas.width = window.innerWidth;
 	ShaderBoy.canvas.height = window.innerHeight;
+
 	ShaderBoy.gl = null;
 	ShaderBoy.glVersion = 0.0;
+
 	try {
 		let opts = {
 			alpha: false,
@@ -171,8 +184,6 @@ ShaderBoy.init = function () {
 		throw e;
 	}
 
-	console.log(ShaderBoy.glVersion);
-
 	if (ShaderBoy.gl) {
 		ShaderBoy.buffers['Common'] = new BufferDataContainer(false);
 		ShaderBoy.buffers['MainImage'] = new BufferDataContainer(true);
@@ -196,7 +207,7 @@ ShaderBoy.init = function () {
 		});
 	}
 	else {
-		throw 'Sorry! Your browser does not support WEBGL2.0!';
+		throw 'Sorry! Your browser does not support WEBGL!';
 	}
 };
 

@@ -10,6 +10,8 @@
 
 import ShaderBoy from './shaderboy';
 
+import $ from 'jquery';
+
 import 'codemirror/keymap/sublime';
 import 'codemirror/mode/clike/clike';
 import './codemirror/mode/glsl/glsl';
@@ -51,6 +53,241 @@ export default ShaderBoy.editor = {
         this.textArea.setAttribute('cols', '50');
         this.textArea.value = ShaderBoy.buffers['MainImage'].textData;
 
+        this.fontSize = (localStorage.fontSize !== undefined) ? localStorage.fontSize : 14;
+        this.setFontSize = function () {
+            $(".CodeMirror").css('font-size', this.fontSize + "pt");
+        };
+        let keys = {};
+        switch (ShaderBoy.OS) {
+            case 'Windows':
+                keys = {
+                    "Ctrl-J": 'fold',
+                    "Alt-J": 'unfold',
+                    "Ctrl-K": 'foldAll',
+                    "Alt-K": 'unfoldAll',
+                    'Alt-Right': function () {
+                        ShaderBoy.editor.selectBuffer('MainImage', false);
+                    },
+                    'Alt-Left': function () {
+                        ShaderBoy.editor.selectBuffer('Common', false);
+                    },
+                    'Alt-Up': function () {
+                        ShaderBoy.isPlaying = !ShaderBoy.isPlaying;
+                        ShaderBoy.time.pause();
+                    },
+                    'Alt-Down': function () {
+                        ShaderBoy.time.reset();
+                        ShaderBoy.uniforms.iFrame = 0;
+                    },
+                    'Ctrl-1': function () {
+                        ShaderBoy.isPlaying = false;
+                        ShaderBoy.renderScale = 1;
+                        ShaderBoy.renderer.createBuffer(false);
+                        ShaderBoy.isPlaying = true;
+                    },
+                    'Ctrl-2': function () {
+                        ShaderBoy.isPlaying = false;
+                        ShaderBoy.renderScale = 2;
+                        ShaderBoy.renderer.createBuffer(false);
+                        ShaderBoy.isPlaying = true;
+                    },
+                    'Ctrl-3': function () {
+                        ShaderBoy.isPlaying = false;
+                        ShaderBoy.renderScale = 3;
+                        ShaderBoy.renderer.createBuffer(false);
+                        ShaderBoy.isPlaying = true;
+                    },
+                    'Ctrl-4': function () {
+                        ShaderBoy.isPlaying = false;
+                        ShaderBoy.renderScale = 4;
+                        ShaderBoy.renderer.createBuffer(false);
+                        ShaderBoy.isPlaying = true;
+                    },
+                    'Ctrl-Alt-+': function () {
+                        if (ShaderBoy.editor.fontSize < 64) ShaderBoy.editor.fontSize++;
+                        ShaderBoy.editor.setFontSize();
+                    },
+                    'Ctrl-Alt-=': function () {
+                        if (ShaderBoy.editor.fontSize < 64) ShaderBoy.editor.fontSize++;
+                        ShaderBoy.editor.setFontSize();
+                    },
+                    'Ctrl-Alt--': function () {
+                        if (ShaderBoy.editor.fontSize > 8) ShaderBoy.editor.fontSize--;
+                        ShaderBoy.editor.setFontSize();
+                    },
+                    'Alt-Enter': function (cm) { ShaderBoy.io.recompile(); },
+                    'Ctrl-S': function (cm) { ShaderBoy.io.saveShader(); },
+                    'Ctrl-Alt-L': function () { ShaderBoy.io.loadShader(); },
+                    'Ctrl-Shift-N': function () { ShaderBoy.io.newShader(); },
+                    'Ctrl-Space': 'autocomplete',
+                    'Ctrl-Alt-F': function (cm) {
+                        function getSelectedRange() {
+                            return {
+                                from: cm.getCursor(true),
+                                to: cm.getCursor(false),
+                            };
+                        }
+                        let range = getSelectedRange();
+                        cm.autoFormatRange(range.from, range.to);
+                    },
+                };
+                break;
+
+            case 'MacOS':
+            case 'UNIX':
+            case 'Linux':
+                keys = {
+                    "Ctrl-J": 'fold',
+                    "Alt-J": 'unfold',
+                    "Ctrl-K": 'foldAll',
+                    "Alt-K": 'unfoldAll',
+                    'Alt-Right': function () {
+                        ShaderBoy.editor.selectBuffer('MainImage', false);
+                    },
+                    'Alt-Left': function () {
+                        ShaderBoy.editor.selectBuffer('Common', false);
+                    },
+                    'Alt-Up': function () {
+                        ShaderBoy.isPlaying = !ShaderBoy.isPlaying;
+                        ShaderBoy.time.pause();
+                    },
+                    'Alt-Down': function () {
+                        ShaderBoy.time.reset();
+                        ShaderBoy.uniforms.iFrame = 0;
+                    },
+                    'Ctrl-1': function () {
+                        ShaderBoy.isPlaying = false;
+                        ShaderBoy.renderScale = 1;
+                        ShaderBoy.renderer.createBuffer(false);
+                        ShaderBoy.isPlaying = true;
+                    },
+                    'Ctrl-2': function () {
+                        ShaderBoy.isPlaying = false;
+                        ShaderBoy.renderScale = 2;
+                        ShaderBoy.renderer.createBuffer(false);
+                        ShaderBoy.isPlaying = true;
+                    },
+                    'Ctrl-3': function () {
+                        ShaderBoy.isPlaying = false;
+                        ShaderBoy.renderScale = 3;
+                        ShaderBoy.renderer.createBuffer(false);
+                        ShaderBoy.isPlaying = true;
+                    },
+                    'Ctrl-4': function () {
+                        ShaderBoy.isPlaying = false;
+                        ShaderBoy.renderScale = 4;
+                        ShaderBoy.renderer.createBuffer(false);
+                        ShaderBoy.isPlaying = true;
+                    },
+                    'Cmd-Alt-+': function () {
+                        if (ShaderBoy.editor.fontSize < 64) ShaderBoy.editor.fontSize++;
+                        ShaderBoy.editor.setFontSize();
+                    },
+                    'Cmd-Alt-=': function () {
+                        if (ShaderBoy.editor.fontSize < 64) ShaderBoy.editor.fontSize++;
+                        ShaderBoy.editor.setFontSize();
+                    },
+                    'Cmd-Alt--': function () {
+                        if (ShaderBoy.editor.fontSize > 8) ShaderBoy.editor.fontSize--;
+                        ShaderBoy.editor.setFontSize();
+                    },
+                    'Alt-Enter': function (cm) { ShaderBoy.io.recompile(); },
+                    'Cmd-S': function (cm) { ShaderBoy.io.saveShader(); },
+                    'Cmd-Alt-L': function () { ShaderBoy.io.loadShader(); },
+                    'Cmd-Shift-N': function () { ShaderBoy.io.newShader(); },
+                    'Cmd-Space': 'autocomplete',
+                    'Ctrl-Alt-F': function (cm) {
+                        function getSelectedRange() {
+                            return {
+                                from: cm.getCursor(true),
+                                to: cm.getCursor(false),
+                            };
+                        }
+                        let range = getSelectedRange();
+                        cm.autoFormatRange(range.from, range.to);
+                    },
+                };
+                break;
+
+            case 'iOS':
+            case 'Android':
+                keys = {
+                    "Ctrl-J": 'fold',
+                    "Alt-J": 'unfold',
+                    "Ctrl-K": 'foldAll',
+                    "Alt-K": 'unfoldAll',
+                    'Alt-Right': function () {
+                        ShaderBoy.editor.selectBuffer('MainImage', false);
+                    },
+                    'Alt-Left': function () {
+                        ShaderBoy.editor.selectBuffer('Common', false);
+                    },
+                    'Alt-Up': function () {
+                        ShaderBoy.isPlaying = !ShaderBoy.isPlaying;
+                        ShaderBoy.time.pause();
+                    },
+                    'Alt-Down': function () {
+                        ShaderBoy.time.reset();
+                        ShaderBoy.uniforms.iFrame = 0;
+                    },
+                    'Ctrl-1': function () {
+                        ShaderBoy.isPlaying = false;
+                        ShaderBoy.renderScale = 1;
+                        ShaderBoy.renderer.createBuffer(false);
+                        ShaderBoy.isPlaying = true;
+                    },
+                    'Ctrl-2': function () {
+                        ShaderBoy.isPlaying = false;
+                        ShaderBoy.renderScale = 2;
+                        ShaderBoy.renderer.createBuffer(false);
+                        ShaderBoy.isPlaying = true;
+                    },
+                    'Ctrl-3': function () {
+                        ShaderBoy.isPlaying = false;
+                        ShaderBoy.renderScale = 3;
+                        ShaderBoy.renderer.createBuffer(false);
+                        ShaderBoy.isPlaying = true;
+                    },
+                    'Ctrl-4': function () {
+                        ShaderBoy.isPlaying = false;
+                        ShaderBoy.renderScale = 4;
+                        ShaderBoy.renderer.createBuffer(false);
+                        ShaderBoy.isPlaying = true;
+                    },
+                    'Ctrl-Alt-=': function () {
+                        if (ShaderBoy.editor.fontSize < 64) ShaderBoy.editor.fontSize++;
+                        ShaderBoy.editor.setFontSize();
+                    },
+                    'Ctrl-Alt-+': function () {
+                        if (ShaderBoy.editor.fontSize < 64) ShaderBoy.editor.fontSize++;
+                        ShaderBoy.editor.setFontSize();
+                    },
+                    'Ctrl-Alt--': function () {
+                        if (ShaderBoy.editor.fontSize > 8) ShaderBoy.editor.fontSize--;
+                        ShaderBoy.editor.setFontSize();
+                    },
+                    'Alt-Space': function (cm) { ShaderBoy.io.recompile(); },
+                    'Ctrl-S': function (cm) { ShaderBoy.io.saveShader(); },
+                    'Ctrl-Alt-L': function () { ShaderBoy.io.loadShader(); },
+                    'Ctrl-Alt-N': function () { ShaderBoy.io.newShader(); },
+                    'Ctrl-Space': 'autocomplete',
+                    'Ctrl-Alt-F': function (cm) {
+                        function getSelectedRange() {
+                            return {
+                                from: cm.getCursor(true),
+                                to: cm.getCursor(false),
+                            };
+                        }
+                        let range = getSelectedRange();
+                        cm.autoFormatRange(range.from, range.to);
+                    },
+                };
+                break;
+
+            default:
+                break;
+        }
+
         this.codemirror = CodeMirror.fromTextArea(this.textArea, {
             lineNumbers: true,
             smartIndent: true,
@@ -81,66 +318,7 @@ export default ShaderBoy.editor = {
                         Array(cm.getOption("indentUnit") + 1).join(" "), "end", "+input");
                 }
             },
-            extraKeys: {
-                "Ctrl-J": 'fold',
-                "Alt-J": 'unfold',
-                "Ctrl-K": 'foldAll',
-                "Alt-K": 'unfoldAll',
-                'Alt-Right': function () {
-                    ShaderBoy.editor.selectBuffer('MainImage', false);
-                },
-                'Alt-Left': function () {
-                    ShaderBoy.editor.selectBuffer('Common', false);
-                },
-                'Alt-Up': function () {
-                    ShaderBoy.isPlaying = !ShaderBoy.isPlaying;
-                    ShaderBoy.time.pause();
-                },
-                'Alt-Down': function () {
-                    ShaderBoy.time.reset();
-                    ShaderBoy.uniforms.iFrame = 0;
-                },
-                'Ctrl-1': function () {
-                    ShaderBoy.isPlaying = false;
-                    ShaderBoy.renderScale = 1;
-                    ShaderBoy.renderer.createBuffer(false);
-                    ShaderBoy.isPlaying = true;
-                },
-                'Ctrl-2': function () {
-                    ShaderBoy.isPlaying = false;
-                    ShaderBoy.renderScale = 2;
-                    ShaderBoy.renderer.createBuffer(false);
-                    ShaderBoy.isPlaying = true;
-                },
-                'Ctrl-3': function () {
-                    ShaderBoy.isPlaying = false;
-                    ShaderBoy.renderScale = 3;
-                    ShaderBoy.renderer.createBuffer(false);
-                    ShaderBoy.isPlaying = true;
-                },
-                'Ctrl-4': function () {
-                    ShaderBoy.isPlaying = false;
-                    ShaderBoy.renderScale = 4;
-                    ShaderBoy.renderer.createBuffer(false);
-                    ShaderBoy.isPlaying = true;
-                },
-                'Alt-Space': function (cm) { ShaderBoy.io.recompile(); },
-                'Ctrl-S': function (cm) { ShaderBoy.io.saveShader(); },
-                'Ctrl-Alt-L': function () { ShaderBoy.io.loadShader(); },
-                'Ctrl-Alt-N': function () { ShaderBoy.io.newShader(); },
-                'Ctrl-F': 'findPersistent',
-                'Ctrl-Space': 'autocomplete',
-                'Ctrl-Alt-F': function (cm) {
-                    function getSelectedRange() {
-                        return {
-                            from: cm.getCursor(true),
-                            to: cm.getCursor(false),
-                        };
-                    }
-                    let range = getSelectedRange();
-                    cm.autoFormatRange(range.from, range.to);
-                },
-            },
+            extraKeys: keys,
         });
 
         this.codemirror.parent = this;
