@@ -40,7 +40,7 @@ Any pull requests welcome.( ༎ຶ‿༎ຶ )
 - [ ] Multipass shader
 - [ ] Sound shader
 - [ ] Official assets(textures)
-- [X] ~~Raise Shadertoy compatibility(Some shader does not work properly.)~~
+- [X] ~~Raise Shadertoy compatibility(Some shader does not work properly.)~~  
 (2018.8.29: singlepass and no asset shaders only.)
   
 ### Other
