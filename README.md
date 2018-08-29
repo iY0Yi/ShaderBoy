@@ -87,6 +87,7 @@ If you want to change, edit "editor.js", and build it.
 | **Unfold single** | ⌥+j | ⇢ | ⇢ |
 | **Fold all** | ctrl+k | ⇢ | ⇢ |
 | **Unfold all** | ⌥+k | ⇢ | ⇢ |
+  
 *And many of Sublime Text bindings by Codemirror.
 </br>
 </br>
