@@ -7,7 +7,7 @@ body
 	border:0;
 	padding:0;
 	margin:0;
-	background:#000000;
+	background:#1E1E1E;
 	overflow: hidden;
 	-webkit-text-size-adjust: 100%;
 }
@@ -54,7 +54,7 @@ textarea
 	border: 0px solid #FFF;
 	z-index: 80;
 	text-align: left;
-	background-color: #00000055;
+	background-color: #00000000;
 }
 
 #editor
@@ -68,6 +68,10 @@ textarea
 
 /* Custom Codemirror Style */
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+.error {font-family: Arial, monospace; font-size: 96%; background: red; color: #FFFFFF; margin-left:5px; padding: 2px 5px 3px; }
+/* .error-icon {color: white; background-color: red; font-weight: bold; border-radius: 50%; padding: 0 3px; margin-right: 7px;} */
+
 .CodeMirror {
     background-color:#00000033;
     /* text-shadow: rgba( 0, 0, 0, 0.5 ) 0px 1px 4px; */
