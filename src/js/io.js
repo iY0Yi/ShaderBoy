@@ -38,6 +38,7 @@ export default ShaderBoy.io = {
 			localStorage.mainText = ShaderBoy.util.deepcopy(ShaderBoy.buffers['MainImage'].textData);
 			localStorage.commonText = ShaderBoy.util.deepcopy(ShaderBoy.buffers['Common'].textData);
 			localStorage.renderScale = ShaderBoy.renderScale;
+			localStorage.fontSize = ShaderBoy.editor.fontSize;
 			ShaderBoy.gui.header.needUpdate = true;
 			ShaderBoy.gui.header.contents.innerText = 'saved.';
 			ShaderBoy.gui.header.base.domElement.style.backgroundColor = '#1794be';

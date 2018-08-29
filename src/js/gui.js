@@ -152,7 +152,7 @@ export default ShaderBoy.gui = {
 				case 'MacOS':
 				case 'UNIX':
 				case 'Linux':
-					keyHide = 'ctrl+h';
+					keyHide = 'ctrl+⌥+h';
 					break;
 
 				case 'iOS':
@@ -161,10 +161,12 @@ export default ShaderBoy.gui = {
 					break;
 
 				default:
-					keyHide = 'alt+h';
+					keyHide = 'ctrl+⌥+h';
 					break;
 			}
+			console.log('keyHide', keyHide);
 			key(keyHide, function () {
+				console.log("Hide/Show");
 				ShaderBoy.isEditorHide = !ShaderBoy.isEditorHide;
 				if (ShaderBoy.isEditorHide) {
 					ShaderBoy.editor.domElement.style.opacity = '0.0';

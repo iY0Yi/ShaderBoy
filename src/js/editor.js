@@ -15,26 +15,26 @@ import $ from 'jquery';
 import 'codemirror/keymap/sublime';
 import 'codemirror/mode/clike/clike';
 import './codemirror/mode/glsl/glsl';
-import './codemirror/addon/selection/active-line';
-import './codemirror/addon/edit/closebrackets';
+import 'codemirror/addon/selection/active-line';
+import 'codemirror/addon/edit/closebrackets';
 import './codemirror/lib/util/formatting';
-import './codemirror/addon/search/match-highlighter';
-import './codemirror/addon/comment/comment';
-import './codemirror/addon/hint/anyword-hint';
-import './codemirror/addon/hint/show-hint';
+import 'codemirror/addon/search/match-highlighter';
+import 'codemirror/addon/comment/comment';
+import 'codemirror/addon/hint/anyword-hint';
+import 'codemirror/addon/hint/show-hint';
 import './codemirror/addon/hint/glsl-hint';
-import './codemirror/addon/dialog/dialog';
-import './codemirror/addon/search/searchcursor';
-import './codemirror/addon/search/search';
-import './codemirror/addon/scroll/annotatescrollbar';
-import './codemirror/addon/search/matchesonscrollbar';
-import './codemirror/addon/search/matchesonscrollbar';
-import './codemirror/addon/search/jump-to-line';
-import './codemirror/addon/selection/selection-pointer';
-import './codemirror/addon/selection/mark-selection';
-import './codemirror/addon/fold/foldcode';
-import './codemirror/addon/fold/foldgutter';
-import './codemirror/addon/fold/brace-fold';
+import 'codemirror/addon/dialog/dialog';
+import 'codemirror/addon/search/searchcursor';
+import 'codemirror/addon/search/search';
+import 'codemirror/addon/scroll/annotatescrollbar';
+import 'codemirror/addon/search/matchesonscrollbar';
+import 'codemirror/addon/search/matchesonscrollbar';
+import 'codemirror/addon/search/jump-to-line';
+import 'codemirror/addon/selection/selection-pointer';
+import 'codemirror/addon/selection/mark-selection';
+import 'codemirror/addon/fold/foldcode';
+import 'codemirror/addon/fold/foldgutter';
+import 'codemirror/addon/fold/brace-fold';
 import CodeMirror from 'codemirror/lib/codemirror';
 
 export default ShaderBoy.editor = {
@@ -46,11 +46,14 @@ export default ShaderBoy.editor = {
 
         this.domElement = document.getElementById('code');
         this.domElement.style.top = ShaderBoy.style.buttonHeight + 'px';
+        this.domElement.style.width = window.innerWidth + 'px';
         this.domElement.style.height = window.innerHeight - ShaderBoy.style.buttonHeight + 'px';
 
         this.textArea = document.getElementById('editor');
         this.textArea.setAttribute('rows', '200');
         this.textArea.setAttribute('cols', '50');
+        this.textArea.style.width = this.domElement.style.width;
+        this.textArea.style.height = this.domElement.style.height;
         this.textArea.value = ShaderBoy.buffers['MainImage'].textData;
 
         this.fontSize = (localStorage.fontSize !== undefined) ? localStorage.fontSize : 14;
@@ -300,6 +303,7 @@ export default ShaderBoy.editor = {
             showCursorWhenSelecting: true,
             theme: '3024-night',
             foldGutter: true,
+            autofocus: true,
             continuousScanning: 500,
             styleActiveLine: true,
             styleCursor: true,
