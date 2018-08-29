@@ -54,25 +54,23 @@ ShaderBoy has no GUI. Works with shortcuts.
 These are default shortcuts.  
 If you want to change, edit "editor.js", and build it.  
   
-| Key | Func |
-|:---|:---|
-| Alt-Space | Compile |
-| Alt-Up | Play/Pause |
-| Alt-Down | Reset time to 0 |
-| Alt-Right | Show Common tab |
-| Alt-Left | Show Image tab |
-| Ctrl-F | Search |
-| Ctrl-Shift-F | Replace |
-| Alt-H | Hide/Show editor |
-| Ctrl-Alt-L | Load last save point |
-| Ctrl-Alt-N | New Shader |
-| Ctrl-1-4 | Set Resolution |
-| Ctrl-Alt-F | Format selected lines |
-| Ctrl-Space | Auto complete |
-| Ctrl-J | Fold single gutter |
-| Alt-J | Unfold single gutter |
-| Ctrl-K | Fold all gutters |
-| Alt-K | Unfold all gutters |
+| Func | Smartphone | Windows | Mac |
+|:---|:---|:---|:---|
+| Compile | ⌥+space | ⌥+Enter | ⌥+Enter |
+| Play/Pause | ⌥+up |  | ⌥+up |
+| Reset time to 0 | ⌥+down |  |  |
+| Show Common tab | ⌥+right |  |  |
+| Show Image tab | ⌥+left |  |  |
+| Search | ctrl+f |  | ⌘+f |
+| Replace | ctrl+⇧+f |  | ⌘+⇧+f |
+| Hide/Show editor | ⌥+h | ctrl+h |  |
+| Load last save point | ctrl+⌥+l |  | ⌘+⌥+l |
+| New Shader | ctrl+⌥+N | ctrl+⇧+n | ⌘+⇧+n |
+| Set Resolution | ctrl+1-4 |  |  |
+| Format selected lines | ctrl+⌥+f |  |  |
+| Auto complete | ctrl+space |  |  |
+| Fold/Unfold single gutter | ctrl+j |  |  |
+| Fold/Unfold all gutters | ctrl+k |  |  |
 </br>
 </br>
 </br>
@@ -91,7 +89,7 @@ ShaderBoy uses gulp and webpack. so,
 $ gulp
 ```
   
-### Upload
+### upload
 And upload files in "dest" directory to your server.  
 That's it! Good luck!  
 </br>
