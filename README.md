@@ -57,6 +57,9 @@ If you want to change, edit "editor.js", and build it.
 |   | Smartphone | Windows | Mac |
 |:---|:---|:---|:---|
 | Compile | ⌥+space | ⌥+Enter | ⇢ |
+| Save | ctrl+s | ⇢ | ⌘+s |
+| Load last save point | ctrl+⌥+l | ⇢ | ⌘+⌥+l |
+| New Shader | ctrl+⌥+N | ctrl+⇧+n | ⌘+⇧+n |
 | Play/Pause | ⌥+up | ⇢ | ⇢ |
 | Reset time to 0 | ⌥+down | ⇢ | ⇢ |
 | Show Common tab | ⌥+right | ⇢ | ⇢ |
@@ -64,8 +67,6 @@ If you want to change, edit "editor.js", and build it.
 | Search | ctrl+f | ⇢ | ⌘+f |
 | Replace | ctrl+⇧+f | ⇢ | ⌘+⇧+f |
 | Hide/Show editor | ⌥+h | ctrl+h | ⇢ |
-| Load last save point | ctrl+⌥+l | ⇢ | ⌘+⌥+l |
-| New Shader | ctrl+⌥+N | ctrl+⇧+n | ⌘+⇧+n |
 | Set Resolution | ctrl+1-4 | ⇢ | ⇢ |
 | Format selected lines | ctrl+⌥+f | ⇢ | ⇢ |
 | Auto complete | ctrl+space | ⇢ | ⇢ |
