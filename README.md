@@ -26,7 +26,7 @@ Any pull requests welcome.( ༎ຶ‿༎ຶ )
 ### General
 - [ ] Kill software keyboards(refocus)
 - [ ] Fix broken uniforms
-- [ ] Inline error display
+- [X] ~~Inline error display~~(2018.8.30)
 - [X] ~~Active line highlight~~(2018.8.29)
 - [X] ~~Wordwrapping or scrolling~~(2018.8.29)
 - [X] ~~Add WebGL "1.0" fallback~~(2018.8.28)
