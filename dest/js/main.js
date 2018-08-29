@@ -437,7 +437,7 @@ webpackJsonp([0,1],[
 				localStorage.mainText = _shaderboy2.default.util.deepcopy(_shaderboy2.default.buffers['MainImage'].textData);
 				localStorage.commonText = _shaderboy2.default.util.deepcopy(_shaderboy2.default.buffers['Common'].textData);
 				localStorage.renderScale = _shaderboy2.default.renderScale;
-				localStorage.fontSize = _shaderboy2.default.editor.fontSize;
+				localStorage.textSize = _shaderboy2.default.editor.textSize;
 				_shaderboy2.default.gui.header.needUpdate = true;
 				_shaderboy2.default.gui.header.contents.innerText = 'saved.';
 				_shaderboy2.default.gui.header.base.domElement.style.backgroundColor = '#1794be';
@@ -1967,9 +1967,9 @@ webpackJsonp([0,1],[
 	        this.textArea.style.height = this.domElement.style.height;
 	        this.textArea.value = _shaderboy2.default.buffers['MainImage'].textData;
 
-	        this.fontSize = localStorage.fontSize !== undefined ? localStorage.fontSize : 14;
-	        this.setFontSize = function () {
-	            (0, _jquery2.default)(".CodeMirror").css('font-size', this.fontSize + "pt");
+	        this.textSize = localStorage.textSize !== undefined ? localStorage.textSize : 14;
+	        this.setTextSize = function () {
+	            (0, _jquery2.default)(".CodeMirror").css('font-size', this.textSize + "pt");
 	        };
 
 	        this.widgets = [];
@@ -2041,16 +2041,16 @@ webpackJsonp([0,1],[
 	                        _shaderboy2.default.isPlaying = true;
 	                    },
 	                    'Ctrl-Alt-+': function CtrlAlt() {
-	                        if (_shaderboy2.default.editor.fontSize < 64) _shaderboy2.default.editor.fontSize++;
-	                        _shaderboy2.default.editor.setFontSize();
+	                        if (_shaderboy2.default.editor.textSize < 64) _shaderboy2.default.editor.textSize++;
+	                        _shaderboy2.default.editor.setTextSize();
 	                    },
 	                    'Ctrl-Alt-=': function CtrlAlt() {
-	                        if (_shaderboy2.default.editor.fontSize < 64) _shaderboy2.default.editor.fontSize++;
-	                        _shaderboy2.default.editor.setFontSize();
+	                        if (_shaderboy2.default.editor.textSize < 64) _shaderboy2.default.editor.textSize++;
+	                        _shaderboy2.default.editor.setTextSize();
 	                    },
 	                    'Ctrl-Alt--': function CtrlAlt() {
-	                        if (_shaderboy2.default.editor.fontSize > 8) _shaderboy2.default.editor.fontSize--;
-	                        _shaderboy2.default.editor.setFontSize();
+	                        if (_shaderboy2.default.editor.textSize > 8) _shaderboy2.default.editor.textSize--;
+	                        _shaderboy2.default.editor.setTextSize();
 	                    },
 	                    'Alt-Enter': function AltEnter(cm) {
 	                        _shaderboy2.default.io.recompile();
@@ -2135,16 +2135,16 @@ webpackJsonp([0,1],[
 	                        _shaderboy2.default.isPlaying = true;
 	                    },
 	                    'Cmd-Alt-+': function CmdAlt() {
-	                        if (_shaderboy2.default.editor.fontSize < 64) _shaderboy2.default.editor.fontSize++;
-	                        _shaderboy2.default.editor.setFontSize();
+	                        if (_shaderboy2.default.editor.textSize < 64) _shaderboy2.default.editor.textSize++;
+	                        _shaderboy2.default.editor.setTextSize();
 	                    },
 	                    'Cmd-Alt-=': function CmdAlt() {
-	                        if (_shaderboy2.default.editor.fontSize < 64) _shaderboy2.default.editor.fontSize++;
-	                        _shaderboy2.default.editor.setFontSize();
+	                        if (_shaderboy2.default.editor.textSize < 64) _shaderboy2.default.editor.textSize++;
+	                        _shaderboy2.default.editor.setTextSize();
 	                    },
 	                    'Cmd-Alt--': function CmdAlt() {
-	                        if (_shaderboy2.default.editor.fontSize > 8) _shaderboy2.default.editor.fontSize--;
-	                        _shaderboy2.default.editor.setFontSize();
+	                        if (_shaderboy2.default.editor.textSize > 8) _shaderboy2.default.editor.textSize--;
+	                        _shaderboy2.default.editor.setTextSize();
 	                    },
 	                    'Alt-Enter': function AltEnter(cm) {
 	                        _shaderboy2.default.io.recompile();
@@ -2228,16 +2228,16 @@ webpackJsonp([0,1],[
 	                        _shaderboy2.default.isPlaying = true;
 	                    },
 	                    'Ctrl-Alt-=': function CtrlAlt() {
-	                        if (_shaderboy2.default.editor.fontSize < 64) _shaderboy2.default.editor.fontSize++;
-	                        _shaderboy2.default.editor.setFontSize();
+	                        if (_shaderboy2.default.editor.textSize < 64) _shaderboy2.default.editor.textSize++;
+	                        _shaderboy2.default.editor.setTextSize();
 	                    },
 	                    'Ctrl-Alt-+': function CtrlAlt() {
-	                        if (_shaderboy2.default.editor.fontSize < 64) _shaderboy2.default.editor.fontSize++;
-	                        _shaderboy2.default.editor.setFontSize();
+	                        if (_shaderboy2.default.editor.textSize < 64) _shaderboy2.default.editor.textSize++;
+	                        _shaderboy2.default.editor.setTextSize();
 	                    },
 	                    'Ctrl-Alt--': function CtrlAlt() {
-	                        if (_shaderboy2.default.editor.fontSize > 8) _shaderboy2.default.editor.fontSize--;
-	                        _shaderboy2.default.editor.setFontSize();
+	                        if (_shaderboy2.default.editor.textSize > 8) _shaderboy2.default.editor.textSize--;
+	                        _shaderboy2.default.editor.setTextSize();
 	                    },
 	                    'Alt-Space': function AltSpace(cm) {
 	                        _shaderboy2.default.io.recompile();
@@ -2311,6 +2311,7 @@ webpackJsonp([0,1],[
 
 	        this.codemirror.parent = this;
 	        this.setSize(this.domElement.style.width, this.domElement.style.height);
+	        this.setTextSize();
 	        this.save();
 	    },
 

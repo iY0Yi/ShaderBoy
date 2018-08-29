@@ -56,9 +56,9 @@ export default ShaderBoy.editor = {
         this.textArea.style.height = this.domElement.style.height;
         this.textArea.value = ShaderBoy.buffers['MainImage'].textData;
 
-        this.fontSize = (localStorage.fontSize !== undefined) ? localStorage.fontSize : 14;
-        this.setFontSize = function () {
-            $(".CodeMirror").css('font-size', this.fontSize + "pt");
+        this.textSize = (localStorage.textSize !== undefined) ? localStorage.textSize : 14;
+        this.setTextSize = function () {
+            $(".CodeMirror").css('font-size', this.textSize + "pt");
         };
 
         this.widgets = [];
@@ -131,16 +131,16 @@ export default ShaderBoy.editor = {
                         ShaderBoy.isPlaying = true;
                     },
                     'Ctrl-Alt-+': function () {
-                        if (ShaderBoy.editor.fontSize < 64) ShaderBoy.editor.fontSize++;
-                        ShaderBoy.editor.setFontSize();
+                        if (ShaderBoy.editor.textSize < 64) ShaderBoy.editor.textSize++;
+                        ShaderBoy.editor.setTextSize();
                     },
                     'Ctrl-Alt-=': function () {
-                        if (ShaderBoy.editor.fontSize < 64) ShaderBoy.editor.fontSize++;
-                        ShaderBoy.editor.setFontSize();
+                        if (ShaderBoy.editor.textSize < 64) ShaderBoy.editor.textSize++;
+                        ShaderBoy.editor.setTextSize();
                     },
                     'Ctrl-Alt--': function () {
-                        if (ShaderBoy.editor.fontSize > 8) ShaderBoy.editor.fontSize--;
-                        ShaderBoy.editor.setFontSize();
+                        if (ShaderBoy.editor.textSize > 8) ShaderBoy.editor.textSize--;
+                        ShaderBoy.editor.setTextSize();
                     },
                     'Alt-Enter': function (cm) { ShaderBoy.io.recompile(); },
                     'Ctrl-S': function (cm) { ShaderBoy.io.saveShader(); },
@@ -218,16 +218,16 @@ export default ShaderBoy.editor = {
                         ShaderBoy.isPlaying = true;
                     },
                     'Cmd-Alt-+': function () {
-                        if (ShaderBoy.editor.fontSize < 64) ShaderBoy.editor.fontSize++;
-                        ShaderBoy.editor.setFontSize();
+                        if (ShaderBoy.editor.textSize < 64) ShaderBoy.editor.textSize++;
+                        ShaderBoy.editor.setTextSize();
                     },
                     'Cmd-Alt-=': function () {
-                        if (ShaderBoy.editor.fontSize < 64) ShaderBoy.editor.fontSize++;
-                        ShaderBoy.editor.setFontSize();
+                        if (ShaderBoy.editor.textSize < 64) ShaderBoy.editor.textSize++;
+                        ShaderBoy.editor.setTextSize();
                     },
                     'Cmd-Alt--': function () {
-                        if (ShaderBoy.editor.fontSize > 8) ShaderBoy.editor.fontSize--;
-                        ShaderBoy.editor.setFontSize();
+                        if (ShaderBoy.editor.textSize > 8) ShaderBoy.editor.textSize--;
+                        ShaderBoy.editor.setTextSize();
                     },
                     'Alt-Enter': function (cm) { ShaderBoy.io.recompile(); },
                     'Cmd-S': function (cm) { ShaderBoy.io.saveShader(); },
@@ -304,16 +304,16 @@ export default ShaderBoy.editor = {
                         ShaderBoy.isPlaying = true;
                     },
                     'Ctrl-Alt-=': function () {
-                        if (ShaderBoy.editor.fontSize < 64) ShaderBoy.editor.fontSize++;
-                        ShaderBoy.editor.setFontSize();
+                        if (ShaderBoy.editor.textSize < 64) ShaderBoy.editor.textSize++;
+                        ShaderBoy.editor.setTextSize();
                     },
                     'Ctrl-Alt-+': function () {
-                        if (ShaderBoy.editor.fontSize < 64) ShaderBoy.editor.fontSize++;
-                        ShaderBoy.editor.setFontSize();
+                        if (ShaderBoy.editor.textSize < 64) ShaderBoy.editor.textSize++;
+                        ShaderBoy.editor.setTextSize();
                     },
                     'Ctrl-Alt--': function () {
-                        if (ShaderBoy.editor.fontSize > 8) ShaderBoy.editor.fontSize--;
-                        ShaderBoy.editor.setFontSize();
+                        if (ShaderBoy.editor.textSize > 8) ShaderBoy.editor.textSize--;
+                        ShaderBoy.editor.setTextSize();
                     },
                     'Alt-Space': function (cm) { ShaderBoy.io.recompile(); },
                     'Ctrl-S': function (cm) { ShaderBoy.io.saveShader(); },
@@ -384,6 +384,7 @@ export default ShaderBoy.editor = {
 
         this.codemirror.parent = this;
         this.setSize(this.domElement.style.width, this.domElement.style.height);
+        this.setTextSize();
         this.save();
     },
 
