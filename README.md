@@ -28,6 +28,7 @@ Any pull requests welcome.( ༎ຶ‿༎ຶ )
 - [ ] Kill software keyboards(refocus)
 - [ ] Fix broken uniforms
 - [ ] Active line highlight
+- [ ] Inline error display
 - [X] ~~Add WebGL "1.0" fallback~~(2018.8.29)
   
 ### Manipulations
