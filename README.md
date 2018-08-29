@@ -22,22 +22,32 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
   
 # Todo
 Any pull requests welcome.( ༎ຶ‿༎ຶ )
-- [X] ~~Add WebGL "1.0" fallback~~(2018.8.29)
-- [ ] Shortcuts for text size
-- [ ] Shortcuts for PC
+  
+### General
 - [ ] Wordwrapping or scrolling
 - [ ] Kill software keyboards(refocus)
 - [ ] Fix broken uniforms
 - [ ] Active line highlight
-- [ ] Raise Shadertoy compatibility(Some shader does not work properly.)
+- [X] ~~Add WebGL "1.0" fallback~~(2018.8.29)
+- [X] ~~Raise Shadertoy compatibility(Some shader does not work properly.)~~(2018.8.29: singlepass and no asset shaders only.)
+  
+### Manipulations
+- [ ] Shortcuts for text size
+- [ ] Shortcuts for PC
 - [ ] GUI for some useful settings
+- [ ] Auto compile
+
+### Compatibility
 - [ ] Multipass shader
 - [ ] Sound shader
 - [ ] Official assets(textures)
+
+### Other
 - [ ] Dropbox integration
 - [ ] Shadertoy API integration
 - [ ] Splash screen for iOS
 - [ ] Some Themes
+  
 </br>
 </br>
 </br>
