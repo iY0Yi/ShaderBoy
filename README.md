@@ -68,7 +68,7 @@ If you want to change, edit "editor.js", and build it.
   
 |   | Smartphone | Windows | Mac |
 |:---|:---|:---|:---|
-| **Compile** | ⌥+space | ⌥+Enter | ⇢ |
+| **Compile** | ⌥+space | ⌥+enter | ⇢ |
 | **Save** | ctrl+s | ⇢ | ⌘+s |
 | **Load** | ctrl+⌥+l | ⇢ | ⌘+⌥+l |
 | **New** | ctrl+⌥+N | ctrl+⇧+n | ⌘+⇧+n |
