@@ -66,22 +66,22 @@ If you want to change, edit "editor.js", and build it.
   
 |   | Smartphone | Windows | Mac |
 |:---|:---|:---|:---|
-| Compile | ⌥+space | ⌥+Enter | ⇢ |
-| Save | ctrl+s | ⇢ | ⌘+s |
-| Load last save point | ctrl+⌥+l | ⇢ | ⌘+⌥+l |
-| New Shader | ctrl+⌥+N | ctrl+⇧+n | ⌘+⇧+n |
-| Play/Pause | ⌥+up | ⇢ | ⇢ |
-| Reset time to 0 | ⌥+down | ⇢ | ⇢ |
-| Show Common tab | ⌥+right | ⇢ | ⇢ |
-| Show Image tab | ⌥+left | ⇢ | ⇢ |
-| Search | ctrl+f | ⇢ | ⌘+f |
-| Replace | ctrl+⇧+f | ⇢ | ⌘+⇧+f |
-| Hide/Show editor | ⌥+h | ctrl+h | ⇢ |
-| Set Resolution | ctrl+1-4 | ⇢ | ⇢ |
-| Format selected lines | ctrl+⌥+f | ⇢ | ⇢ |
-| Auto complete | ctrl+space | ⇢ | ⇢ |
-| Fold/Unfold single gutter | ctrl+j | ⇢ | ⇢ |
-| Fold/Unfold all gutters | ctrl+k | ⇢ | ⇢ |
+| **Compile** | ⌥+space | ⌥+Enter | ⇢ |
+| **Save** | ctrl+s | ⇢ | ⌘+s |
+| **Load** last save point | ctrl+⌥+l | ⇢ | ⌘+⌥+l |
+| **New** | ctrl+⌥+N | ctrl+⇧+n | ⌘+⇧+n |
+| **Play/Pause** | ⌥+up | ⇢ | ⇢ |
+| **Reset time** | ⌥+down | ⇢ | ⇢ |
+| **Common tab** | ⌥+right | ⇢ | ⇢ |
+| **Image tab** | ⌥+left | ⇢ | ⇢ |
+| **Hide/Show editor** | ⌥+h | ctrl+h | ⇢ |
+| **Search** | ctrl+f | ⇢ | ⌘+f |
+| **Replace** | ctrl+⇧+f | ⇢ | ⌘+⇧+f |
+| **Auto complete** | ctrl+space | ⇢ | ⇢ |
+| **Resolution** | ctrl+1-4 | ⇢ | ⇢ |
+| **Format** lines | ctrl+⌥+f | ⇢ | ⇢ |
+| **Fold/Unfold single** | ctrl+j | ⇢ | ⇢ |
+| **Fold/Unfold all** | ctrl+k | ⇢ | ⇢ |
 </br>
 </br>
 </br>
