@@ -24,8 +24,8 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 Any pull requests welcome.( ༎ຶ‿༎ຶ )
   
 ### General
-- [ ] Kill software keyboards(refocus)
 - [ ] Fix broken uniforms
+- [ ] Kill software keyboards(refocus)
 - [X] ~~Inline error display~~(2018.8.30)
 - [X] ~~Active line highlight~~(2018.8.29)
 - [X] ~~Wordwrapping or scrolling~~(2018.8.29)
