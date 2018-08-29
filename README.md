@@ -69,13 +69,13 @@ If you want to change, edit "editor.js", and build it.
 |:---|:---|:---|:---|
 | **Compile** | ⌥+space | ⌥+Enter | ⇢ |
 | **Save** | ctrl+s | ⇢ | ⌘+s |
-| **Load** last save point | ctrl+⌥+l | ⇢ | ⌘+⌥+l |
+| **Load** | ctrl+⌥+l | ⇢ | ⌘+⌥+l |
 | **New** | ctrl+⌥+N | ctrl+⇧+n | ⌘+⇧+n |
 | **Play/Pause** | ⌥+up | ⇢ | ⇢ |
 | **Reset time** | ⌥+down | ⇢ | ⇢ |
 | **Common tab** | ⌥+right | ⇢ | ⇢ |
 | **Image tab** | ⌥+left | ⇢ | ⇢ |
-| **Hide/Show editor** | ⌥+h | ctrl+h | ⇢ |
+| **Hide/Show** | ⌥+h | ctrl+h | ⇢ |
 | **Search** | ctrl+f | ⇢ | ⌘+f |
 | **Replace** | ctrl+⇧+f | ⇢ | ⌘+⇧+f |
 | **Auto complete** | ctrl+space | ⇢ | ⇢ |
