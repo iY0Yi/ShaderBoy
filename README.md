@@ -68,25 +68,25 @@ If you want to change, edit "editor.js", and build it.
   
 |   | Smartphone | Windows | Mac |
 |:---|:---|:---|:---|
-| **Compile** | ⌥+space | ⌥+enter | ⇢ |
-| **Save** | ctrl+s | ⇢ | ⌘+s |
-| **Load** | ctrl+⌥+l | ⇢ | ⌘+⌥+l |
-| **New** | ctrl+⌥+N | ctrl+⇧+n | ⌘+⇧+n |
-| **Play/Pause** | ⌥+up | ⇢ | ⇢ |
-| **Reset time** | ⌥+down | ⇢ | ⇢ |
-| **Common tab** | ⌥+right | ⇢ | ⇢ |
-| **Image tab** | ⌥+left | ⇢ | ⇢ |
-| **Hide/Show** | ⌥+h | ctrl+⌥+h | ⇢ |
-| **Search** | ctrl+f | ⇢ | ⌘+f |
-| **Replace** | ctrl+h | ⇢ | ⌘+h |
-| **Auto complete** | ctrl+space | ⇢ | ⇢ |
+| **Compile** | ⌥+SPACE | ⌥+ENTER | ⇢ |
+| **Save** | ctrl+S | ⇢ | ⌘+S |
+| **Load** | ctrl+⌥+L | ⇢ | ⌘+⌥+L |
+| **New** | ctrl+⌥+N | ctrl+⇧+N | ⌘+⇧+N |
+| **Play/Pause** | ⌥+UP | ⇢ | ⇢ |
+| **Reset time** | ⌥+DOWN | ⇢ | ⇢ |
+| **Common tab** | ⌥+RIGHT | ⇢ | ⇢ |
+| **Image tab** | ⌥+LEFT | ⇢ | ⇢ |
+| **Hide/Show** | ⌥+H | ctrl+⌥+H | ⇢ |
+| **Search** | ctrl+F | ⇢ | ⌘+F |
+| **Replace** | ctrl+H | ⇢ | ⌘+H |
+| **Auto complete** | ctrl+SPACE | ⇢ | ⇢ |
 | **Resolution** | ctrl+1-4 | ⇢ | ⇢ |
 | **Font size** | ctrl+⌥+ +/- | ⇢ | ⌘+⌥+ +/- |
-| **Format** lines | ctrl+⌥+f | ⇢ | ⇢ |
-| **Fold single** | ctrl+j | ⇢ | ⇢ |
-| **Unfold single** | ⌥+j | ⇢ | ⇢ |
-| **Fold all** | ctrl+k | ⇢ | ⇢ |
-| **Unfold all** | ⌥+k | ⇢ | ⇢ |
+| **Format** lines | ctrl+⌥+F | ⇢ | ⇢ |
+| **Fold single** | ctrl+J | ⇢ | ⇢ |
+| **Unfold single** | ⌥+J | ⇢ | ⇢ |
+| **Fold all** | ctrl+K | ⇢ | ⇢ |
+| **Unfold all** | ⌥+K | ⇢ | ⇢ |
   
 *And many of Sublime Text bindings by Codemirror.
 </br>
