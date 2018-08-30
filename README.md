@@ -33,6 +33,7 @@ Any pull requests welcome.( ༎ຶ‿༎ຶ )
   
 ### Manipulations
 - [ ] GUI for some useful settings
+- [ ] Auto complete
 - [ ] Auto compile
 - [X] ~~Shortcuts for text size~~(2018.8.29)
 - [X] ~~Shortcuts for PC~~(2018.8.29)
@@ -79,7 +80,6 @@ If you want to change, edit "editor.js", and build it.
 | **Hide/Show** | ⌥+H | ctrl+⌥+H | ⇢ |
 | **Search** | ctrl+F | ⇢ | ⌘+F |
 | **Replace** | ctrl+H | ⇢ | ⌘+H |
-| **Auto complete** | ctrl+SPACE | ⇢ | ⇢ |
 | **Resolution** | ctrl+1-4 | ⇢ | ⇢ |
 | **Font size** | ctrl+⌥+ +/- | ⇢ | ⌘+⌥+ +/- |
 | **Format** lines | ctrl+⌥+F | ⇢ | ⇢ |
