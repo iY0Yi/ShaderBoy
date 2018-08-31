@@ -16,9 +16,7 @@ Your power to go.</br>
 # App
 ShaderBoy is a *PWA(Progressive Web Apps).*  
 You can install ShaderBoy app from [here](https://shaderboy.net/).  
-</br>
-</br>
-</br>
+  
 ### Supported Uniforms  
 - [X] uniform vec3      iResolution;           // viewport resolution (in pixels)
 - [X] uniform float     iTime;                 // shader playback time (in seconds)
@@ -30,6 +28,9 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 - [ ] uniform samplerXX iChannel0..3;          // input channel. XX = 2D/Cube
 - [ ] uniform vec4      iDate;                 // (year, month, day, time in seconds)
 - [ ] uniform float     iSampleRate;           // sound sample rate (i.e., 44100)
+</br>
+</br>
+</br>
   
 # Todo
 Any pull requests welcome.( ༎ຶ‿༎ຶ )
