@@ -37,6 +37,7 @@ Any pull requests welcome.( ༎ຶ‿༎ຶ )
   
 ### General
 - [ ] Fix broken uniforms
+- [ ] Fit to window resizing
 - [ ] Kill software keyboards(refocus)
 - [X] ~~Inline error display~~(2018.8.30)
 - [X] ~~Active line highlight~~(2018.8.29)
