@@ -18,16 +18,16 @@ ShaderBoy is a *PWA(Progressive Web Apps).*
 You can install ShaderBoy app from [here](https://shaderboy.net/).  
   
 ### Supported Uniforms  
-- [X] uniform vec3      iResolution;           // viewport resolution (in pixels)
-- [X] uniform float     iTime;                 // shader playback time (in seconds)
-- [ ] uniform float     iTimeDelta;            // render time (in seconds)
-- [X] uniform int       iFrame;                // shader playback frame
-- [ ] uniform float     iChannelTime[4];       // channel playback time (in seconds)
-- [ ] uniform vec3      iChannelResolution[4]; // channel resolution (in pixels)
-- [X] uniform vec4      iMouse;                // mouse pixel coords. xy: current (if MLB down), zw: click
-- [ ] uniform samplerXX iChannel0..3;          // input channel. XX = 2D/Cube
-- [ ] uniform vec4      iDate;                 // (year, month, day, time in seconds)
-- [ ] uniform float     iSampleRate;           // sound sample rate (i.e., 44100)
+- [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
+- [X] uniform float     **iTime;**                 *// shader playback time (in seconds)*
+- [ ] uniform float     **iTimeDelta;**            *// render time (in seconds)*
+- [X] uniform int       **iFrame;**                *// shader playback frame*
+- [ ] uniform float     **iChannelTime[4];**       *// channel playback time (in seconds)*
+- [ ] uniform vec3      **iChannelResolution[4];** *// channel resolution (in pixels)*
+- [X] uniform vec4      **iMouse;**                *// mouse pixel coords. xy: current (if MLB down), zw: click*
+- [ ] uniform samplerXX **iChannel0..3;**          *// input channel. XX = 2D/Cube*
+- [ ] uniform vec4      **iDate;**                 *// (year, month, day, time in seconds)*
+- [ ] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
 </br>
 </br>
 </br>
