@@ -89,44 +89,25 @@ export default ShaderBoy.gui = {
 		let scrollMul = 1;
 		if (ShaderBoy.OS === 'Windows') { scrollMul = 100.0; }
 
-		let elementPos = function (element) {
-			if (element !== undefined) {
-				var x = 0,
-					y = 0;
-				while (element.offsetParent) {
-					x += element.offsetLeft;
-					y += element.offsetTop;
-					element = element.offsetParent;
-				}
-				return {
-					x: x,
-					y: y
-				};
-			}
-		};
-
 		let eventPos = function (event) {
+			let x = window.innerWidth - event.clientX;
+			let y = window.innerHeight - event.clientY;
+			console.log('x', x);
+			console.log('y', y);
 			return {
-				x: event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft,
-				y: event.clientY + document.body.scrollTop + document.documentElement.scrollTop
+				x: x,
+				y: y
 			};
 		};
 
 		let canvasMousePos = function (event) {
-			let mousePos = eventPos(event);
-			let canvasPos = elementPos(document.body);
-			// console.log('mousePos', mousePos);
-			// console.log('canvasPos', canvasPos);
-			return {
-				x: mousePos.x - canvasPos.x,
-				y: mousePos.y - canvasPos.y
-			};
+			return eventPos(event);
 		};
 
 		document.body.onmousedown = function (event) {
 			if (event.button == 2) return false;
 			if (ShaderBoy.isEditorHide) {
-				let mouse = canvasMousePos(event);
+				let mouse = eventPos(event);
 				if (mouse.x >= 0 && mouse.x < document.body.clientWidth && mouse.y >= 0 && mouse.y < document.body.clientHeight) {
 					this.mouseLeftDownCur = true;
 					ShaderBoy.uniforms.iMouse[2] = 1;
@@ -137,7 +118,7 @@ export default ShaderBoy.gui = {
 		document.body.onmouseup = function (event) {
 			if (ShaderBoy.isEditorHide) {
 				this.mouseLeftDownCur = false;
-				let mouse = canvasMousePos(event);
+				let mouse = eventPos(event);
 				ShaderBoy.uniforms.iMouse[2] = 0;
 			}
 		};
@@ -145,7 +126,8 @@ export default ShaderBoy.gui = {
 		document.body.onmousemove = function (event) {
 			if (!this.mouseLeftDownCur) return;
 			if (ShaderBoy.isEditorHide) {
-				let mouse = canvasMousePos(event);
+				let mouse = eventPos(event);
+				console.log('mouse', mouse);
 				this.mousePositionCur = [mouse.x, mouse.y];
 				ShaderBoy.uniforms.iMouse[0] = mouse.x;
 				ShaderBoy.uniforms.iMouse[1] = mouse.y;

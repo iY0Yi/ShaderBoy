@@ -46,6 +46,7 @@
   "dependencies": {
     "cm-show-invisibles": "^2.0.2",
     "codemirror": "^5.26.0",
+    "codemirror-formatting": "^1.0.0",
     "codemirror-revisedsearch": "^1.0.12",
     "collect-fps": "^2.0.0",
     "dat-gui": "^0.5.0",

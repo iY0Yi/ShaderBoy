@@ -202,7 +202,6 @@ export default class Shader {
 					case 4:
 						v = new Float32Array(value);
 						gl.uniform4fv(location, v);
-						console.log(realName);
 						v = null;
 						break;
 					// Matrices are automatically transposed, since WebGL uses column-major

@@ -204,7 +204,7 @@ textarea
     width: 20em;
     color: #d8d4c5;
     background: #1E1E1E;
-    font-family: monospace;
+    font-family:  Arial, monospace;
   }
   
   .CodeMirror-dialog button {
@@ -219,5 +219,27 @@ textarea
     box-sizing: border-box;
     z-index: 190;
     /* opacity: .5; */
+  }
+  
+  .CodeMirror-foldmarker {
+    color: blue;
+    /* text-shadow: #b9f 1px 1px 2px, #b9f -1px -1px 2px, #b9f 1px -1px 2px, #b9f -1px 1px 2px; */
+    font-family:  Arial, monospace;
+    font-weight: bold;
+    line-height: .3;
+    cursor: pointer;
+  }
+  .CodeMirror-foldgutter {
+    width: .7em;
+  }
+  .CodeMirror-foldgutter-open,
+  .CodeMirror-foldgutter-folded {
+    cursor: pointer;
+  }
+  .CodeMirror-foldgutter-open:after {
+    content: "\25BE";
+  }
+  .CodeMirror-foldgutter-folded:after {
+    content: "\25B8";
   }
   
