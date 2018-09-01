@@ -84,19 +84,19 @@ If you want to change, edit "editor.js", and build it.
 |:---|:---|:---|:---|
 | **Compile** | ⌥+SPACE | ⌥+ENTER | ⌥+ENTER |
 | **Save** | ctrl+S | ctrl +S | ⌘+S |
-| **Load** | ctrl+⇧+L | ctrl+⇧+⌥+L | ⌘+⇧+⌥+L |
-| **New** | ctrl+⇧+N | ctrl+⇧+⌥+N | ⌘+⇧+⌥+N |
 | **Play/Pause** | ⌥+UP | ⌥+UP | ⌥+UP |
 | **Reset time** | ⌥+DOWN | ⌥+DOWN | ⌥+DOWN |
 | **Move shader tab** | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT |
-| **Hide/Show** | ⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
 | **Search** | ctrl+F | ctrl+F | ⌘+F |
 | **Replace** | ctrl+H | ctrl+H | ⌘+H |
-| **Resolution** | ctrl+1-4 | ctrl+1-4 | ctrl+1-4 |
-| **Font size** | ctrl+⇧+ Up/Down | ctrl +⇧+⌥+ +/-  | ⌘+⇧+⌥+ +/- |
-| **Format lines** | ctrl+⇧+⌥+F | ctrl+⇧+⌥+F| ⌘+⇧+⌥+F |
 | **Fold/Unfold single** | ⌥+K | ⌥+K | ⌥+K |
 | **Fold/Unfold all** | ctrl+K | ctrl+K | ⌘+K |
+| **Resolution** | ctrl+1-4 | ctrl+1-4 | ctrl+1-4 |
+| **Format lines** | ctrl+⇧+⌥+F | ctrl+⇧+⌥+F| ⌘+⇧+⌥+F |
+| **Hide/Show** | ⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
+| **Font size** | ctrl+⇧+ Up/Down | ctrl +⇧+⌥+ +/-  | ⌘+⇧+⌥+ +/- |
+| **Load** | ctrl+⇧+L | ctrl+⇧+⌥+L | ⌘+⇧+⌥+L |
+| **New** | ctrl+⇧+N | ctrl+⇧+⌥+N | ⌘+⇧+⌥+N |
   
 *And many of Sublime Text bindings by Codemirror.
 </br>
