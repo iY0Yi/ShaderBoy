@@ -1,5 +1,6 @@
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/_index/img/sb_logo_1240x600.png"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/_index/img/sb_example.png"></br>
+##### *UPDATE: Now, You can use ShaderBoy on Desktop browser also!*  
 <strong>ShaderBoy</strong> is a tiny shader editor for mobile devices.</br>
 It is intended to use [physical keyboards](https://www.google.co.jp/search?q=smartphone+bluetooth+keyboard&source=lnms&tbm=isch&sa=X&ved=0ahUKEwi-kZzK_4fdAhXRdd4KHSp3BOcQ_AUICigB&biw=1440&bih=781) to write shaders on a small screen.</br>
 It has compatible uniforms with <a href="https://www.shadertoy.com/"><em>Shadertoy</em></a>.</br>
@@ -9,6 +10,7 @@ in Bed, Toilet, Train, Camping, Fishing...
 Your power to go.</br>
   
 ###### *This is "NOT" Shadertoy official!* 
+
 </br>
 </br>
 </br>
@@ -17,7 +19,7 @@ Your power to go.</br>
 ShaderBoy is a *PWA(Progressive Web Apps).*  
 You can install ShaderBoy app from [here](https://shaderboy.net/).  
 ###### *TIPS: A Buffer for previous frame is available as 'iChannel0'.*  
-###### *UPDATE: You can use ShaderBoy on Desktop browser also!*  
+
   
 ### Supported Uniforms  
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
