@@ -218,7 +218,6 @@ export default ShaderBoy.editor = {
             },
         };
 
-        // if (ShaderBoy.OS !== 'Windows' && ShaderBoy.OS !== 'MacOS' && ShaderBoy.OS !== 'UNIX' && ShaderBoy.OS !== 'Linux')
         {
             keys['Alt-Space'] = function (cm) { ShaderBoy.io.recompile(); };
             keys['Shift-Ctrl-N'] = function () { ShaderBoy.io.newShader(); };

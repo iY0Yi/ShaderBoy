@@ -44,10 +44,10 @@ export default ShaderBoy.renderer = {
 			'iFrame': ShaderBoy.uniforms.iFrame,                // shader playback frame
 			'iFrameRate': ShaderBoy.uniforms.iFrameRate,                // shader playback frame
 			'iDate': ShaderBoy.uniforms.iDate,                 // (year, month, day, time in seconds)
-			// 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
-			// 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
 			'iMouse': ShaderBoy.uniforms.iMouse,                // mouse pixel coords. xy: current (if MLB down), zw: click
 			'iChannel0': 0,             // input channel. XX = 2D/Cube
+			// 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
+			// 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
 			// 'iChannel1': 1,             // input channel. XX = 2D/Cube
 			// 'iChannel2': 2,             // input channel. XX = 2D/Cube
 			// 'iChannel3': 3,             // input channel. XX = 2D/Cube
@@ -112,18 +112,6 @@ export default ShaderBoy.renderer = {
 			gl.deleteTexture(this.mainTextures[1]);
 		}
 
-		function getPowerOf2(val) {
-			let res;
-			if (val >= 2048) res = 2048;
-			else if (val < 2048 && val >= 1024) res = 1024;
-			else if (val < 1024 && val >= 512) res = 512;
-			else if (val < 512 && val >= 256) res = 256;
-			else if (val < 256 && val >= 128) res = 128;
-			else if (val < 128 && val >= 64) res = 64;
-			else if (val < 64 && val >= 16) res = 16;
-			else res = 16;
-			return res;
-		}
 		// create textures
 		this.mainTextures = [];
 		for (let i = 0; i < 2; i++) {
@@ -134,8 +122,6 @@ export default ShaderBoy.renderer = {
 			else {
 				let width = window.innerWidth / ShaderBoy.renderScale;
 				let height = window.innerHeight / ShaderBoy.renderScale;
-				let res = (width > height) ? width : height;
-				res = getPowerOf2(res);
 				setUnsignedByteTextureParams(gl, this.mainTextures[i], width, height);
 			}
 		}

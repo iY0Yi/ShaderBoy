@@ -235,8 +235,6 @@ ShaderBoy.update = function () {
 			}
 			ShaderBoy.uniforms.iFrame++;
 		}
-		// ShaderBoy.gui.mouse.down.prev = ShaderBoy.gui.mouse.down.curr;
-		// ShaderBoy.gui.mouse.position.prev = [ShaderBoy.gui.mouse.position.curr[0], ShaderBoy.gui.mouse.position.curr[1]];
 	}
 };
 

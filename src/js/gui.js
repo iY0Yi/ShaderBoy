@@ -34,7 +34,6 @@ export default ShaderBoy.gui = {
 		this.header.base.domElement.style.backgroundColor = '#00000066';
 		this.header.base.domElement.style.float = 'left';
 		this.header.base.domElement.style.position = 'absolute';
-		// this.header.base.domElement.style.top = window.innerHeight - ShaderBoy.style.buttonHeight + 'px';
 		this.header.base.domElement.style.top = '0px';
 		this.header.base.domElement.style.left = '0px';
 		this.header.base.domElement.style.width = window.innerWidth + 'px';
@@ -65,7 +64,6 @@ export default ShaderBoy.gui = {
 		this.mousePosX = 0;
 		this.mousePosY = 0;
 		this.mouseIsDown = false;
-		// this.header.contents.style.marginLeft = ShaderBoy.style.buttonHeight + 5 + 'px';
 	},
 
 	redrawHeader: function () {
@@ -117,8 +115,19 @@ export default ShaderBoy.gui = {
 			}
 		};
 
-		ShaderBoy.canvas.contextmenu = function (ev) {
+		document.body.contextmenu = function (ev) {
 			ev.preventDefault();
 		};
+
+		window.addEventListener('resize', function () {
+			ShaderBoy.isPlaying = false;
+			ShaderBoy.renderer.createBuffer(false);
+			ShaderBoy.canvas.width = window.innerWidth;
+			ShaderBoy.canvas.height = window.innerHeight;
+			ShaderBoy.gui.header.base.domElement.style.width = window.innerWidth + 'px';
+			ShaderBoy.gui.header.base.domElement.style.height = ShaderBoy.style.buttonHeight + 'px';
+			ShaderBoy.editor.setSize(window.innerWidth, window.innerHeight - ShaderBoy.style.buttonHeight);
+			ShaderBoy.isPlaying = true;
+		}, true);
 	}
 };

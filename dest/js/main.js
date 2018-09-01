@@ -207,8 +207,6 @@ webpackJsonp([0,1],[
 				}
 				_shaderboy2.default.uniforms.iFrame++;
 			}
-			// ShaderBoy.gui.mouse.down.prev = ShaderBoy.gui.mouse.down.curr;
-			// ShaderBoy.gui.mouse.position.prev = [ShaderBoy.gui.mouse.position.curr[0], ShaderBoy.gui.mouse.position.curr[1]];
 		}
 	};
 
@@ -572,7 +570,7 @@ webpackJsonp([0,1],[
 
 			for (var i = 0; i < this.shaderNum; i++) {
 				var name = ref[i].name;
-				var url = "." + ref[i].url;
+				var url = "/app" + ref[i].url;
 				this.loadShader(name, url);
 			}
 		}
@@ -633,7 +631,6 @@ webpackJsonp([0,1],[
 			this.header.base.domElement.style.backgroundColor = '#00000066';
 			this.header.base.domElement.style.float = 'left';
 			this.header.base.domElement.style.position = 'absolute';
-			// this.header.base.domElement.style.top = window.innerHeight - ShaderBoy.style.buttonHeight + 'px';
 			this.header.base.domElement.style.top = '0px';
 			this.header.base.domElement.style.left = '0px';
 			this.header.base.domElement.style.width = window.innerWidth + 'px';
@@ -664,7 +661,6 @@ webpackJsonp([0,1],[
 			this.mousePosX = 0;
 			this.mousePosY = 0;
 			this.mouseIsDown = false;
-			// this.header.contents.style.marginLeft = ShaderBoy.style.buttonHeight + 5 + 'px';
 		},
 
 		redrawHeader: function redrawHeader() {
@@ -716,9 +712,20 @@ webpackJsonp([0,1],[
 				}
 			};
 
-			_shaderboy2.default.canvas.contextmenu = function (ev) {
+			document.body.contextmenu = function (ev) {
 				ev.preventDefault();
 			};
+
+			window.addEventListener('resize', function () {
+				_shaderboy2.default.isPlaying = false;
+				_shaderboy2.default.renderer.createBuffer(false);
+				_shaderboy2.default.canvas.width = window.innerWidth;
+				_shaderboy2.default.canvas.height = window.innerHeight;
+				_shaderboy2.default.gui.header.base.domElement.style.width = window.innerWidth + 'px';
+				_shaderboy2.default.gui.header.base.domElement.style.height = _shaderboy2.default.style.buttonHeight + 'px';
+				_shaderboy2.default.editor.setSize(window.innerWidth, window.innerHeight - _shaderboy2.default.style.buttonHeight);
+				_shaderboy2.default.isPlaying = true;
+			}, true);
 		}
 	};
 
@@ -1085,10 +1092,10 @@ webpackJsonp([0,1],[
 				'iFrame': _shaderboy2.default.uniforms.iFrame, // shader playback frame
 				'iFrameRate': _shaderboy2.default.uniforms.iFrameRate, // shader playback frame
 				'iDate': _shaderboy2.default.uniforms.iDate, // (year, month, day, time in seconds)
-				// 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
-				// 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
 				'iMouse': _shaderboy2.default.uniforms.iMouse, // mouse pixel coords. xy: current (if MLB down), zw: click
 				'iChannel0': 0 // input channel. XX = 2D/Cube
+				// 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
+				// 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
 				// 'iChannel1': 1,             // input channel. XX = 2D/Cube
 				// 'iChannel2': 2,             // input channel. XX = 2D/Cube
 				// 'iChannel3': 3,             // input channel. XX = 2D/Cube
@@ -1146,11 +1153,6 @@ webpackJsonp([0,1],[
 				gl.deleteTexture(this.mainTextures[1]);
 			}
 
-			function getPowerOf2(val) {
-				var res = void 0;
-				if (val >= 2048) res = 2048;else if (val < 2048 && val >= 1024) res = 1024;else if (val < 1024 && val >= 512) res = 512;else if (val < 512 && val >= 256) res = 256;else if (val < 256 && val >= 128) res = 128;else if (val < 128 && val >= 64) res = 64;else if (val < 64 && val >= 16) res = 16;else res = 16;
-				return res;
-			}
 			// create textures
 			this.mainTextures = [];
 			for (var i = 0; i < 2; i++) {
@@ -1160,8 +1162,6 @@ webpackJsonp([0,1],[
 				} else {
 					var width = window.innerWidth / _shaderboy2.default.renderScale;
 					var height = window.innerHeight / _shaderboy2.default.renderScale;
-					var res = width > height ? width : height;
-					res = getPowerOf2(res);
 					setUnsignedByteTextureParams(gl, this.mainTextures[i], width, height);
 				}
 			}
@@ -2122,7 +2122,6 @@ webpackJsonp([0,1],[
 	            }
 	        };
 
-	        // if (ShaderBoy.OS !== 'Windows' && ShaderBoy.OS !== 'MacOS' && ShaderBoy.OS !== 'UNIX' && ShaderBoy.OS !== 'Linux')
 	        {
 	            keys['Alt-Space'] = function (cm) {
 	                _shaderboy2.default.io.recompile();
