@@ -82,7 +82,7 @@ If you want to change, edit "editor.js", and build it.
   
 |   | Smartphone | Windows | Mac |
 |:---|:---|:---|:---|
-| **Compile** | ⌥+SPACE | ⌥+ENTER | ⌥+ENTER |
+| **Compile** | ⌥+ENTER(SPACE) | ⌥+ENTER | ⌥+ENTER |
 | **Save** | ctrl+S | ctrl +S | ⌘+S |
 | **Play/Pause** | ⌥+UP | ⌥+UP | ⌥+UP |
 | **Reset time** | ⌥+DOWN | ⌥+DOWN | ⌥+DOWN |
