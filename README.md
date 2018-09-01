@@ -9,7 +9,6 @@ in Bed, Toilet, Train, Camping, Fishing...
 Your power to go.</br>
   
 ###### *This is "NOT" Shadertoy official!* 
-###### *UPDATE: You can use on Desktop also!*  
 </br>
 </br>
 </br>
@@ -17,7 +16,8 @@ Your power to go.</br>
 # App
 ShaderBoy is a *PWA(Progressive Web Apps).*  
 You can install ShaderBoy app from [here](https://shaderboy.net/).  
-###### *TIPS: You can use 'iChannel0' as buffer for previous frame.*  
+###### *TIPS: A Buffer for previous frame is available as 'iChannel0'.*  
+###### *UPDATE: You can use on Desktop also!*  
   
 ### Supported Uniforms  
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
