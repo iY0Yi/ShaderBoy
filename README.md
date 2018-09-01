@@ -8,7 +8,8 @@ Enjoy writing your shaders in everywhere.</br>
 in Bed, Toilet, Train, Camping, Fishing...
 Your power to go.</br>
   
-###### *This is "NOT" Shadertoy official!*    
+###### *This is "NOT" Shadertoy official!* 
+###### *UPDATE: You can use on Desktop also!*  
 </br>
 </br>
 </br>
@@ -37,8 +38,7 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 Any pull requests welcome.( ༎ຶ‿༎ຶ )
   
 ### General
-- [ ] Fit to window resizing
-- [ ] Kill software keyboards(refocus)
+- [X] ~~Fit to window resizing~~(2018.9.1)
 - [X] ~~Fix broken uniforms~~(2018.9.1)
 - [X] ~~Inline error display~~(2018.8.30)
 - [X] ~~Active line highlight~~(2018.8.29)
@@ -46,9 +46,8 @@ Any pull requests welcome.( ༎ຶ‿༎ຶ )
 - [X] ~~Add WebGL "1.0" fallback~~(2018.8.28)
   
 ### Manipulations
-- [ ] GUI for some useful settings
 - [ ] Auto complete
-- [ ] Auto compile
+- [ ] GUI for some useful settings
 - [X] ~~Shortcuts for text size~~(2018.8.29)
 - [X] ~~Shortcuts for PC~~(2018.8.29)
   
