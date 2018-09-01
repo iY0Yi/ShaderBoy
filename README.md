@@ -31,7 +31,7 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 - [ ] uniform vec3      **iChannelResolution[4];** *// channel resolution (in pixels)*
 - [ ] uniform samplerXX **iChannel0..3;**          *// input channel. XX = 2D/Cube*
 - [ ] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
-</br>
+  
 ###### *TIPS: A Buffer for previous frame is available as 'iChannel0'.*  
 </br>
 </br>
