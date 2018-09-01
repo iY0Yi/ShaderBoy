@@ -17,7 +17,7 @@ Your power to go.</br>
 ShaderBoy is a *PWA(Progressive Web Apps).*  
 You can install ShaderBoy app from [here](https://shaderboy.net/).  
 ###### *TIPS: A Buffer for previous frame is available as 'iChannel0'.*  
-###### *UPDATE: You can use on Desktop also!*  
+###### *UPDATE: You can use ShaderBoy on Desktop browser also!*  
   
 ### Supported Uniforms  
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
