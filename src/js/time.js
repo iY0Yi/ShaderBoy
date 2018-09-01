@@ -52,10 +52,12 @@ export default ShaderBoy.time = {
             ShaderBoy.uniforms.iTimeDelta = ShaderBoy.uniforms.iTime - oldITime;
             ShaderBoy.uniforms.iFrameRate = this.fps;
             let d = new Date();
-            ShaderBoy.uniforms.iDate = [d.getFullYear(), // the year (four digits)
-            d.getMonth(),	   // the month (from 0-11)
-            d.getDate(),     // the day of the month (from 1-31)
-            d.getHours() * 60.0 * 60 + d.getMinutes() * 60 + d.getSeconds() + d.getMilliseconds() / 1000.0]
+            ShaderBoy.uniforms.iDate = [
+                d.getFullYear(), // the year (four digits)
+                d.getMonth(),	   // the month (from 0-11)
+                d.getDate(),     // the day of the month (from 1-31)
+                d.getHours() * 60.0 * 60 + d.getMinutes() * 60 + d.getSeconds() + d.getMilliseconds() / 1000.0
+            ];
             return true;
         }
         else {
