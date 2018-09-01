@@ -18,8 +18,6 @@ Your power to go.</br>
 # App
 ShaderBoy is a *PWA(Progressive Web Apps).*  
 You can install ShaderBoy app from [here](https://shaderboy.net/).  
-###### *TIPS: A Buffer for previous frame is available as 'iChannel0'.*  
-
   
 ### Supported Uniforms  
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
@@ -34,6 +32,7 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 - [ ] uniform samplerXX **iChannel0..3;**          *// input channel. XX = 2D/Cube*
 - [ ] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
 </br>
+###### *TIPS: A Buffer for previous frame is available as 'iChannel0'.*  
 </br>
 </br>
   
