@@ -87,7 +87,8 @@ If you want to change, edit "editor.js", and build it.
 ### Other
 - [ ] Dropbox integration
 - [ ] Shadertoy API integration
-- [ ] Splash screen for iOS
+- [ ] Recording in any resolution as PNG sequence
+- [ ] More rich splash screen
 - [ ] Some Themes
 </br>
 </br>
