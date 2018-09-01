@@ -222,12 +222,12 @@ textarea
   }
   
   .CodeMirror-foldmarker {
-    /* color: blue; */
+    color: blue;
     /* text-shadow: #b9f 1px 1px 2px, #b9f -1px -1px 2px, #b9f 1px -1px 2px, #b9f -1px 1px 2px; */
-    /* font-family:  Arial, monospace; */
-    /* font-weight: bold; */
-    /* line-height: .3; */
-    /* cursor: pointer; */
+    font-family:  Arial, monospace;
+    font-weight: bold;
+    line-height: .3;
+    cursor: pointer;
   }
   .CodeMirror-foldgutter {
     width: .7em;

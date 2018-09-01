@@ -200,16 +200,15 @@ webpackJsonp([0,1],[
 		requestAnimationFrame(_shaderboy2.default.update);
 		if (_shaderboy2.default.isPlaying) {
 			if (_shaderboy2.default.time.needUpdate()) {
-				_shaderboy2.default.uniforms.iTime = _shaderboy2.default.time.appTime;
-				_shaderboy2.default.uniforms.iResolution = [_shaderboy2.default.gl.canvas.clientWidth, window.innerHeight];
+				_shaderboy2.default.uniforms.iResolution = [_shaderboy2.default.gl.canvas.clientWidth, window.innerHeight, 1.0];
 				_shaderboy2.default.renderer.render();
 				if (_shaderboy2.default.needEditor) {
 					_shaderboy2.default.gui.redrawHeader();
 				}
 				_shaderboy2.default.uniforms.iFrame++;
 			}
-			_shaderboy2.default.gui.mouse.down.prev = _shaderboy2.default.gui.mouse.down.curr;
-			_shaderboy2.default.gui.mouse.position.prev = [_shaderboy2.default.gui.mouse.position.curr[0], _shaderboy2.default.gui.mouse.position.curr[1]];
+			// ShaderBoy.gui.mouse.down.prev = ShaderBoy.gui.mouse.down.curr;
+			// ShaderBoy.gui.mouse.position.prev = [ShaderBoy.gui.mouse.position.curr[0], ShaderBoy.gui.mouse.position.curr[1]];
 		}
 	};
 
@@ -249,6 +248,7 @@ webpackJsonp([0,1],[
 	    needRecompile: false,
 	    needStatusInfo: false,
 	    needEditor: false,
+	    forceFrame: false,
 
 	    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	    style: {},
@@ -261,11 +261,12 @@ webpackJsonp([0,1],[
 
 	    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	    uniforms: {
-	        iResolution: [0, 0],
-	        iTime: 1,
-	        iTimeDelta: 1,
+	        iResolution: [0, 0, 1],
+	        iTime: 0,
+	        iTimeDelta: 60 / 1000,
 	        iFrame: 0,
 	        iDate: 0,
+	        iFrameRate: 0,
 	        // iChannelTime:[0, 0, 0, 0],
 	        // iChannelResolution:[0, 0, 0, 0],
 	        iMouse: [0, 0, 0, 0]
@@ -316,6 +317,7 @@ webpackJsonp([0,1],[
 	    pausedTime: 0,
 	    offsetTime: 0,
 	    appTime: 0,
+	    d: undefined,
 
 	    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	    init: function init() {
@@ -327,11 +329,10 @@ webpackJsonp([0,1],[
 	            return (this.pnow && this.pnow.call(performance)) * 0.001 || new Date().getTime() * 0.001;
 	        };
 	        this.startTime = this.getGlobalTime();
-
 	        //FPS counter
 	        this.endCollection = (0, _collectFps2.default)();
 	        setInterval(function () {
-	            _this.fps = _this.endCollection().toFixed(0);
+	            _this.fps = _this.endCollection();
 	            _this.endCollection = (0, _collectFps2.default)();
 	        }, 1000);
 	    },
@@ -340,9 +341,18 @@ webpackJsonp([0,1],[
 	    needUpdate: function needUpdate() {
 	        var now = Date.now();
 	        this.time_elapsed = now - this.time_then;
+
 	        if (this.time_elapsed > this.FPS_INTERVAL) {
 	            this.time_then = now - this.time_elapsed % this.FPS_INTERVAL;
-	            this.appTime = this.getGlobalTime() - this.offsetTime - this.startTime;
+	            var oldITime = _shaderboy2.default.uniforms.iTime;
+	            _shaderboy2.default.uniforms.iTime = this.getGlobalTime() - this.offsetTime - this.startTime;
+	            _shaderboy2.default.uniforms.iTimeDelta = _shaderboy2.default.uniforms.iTime - oldITime;
+	            _shaderboy2.default.uniforms.iFrameRate = this.fps;
+	            var d = new Date();
+	            _shaderboy2.default.uniforms.iDate = [d.getFullYear(), // the year (four digits)
+	            d.getMonth(), // the month (from 0-11)
+	            d.getDate(), // the day of the month (from 1-31)
+	            d.getHours() * 60.0 * 60 + d.getMinutes() * 60 + d.getSeconds() + d.getMilliseconds() / 1000.0];
 	            return true;
 	        } else {
 	            false;
@@ -562,7 +572,7 @@ webpackJsonp([0,1],[
 
 			for (var i = 0; i < this.shaderNum; i++) {
 				var name = ref[i].name;
-				var url = "/app" + ref[i].url;
+				var url = "." + ref[i].url;
 				this.loadShader(name, url);
 			}
 		}
@@ -613,18 +623,6 @@ webpackJsonp([0,1],[
 		setting: {},
 
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		mouse: {
-			down: {
-				curr: false,
-				prev: false
-			},
-			position: {
-				curr: [_shaderboy2.default.uniforms.iMouse[0], _shaderboy2.default.uniforms.iMouse[1]],
-				prev: [_shaderboy2.default.uniforms.iMouse[0], _shaderboy2.default.uniforms.iMouse[1]]
-			}
-		},
-
-		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		init: function init() {
 			_shaderboy2.default.style.buttonHeight = 35;
 
@@ -660,13 +658,17 @@ webpackJsonp([0,1],[
 			this.header.contents.style.marginTop = '9px';
 			this.header.contents.style.marginLeft = 15 + 'px';
 
-			this.mouseLeftDownCur = false;
 			this.mousePositionCur = [];
+			this.mousePosX = 0;
+			this.mouseOriY = 0;
+			this.mousePosX = 0;
+			this.mousePosY = 0;
+			this.mouseIsDown = false;
 			// this.header.contents.style.marginLeft = ShaderBoy.style.buttonHeight + 5 + 'px';
 		},
 
 		redrawHeader: function redrawHeader() {
-			if (this.header.needUpdate !== true) this.header.contents.innerText = _shaderboy2.default.uniforms.iTime.toFixed(3) + ' sec' + ' / ' + _shaderboy2.default.uniforms.iFrame.toFixed(0) + ' frms' + ' / ' + _shaderboy2.default.time.fps + ' fps';
+			if (this.header.needUpdate !== true) this.header.contents.innerText = _shaderboy2.default.uniforms.iTime.toFixed(3) + ' sec' + ' / ' + _shaderboy2.default.uniforms.iFrame.toFixed(0) + ' frms' + ' / ' + _shaderboy2.default.time.fps.toFixed(1) + ' fps';
 		},
 
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -676,53 +678,46 @@ webpackJsonp([0,1],[
 				scrollMul = 100.0;
 			}
 
-			var eventPos = function eventPos(event) {
-				var x = window.innerWidth - event.clientX;
-				var y = window.innerHeight - event.clientY;
-				console.log('x', x);
-				console.log('y', y);
-				return {
-					x: x,
-					y: y
-				};
-			};
-
-			var canvasMousePos = function canvasMousePos(event) {
-				return eventPos(event);
-			};
-
-			document.body.onmousedown = function (event) {
-				if (event.button == 2) return false;
+			document.body.onmousedown = function (ev) {
+				if (ev.button == 2) return false;
 				if (_shaderboy2.default.isEditorHide) {
-					var mouse = eventPos(event);
-					if (mouse.x >= 0 && mouse.x < document.body.clientWidth && mouse.y >= 0 && mouse.y < document.body.clientHeight) {
-						this.mouseLeftDownCur = true;
-						_shaderboy2.default.uniforms.iMouse[2] = 1;
+					var c = _shaderboy2.default.canvas;
+					var rect = c.getBoundingClientRect();
+					this.mouseOriX = Math.floor((ev.clientX - rect.left) / (rect.right - rect.left) * c.width);
+					this.mouseOriY = Math.floor(c.height - (ev.clientY - rect.top) / (rect.bottom - rect.top) * c.height);
+					this.mousePosX = this.mouseOriX;
+					this.mousePosY = this.mouseOriY;
+					this.mouseIsDown = true;
+					if (!_shaderboy2.default.isPlaying) _shaderboy2.default.forceFrame = true;
+					_shaderboy2.default.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY];
+				}
+			};
+
+			document.body.onmouseup = function (ev) {
+				if (_shaderboy2.default.isEditorHide) {
+					this.mouseIsDown = false;
+					this.mouseOriX = -Math.abs(this.mouseOriX);
+					this.mouseOriY = -Math.abs(this.mouseOriY);
+					if (!_shaderboy2.default.isPlaying) _shaderboy2.default.forceFrame = true;
+					_shaderboy2.default.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY];
+				}
+			};
+
+			document.body.onmousemove = function (ev) {
+				if (_shaderboy2.default.isEditorHide) {
+					if (this.mouseIsDown) {
+						var c = _shaderboy2.default.canvas;
+						var rect = c.getBoundingClientRect();
+						this.mousePosX = Math.floor((ev.clientX - rect.left) / (rect.right - rect.left) * c.width);
+						this.mousePosY = Math.floor(c.height - (ev.clientY - rect.top) / (rect.bottom - rect.top) * c.height);
+						if (!_shaderboy2.default.isPlaying) _shaderboy2.default.forceFrame = true;
+						_shaderboy2.default.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY];
 					}
 				}
 			};
 
-			document.body.onmouseup = function (event) {
-				if (_shaderboy2.default.isEditorHide) {
-					this.mouseLeftDownCur = false;
-					var mouse = eventPos(event);
-					_shaderboy2.default.uniforms.iMouse[2] = 0;
-				}
-			};
-
-			document.body.onmousemove = function (event) {
-				if (!this.mouseLeftDownCur) return;
-				if (_shaderboy2.default.isEditorHide) {
-					var mouse = eventPos(event);
-					console.log('mouse', mouse);
-					this.mousePositionCur = [mouse.x, mouse.y];
-					_shaderboy2.default.uniforms.iMouse[0] = mouse.x;
-					_shaderboy2.default.uniforms.iMouse[1] = mouse.y;
-				}
-			};
-
-			document.body.contextmenu = function (event) {
-				event.preventDefault();
+			_shaderboy2.default.canvas.contextmenu = function (ev) {
+				ev.preventDefault();
 			};
 		}
 	};
@@ -1086,9 +1081,10 @@ webpackJsonp([0,1],[
 			this.shaders.main.uniforms = {
 				'iResolution': _shaderboy2.default.uniforms.iResolution, // viewport resolution (in pixels)
 				'iTime': _shaderboy2.default.uniforms.iTime, // shader playback time (in seconds)
-				'iTimeDelta': 0, // render time (in seconds)
+				'iTimeDelta': _shaderboy2.default.uniforms.iTimeDelta, // render time (in seconds)
 				'iFrame': _shaderboy2.default.uniforms.iFrame, // shader playback frame
-				// 'iDate': iDate,                 // (year, month, day, time in seconds)
+				'iFrameRate': _shaderboy2.default.uniforms.iFrameRate, // shader playback frame
+				'iDate': _shaderboy2.default.uniforms.iDate, // (year, month, day, time in seconds)
 				// 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
 				// 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
 				'iMouse': _shaderboy2.default.uniforms.iMouse, // mouse pixel coords. xy: current (if MLB down), zw: click
@@ -1188,12 +1184,14 @@ webpackJsonp([0,1],[
 		render: function render() {
 			gl.viewport(0, 0, gl.canvas.clientWidth / _shaderboy2.default.renderScale, window.innerHeight / _shaderboy2.default.renderScale);
 			this.shaders.main.begin();
-			this.shaders.main.uniforms.iResolution = [_shaderboy2.default.uniforms.iResolution[0] / _shaderboy2.default.renderScale, _shaderboy2.default.uniforms.iResolution[1] / _shaderboy2.default.renderScale];
+			this.shaders.main.uniforms.iResolution = [_shaderboy2.default.uniforms.iResolution[0] / _shaderboy2.default.renderScale, _shaderboy2.default.uniforms.iResolution[1] / _shaderboy2.default.renderScale, _shaderboy2.default.uniforms.iResolution[2]];
 			this.shaders.main.uniforms.iTime = _shaderboy2.default.uniforms.iTime;
 			this.shaders.main.uniforms.iTimeDelta = _shaderboy2.default.uniforms.iTimeDelta;
 			this.shaders.main.uniforms.iFrame = _shaderboy2.default.uniforms.iFrame;
+			this.shaders.main.uniforms.iFrameRate = _shaderboy2.default.uniforms.iFrameRate;
+			this.shaders.main.uniforms.iDate = _shaderboy2.default.uniforms.iDate;
 			this.shaders.main.uniforms.iChannel0 = 0;
-			this.shaders.main.uniforms.iMouse = _shaderboy2.default.uniforms.iMouse;
+			this.shaders.main.uniforms.iMouse = [_shaderboy2.default.uniforms.iMouse[0] / _shaderboy2.default.renderScale, _shaderboy2.default.uniforms.iMouse[1] / _shaderboy2.default.renderScale, _shaderboy2.default.uniforms.iMouse[2] / _shaderboy2.default.renderScale, _shaderboy2.default.uniforms.iMouse[3] / _shaderboy2.default.renderScale];
 			this.shaders.main.setUniforms();
 			this.shaders.main.setTexture2d(0, this.mainTextures[0]);
 			this.shaders.main.drawTexture(this.mainFramebuffer, this.mainTextures[1]);

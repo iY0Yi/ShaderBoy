@@ -228,16 +228,15 @@ ShaderBoy.update = function () {
 	requestAnimationFrame(ShaderBoy.update);
 	if (ShaderBoy.isPlaying) {
 		if (ShaderBoy.time.needUpdate()) {
-			ShaderBoy.uniforms.iTime = ShaderBoy.time.appTime;
-			ShaderBoy.uniforms.iResolution = [ShaderBoy.gl.canvas.clientWidth, window.innerHeight];
+			ShaderBoy.uniforms.iResolution = [ShaderBoy.gl.canvas.clientWidth, window.innerHeight, 1.0];
 			ShaderBoy.renderer.render();
 			if (ShaderBoy.needEditor) {
 				ShaderBoy.gui.redrawHeader();
 			}
 			ShaderBoy.uniforms.iFrame++;
 		}
-		ShaderBoy.gui.mouse.down.prev = ShaderBoy.gui.mouse.down.curr;
-		ShaderBoy.gui.mouse.position.prev = [ShaderBoy.gui.mouse.position.curr[0], ShaderBoy.gui.mouse.position.curr[1]];
+		// ShaderBoy.gui.mouse.down.prev = ShaderBoy.gui.mouse.down.curr;
+		// ShaderBoy.gui.mouse.position.prev = [ShaderBoy.gui.mouse.position.curr[0], ShaderBoy.gui.mouse.position.curr[1]];
 	}
 };
 

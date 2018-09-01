@@ -26,20 +26,6 @@ export default ShaderBoy.gui = {
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	mouse: {
-		down:
-		{
-			curr: false,
-			prev: false
-		},
-		position:
-		{
-			curr: [ShaderBoy.uniforms.iMouse[0], ShaderBoy.uniforms.iMouse[1]],
-			prev: [ShaderBoy.uniforms.iMouse[0], ShaderBoy.uniforms.iMouse[1]]
-		}
-	},
-
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	init: function () {
 		ShaderBoy.style.buttonHeight = 35;
 
@@ -73,14 +59,18 @@ export default ShaderBoy.gui = {
 		this.header.contents.style.marginTop = '9px';
 		this.header.contents.style.marginLeft = 15 + 'px';
 
-		this.mouseLeftDownCur = false;
 		this.mousePositionCur = [];
+		this.mousePosX = 0;
+		this.mouseOriY = 0;
+		this.mousePosX = 0;
+		this.mousePosY = 0;
+		this.mouseIsDown = false;
 		// this.header.contents.style.marginLeft = ShaderBoy.style.buttonHeight + 5 + 'px';
 	},
 
 	redrawHeader: function () {
 		if (this.header.needUpdate !== true)
-			this.header.contents.innerText = ShaderBoy.uniforms.iTime.toFixed(3) + ' sec' + ' / ' + ShaderBoy.uniforms.iFrame.toFixed(0) + ' frms' + ' / ' + ShaderBoy.time.fps + ' fps';
+			this.header.contents.innerText = ShaderBoy.uniforms.iTime.toFixed(3) + ' sec' + ' / ' + ShaderBoy.uniforms.iFrame.toFixed(0) + ' frms' + ' / ' + ShaderBoy.time.fps.toFixed(1) + ' fps';
 
 	},
 
@@ -89,53 +79,46 @@ export default ShaderBoy.gui = {
 		let scrollMul = 1;
 		if (ShaderBoy.OS === 'Windows') { scrollMul = 100.0; }
 
-		let eventPos = function (event) {
-			let x = window.innerWidth - event.clientX;
-			let y = window.innerHeight - event.clientY;
-			console.log('x', x);
-			console.log('y', y);
-			return {
-				x: x,
-				y: y
-			};
-		};
-
-		let canvasMousePos = function (event) {
-			return eventPos(event);
-		};
-
-		document.body.onmousedown = function (event) {
-			if (event.button == 2) return false;
+		document.body.onmousedown = function (ev) {
+			if (ev.button == 2) return false;
 			if (ShaderBoy.isEditorHide) {
-				let mouse = eventPos(event);
-				if (mouse.x >= 0 && mouse.x < document.body.clientWidth && mouse.y >= 0 && mouse.y < document.body.clientHeight) {
-					this.mouseLeftDownCur = true;
-					ShaderBoy.uniforms.iMouse[2] = 1;
+				let c = ShaderBoy.canvas;
+				let rect = c.getBoundingClientRect();
+				this.mouseOriX = Math.floor((ev.clientX - rect.left) / (rect.right - rect.left) * c.width);
+				this.mouseOriY = Math.floor(c.height - (ev.clientY - rect.top) / (rect.bottom - rect.top) * c.height);
+				this.mousePosX = this.mouseOriX;
+				this.mousePosY = this.mouseOriY;
+				this.mouseIsDown = true;
+				if (!ShaderBoy.isPlaying) ShaderBoy.forceFrame = true;
+				ShaderBoy.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY];
+			}
+		};
+
+		document.body.onmouseup = function (ev) {
+			if (ShaderBoy.isEditorHide) {
+				this.mouseIsDown = false;
+				this.mouseOriX = -Math.abs(this.mouseOriX);
+				this.mouseOriY = -Math.abs(this.mouseOriY);
+				if (!ShaderBoy.isPlaying) ShaderBoy.forceFrame = true;
+				ShaderBoy.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY];
+			}
+		};
+
+		document.body.onmousemove = function (ev) {
+			if (ShaderBoy.isEditorHide) {
+				if (this.mouseIsDown) {
+					let c = ShaderBoy.canvas;
+					let rect = c.getBoundingClientRect();
+					this.mousePosX = Math.floor((ev.clientX - rect.left) / (rect.right - rect.left) * c.width);
+					this.mousePosY = Math.floor(c.height - (ev.clientY - rect.top) / (rect.bottom - rect.top) * c.height);
+					if (!ShaderBoy.isPlaying) ShaderBoy.forceFrame = true;
+					ShaderBoy.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY];
 				}
 			}
 		};
 
-		document.body.onmouseup = function (event) {
-			if (ShaderBoy.isEditorHide) {
-				this.mouseLeftDownCur = false;
-				let mouse = eventPos(event);
-				ShaderBoy.uniforms.iMouse[2] = 0;
-			}
-		};
-
-		document.body.onmousemove = function (event) {
-			if (!this.mouseLeftDownCur) return;
-			if (ShaderBoy.isEditorHide) {
-				let mouse = eventPos(event);
-				console.log('mouse', mouse);
-				this.mousePositionCur = [mouse.x, mouse.y];
-				ShaderBoy.uniforms.iMouse[0] = mouse.x;
-				ShaderBoy.uniforms.iMouse[1] = mouse.y;
-			}
-		};
-
-		document.body.contextmenu = function (event) {
-			event.preventDefault();
+		ShaderBoy.canvas.contextmenu = function (ev) {
+			ev.preventDefault();
 		};
 	}
 };

@@ -4,7 +4,7 @@
 // just draw color buffer to screen.
 //
 ////////////////////////////////////////
-uniform vec2 iResolution;// viewport resolution (in pixels)
+uniform vec3 iResolution;// viewport resolution (in pixels)
 uniform sampler2D frameTexture;
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )

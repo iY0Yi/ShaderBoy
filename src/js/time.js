@@ -24,6 +24,7 @@ export default ShaderBoy.time = {
     pausedTime: 0,
     offsetTime: 0,
     appTime: 0,
+    d: undefined,
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     init: function () {
@@ -31,11 +32,10 @@ export default ShaderBoy.time = {
         this.pnow = window.performance && (performance.now || performance.mozNow || performance.msNow || performance.oNow || performance.webkitNow);
         this.getGlobalTime = function () { return (this.pnow && this.pnow.call(performance)) * 0.001 || (new Date().getTime()) * 0.001; }
         this.startTime = this.getGlobalTime();
-
         //FPS counter
         this.endCollection = collectFPS();
         setInterval(() => {
-            this.fps = this.endCollection().toFixed(0);
+            this.fps = this.endCollection();
             this.endCollection = collectFPS();
         }, 1000);
     },
@@ -44,9 +44,18 @@ export default ShaderBoy.time = {
     needUpdate: function () {
         let now = Date.now();
         this.time_elapsed = now - this.time_then;
+
         if (this.time_elapsed > this.FPS_INTERVAL) {
             this.time_then = now - (this.time_elapsed % this.FPS_INTERVAL);
-            this.appTime = this.getGlobalTime() - this.offsetTime - this.startTime;
+            let oldITime = ShaderBoy.uniforms.iTime;
+            ShaderBoy.uniforms.iTime = this.getGlobalTime() - this.offsetTime - this.startTime;
+            ShaderBoy.uniforms.iTimeDelta = ShaderBoy.uniforms.iTime - oldITime;
+            ShaderBoy.uniforms.iFrameRate = this.fps;
+            let d = new Date();
+            ShaderBoy.uniforms.iDate = [d.getFullYear(), // the year (four digits)
+            d.getMonth(),	   // the month (from 0-11)
+            d.getDate(),     // the day of the month (from 1-31)
+            d.getHours() * 60.0 * 60 + d.getMinutes() * 60 + d.getSeconds() + d.getMilliseconds() / 1000.0]
             return true;
         }
         else {

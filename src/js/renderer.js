@@ -40,9 +40,10 @@ export default ShaderBoy.renderer = {
 		this.shaders.main.uniforms = {
 			'iResolution': ShaderBoy.uniforms.iResolution,           // viewport resolution (in pixels)
 			'iTime': ShaderBoy.uniforms.iTime,                 // shader playback time (in seconds)
-			'iTimeDelta': 0,            // render time (in seconds)
+			'iTimeDelta': ShaderBoy.uniforms.iTimeDelta,            // render time (in seconds)
 			'iFrame': ShaderBoy.uniforms.iFrame,                // shader playback frame
-			// 'iDate': iDate,                 // (year, month, day, time in seconds)
+			'iFrameRate': ShaderBoy.uniforms.iFrameRate,                // shader playback frame
+			'iDate': ShaderBoy.uniforms.iDate,                 // (year, month, day, time in seconds)
 			// 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
 			// 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
 			'iMouse': ShaderBoy.uniforms.iMouse,                // mouse pixel coords. xy: current (if MLB down), zw: click
@@ -157,12 +158,14 @@ export default ShaderBoy.renderer = {
 	render: function () {
 		gl.viewport(0, 0, gl.canvas.clientWidth / ShaderBoy.renderScale, window.innerHeight / ShaderBoy.renderScale);
 		this.shaders.main.begin();
-		this.shaders.main.uniforms.iResolution = [ShaderBoy.uniforms.iResolution[0] / ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[1] / ShaderBoy.renderScale];
+		this.shaders.main.uniforms.iResolution = [ShaderBoy.uniforms.iResolution[0] / ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[1] / ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[2]];
 		this.shaders.main.uniforms.iTime = ShaderBoy.uniforms.iTime;
 		this.shaders.main.uniforms.iTimeDelta = ShaderBoy.uniforms.iTimeDelta;
 		this.shaders.main.uniforms.iFrame = ShaderBoy.uniforms.iFrame;
+		this.shaders.main.uniforms.iFrameRate = ShaderBoy.uniforms.iFrameRate;
+		this.shaders.main.uniforms.iDate = ShaderBoy.uniforms.iDate;
 		this.shaders.main.uniforms.iChannel0 = 0;
-		this.shaders.main.uniforms.iMouse = ShaderBoy.uniforms.iMouse;
+		this.shaders.main.uniforms.iMouse = [ShaderBoy.uniforms.iMouse[0] / ShaderBoy.renderScale, ShaderBoy.uniforms.iMouse[1] / ShaderBoy.renderScale, ShaderBoy.uniforms.iMouse[2] / ShaderBoy.renderScale, ShaderBoy.uniforms.iMouse[3] / ShaderBoy.renderScale];
 		this.shaders.main.setUniforms();
 		this.shaders.main.setTexture2d(0, this.mainTextures[0]);
 		this.shaders.main.drawTexture(this.mainFramebuffer, this.mainTextures[1]);

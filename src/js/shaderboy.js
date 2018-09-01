@@ -19,6 +19,7 @@ let ShaderBoy = {
     needRecompile: false,
     needStatusInfo: false,
     needEditor: false,
+    forceFrame: false,
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     style: {
@@ -37,11 +38,12 @@ let ShaderBoy = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     uniforms: {
-        iResolution: [0, 0],
-        iTime: 1,
-        iTimeDelta: 1,
+        iResolution: [0, 0, 1],
+        iTime: 0,
+        iTimeDelta: 60 / 1000,
         iFrame: 0,
         iDate: 0,
+        iFrameRate: 0,
         // iChannelTime:[0, 0, 0, 0],
         // iChannelResolution:[0, 0, 0, 0],
         iMouse: [0, 0, 0, 0]
