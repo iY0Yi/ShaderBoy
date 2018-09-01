@@ -20,13 +20,14 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 ### Supported Uniforms  
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
 - [X] uniform float     **iTime;**                 *// shader playback time (in seconds)*
-- [ ] uniform float     **iTimeDelta;**            *// render time (in seconds)*
+- [X] uniform float     **iTimeDelta;**            *// render time (in seconds)*
 - [X] uniform int       **iFrame;**                *// shader playback frame*
+- [X] uniform float       **iFrameRate;**                *// number of frames rendered per second*
 - [ ] uniform float     **iChannelTime[4];**       *// channel playback time (in seconds)*
 - [ ] uniform vec3      **iChannelResolution[4];** *// channel resolution (in pixels)*
 - [X] uniform vec4      **iMouse;**                *// mouse pixel coords. xy: current (if MLB down), zw: click*
 - [ ] uniform samplerXX **iChannel0..3;**          *// input channel. XX = 2D/Cube*
-- [ ] uniform vec4      **iDate;**                 *// (year, month, day, time in seconds)*
+- [X] uniform vec4      **iDate;**                 *// (year, month, day, time in seconds)*
 - [ ] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
 </br>
 </br>
@@ -36,9 +37,9 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 Any pull requests welcome.( ༎ຶ‿༎ຶ )
   
 ### General
-- [ ] Fix broken uniforms
 - [ ] Fit to window resizing
 - [ ] Kill software keyboards(refocus)
+- [X] ~~Fix broken uniforms~~(2018.9.1)
 - [X] ~~Inline error display~~(2018.8.30)
 - [X] ~~Active line highlight~~(2018.8.29)
 - [X] ~~Wordwrapping or scrolling~~(2018.8.29)
