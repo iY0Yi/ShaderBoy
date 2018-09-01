@@ -17,18 +17,19 @@ Your power to go.</br>
 # App
 ShaderBoy is a *PWA(Progressive Web Apps).*  
 You can install ShaderBoy app from [here](https://shaderboy.net/).  
+###### *TIPS: You can use 'iChannel0' as buffer for previous frame.*  
   
 ### Supported Uniforms  
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
 - [X] uniform float     **iTime;**                 *// shader playback time (in seconds)*
 - [X] uniform float     **iTimeDelta;**            *// render time (in seconds)*
 - [X] uniform int       **iFrame;**                *// shader playback frame*
-- [X] uniform float       **iFrameRate;**                *// number of frames rendered per second*
+- [X] uniform float     **iFrameRate;**            *// number of frames rendered per second*
+- [X] uniform vec4      **iDate;**                 *// (year, month, day, time in seconds)*
+- [X] uniform vec4      **iMouse;**                *// mouse pixel coords. xy: current (if MLB down), zw: click*
 - [ ] uniform float     **iChannelTime[4];**       *// channel playback time (in seconds)*
 - [ ] uniform vec3      **iChannelResolution[4];** *// channel resolution (in pixels)*
-- [X] uniform vec4      **iMouse;**                *// mouse pixel coords. xy: current (if MLB down), zw: click*
 - [ ] uniform samplerXX **iChannel0..3;**          *// input channel. XX = 2D/Cube*
-- [X] uniform vec4      **iDate;**                 *// (year, month, day, time in seconds)*
 - [ ] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
 </br>
 </br>
