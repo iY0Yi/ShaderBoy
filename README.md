@@ -82,14 +82,14 @@ If you want to change, edit "editor.js", and build it.
 - [ ] Official assets(textures)
   
 ### Manipulations
-- [ ] GUI for some useful settings
+- [ ] GUI
   
 ### Other
 - [ ] Dropbox integration
 - [ ] Shadertoy API integration
 - [ ] Recording in any resolution as PNG sequence
 - [ ] More rich splash screen
-- [ ] Some Themes
+- [ ] Themes for editor pane
 </br>
 </br>
 </br>
