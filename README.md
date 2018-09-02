@@ -82,7 +82,8 @@ If you want to change, edit "editor.js", and build it.
 - [ ] Official assets(textures)
   
 ### Manipulations
-- [ ] GUI
+- [ ] User friendly UI
+- [ ] Auto slider for added uniforms
   
 ### Other
 - [ ] Dropbox integration
