@@ -82,6 +82,7 @@ If you want to change, edit "editor.js", and build it.
 - [ ] Official assets(textures)
   
 ### Manipulations
+- [ ] Multiple editor pane
 - [ ] User friendly UI
 - [ ] Auto slider for added uniforms
   
