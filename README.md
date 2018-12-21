@@ -82,13 +82,16 @@ If you want to change, edit "editor.js", and build it.
 - [ ] Official assets(textures)
   
 ### Manipulations
-- [ ] GUI for some useful settings
+- [ ] Multiple editor pane
+- [ ] User friendly UI
+- [ ] Auto slider for added uniforms
   
 ### Other
 - [ ] Dropbox integration
 - [ ] Shadertoy API integration
-- [ ] Splash screen for iOS
-- [ ] Some Themes
+- [ ] Recording in any resolution as PNG sequence
+- [ ] More rich splash screen
+- [ ] Themes for editor pane
 </br>
 </br>
 </br>
