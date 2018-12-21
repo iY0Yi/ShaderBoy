@@ -14,20 +14,23 @@ let ShaderBoy = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     editor: null,
-    isPlaying: true,
+    isPlaying: false,
     isEditorHide: false,
+    isConcentrating: false,
     needRecompile: false,
     needStatusInfo: false,
-    needEditor: false,
     forceFrame: false,
+    forceDraw: false,
+    editingBuffer: '',
+    vsSource: null,
+    screenShader: null,
+    activeBufferIds: [],
+    config: {},
+
+    activeShaderName: '_defaultShader',
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     style: {
-
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    settings: {
 
     },
 

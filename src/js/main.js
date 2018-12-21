@@ -15,15 +15,17 @@ import gui from './gui';
 import renderer from './renderer';
 import editor from './editor';
 import util from './util';
-import BufferDataContainer from './buffer_data_container';
-
+import bufferManager from './buffer_manager';
 import ShaderLib from './shader/shaderlib';
 import ShaderList from './shader/shaderlist';
 
 // ShaderBoy init
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 ShaderBoy.init = function () {
+
+	ShaderBoy.capture = null;
+	ShaderBoy.isRecording = false;
+
 	ShaderBoy.OS = 'Unknown OS';
 	if (navigator.appVersion.indexOf('Win') != -1) ShaderBoy.OS = 'Windows';
 	if (navigator.appVersion.indexOf('Mac') != -1) ShaderBoy.OS = 'MacOS';
@@ -31,6 +33,9 @@ ShaderBoy.init = function () {
 	if (navigator.appVersion.indexOf('Linux') != -1) ShaderBoy.OS = 'Linux';
 	if (navigator.appVersion.indexOf('iphone') != -1) ShaderBoy.OS = 'iOS';
 	if (navigator.appVersion.indexOf('android') != -1) ShaderBoy.OS = 'Android';
+	if (ShaderBoy.OS === 'Unknown OS') {
+		ShaderBoy.OS = 'Android';
+	}
 
 	console.log('ShaderBoy.OS', ShaderBoy.OS);
 	console.log('navigator.appVersion', navigator.appVersion);
@@ -185,26 +190,13 @@ ShaderBoy.init = function () {
 	}
 
 	if (ShaderBoy.gl) {
-		ShaderBoy.buffers['Common'] = new BufferDataContainer(false);
-		ShaderBoy.buffers['MainImage'] = new BufferDataContainer(true);
 
-		if (ShaderBoy.needEditor) {
-			ShaderBoy.gui.init();
-			ShaderBoy.editor.init();
-		}
-
-		ShaderBoy.io.loadShader(function () {
-			ShaderBoy.renderer.init();
-			if (ShaderBoy.needEditor) {
-				ShaderBoy.editor.selectBuffer('MainImage', true);
-				ShaderBoy.editor.selectBuffer('Common', true);
-				ShaderBoy.editor.selectBuffer('MainImage', false);
-			}
-			ShaderBoy.io.recompile();
-			ShaderBoy.gui.setupInteraction();
-			ShaderBoy.time.init();
-			ShaderBoy.update();
-		});
+		ShaderBoy.gui.init();
+		ShaderBoy.time.init();
+		ShaderBoy.bufferManager.init();
+		ShaderBoy.editor.init();
+		ShaderBoy.io.init();
+		ShaderBoy.update();
 	}
 	else {
 		throw 'Sorry! Your browser does not support WEBGL!';
@@ -213,31 +205,54 @@ ShaderBoy.init = function () {
 
 // Update
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-var requestAnimationFrame = (function () {
-	return window.requestAnimationFrame ||
-		window.webkitRequestAnimationFrame ||
-		window.mozRequestAnimationFrame ||
-		window.oRequestAnimationFrame ||
-		window.msRequestAnimationFrame ||
-		function (callback) {
-			window.setTimeout(callback, 1000.0 / 60.0);
-		};
+// RequestAnimationFrame
+window.requestAnimFrame = (function () {
+	return window.requestAnimationFrame || window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame || window.oRequestAnimationFrame ||
+		window.msRequestAnimationFrame || function (cb) { window.setTimeout(cb, 1000 / 60); };
 })();
 
 ShaderBoy.update = function () {
 	requestAnimationFrame(ShaderBoy.update);
 	if (ShaderBoy.isPlaying) {
 		if (ShaderBoy.time.needUpdate()) {
-			ShaderBoy.uniforms.iResolution = [ShaderBoy.gl.canvas.clientWidth, window.innerHeight, 1.0];
 			ShaderBoy.renderer.render();
-			if (ShaderBoy.needEditor) {
-				ShaderBoy.gui.redrawHeader();
+			if (ShaderBoy.capture && ShaderBoy.isRecording) {
+				ShaderBoy.capture.capture(ShaderBoy.canvas);
+				let total = ShaderBoy.capture.totalframes;
+				let current = ShaderBoy.capture.currentframes;
+
+				if (current > total) {
+					ShaderBoy.gui.header.showCommandInfo('✓ Finished Recording.', '#FF0000', '#1E1E1E', false);
+					ShaderBoy.capture.stop();
+					console.log('ShaderBoy.capture', ShaderBoy.capture);
+					let canvasWidth = Math.floor(window.innerWidth);
+					let canvasHeight = Math.floor(window.innerHeight);
+					ShaderBoy.canvas.width = canvasWidth;
+					ShaderBoy.canvas.height = canvasHeight;
+					ShaderBoy.bufferManager.initFrameBuffers();
+					ShaderBoy.isRecording = false;
+					ShaderBoy.capture = null;
+					ShaderBoy.time.pause();
+					ShaderBoy.time.reset();
+				}
+				else {
+					ShaderBoy.gui.header.showCommandInfo('● Recording... ' + current + ' / ' + total + ' frames', '#FF0000', '#1E1E1E', true);
+					ShaderBoy.capture.currentframes++;
+				}
 			}
 			ShaderBoy.uniforms.iFrame++;
 		}
 	}
+	else if (ShaderBoy.forceDraw === true) {
+		ShaderBoy.renderer.render();
+		ShaderBoy.forceDraw = false;
+	}
+	ShaderBoy.gui.redraw();
 };
 
 // Entry point
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-window.onload = function () { ShaderLib.loadShaders(ShaderList, ShaderBoy.init); };
+window.onload = function () {
+	ShaderLib.loadShadersFiles(ShaderList, ShaderBoy.init);
+};

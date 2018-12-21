@@ -16,21 +16,22 @@ export default ShaderBoy.time = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     FPS: 60.0,
     FPS_INTERVAL: 1000 / 60,
-    pnow: undefined,
     getGlobalTime: undefined,
     time_then: undefined,
     time_elapsed: undefined,
     startTime: undefined,
     pausedTime: 0,
     offsetTime: 0,
-    appTime: 0,
-    d: undefined,
+    fps: 0,
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     init: function () {
+
         this.time_then = Date.now();
-        this.pnow = window.performance && (performance.now || performance.mozNow || performance.msNow || performance.oNow || performance.webkitNow);
-        this.getGlobalTime = function () { return (this.pnow && this.pnow.call(performance)) * 0.001 || (new Date().getTime()) * 0.001; }
+        this.getGlobalTime = (function () {
+            if ("performance" in window) return function () { return window.performance.now() * 0.001; }
+            return function () { return (new Date()).getTime() * 0.001; }
+        })();
         this.startTime = this.getGlobalTime();
         //FPS counter
         this.endCollection = collectFPS();
@@ -61,7 +62,7 @@ export default ShaderBoy.time = {
             return true;
         }
         else {
-            false;
+            return false;
         }
     },
 
@@ -70,16 +71,19 @@ export default ShaderBoy.time = {
         this.startTime = this.getGlobalTime();
         this.pausedTime = 0;
         this.offsetTime = 0;
+        ShaderBoy.uniforms.iTime = 0.0;
+        ShaderBoy.uniforms.iFrame = 0;
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     pause: function () {
         if (ShaderBoy.isPlaying !== true) {
             this.pausedTime = this.getGlobalTime();
+            console.log('Paused.');
         }
         else {
-            if (this.pausedTime !== 0 && this.offsetTime !== 0)
-                this.offsetTime += this.getGlobalTime() - this.pausedTime;
+            this.offsetTime += this.getGlobalTime() - this.pausedTime;
+            console.log('Resumed.');
         }
     }
 };

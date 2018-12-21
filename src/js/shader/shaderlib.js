@@ -10,7 +10,8 @@ var ShaderLib = {
 	shaderNum: 0,
 	shaderInitialized: false,
 
-	loadShader: function (name, url) {
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	loadTextFile: function (name, url) {
 		// Set up an asynchronous request
 		let request = new XMLHttpRequest();
 		request.open('GET', url, true);
@@ -54,16 +55,16 @@ var ShaderLib = {
 		request.send(null);
 	},
 
-	loadShaders: function (ref, callback) {
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	loadShadersFiles: function (ref, callback) {
 
-		ShaderBoy.needEditor = (document.getElementById('ctrl') !== null && document.getElementById('code') !== null);
 		this.callback = callback;
 		this.shaderNum = ref.length;
 
 		for (let i = 0; i < this.shaderNum; i++) {
 			let name = ref[i].name;
-			let url = "/app" + ref[i].url;
-			this.loadShader(name, url);
+			let url = window.location.href + ref[i].url;
+			this.loadTextFile(name, url);
 		}
 	}
 };

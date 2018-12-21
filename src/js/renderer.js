@@ -9,165 +9,71 @@
 //                                                       
 
 import ShaderBoy from './shaderboy';
-import ShaderLib from './shader/shaderlib';
-import Shader from './shader/shader';
-import AssetLoader from './util/AssetLoader';
-
-let gl = null;
+import bufferManager from './buffer_manager';
 
 export default ShaderBoy.renderer = {
-
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	init: function () {
-		gl = ShaderBoy.gl;
-
-		this.shaders = {};
-
-		let mainFragCode = '';
-		mainFragCode =
-			ShaderBoy.shaderHeader[1] +
-			ShaderLib.shader.uniformFS +
-			ShaderLib.shader.commonFS +
-			ShaderLib.shader.imageFS +
-			ShaderLib.shader.commonfooterFS;
-		let vsSource = null;
-		if (ShaderBoy.glVersion === 2.0)
-			vsSource = ShaderBoy.shaderHeader[0] + "in vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }";
-		else
-			vsSource = ShaderBoy.shaderHeader[0] + "attribute vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }";
-
-		this.shaders.main = new Shader(gl, vsSource, mainFragCode);
-		this.shaders.main.uniforms = {
-			'iResolution': ShaderBoy.uniforms.iResolution,           // viewport resolution (in pixels)
-			'iTime': ShaderBoy.uniforms.iTime,                 // shader playback time (in seconds)
-			'iTimeDelta': ShaderBoy.uniforms.iTimeDelta,            // render time (in seconds)
-			'iFrame': ShaderBoy.uniforms.iFrame,                // shader playback frame
-			'iFrameRate': ShaderBoy.uniforms.iFrameRate,                // shader playback frame
-			'iDate': ShaderBoy.uniforms.iDate,                 // (year, month, day, time in seconds)
-			'iMouse': ShaderBoy.uniforms.iMouse,                // mouse pixel coords. xy: current (if MLB down), zw: click
-			'iChannel0': 0,             // input channel. XX = 2D/Cube
-			// 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
-			// 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
-			// 'iChannel1': 1,             // input channel. XX = 2D/Cube
-			// 'iChannel2': 2,             // input channel. XX = 2D/Cube
-			// 'iChannel3': 3,             // input channel. XX = 2D/Cube
-		};
-
-		let screenFsHeader = '';
-		if (ShaderBoy.glVersion === 2.0) {
-		}
-		else {
-			screenFsHeader += '#define outColor gl_FragColor\n';
-		}
-		this.shaders.screen = new Shader(gl, vsSource, screenFsHeader + ShaderBoy.shaderHeader[1] + ShaderLib.shader.screenFS + ShaderLib.shader.commonfooterFS);
-		this.shaders.screen.uniforms = {
-			'iResolution': ShaderBoy.uniforms.iResolution,
-			'frameTexture': 0
-		};
-
-		this.createBuffer(true);
-	},
-
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	recompile: function (commonCode, fragmentCode) {
-		let mainFragCode = '';
-		ShaderBoy.shaderUniformsLines = ShaderLib.shader.uniformFS.split(/\n/).length - 1;
-		ShaderBoy.shaderCommonLines = commonCode.split(/\n/).length - 1;
-
-		mainFragCode +=
-			ShaderBoy.shaderHeader[1] +
-			ShaderLib.shader.uniformFS +
-			commonCode +
-			fragmentCode +
-			ShaderLib.shader.commonfooterFS;
-		this.shaders.main.recompileFragment(mainFragCode);
-	},
-
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	createBuffer: function (init) {
-		function setFloatTextureParams(gl, texture, width, height) {
-			gl.bindTexture(gl.TEXTURE_2D, texture);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, width, height, 0, gl.RGBA, gl.FLOAT, null);
-			gl.bindTexture(gl.TEXTURE_2D, null);
-		}
-
-		function setUnsignedByteTextureParams(gl, texture, width, height) {
-			gl.bindTexture(gl.TEXTURE_2D, texture);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-			gl.bindTexture(gl.TEXTURE_2D, null);
-		}
-
-		// create mainFramebuffer
-		this.mainFramebuffer = gl.createFramebuffer();
-		if (init === false) {
-			gl.deleteTexture(this.mainTextures[0]);
-			gl.deleteTexture(this.mainTextures[1]);
-		}
-
-		// create textures
-		this.mainTextures = [];
-		for (let i = 0; i < 2; i++) {
-			this.mainTextures.push(gl.createTexture());
-			if (ShaderBoy.glVersion === 2.0) {
-				setFloatTextureParams(gl, this.mainTextures[i], window.innerWidth / ShaderBoy.renderScale, window.innerHeight / ShaderBoy.renderScale);
-			}
-			else {
-				let width = window.innerWidth / ShaderBoy.renderScale;
-				let height = window.innerHeight / ShaderBoy.renderScale;
-				setUnsignedByteTextureParams(gl, this.mainTextures[i], width, height);
-			}
-		}
-		gl.bindFramebuffer(gl.FRAMEBUFFER, this.mainFramebuffer);
-		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.mainTextures[0], 0);
-		gl.clearColor(0.0, 0.0, 0.0, 1.0);
-		gl.clearDepth(1.0);
-		gl.clear(gl.COLOR_BUFFER_BIT);
-		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-		gl.bindFramebuffer(gl.FRAMEBUFFER, this.mainFramebuffer);
-		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.mainTextures[1], 0);
-		gl.clearColor(0.0, 0.0, 0.0, 1.0);
-		gl.clearDepth(1.0);
-		gl.clear(gl.COLOR_BUFFER_BIT);
-		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-	},
-
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	render: function () {
-		gl.viewport(0, 0, gl.canvas.clientWidth / ShaderBoy.renderScale, window.innerHeight / ShaderBoy.renderScale);
-		this.shaders.main.begin();
-		this.shaders.main.uniforms.iResolution = [ShaderBoy.uniforms.iResolution[0] / ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[1] / ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[2]];
-		this.shaders.main.uniforms.iTime = ShaderBoy.uniforms.iTime;
-		this.shaders.main.uniforms.iTimeDelta = ShaderBoy.uniforms.iTimeDelta;
-		this.shaders.main.uniforms.iFrame = ShaderBoy.uniforms.iFrame;
-		this.shaders.main.uniforms.iFrameRate = ShaderBoy.uniforms.iFrameRate;
-		this.shaders.main.uniforms.iDate = ShaderBoy.uniforms.iDate;
-		this.shaders.main.uniforms.iChannel0 = 0;
-		this.shaders.main.uniforms.iMouse = [ShaderBoy.uniforms.iMouse[0] / ShaderBoy.renderScale, ShaderBoy.uniforms.iMouse[1] / ShaderBoy.renderScale, ShaderBoy.uniforms.iMouse[2] / ShaderBoy.renderScale, ShaderBoy.uniforms.iMouse[3] / ShaderBoy.renderScale];
-		this.shaders.main.setUniforms();
-		this.shaders.main.setTexture2d(0, this.mainTextures[0]);
-		this.shaders.main.drawTexture(this.mainFramebuffer, this.mainTextures[1]);
-		this.shaders.main.end();
+		let gl = ShaderBoy.gl;
+		let canvasWidth = (ShaderBoy.capture === null) ? gl.canvas.clientWidth : ShaderBoy.canvas.width;
+		let canvasHeight = (ShaderBoy.capture === null) ? window.innerHeight : ShaderBoy.canvas.height;
+		gl.viewport(0, 0, canvasWidth / ShaderBoy.renderScale, canvasHeight / ShaderBoy.renderScale);
 
-		gl.viewport(0, 0, gl.canvas.clientWidth, window.innerHeight);
-		this.shaders.screen.begin();
-		this.shaders.screen.uniforms.iResolution = ShaderBoy.uniforms.iResolution;
-		this.shaders.screen.uniforms.frameTexture = 0;
-		this.shaders.screen.setUniforms();
-		this.shaders.screen.setTexture2d(0, this.mainTextures[0]);
-		this.shaders.screen.drawScreen();
-		this.shaders.screen.end();
+		const len = ShaderBoy.activeBufferIds.length;
+		for (let i = 0; i < len; i++) {
+			const name = ShaderBoy.activeBufferIds[i];
+			if (ShaderBoy.buffers[name].isRenderable) {
+				let buffer = ShaderBoy.buffers[name];
+				buffer.shader.begin();
+				buffer.shader.uniforms.iResolution = ShaderBoy.uniforms.iResolution;
+				buffer.shader.uniforms.iTime = ShaderBoy.uniforms.iTime;
+				buffer.shader.uniforms.iTimeDelta = ShaderBoy.uniforms.iTimeDelta;
+				buffer.shader.uniforms.iFrame = ShaderBoy.uniforms.iFrame;
+				buffer.shader.uniforms.iFrameRate = ShaderBoy.uniforms.iFrameRate;
+				buffer.shader.uniforms.iDate = ShaderBoy.uniforms.iDate;
+				buffer.shader.uniforms.iMouse = [ShaderBoy.uniforms.iMouse[0] / ShaderBoy.renderScale, ShaderBoy.uniforms.iMouse[1] / ShaderBoy.renderScale, ShaderBoy.uniforms.iMouse[2] / ShaderBoy.renderScale, ShaderBoy.uniforms.iMouse[3] / ShaderBoy.renderScale];
+				buffer.shader.uniforms.iChannel0 = 0;
+				buffer.shader.uniforms.iChannel1 = 1;
+				buffer.shader.uniforms.iChannel2 = 2;
+				buffer.shader.uniforms.iChannel3 = 3;
+				for (let j = 0; j < 4; j++) {
+					const iChannelSetting = buffer.iChannel[j];
+					if (iChannelSetting !== null) {
+						// if (name === 'BufferA') console.log(j + ': ', iChannelSetting);
+						let texid = 0;
+						buffer.needSwap = (name === iChannelSetting.asset);
+						let texture = ShaderBoy.buffers[iChannelSetting.asset].textures[(buffer.needSwap) ? 1 : 0];
+						buffer.shader.setTextureSlot(j);
+						ShaderBoy.bufferManager.setSamplerFilter(texture, iChannelSetting.filter);
+						ShaderBoy.bufferManager.setSamplerWrap(texture, iChannelSetting.wrap);
+						gl.bindTexture(gl.TEXTURE_2D, texture);
+					}
+				}
+				buffer.shader.setShadetoyUniforms();
+				buffer.shader.drawTexture(buffer.framebuffer, buffer.textures[0]);
+				buffer.shader.end();
+			}
+		}
+
+		gl.viewport(0, 0, canvasWidth, canvasHeight);
+		ShaderBoy.screenShader.begin();
+		ShaderBoy.screenShader.uniforms.iResolution = [ShaderBoy.uniforms.iResolution[0] * ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[1] * ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[2]];
+		ShaderBoy.screenShader.uniforms.frameTexture = 0;
+		ShaderBoy.bufferManager.setSamplerFilter(ShaderBoy.buffers['MainImage'].textures[0], 'nearest');
+		ShaderBoy.bufferManager.setSamplerWrap(ShaderBoy.buffers['MainImage'].textures[0], 'clamp');
+		ShaderBoy.screenShader.setTexture2d(0, ShaderBoy.buffers['MainImage'].textures[0]);
+		ShaderBoy.screenShader.setUniforms();
+		ShaderBoy.screenShader.drawScreen();
+		ShaderBoy.screenShader.end();
 
 		gl.flush();
 
-		this.mainTextures.reverse();
+		for (let i = 0; i < len; i++) {
+			const name = ShaderBoy.activeBufferIds[i];
+			if (ShaderBoy.buffers[name].isRenderable) {
+				if (ShaderBoy.buffers[name].needSwap)
+					ShaderBoy.buffers[name].textures.reverse();
+			}
+		}
 	}
 };

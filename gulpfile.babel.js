@@ -8,7 +8,7 @@ import browserSync from 'browser-sync';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import webpackConfig from './webpack.config.js';
 import pck from './package.json';
-
+import webserver from 'gulp-webserver';
 // const reload = browserSync.reload;
 const $ = gulpLoadPlugins(
 	{
@@ -58,6 +58,7 @@ gulp.task('build', () => {
 	);
 });
 
+
 gulp.task('serve', ['webpack', 'copy', 'reload'], () => {
 	browserSync(
 		{
@@ -85,5 +86,15 @@ gulp.task('serve', ['webpack', 'copy', 'reload'], () => {
 			.pipe(browserSync.reload({ stream: true }));
 	});
 });
+
+
+// gulp.task('serve', () => {
+// 	gulp.src('dest')
+// 		.pipe(webserver({
+// 			livereload: false,
+// 			directoryListing: false,
+// 			open: true
+// 		}));
+// });
 
 gulp.task('default', ['serve']);

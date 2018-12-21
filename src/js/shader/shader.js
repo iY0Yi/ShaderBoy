@@ -1,7 +1,10 @@
 import ShaderBoy from '../shaderboy';
+import util from '../util';
 
 let gl = null;
 export default class Shader {
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	constructor(gGl, vertexSource, fragmentSource) {
 		gl = gGl;
 		function regexMap(regex, text, callback) {
@@ -62,7 +65,8 @@ export default class Shader {
 		this.isSampler = isSampler;
 	}
 
-	recompileFragment(fragmentSource) {
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	recompileFragment(fragmentSource, isMainImage) {
 		fragmentSource = fragmentSource.replace('　', ' ');
 		fragmentSource = fragmentSource.replace('	', ' ');
 		fragmentSource = fragmentSource.replace(/[^\x00-\x7F]/g, '');
@@ -80,7 +84,7 @@ export default class Shader {
 			for (let i = 0; i < errors.length - 1; i++) {
 				let errorElements = errors[i].split(':');
 				res[i] = {
-					'lineNum': Math.max(1, errorElements[2] - (ShaderBoy.shaderHeaderLines[1] + ShaderBoy.shaderUniformsLines + ShaderBoy.shaderCommonLines + 1)),
+					'lineNum': Math.max(1, errorElements[2] - (ShaderBoy.shaderHeaderLines[1] + ShaderBoy.shaderUniformsLines + ShaderBoy.shaderCommonLines)),
 					'element': errorElements[3],
 					'msg': errorElements[4]
 				};
@@ -93,31 +97,18 @@ export default class Shader {
 			gl.shaderSource(shader, source);
 			gl.compileShader(shader);
 
-			if (ShaderBoy.needEditor) {
-				if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-					// throw new Error('compile error: ' + gl.getShaderInfoLog(shader));
-
-					ShaderBoy.gui.header.needUpdate = true;
-					scope.errors = splitErrorMsg(gl.getShaderInfoLog(shader));
-					console.log(scope.errors);
-					ShaderBoy.editor.updateErrorInfo(scope.errors);
-					ShaderBoy.gui.header.contents.innerText = '' + 'failed!';
-					ShaderBoy.gui.header.base.domElement.style.backgroundColor = '#FF0000';
-					setTimeout(function () {
-						ShaderBoy.gui.header.needUpdate = false;
-						ShaderBoy.gui.header.base.domElement.style.backgroundColor = '#00000066';
-					}, 6000);
-				}
-				else {
-					scope.errors = [];
-					ShaderBoy.editor.updateErrorInfo(scope.errors);
-					ShaderBoy.gui.header.needUpdate = true;
-					ShaderBoy.gui.header.contents.innerText = 'compiled.';
-					ShaderBoy.gui.header.base.domElement.style.backgroundColor = '#3ca403';
-					setTimeout(function () {
-						ShaderBoy.gui.header.needUpdate = false;
-						ShaderBoy.gui.header.base.domElement.style.backgroundColor = '#00000066';
-					}, 1500);
+			if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+				// throw new Error('compile error: ' + gl.getShaderInfoLog(shader));
+				scope.errors = splitErrorMsg(gl.getShaderInfoLog(shader));
+				console.log(scope.errors);
+				ShaderBoy.editor.updateErrorInfo(scope.errors);
+				ShaderBoy.gui.header.showCommandInfo('failed!', '#d8d4c5', '#FF0000', false);
+			}
+			else {
+				scope.errors = [];
+				ShaderBoy.editor.updateErrorInfo(scope.errors);
+				if (type === gl.FRAGMENT_SHADER && isMainImage) {
+					ShaderBoy.gui.header.showCommandInfo('compiled.', '#d8d4c5', '#3ca403', false);
 				}
 			}
 			return shader;
@@ -136,21 +127,44 @@ export default class Shader {
 		}
 	}
 
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	begin() {
 		gl.useProgram(this.program);
-		// gl.clearColor(0.0, 0.0, 0.0, 1.0);
-		// gl.clear(gl.COLOR_BUFFER_BIT);
 	}
 
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	end() {
-		// gl.clearColor(0.0, 0.0, 0.0, 1.0);
-		// gl.clear(gl.COLOR_BUFFER_BIT);
+		// gl.activeTexture(gl.TEXTURE0);
+		// gl.bindTexture(gl.TEXTURE_2D, null);
+		// gl.activeTexture(gl.TEXTURE1);
+		// gl.bindTexture(gl.TEXTURE_2D, null);
+		// gl.activeTexture(gl.TEXTURE2);
+		// gl.bindTexture(gl.TEXTURE_2D, null);
+		// gl.activeTexture(gl.TEXTURE3);
+		// gl.bindTexture(gl.TEXTURE_2D, null);
 		gl.disableVertexAttribArray(this.vertAttLocation);
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		gl.bindBuffer(gl.ARRAY_BUFFER, null);
 		gl.useProgram(null);
 	}
 
+	setShadetoyUniforms() {
+		gl.uniform3fv(gl.getUniformLocation(this.program, 'iResolution'), new Float32Array(this.uniforms.iResolution));
+		gl.uniform1f(gl.getUniformLocation(this.program, 'iTime'), this.uniforms.iTime);
+		gl.uniform1f(gl.getUniformLocation(this.program, 'iTimeDelta'), this.uniforms.iTimeDelta);
+		gl.uniform1i(gl.getUniformLocation(this.program, 'iFrame'), this.uniforms.iFrame);
+		gl.uniform1f(gl.getUniformLocation(this.program, 'iFrameRate'), this.uniforms.iFrameRate);
+		gl.uniform4fv(gl.getUniformLocation(this.program, 'iDate'), new Float32Array(this.uniforms.iDate));
+		gl.uniform4fv(gl.getUniformLocation(this.program, 'iMouse'), new Float32Array(this.uniforms.iMouse));
+		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel0'), 0);
+		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel1'), 1);
+		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel2'), 2);
+		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel3'), 3);
+	}
+
+
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setUniforms() {
 		let isArray = function (obj) {
 			let str = Object.prototype.toString.call(obj);
@@ -161,21 +175,11 @@ export default class Shader {
 			let str = Object.prototype.toString.call(obj);
 			return str == '[object Number]' || str == '[object Boolean]';
 		};
-		// if(name==='iChannel0')
-		{
-			let location = this.uniformLocations['iChannel0'] || gl.getUniformLocation(this.program, 'iChannel0');
-			gl.uniform1i(location, 0);
-		}
-
-		let location = this.uniformLocations['iChannel0'] || gl.getUniformLocation(this.program, 'iChannel0');
 
 		for (let name in this.uniforms) {
+
 			let realName = name.replace(/\"/g, '');
-			let location = this.uniformLocations[name] || gl.getUniformLocation(this.program, name);
-			if (realName == 'iFrame') {
-				let value = this.uniforms[name];
-				gl.uniform1i(location, value);
-			}
+			let location = this.uniformLocations[realName] || gl.getUniformLocation(this.program, name);
 
 			if (!location) continue;
 			this.uniformLocations[realName] = location;
@@ -185,9 +189,13 @@ export default class Shader {
 				let v, m;
 				switch (value.length) {
 					case 1:
-						v = new Float32Array(value);
-						gl.uniform1fv(location, v);
-						v = null;
+						if (isChannel) {
+							gl.uniform1i(location, value);
+						} else {
+							v = new Float32Array(value);
+							gl.uniform1fv(location, v);
+							v = null;
+						}
 						break;
 					case 2:
 						v = new Float32Array(value);
@@ -230,8 +238,7 @@ export default class Shader {
 						v = null;
 						break;
 					default:
-						// console.log(value);
-						gl.uniform1fv(location, value);
+						gl.uniform1fv(location, new Float32Array(value));
 						break;
 					// throw new Error('don\'t know how to load uniform "' + name + '" of length ' + value.length);
 				}
@@ -250,13 +257,56 @@ export default class Shader {
 		return this;
 	}
 
-	setTexture2d(id, texture) {
-		this.gl = gl;
-		gl.bindTexture(gl.TEXTURE_2D, null);
-		eval('this.gl.activeTexture(this.gl.TEXTURE' + id + ');');
-		gl.bindTexture(gl.TEXTURE_2D, texture);
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	setTextureSlot(id) {
+
+		switch (id) {
+			case 0:
+				gl.activeTexture(gl.TEXTURE0);
+				break;
+			case 1:
+				gl.activeTexture(gl.TEXTURE1);
+				break;
+			case 2:
+				gl.activeTexture(gl.TEXTURE2);
+				break;
+			case 3:
+				gl.activeTexture(gl.TEXTURE3);
+				break;
+			default:
+				gl.activeTexture(gl.TEXTURE0);
+				break;
+		}
 	}
 
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	setTexture2d(id, texture) {
+
+		switch (id) {
+			case 0:
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D, texture);
+				break;
+			case 1:
+				gl.activeTexture(gl.TEXTURE1);
+				gl.bindTexture(gl.TEXTURE_2D, texture);
+				break;
+			case 2:
+				gl.activeTexture(gl.TEXTURE2);
+				gl.bindTexture(gl.TEXTURE_2D, texture);
+				break;
+			case 3:
+				gl.activeTexture(gl.TEXTURE3);
+				gl.bindTexture(gl.TEXTURE_2D, texture);
+				break;
+			default:
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D, texture);
+				break;
+		}
+	}
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setTexture3d(id, texture) {
 		this.gl = gl;
 		gl.bindTexture(gl.TEXTURE_2D, null);
@@ -264,6 +314,7 @@ export default class Shader {
 		gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
 	}
 
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	drawScreen() {
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVBO);
 		gl.vertexAttribPointer(this.vertAttLocation, 2, gl.FLOAT, false, 0, 0);
@@ -271,12 +322,15 @@ export default class Shader {
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
 	}
 
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	drawTexture(fbo, texture) {
 		gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
 		if (texture !== undefined) gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.triVBO);
 		gl.vertexAttribPointer(this.vertAttLocation, 2, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(this.vertAttLocation);
+		gl.clearColor(0.0, 0.0, 0.0, 1.0);
+		gl.clear(gl.COLOR_BUFFER_BIT);
 		gl.drawArrays(gl.TRIANGLES, 0, 3);
 	}
 }

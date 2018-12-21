@@ -1,0 +1,3 @@
+ffmpeg -i %07d.png -start_number 0 -framerate 60 -vcodec libx264 -pix_fmt yuv420p -i sound.mp3 -acodec aac -strict experimental -ab 320k -ac 2 -ar 48000 -shortest output.mp4
+
+ffmpeg -i output.mp4 -ss 00:00:00 -to 00:00:10 -vf scale=640:-1 -r 30 output.gif

@@ -1,0 +1,224 @@
+{
+    "name": "yourshader",
+    "info": {
+        "tags": "Tags, comma separate",
+        "discription": "Descrive your shader"
+    },
+    "buffers": {
+        "Common": {
+            "active": false
+        },
+        "MainImage": {
+            "active": true,
+            "iChannel": [
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                }
+            ]
+        },
+        "BufferA": {
+            "active": false,
+            "iChannel": [
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                }
+            ]
+        },
+        "BufferB": {
+            "active": false,
+            "iChannel": [
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                }
+            ]
+        },
+        "BufferC": {
+            "active": false,
+            "iChannel": [
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                }
+            ]
+        },
+        "BufferD": {
+            "active": false,
+            "iChannel": [
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                }
+            ]
+        },
+        "MainSound": {
+            "active": false,
+            "iChannel": [
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                }
+            ]
+        },
+        "CubemapA": {
+            "active": false,
+            "iChannel": [
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                },
+                {
+                    "asset": null,
+                    "filter": "linear",
+                    "wrap": "repeat",
+                    "vflip": true
+                }
+            ]
+        }
+    },
+    "capture": {
+        "name": "yourshader",
+        "format": "webm",
+        "framerate": 60,
+        "timeLimit": 180,
+        "autoSaveTime": 0,
+        "motionBlurFrames": 0,
+        "quality": 99
+    }
+}

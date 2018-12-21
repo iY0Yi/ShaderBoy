@@ -2,8 +2,18 @@
 <html>
 
 <head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-131224481-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-131224481-1');
+	</script>
+
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="manifest" href="manifest.json">
 	<link rel="shortcut icon" href="../img/icons/favicon.ico">
 	<link rel="icon" type="image/png" sizes="16x16" href="../img/icons/favicon-16x16.png">
@@ -34,17 +44,35 @@
 	<meta name="twitter:site" content="@iy0yi">
 	<meta name="twitter:player" content="@iy0yi">
 
+	<link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Cutive+Mono" rel="stylesheet">
+	<link rel="stylesheet" href="../style.css">
 	<link rel="stylesheet" href="./css/style.css">
 	<link rel="stylesheet" href="./js/codemirror/addon/hint/show-hint.css">
 	<link rel="stylesheet" href="./js/codemirror/lib/codemirror.css">
 	<link rel="stylesheet" href="./js/codemirror/theme/3024-night.css">
 
-	<script src="./js/bundle.js"></script>
-	<script src="./js/main.js"></script>
+	<script src="https://apis.google.com/js/client.js"></script>
+	<script src="./js/CCapture.all.min.js"></script>
+	<script src="./js/bundle.min.js"></script>
+	<script src="./js/main.min.js"></script>
 	<title>ShaderBoy</title>
 </head>
 
 <body>
+
+	<div class="container" id="div_authrise">
+		<div class="content">
+			<div class="glogo"></div>
+			<div class="gdiscription">
+				ShaderBoy uses Google Drive for save your shader.<br> Once you authrise, you can edit same shader from any devices. Please
+				authrise with your Google Account from below button.<br>
+			</div>
+			<div class="btn -bold" id="btn_authrise">Authrise</div>
+		</div>
+		<!-- <div id="main"><canvas id="gl_canvas"></canvas></div> -->
+	</div>
+
 	<div id="ctrl"></div>
 	<!-- comment out here for viewer mode -->
 	<div id="code">

@@ -11,9 +11,9 @@
   -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2); */
   /* box-shadow: 2px 3px 5px rgba(0,0,0,.2); */
   border-radius: 0px;
-  border: 0px solid #1A1A1A;
-  color: white;
-  background: #1A1A1A;
+  border: 0px solid #1E1E1E;
+  color: #d8d4c5;
+  background: #1E1E1E;
   font-size: 130%;
   font-family: monospace;
   
@@ -26,14 +26,14 @@
   padding: 0 4px;
   border-radius: 0px;
   white-space: pre;
-  color: white;
+  color: #d8d4c5;
   border: 0px solid black;
   cursor: pointer;
 }
 
 li.CodeMirror-hint-active {
-  border: 0px solid white;
-  background: white;
+  border: 0px solid #d8d4c5;
+  background: #d8d4c5;
   font-weight: bold;
   color: black;
 }

@@ -1,0 +1,1 @@
+ffmpeg -i E:\PWorks\capture_runrunrun\capture181014\%07d.png -i E:\PWorks\capture_runrunrun\capture181014\sound.mp3 -framerate 60 -start_number 0 -pixel_format yuv420p -acodec aac -strict experimental -ab 320k -ac 2 -ar 48000 -vcodec libx264 -shortest E:\PWorks\capture_runrunrun\capture181014\output.mp4
