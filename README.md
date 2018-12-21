@@ -1,9 +1,10 @@
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/_index/img/sb_logo_1240x600.png"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/_index/img/sb_example.png"></br>
-##### *UPDATE: Now, You can use ShaderBoy on Desktop browser also!*  
+##### *UPDATE: Multipass Shader, GoogleDrive integration, Recording HD video and so on!*  
 <strong>ShaderBoy</strong> is a tiny shader editor for mobile devices.</br>
 It is intended to use [physical keyboards](https://www.google.co.jp/search?q=smartphone+bluetooth+keyboard&source=lnms&tbm=isch&sa=X&ved=0ahUKEwi-kZzK_4fdAhXRdd4KHSp3BOcQ_AUICigB&biw=1440&bih=781) to write shaders on a small screen.</br>
 It has compatible uniforms with <a href="https://www.shadertoy.com/"><em>Shadertoy</em></a>.</br>
+And you need Google account, because ShaderBoy works with GoogleDrive to save your shaders.
 
 Enjoy writing your shaders in everywhere.</br>
 in Bed, Toilet, Train, Camping, Fishing...
@@ -31,8 +32,6 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 - [ ] uniform vec3      **iChannelResolution[4];** *// channel resolution (in pixels)*
 - [ ] uniform samplerXX **iChannel0..3;**          *// input channel. XX = 2D/Cube*
 - [ ] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
-  
-###### *TIPS: A Buffer for previous frame is available as 'iChannel0'.*  
 </br>
 </br>
 </br>
@@ -77,7 +76,7 @@ If you want to change, edit "editor.js", and build it.
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/design/_output/shaderboy_pc.png">  
   
 ### Compatibility
-- [ ] Multipass shader
+- [X] Multipass shader(2018.12.21)
 - [ ] Sound shader
 - [ ] Official assets(textures)
   
@@ -87,9 +86,9 @@ If you want to change, edit "editor.js", and build it.
 - [ ] Auto slider for added uniforms
   
 ### Other
-- [ ] Dropbox integration
+- [X] GoogleDrive integration(2018.12.21)
+- [X] Recording in any resolution as PNG sequence(2018.12.21)
 - [ ] Shadertoy API integration
-- [ ] Recording in any resolution as PNG sequence
 - [ ] More rich splash screen
 - [ ] Themes for editor pane
 </br>
