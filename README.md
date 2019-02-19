@@ -81,7 +81,8 @@ If you want to change, edit "editor.js", and build it.
 - [ ] Official assets(textures)
   
 ### Manipulations
-- [X] x24 uniforms with GUI(knob style) for tweaking
+- [X] Timeline GUI for PC(frame based)
+- [X] x24 uniforms with GUI(knob style) for PC
 - [ ] GUI for Shader list
 - [ ] GUI for iChannels
 - [ ] Multiple editor pane
@@ -89,6 +90,7 @@ If you want to change, edit "editor.js", and build it.
 ### Other
 - [X] GoogleDrive integration(2018.12.21)
 - [X] Recording in any resolution as PNG sequence(2018.12.21)
+- [ ] Witout Google account(localStrage)
 - [ ] Shadertoy API integration
 - [ ] More rich splash screen
 - [ ] Themes for editor pane
