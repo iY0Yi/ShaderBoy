@@ -30,7 +30,7 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 - [X] uniform vec4      **iMouse;**                *// mouse pixel coords. xy: current (if MLB down), zw: click*
 - [ ] uniform float     **iChannelTime[4];**       *// channel playback time (in seconds)*
 - [ ] uniform vec3      **iChannelResolution[4];** *// channel resolution (in pixels)*
-- [ ] uniform samplerXX **iChannel0..3;**          *// input channel. XX = 2D/Cube*
+- [X] uniform samplerXX **iChannel0..3;**          *// input channel. XX = 2D/Cube*
 - [ ] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
 </br>
 </br>
@@ -81,9 +81,10 @@ If you want to change, edit "editor.js", and build it.
 - [ ] Official assets(textures)
   
 ### Manipulations
+- [X] x24 uniforms with GUI(knob style) for tweaking
+- [ ] GUI for Shader list
+- [ ] GUI for iChannels
 - [ ] Multiple editor pane
-- [ ] User friendly UI
-- [ ] Auto slider for added uniforms
   
 ### Other
 - [X] GoogleDrive integration(2018.12.21)
