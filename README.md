@@ -73,7 +73,6 @@ If you want to change, edit "editor.js", and build it.
 </br>
 
 # Features
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/design/_output/shaderboy_pc.png">  
   
 ### Compatibility
 - [X] Shadertoy uniform variables
