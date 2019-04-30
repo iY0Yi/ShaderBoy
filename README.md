@@ -1,4 +1,5 @@
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/_index/img/sb_logo_1240x600.png"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc00.jpg"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/_index/img/sb_example.png"></br>
 
 <strong>ShaderBoy</strong> is a tiny shader editor for mobile devices.</br>
@@ -31,8 +32,8 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 </br>
 
 # Screenshots
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots3.png">  
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots4.png">  
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc00.jpg">
+</br> 
 </br>
 </br>
 </br>
