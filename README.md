@@ -1,6 +1,6 @@
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/_index/img/sb_logo_1240x600.png"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/_index/img/sb_example.png"></br>
-##### *UPDATE: Multipass Shader, GoogleDrive integration, Recording HD video and so on!*  
+
 <strong>ShaderBoy</strong> is a tiny shader editor for mobile devices.</br>
 It is intended to use [physical keyboards](https://www.google.co.jp/search?q=smartphone+bluetooth+keyboard&source=lnms&tbm=isch&sa=X&ved=0ahUKEwi-kZzK_4fdAhXRdd4KHSp3BOcQ_AUICigB&biw=1440&bih=781) to write shaders on a small screen.</br>
 It has compatible uniforms with <a href="https://www.shadertoy.com/"><em>Shadertoy</em></a>.</br>
@@ -10,17 +10,78 @@ Enjoy writing your shaders in everywhere.</br>
 in Bed, Toilet, Train, Camping, Fishing...
 Your power to go.</br>
   
-###### *This is "NOT" Shadertoy official!* 
+##### *This is "NOT" Shadertoy official!* 
+##### *And now... ShaderBoy has updated. On PC, It has nice GUIs for writing shaders comfortably. See screenshots.*
 
 </br>
 </br>
 </br>
-  
+</br>
+</br>
+</br>
+
 # App
 ShaderBoy is a *PWA(Progressive Web Apps).*  
-You can install ShaderBoy app from [here](https://shaderboy.net/).  
+You can install ShaderBoy app from [here](https://shaderboy.net/).
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+
+# Screenshots
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots3.png">  
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots4.png">  
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+
+# Shortcuts
+ShaderBoy has no GUI. Works with shortcuts.  
+These are default shortcuts.  
+If you want to change, edit "editor.js", and build it.  
   
-### Supported Uniforms  
+|   | Smartphone | Windows | Mac |
+|:---|:---|:---|:---|
+| **Compile** | ⌥+ENTER(SPACE) | ⌥+ENTER | ⌥+ENTER |
+| **Play/Pause** | ⌥+UP | ⌥+UP | ⌥+UP |
+| **Reset time** | ⌥+DOWN | ⌥+DOWN | ⌥+DOWN |
+| **Move shader tab** | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT |
+| **Search** | ctrl+F | ctrl+F | ⌘+F |
+| **Replace** | ctrl+H | ctrl+H | ⌘+H |
+| **Resolution** | ctrl+1-4 | ctrl+1-4 | ctrl+1-4 |
+| **Hide/Show WebGL canvas** | ⌥+V | ctrl+⇧+⌥+V | ⌘+⇧+⌥+V |
+| **Hide/Show Code & All GUIs** | ⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
+| **Hide/Show Timeline** | ctrl+⇧+T | ctrl+⇧+⌥+T | ⌘+⇧+⌥+T |
+| **Hide/Show Knobs GUI** | ctrl+⇧+D | ctrl+⇧+⌥+D | ⌘+⇧+⌥+D |
+| **Hide/Show iChannel GUI** | ctrl+⇧+A | ctrl+⇧+⌥+A | ⌘+⇧+⌥+A |
+| **Hide/Show Recording GUI** | ctrl+⇧+A | ctrl+⇧+⌥+A | ⌘+⇧+⌥+A |
+| **Save shader files** | ctrl+S | ctrl +S | ⌘+S |
+| **Create a new shader** | ctrl+⇧+N | ctrl+⇧+⌥+N | ⌘+⇧+⌥+N |
+| **Show shaders list** | ctrl+O | ctrl+O | ⌘+O |
+
+##### *And some of Sublime Text bindings by Codemirror.
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+
+# Features
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/design/_output/shaderboy_pc.png">  
+  
+### Compatibility
+- [X] Shadertoy uniform variables
+- [X] Multipass shader
+- [ ] Sound shader
+- [ ] Official assets(textures)
+
+### Supported Shadertoy Uniforms  
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
 - [X] uniform float     **iTime;**                 *// shader playback time (in seconds)*
 - [X] uniform float     **iTimeDelta;**            *// render time (in seconds)*
@@ -32,68 +93,22 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 - [ ] uniform vec3      **iChannelResolution[4];** *// channel resolution (in pixels)*
 - [X] uniform samplerXX **iChannel0..3;**          *// input channel. XX = 2D/Cube*
 - [ ] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
-</br>
-</br>
-</br>
-  
-# Screenshots
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots3.png">  
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/screenshots4.png">  
-</br>
-</br>
-</br>
-  
-
-# Shortcuts
-ShaderBoy has no GUI. Works with shortcuts.  
-These are default shortcuts.  
-If you want to change, edit "editor.js", and build it.  
-  
-|   | Smartphone | Windows | Mac |
-|:---|:---|:---|:---|
-| **Compile** | ⌥+ENTER(SPACE) | ⌥+ENTER | ⌥+ENTER |
-| **Save** | ctrl+S | ctrl +S | ⌘+S |
-| **Play/Pause** | ⌥+UP | ⌥+UP | ⌥+UP |
-| **Reset time** | ⌥+DOWN | ⌥+DOWN | ⌥+DOWN |
-| **Move shader tab** | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT |
-| **Search** | ctrl+F | ctrl+F | ⌘+F |
-| **Replace** | ctrl+H | ctrl+H | ⌘+H |
-| **Fold/Unfold single** | ⌥+K | ⌥+K | ⌥+K |
-| **Fold/Unfold all** | ctrl+K | ctrl+K | ⌘+K |
-| **Resolution** | ctrl+1-4 | ctrl+1-4 | ctrl+1-4 |
-| **Format lines** | ctrl+⇧+⌥+F | ctrl+⇧+⌥+F| ⌘+⇧+⌥+F |
-| **Hide/Show** | ⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
-| **Font size** | ctrl+⇧+ Up/Down | ctrl +⇧+⌥+ +/-  | ⌘+⇧+⌥+ +/- |
-| **Load** | ctrl+⇧+L | ctrl+⇧+⌥+L | ⌘+⇧+⌥+L |
-| **New** | ctrl+⇧+N | ctrl+⇧+⌥+N | ⌘+⇧+⌥+N |
-  
-*And many of Sublime Text bindings by Codemirror.
-</br>
-</br>
-</br>
-  
-# Future Plan
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/design/_output/shaderboy_pc.png">  
-  
-### Compatibility
-- [X] Multipass shader(2018.12.21)
-- [ ] Sound shader
-- [ ] Official assets(textures)
   
 ### Manipulations
 - [X] Timeline GUI for PC(frame based)
-- [X] x24 uniforms with GUI(knob style) for PC
-- [ ] GUI for Shader list
-- [ ] GUI for iChannels
+- [X] x32 uniforms with GUI(knob style) for PC
+- [X] GUI for Shader list
+- [X] GUI for iChannels
 - [ ] Multiple editor pane
   
 ### Other
-- [X] GoogleDrive integration(2018.12.21)
-- [X] Recording in any resolution as PNG sequence(2018.12.21)
+- [X] GoogleDrive integration
+- [X] Capturing shader to movie file.(WebM/PNG/JPG/GIF)
 - [ ] Witout Google account(localStrage)
-- [ ] Shadertoy API integration
-- [ ] More rich splash screen
 - [ ] Themes for editor pane
+</br>
+</br>
+</br>
 </br>
 </br>
 </br>
@@ -107,9 +122,13 @@ $ npm install
 ```
   
 ### Build
-ShaderBoy uses gulp and webpack. so,  
+ShaderBoy uses webpack. so,  
 ```
-$ gulp
+$ npm start
+```
+or to build,
+```
+$ npm run build
 ```
   
 ### upload
@@ -118,7 +137,10 @@ That's it! Good luck!
 </br>
 </br>
 </br>
-  
+</br>
+</br>
+</br>
+
 I love writing shaders.  
 And I also love Shadertoy.  
 I want to write it everytime, everywhere.  
