@@ -33,6 +33,10 @@ You can install ShaderBoy app from [here](https://shaderboy.net/).
 # Screenshots
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc00.jpg">
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_sp00.jpg">
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc01.jpg">
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc02.jpg">
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc03.jpg">
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc04.jpg">
 </br>
 </br> 
 </br>
