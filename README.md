@@ -32,14 +32,14 @@ You can install the app from [here](https://shaderboy.net/).
 
 # Screenshots
 
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc00.jpg">
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_sp00.jpg">
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc01.jpg">
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc02.jpg">
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc03.jpg">
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc04.jpg">
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc05.jpg">
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc06.jpg">
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc00.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_sp00.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc01.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc02.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc03.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc04.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc05.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc06.jpg"></br>
 </br>
 </br> 
 </br>
@@ -55,12 +55,12 @@ You can install the app from [here](https://shaderboy.net/).
 | **Compile** | ⌥+ENTER(SPACE) | ⌥+ENTER | ⌥+ENTER |
 | **Play/Pause** | ⌥+UP | ⌥+UP | ⌥+UP |
 | **Reset time** | ⌥+DOWN | ⌥+DOWN | ⌥+DOWN |
-| **Move shader tab** | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT |
+| **Move to neighbor buffer** | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT |
 | **Search** | ctrl+F | ctrl+F | ⌘+F |
 | **Replace** | ctrl+H | ctrl+H | ⌘+H |
 | **Resolution** | ctrl+1-4 | ctrl+1-4 | ctrl+1-4 |
-| **Hide/Show WebGL canvas** | ⌥+V | ctrl+⇧+⌥+V | ⌘+⇧+⌥+V |
 | **Go Fullscreen** | - | ctrl+⇧+⌥+F | ⌘+⇧+⌥+F |
+| **Hide/Show WebGL canvas** | ⌥+V | ctrl+⇧+⌥+V | ⌘+⇧+⌥+V |
 | **Hide/Show Code & All GUIs** | ⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
 | **Hide/Show Timeline** | ctrl+⇧+T | ctrl+⇧+⌥+T | ⌘+⇧+⌥+T |
 | **Hide/Show Knobs GUI** | ctrl+⇧+D | ctrl+⇧+⌥+D | ⌘+⇧+⌥+D |
