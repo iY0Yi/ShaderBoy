@@ -48,7 +48,6 @@ You can install the app from [here](https://shaderboy.net/).
 </br>
 
 # Hotkeys
-ShaderBoy works with hotkeys.  
   
 |   | Smartphone | Windows | Mac |
 |:---|:---|:---|:---|
@@ -60,6 +59,7 @@ ShaderBoy works with hotkeys.
 | **Replace** | ctrl+H | ctrl+H | ⌘+H |
 | **Resolution** | ctrl+1-4 | ctrl+1-4 | ctrl+1-4 |
 | **Hide/Show WebGL canvas** | ⌥+V | ctrl+⇧+⌥+V | ⌘+⇧+⌥+V |
+| **Go Fullscreen** | - | ctrl+⇧+⌥+F | ⌘+⇧+⌥+F |
 | **Hide/Show Code & All GUIs** | ⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
 | **Hide/Show Timeline** | ctrl+⇧+T | ctrl+⇧+⌥+T | ⌘+⇧+⌥+T |
 | **Hide/Show Knobs GUI** | ctrl+⇧+D | ctrl+⇧+⌥+D | ⌘+⇧+⌥+D |
