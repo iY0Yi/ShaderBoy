@@ -1,0 +1,95 @@
+@import 'base';
+
+#main {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: block;
+}
+
+.gui {
+    color: $col_frnt;
+}
+
+.gui-layer {
+    z-index: $gui-z-index;
+}
+
+#gui-panel {
+    z-index: $gui-z-index*2;
+}
+
+.code-container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    overflow: hidden;
+
+    width: 100vw;
+
+    transition: all $anm-middle;
+
+    transform: translate(0, 0);
+
+    @include mq {
+        top: $gui-size-unit-sp;
+    }
+}
+
+.code_hide {
+    width: 0vw;
+}
+
+.code-container-mov-l {
+    transform-origin: center top;
+    animation: anm-code-container-mov-l 0.2s both;
+    animation-timing-function: ease-in-out;
+    animation-delay: 0.0s;
+}
+
+.code-container-mov-r {
+    transform-origin: center top;
+    animation: anm-code-container-mov-r 0.2s both;
+    animation-timing-function: ease-in-out;
+    animation-delay: 0.0s;
+}
+
+.code-container-hidden {
+    transform-origin: left top;
+    flex: 0 0 0;
+    width: 0%;
+}
+
+@keyframes anm-code-container-mov-l {
+    0% {
+        opacity: 1;
+        // transform: translate($gui-size-unit*-0.25, 0);
+    }
+
+    100% {
+        opacity: 1;
+        // transform: translate(0, 0);
+    }
+}
+
+@keyframes anm-code-container-mov-r {
+    0% {
+        opacity: 1;
+        // transform: translate($gui-size-unit*-0.25, 0);
+    }
+
+    100% {
+        opacity: 1;
+        // transform: translate(0, 0);
+    }
+}
+
+.editor {
+    text-align: left;
+    width: 0px;
+    height: auto;
+    flex: 1;
+    margin: 0px;
+}

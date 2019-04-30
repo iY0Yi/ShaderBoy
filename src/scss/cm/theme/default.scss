@@ -1,0 +1,130 @@
+.cm-sb-default.CodeMirror {
+    background: #00000000;
+    color: #848484;
+    line-height: 1.2;
+    font-family: 'Cutive Mono', monospace;
+}
+
+.cm-sb-default div.CodeMirror-selected {
+    background: #FFFFFFFF;
+}
+
+.cm-sb-default .CodeMirror-line::selection,
+.cm-sb-default .CodeMirror-line>span::selection,
+.cm-sb-default .CodeMirror-line>span>span::selection {
+    background: #FFFFFFFF;
+}
+
+.cm-sb-default .CodeMirror-line::-moz-selection,
+.cm-sb-default .CodeMirror-line>span::-moz-selection,
+.cm-sb-default .CodeMirror-line>span>span::-moz-selection {
+    background: #FFFFFFFF;
+}
+
+.cm-sb-default .CodeMirror-gutters {
+    background: #00000000;
+    border-right: 0px solid #FFFFFF;
+    margin-left: 0px
+}
+
+.cm-sb-default .CodeMirror-guttermarker {
+    color: #db2d20;
+}
+
+.cm-sb-default .CodeMirror-selectedtext {
+    background: #555555;
+}
+
+.cm-sb-default .CodeMirror-guttermarker-subtle {
+    color: transparent;
+}
+
+.cm-sb-default .CodeMirror-linenumber {
+    font-size: 14px;
+    color: #FFFFFF55;
+}
+
+.cm-sb-default .CodeMirror-cursor {
+    border-right: 2px;
+    border-left: 2px solid #FFF;
+}
+
+.cm-sb-default .CodeMirror-activeline-background {
+    background: #FFFFFF22 !important;
+}
+
+.cm-sb-default .CodeMirror-matchingbracket {
+    text-decoration: underline;
+    color: white !important;
+}
+
+.cm-sb-default span {
+    background: #1F1F1F;
+    padding: 2px 0px 2px 2px;
+    border-radius: 0px 15px 15px 0px;
+}
+
+.cm-sb-default span.cm-comment {
+    color: #FFFFFF33;
+}
+
+.cm-sb-default span.cm-atom {
+    color: #a16a94;
+}
+
+.cm-sb-default span.cm-number {
+    color: #5fb92f;
+}
+
+.cm-sb-default span.cm-property {
+    color: #01a252;
+}
+
+.cm-sb-default span.cm-attribute {
+    color: #01a252;
+}
+
+.cm-sb-default span.cm-keyword {
+    color: #d25f89;
+}
+
+.cm-sb-default span.cm-string {
+    color: #fded02;
+}
+
+.cm-sb-default span.cm-operator {
+    color: #ffd045;
+}
+
+.cm-sb-default span.cm-variable {
+    color: #d2d2d2;
+}
+
+.cm-sb-default span.cm-variable-2 {
+    color: #01a0e4;
+}
+
+.cm-sb-default span.cm-def {
+    color: #dc448b;
+}
+
+.cm-sb-default span.cm-bracket {
+    color: #565656;
+}
+
+.cm-sb-default span.cm-tag {
+    color: #db2d20;
+}
+
+.cm-sb-default span.cm-link {
+    color: #a16a94;
+}
+
+.cm-sb-default span.cm-error {
+    background: #db2d20;
+    color: #807d7c;
+}
+
+.cm-sb-default span.cm-builtin {
+    color: #1794be;
+}

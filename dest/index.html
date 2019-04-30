@@ -2,16 +2,6 @@
 <html>
 
 <head>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-131224481-1"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag() { dataLayer.push(arguments); }
-		gtag('js', new Date());
-
-		gtag('config', 'UA-131224481-1');
-	</script>
-
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="manifest" href="manifest.json">
@@ -30,9 +20,9 @@
 	<meta name="apple-mobile-web-app-title" content="ShaderBoy">
 	<link rel="apple-touch-icon" sizes="180x180" href="../img/icons/apple-touch-icon.png">
 	<link rel="mask-icon" href="../img/icons/safari-pinned-tab.svg" color="#5bbad5">
-	<meta name="msapplication-TileColor" content="#1e1e1e">
+	<meta name="msapplication-TileColor" content="#1F1F1F">
 	<meta name="msapplication-config" content="../img/icons/browserconfig.xml">
-	<meta name="theme-color" content="#1E1E1E">
+	<meta name="theme-color" content="#1F1F1F">
 
 	<meta property="og:image:width" content="1240">
 	<meta property="og:image:height" content="600">
@@ -44,45 +34,328 @@
 	<meta name="twitter:site" content="@iy0yi">
 	<meta name="twitter:player" content="@iy0yi">
 
-	<link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Cutive+Mono" rel="stylesheet">
-	<link rel="stylesheet" href="../style.css">
-	<link rel="stylesheet" href="./css/style.css">
-	<link rel="stylesheet" href="./js/codemirror/addon/hint/show-hint.css">
-	<link rel="stylesheet" href="./js/codemirror/lib/codemirror.css">
-	<link rel="stylesheet" href="./js/codemirror/theme/3024-night.css">
+	<script>
+		if ('serviceWorker' in navigator)
+		{
+			navigator.serviceWorker
+				.register('./serviceworker.js')
+				.then(function (registration)
+				{
+					console.log(
+						'Service Worker registration successful with scope: ',
+						registration.scope
+					);
+				})
+				.catch(function (err)
+				{
+					console.log('Service Worker registration failed: ', err);
+				});
+		}
+	</script>
+	<script src="./manup.js"></script>
 
-	<script src="https://apis.google.com/js/client.js"></script>
-	<script src="./js/CCapture.all.min.js"></script>
-	<script src="./js/bundle.min.js"></script>
-	<script src="./js/main.min.js"></script>
+	<script src="./js/css_browser_selector.js"></script>
+
 	<title>ShaderBoy</title>
 </head>
 
 <body>
+	<style>
+		body {
+			font-family: Muli, Arial, Helvetica, sans-serif;
+			color: #d8d4c5FF;
+			width: 100vw;
+			height: 100vh;
+			border: 0;
+			padding: 0;
+			margin: 0;
+			background: #1F1F1FFF;
+			background-size: cover;
+			-webkit-text-size-adjust: 100%;
+			display: block;
+			text-align: center;
+			overflow: hidden;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			position: relative;
+		}
 
-	<div class="container" id="div_authrise">
-		<div class="content">
-			<div class="glogo"></div>
-			<div class="gdiscription">
-				ShaderBoy uses Google Drive for save your shader.<br> Once you authrise, you can edit same shader from any devices. Please
-				authrise with your Google Account from below button.<br>
-			</div>
-			<div class="btn -bold" id="btn_authrise">Authrise</div>
+		.cvr-loading {
+			z-index: 9999;
+			background: #1F1F1FFF;
+			position: absolute;
+			margin: 0px;
+			top: 0px;
+			left: 0px;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			align-content: center;
+			transition: all .4s ease-in-out;
+		}
+
+		.loading-hide {
+			opacity: 0;
+		}
+
+		.loading-hidden {
+			height: 0%;
+			display: none;
+		}
+
+		.logo-sb {
+			display: inline-flex;
+			fill: #d8d4c5FF;
+			width: 15vw;
+			opacity: 0;
+			transition: all .8s ease-in-out;
+		}
+
+		@media screen and (max-width: 735px) {
+			.logo-sb {
+				width: 25vw;
+			}
+		}
+
+		.show-logo {
+			opacity: 1.0;
+		}
+	</style>
+	<script>
+		function loadImage()
+		{
+			console.log('loooogooooo');
+			document.getElementById('logo-sb').classList.add('show-logo');
+		}
+	</script>
+	<div id="cvr-loading" style="z-index: 10000;" class="cvr-loading">
+		<div id="ghdr-notif" style="z-index: 10001; position:absolute; right:0px;" class="ghdr-notif in-panel noselect"></div>
+		<img id="logo-sb" onload="loadImage()" class="logo-sb" src="../img/sb_logo.svg" />
+	</div>
+	<div id="shaderboy" style="display:none;">
+		<!-- comment out here for viewer mode -->
+		<div id="main">
+			<canvas id="gl_canvas"></canvas>
 		</div>
-		<!-- <div id="main"><canvas id="gl_canvas"></canvas></div> -->
-	</div>
+		<!-- comment out here for viewer mode -->
+		<div id="code" class="code-container">
+			<div id="gui-sidebar-left" class="gsbl-container gsbl-container-hidden">
+				<div id="gsbl-base" class="gsbl-base">
+					<div id="ichannels">
+						<div id="ichannel0" class="ichannel null">
+							<div class="asset-panel buf-null"></div>
+							<select id="filter" class="ichannels-drpdwn">
+								<option value="" data-display-text="linear"></option>
+								<option value="linear">linear</option>
+								<option value="nearest">nearest</option>
+								<option value="mipmap">mipmap</option>
+							</select>
+							<select id="wrap" class="ichannels-drpdwn">
+								<option value="" data-display-text="repeat"></option>
+								<option value="clamp">clamp</option>
+								<option value="repeat">repeat</option>
+							</select>
+						</div>
 
-	<div id="ctrl"></div>
-	<!-- comment out here for viewer mode -->
-	<div id="code">
-		<div id="editor"></div>
-	</div>
-	<!-- comment out here for viewer mode -->
-	<div id="main">
-		<canvas id="gl_canvas"></canvas>
-	</div>
-	<!-- <div id="setting"></div> -->
+						<div id="ichannel1" class="ichannel null">
+							<div class="asset-panel buf-b"></div>
+							<select id="filter" class="ichannels-drpdwn">
+								<option value="" data-display-text="linear"></option>
+								<option value="linear">linear</option>
+								<option value="nearest">nearest</option>
+								<option value="mipmap">mipmap</option>
+							</select>
+							<select id="wrap" class="ichannels-drpdwn">
+								<option value="" data-display-text="repeat"></option>
+								<option value="clamp">clamp</option>
+								<option value="repeat">repeat</option>
+							</select>
+						</div>
+
+						<div id="ichannel2" class="ichannel null">
+							<div class="asset-panel buf-c"></div>
+							<select id="filter" class="ichannels-drpdwn">
+								<option value="" data-display-text="linear"></option>
+								<option value="linear">linear</option>
+								<option value="nearest">nearest</option>
+								<option value="mipmap">mipmap</option>
+							</select>
+							<select id="wrap" class="ichannels-drpdwn">
+								<option value="" data-display-text="repeat"></option>
+								<option value="clamp">clamp</option>
+								<option value="repeat">repeat</option>
+							</select>
+						</div>
+
+						<div id="ichannel3" class="ichannel null">
+							<div class="asset-panel buf-d"></div>
+							<select id="filter" class="ichannels-drpdwn">
+								<option value="" data-display-text="linear"></option>
+								<option value="linear">linear</option>
+								<option value="nearest">nearest</option>
+								<option value="mipmap">mipmap</option>
+							</select>
+							<select id="wrap" class="ichannels-drpdwn">
+								<option value="" data-display-text="repeat"></option>
+								<option value="clamp">clamp</option>
+								<option value="repeat">repeat</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="editor" class="editor"></div>
+
+			<div id="ctrl-wrapper" class="ctrl-wrapper_hide">
+				<div id="ctrl" class='ctrl ctrl_hide'>
+					<div id="gui-panel-knob" class="gui-layer gui-panel-knob">
+						<div class="gui-knob comp" v-for="(knob) in knobs" v-bind:class="{ active: knob.active }">
+							<div class="name"> {{ knob.name }}</div>
+							<div class="knob"><svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+									<circle class='gui-knob-svg-body' cx="6" cy="6" r="6" />
+									<circle class='gui-knob-svg-dot' cx="6" cy="3" r="1" />
+									<!-- <rect class='gui-knob-svg-dot' x="5.5" y="0" width="3" height="3" /> -->
+								</svg></div>
+							<div class="value"> {{ knob.value }}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="gui-layer" class="gui gui-layer show">
+
+			<div id="gui-header" class="ghdr-container">
+
+				<div id="ghdr-base" class="noselect ghdr-base">
+					<div id="buf-btns">
+						<div id="ghdr-btn-switch-cmn" class="ghdr-btn btn-swith inc"></div>
+						<div id="ghdr-btn-dec-buf" class="ghdr-btn btn-addmin dec"></div>
+						<div id="ghdr-btn-inc-buf" class="ghdr-btn btn-addmin inc"></div>
+						<div id="ghdr-btn-common" class="ghdr-btn btn-buf">Common</div>
+						<div id="ghdr-btn-buf-a" class="ghdr-btn btn-buf">BufferA</div>
+						<div id="ghdr-btn-buf-b" class="ghdr-btn btn-buf">BufferB</div>
+						<div id="ghdr-btn-buf-c" class="ghdr-btn btn-buf">BufferC</div>
+						<div id="ghdr-btn-buf-d" class="ghdr-btn btn-buf">BufferD</div>
+						<div id="ghdr-btn-mainimg" class="ghdr-btn btn-buf active">MainImage</div>
+					</div>
+					<div id="fpscounter">
+						<span id="cntr_itime">0.000</span>
+						<span id="cntr_iframe">0</span>
+						<span id="cntr_fps">0.00</span>
+					</div>
+				</div>
+
+				<div id="ghdr-rec-base" class="noselect ghdr-rec-base rec_hide">
+					<div id="rec-btns">
+						<input type="text" id="filename" class="rec-text" value="Untitled">
+						<input type="text" id="res-x" class="rec-text" value="1920">
+						<input type="text" id="res-y" class="rec-text" value="1080">
+						<select id="format" class="rec-setting-drpdwn">
+							<option value="" data-display-text="Format"></option>
+							<option value="webm">WebM</option>
+							<option value="gif">GIF</option>
+							<option value="png">PNG</option>
+							<option value="jpg">JPG</option>
+						</select>
+						<select id="framerate" class="rec-setting-drpdwn">
+							<option value="" data-display-text="Framerate"></option>
+							<option value="120">120</option>
+							<option value="60">60</option>
+							<option value="30">30</option>
+							<option value="24">24</option>
+							<option value="15">15</option>
+							<option value="12">12</option>
+							<option value="8">8</option>
+						</select>
+						<select id="quality" class="rec-setting-drpdwn">
+							<option value="" data-display-text="Quality"></option>
+							<option value="veryhigh">Very High</option>
+							<option value="high">High</option>
+							<option value="medium">Medium</option>
+							<option value="low">Low</option>
+							<option value="verylow">Very Low</option>
+						</select>
+						<div id="ghdr-btn-record" class="ghdr-btn btn-record"></div>
+					</div>
+				</div>
+
+				<div id="ghdr-notif" class="ghdr-notif in-editor noselect"></div>
+			</div>
+
+
+
+
+
+			<div id="timeline" class="tl-root">
+				<div id="tl-start">
+					<input class="tl-header" style="outline:0px;" type="number" value="0" min="0" step="1" />
+					<div class="tl-tip"></div>
+				</div>
+				<div id="tl-end">
+					<input class="tl-header" style="outline:0px;" type="number" value="0" min="0" step="1" />
+					<div class="tl-tip"></div>
+				</div>
+				<div id="tl-current">
+					<input class="tl-header" style="outline:0px;" type="number" value="0" min="0" step="1" />
+					<div class="tl-tip"></div>
+				</div>
+				<div id="tl-workspace"></div>
+				<div id="tl-base"></div>
+				<input id="tl-offset-frames" style="outline:0px;" type="number" value="0" min="0" step="1" />
+				<input id="tl-total-frames" style="outline:0px;" type="number" value="0" min="0" step="1" />
+			</div>
+
+
+			<div id="gui-panel" class="container gp-container-hidden">
+				<div id="gp-base" class="gp-base gp-hidden">
+					<div id="gp-shader-list" class="gp-shader-list hide"></div>
+					<div id="gp-textarea" class="gp-textarea hide">
+						<div id="textarea-container">
+							<div id="div-textarea" contenteditable="true"></div>
+							<span id="gp-formname">New Shader Name</span>
+						</div>
+					</div>
+					<!-- <div id="gp-setting" class="hide"></div> -->
+				</div>
+			</div>
+		</div>
+
+		<div id="div_authrise" style="z-index: 20000" class="hide">
+			<div id="auth-content" class="auth-content hide">
+				<img id="logo-gdrive" class="glogo" src="../img/logo_works_with_google_drive.svg" />
+				<div class="gdiscription">
+					ShaderBoy uses "Google Drive" to save shaders. Once authorized, you can edit the same shader from any device. You can also
+					save any number of shaders. If not, you can try ShaderBoy's feel. Do you authorize?<br>
+				</div>
+				<div class='btns-container'>
+					<div class="btn_authrise" id="btn_authrise_later"><span class="noselect">No</span></div>
+					<div class="btn_authrise" id="btn_authrise_now"><span class="noselect">Yes</span></div>
+				</div>
+			</div>
+		</div>
+
+		<link href="https://fonts.googleapis.com/css?family=Muli:400,400i,700,700i" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Cutive+Mono" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono|Nova+Mono|Overpass+Mono|PT+Mono|Space+Mono|Ubuntu+Mono"
+		 rel="stylesheet">
+
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-131224481-1"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() { dataLayer.push(arguments); }
+			gtag('js', new Date());
+			gtag('config', 'UA-131224481-1');
+		</script>
+		<script src="https://apis.google.com/js/client.js"></script>
+		<script src="./js/CCapture.all.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js"></script>
+		<script src="./js/main.min.js"></script>
+
 </body>
 
 </html>

@@ -14,13 +14,13 @@
 //                                                                     
 //                                                                     
 
-export default class BufferDataContainer {
-
+export default class BufferDataContainer
+{
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    constructor(isRenderable) {
-
+    constructor(isRenderable)
+    {
         // true: BufferA-D, CubemapA, MainSound and MainImage
-        // false: Config, Common
+        // false: Config, Common and Setting
         this.isRenderable = isRenderable;
 
         // Use or not this pass
@@ -28,6 +28,7 @@ export default class BufferDataContainer {
 
         // Frame buffer
         this.framebuffer = null;
+
         // Render textures
         this.textures = [];
         this.needSwap = false;

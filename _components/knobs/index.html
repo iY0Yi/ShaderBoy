@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#1F1F1F">
+
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js"></script>
+    <script src="./gui_panel_knob.js"></script>
+
+    <title>ShaderBoy</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="gui">
+            <div class="gui-panel-knob" id="gui-panel-knob">
+                <div class="gui_knob comp" v-for="(knob) in knobs" v-bind:class="{ active: knob.active }">
+                    <div class="name">{{knob.name}}</div>
+                    <div class="knob">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                            <circle cx="7" cy="7" r="7" fill="#d8d4c5" />
+                            <circle cx="7" cy="3" r="1.5" fill="#1F1F1F" />
+                        </svg>
+                    </div>
+                    <div class="value">{{knob.value}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+    </div>
+</body>
+
+</html>

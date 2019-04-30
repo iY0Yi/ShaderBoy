@@ -30,9 +30,9 @@
 	<meta name="apple-mobile-web-app-title" content="ShaderBoy">
 	<link rel="apple-touch-icon" sizes="180x180" href="./img/icons/apple-touch-icon.png">
 	<link rel="mask-icon" href="./img/icons/safari-pinned-tab.svg" color="#5bbad5">
-	<meta name="msapplication-TileColor" content="#1e1e1e">
+	<meta name="msapplication-TileColor" content="#1F1F1F">
 	<meta name="msapplication-config" content="./img/icons/browserconfig.xml">
-	<meta name="theme-color" content="#1E1E1E">
+	<meta name="theme-color" content="#1F1F1F">
 
 	<meta property="og:image:width" content="1240">
 	<meta property="og:image:height" content="600">
@@ -44,31 +44,30 @@
 	<meta name="twitter:site" content="@iy0yi">
 	<meta name="twitter:player" content="@iy0yi">
 
+	<link href="https://fonts.googleapis.com/css?family=Muli:400,400i,700,700i" rel="stylesheet">
 	<link rel="stylesheet" href="./style.css">
 
-	<link rel="stylesheet" href="./app/css/style.css">
-	<link rel="stylesheet" href="./app/js/codemirror/addon/hint/show-hint.css">
-	<link rel="stylesheet" href="./app/js/codemirror/lib/codemirror.css">
-	<link rel="stylesheet" href="./app/js/codemirror/theme/3024-night.css">
-
 	<script>
-		if ('serviceWorker' in navigator) {
+		if ('serviceWorker' in navigator)
+		{
 			navigator.serviceWorker
 				.register('./serviceworker.js')
-				.then(function (registration) {
+				.then(function (registration)
+				{
 					console.log(
 						'Service Worker registration successful with scope: ',
 						registration.scope
 					);
 				})
-				.catch(function (err) {
+				.catch(function (err)
+				{
 					console.log('Service Worker registration failed: ', err);
 				});
 		}
 	</script>
 	<script src="./manup.js"></script>
-	<!-- <script src="./app/js/bundle.js"></script>
-	<script src="./app/js/main.js"></script> -->
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js"></script>
+	<!-- <script src="./app/js/bundle.js"></script> -->
 
 	<title>ShaderBoy</title>
 </head>
@@ -78,18 +77,16 @@
 		<div class="content">
 			<div class="logo"></div>
 			<div class="discription">
-				ShaderBoy is a simple shader editor for mobile devices. This is intended to use physical keyboards to write shaders in small
-				screen. It has compatible uniforms with Shadertoy. Read Github for usage. Enjoy writing your shaders in everywhere.<br/>Your
-				power to go.<br/>
+				ShaderBoy is a simple shader editor for mobile devices. It is intended to use a physical keyboard to write shaders on small
+				screens. It has a uniform compatible with Shadertoy. Please read Github for usage. Enjoy writing your shaders everywhere.
+				Your power to go.
 			</div>
 			<a href="https://shaderboy.net/app"><div class="btn -bold" id="btn_install">Start</div></a>
 			<span class="alert_ios">iOS:<br/>To install ShaderBoy,<br/> please add to your homescreen.</span>
-			<a href="https://github.com/iY0Yi/ShaderBoy"><div class="btn -regular" id="btn_github"><span class="icon_github"></span>Github</div></a>
+			<a href="https://github.com/iY0Yi/ShaderBoy"><div class="btn -regular" id="btn_github"><span class="icon_github"></span>Github
+					page
+				</div></a>
 		</div>
-		<!-- <div id="main"><canvas id="gl_canvas"></canvas></div> -->
-	</div>
-	<div class="main">
-
 	</div>
 </body>
 

@@ -1,0 +1,113 @@
+@import 'base';
+
+#div_authrise {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    margin: 0px;
+    background: $col_bg;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    opacity: 1;
+
+    transition: all $anm-middle;
+
+    &.hide {
+        height: 0px;
+        opacity: 0;
+    }
+
+    &.hidden {
+        display: none;
+    }
+}
+
+.auth-content {
+    background: $col_bg;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+
+    margin-top: 0px;
+    opacity: 1;
+
+    transition: all $anm-long;
+
+    &.hide {
+        margin-top: 50px;
+        opacity: 0;
+    }
+}
+
+.glogo {
+    fill: $col_frnt;
+    width: 300px;
+
+    @include mq {}
+}
+
+.gdiscription {
+    text-align: left;
+    letter-spacing: 0.015em;
+    line-height: 1.5;
+    width: 300px;
+    font-size: 12.5px;
+    margin-bottom: $gui-size-unit*0.5;
+
+    @include mq {
+        text-align: justify;
+        letter-spacing: 0.03vw;
+        line-height: 1.4;
+        width: 298px;
+        height: auto;
+        font-size: 12.5px;
+    }
+}
+
+.btns-container {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 300px;
+    height: $gui-size-unit;
+}
+
+.btn_authrise {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    color: $col_frnt;
+    background: $col_bg-bright;
+    height: $gui-size-unit;
+    width: 149.5px;
+
+    transition: all $anm-short;
+
+    &>span {
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        margin-bottom: 3px;
+    }
+
+    &:hover {
+        cursor: pointer;
+        background: $col_bg-bright-darken;
+    }
+
+    @include mq {}
+}
+
+#btn_authrise_later {
+    &>span {
+        font-weight: 400;
+        margin-bottom: 1px;
+    }
+}

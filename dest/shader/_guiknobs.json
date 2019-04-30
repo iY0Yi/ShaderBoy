@@ -1,0 +1,173 @@
+{
+    "show": false,
+    "knobs": [
+        {
+            "id": 0,
+            "name": "s0x",
+            "circle": null,
+            "value": 0,
+            "active": true
+        },
+        {
+            "id": 1,
+            "name": "s0y",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 2,
+            "name": "s0z",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 3,
+            "name": "s1x",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 4,
+            "name": "s1y",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 5,
+            "name": "s1z",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 6,
+            "name": "s2x",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 7,
+            "name": "s2y",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 8,
+            "name": "s2z",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 9,
+            "name": "s3x",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 10,
+            "name": "s3y",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 11,
+            "name": "s3z",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 12,
+            "name": "s4x",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 13,
+            "name": "s4y",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 14,
+            "name": "s4z",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 15,
+            "name": "s5x",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 16,
+            "name": "s5y",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 17,
+            "name": "s5z",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 18,
+            "name": "s6x",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 19,
+            "name": "s6y",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 20,
+            "name": "s6z",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 21,
+            "name": "s7x",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 22,
+            "name": "s7y",
+            "circle": null,
+            "value": 0,
+            "active": false
+        },
+        {
+            "id": 23,
+            "name": "s7z",
+            "circle": null,
+            "value": 0,
+            "active": false
+        }
+    ]
+}

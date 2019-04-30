@@ -34,23 +34,21 @@ import 'codemirror/addon/selection/selection-pointer';
 import 'codemirror/addon/selection/mark-selection';
 import CodeMirror from 'codemirror/lib/codemirror';
 
+import gui_sidebar_ichannels from './gui/gui_sidebar_ichannels';
+
 export default ShaderBoy.editor = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    init: function () {
+    init: function ()
+    {
         this.domElement = document.getElementById('code');
-        this.domElement.style.top = ShaderBoy.style.buttonHeight + 'px';
-        this.domElement.style.width = window.innerWidth + 'px';
-        this.domElement.style.height = window.innerHeight - ShaderBoy.style.buttonHeight + 'px';
 
         this.textArea = document.getElementById('editor');
         this.textArea.setAttribute('rows', '200');
         this.textArea.setAttribute('cols', '50');
-        this.textArea.style.width = this.domElement.style.width;
-        this.textArea.style.height = this.domElement.style.height;
         this.textArea.value = '';
 
-        this.textSize = (localStorage.textSize !== undefined) ? localStorage.textSize : 14;
+        this.textSize = (localStorage.textSize !== undefined) ? localStorage.textSize : 11;
 
         this.errorWidgets = [];
 
@@ -64,7 +62,8 @@ export default ShaderBoy.editor = {
             showInvisibles: true,
             maxInvisibles: 16,
             keyMap: 'sublime',
-            theme: '3024-night',
+            // theme: '3024-night',
+            theme: '3024-monotone',
             styleActiveLine: true,
             styleSelectedText: true,
             styleCursor: true,
@@ -76,10 +75,13 @@ export default ShaderBoy.editor = {
             continuousScanning: 500,
             foldGutter: true,
             gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-            Tab: function (cm) { //tab as space
-                if (cm.somethingSelected()) {
+            Tab: function (cm)
+            { //tab as space
+                if (cm.somethingSelected())
+                {
                     cm.indentSelection("add");
-                } else {
+                } else
+                {
                     cm.replaceSelection(cm.getOption("indentWithTabs") ? "\t" :
                         Array(cm.getOption("indentUnit") + 1).join(" "), "end", "+input");
                 }
@@ -88,79 +90,115 @@ export default ShaderBoy.editor = {
         });
 
         this.codemirror.parent = this;
-        this.codemirror.setSize(this.domElement.style.width, this.domElement.style.height);
         this.setTextSize();
+        // this.codemirror.setSize('100%', '100%');
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    setTextSize: function () {
+    setTextSize: function ()
+    {
         if (this.textSize <= 8) this.textSize = 8;
         if (this.textSize >= 64) this.textSize = 64;
         $(".CodeMirror").css('font-size', this.textSize + "pt");
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    incTextSize: function () {
-        if (this.textSize < 64) {
+    incTextSize: function ()
+    {
+        if (this.textSize < 64)
+        {
             this.textSize++;
             $(".CodeMirror").css('font-size', this.textSize + "pt");
         }
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    decTextSize: function () {
-        if (this.textSize > 8) {
+    decTextSize: function ()
+    {
+        if (this.textSize > 8)
+        {
             this.textSize--;
             $(".CodeMirror").css('font-size', this.textSize + "pt");
         }
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    setBuffer: function (bufName) {
-
+    setBuffer: function (bufName)
+    {
         ShaderBoy.editingBuffer = bufName;
+        gui_sidebar_ichannels.readiChannels(bufName);
+        ShaderBoy.gui_header.setActive(bufName);
 
         let buf = ShaderBoy.buffers[bufName].cm;
         if (buf.getEditor()) buf = buf.linkedDoc({ sharedHist: true });
         let old = this.codemirror.swapDoc(buf);
-        let linked = old.iterLinkedDocs(function (doc) { linked = doc; });
-        if (linked) {
+        let linked;
+        let fnc = function (doc) { linked = doc; };
+        linked = old.iterLinkedDocs(fnc);
+        if (linked)
+        {
             // Make sure the document in ShaderBoy.buffers is the one the other view is looking at
-            for (let name in ShaderBoy.buffers) if (ShaderBoy.buffers[name].cm == old) ShaderBoy.buffers[name].cm = linked;
-            old.unlinkDoc(linked);
+            for (let name in ShaderBoy.buffers)
+            {
+                if (ShaderBoy.buffers[name].cm == old)
+                {
+                    ShaderBoy.buffers[name].cm = linked;
+                }
+                old.unlinkDoc(linked);
+            }
         }
 
         this.codemirror.focus();
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    moveBuffer: function (offset) {
+    moveBuffer: function (offset)
+    {
+        let curBufName = ShaderBoy.activeBufferIds[ShaderBoy.bufferManager.currentBufferDataId];
         ShaderBoy.bufferManager.currentBufferDataId += offset;
         ShaderBoy.bufferManager.currentBufferDataId = Math.max(Math.min(ShaderBoy.activeBufferIds.length - 1, ShaderBoy.bufferManager.currentBufferDataId), 0);
         let newBufName = ShaderBoy.activeBufferIds[ShaderBoy.bufferManager.currentBufferDataId];
-        this.setBuffer(newBufName);
+        if (curBufName !== newBufName)
+        {
+            this.setBuffer(newBufName);
+        }
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    updateErrorInfo: function (errors) {
-        this.codemirror.operation(function () {
+    updateErrorInfo: function (bufName, errors)
+    {
+        this.codemirror.operation(function ()
+        {
             let scope = ShaderBoy.editor;
             for (let i = 0; i < scope.errorWidgets.length; ++i)
                 scope.codemirror.removeLineWidget(scope.errorWidgets[i]);
             scope.errorWidgets.length = 0;
 
-            for (let i = 0; i < errors.length; ++i) {
+            let curline = 0;
+            for (let i = 0; i < errors.length; ++i)
+            {
                 let err = errors[i];
                 if (!err) continue;
                 let msg = document.createElement("div");
                 msg.appendChild(document.createTextNode(err.element + ': ' + err.msg));
-                msg.className = "error";
-                scope.errorWidgets.push(scope.codemirror.addLineWidget(err.lineNum, msg, { coverGutter: false, noHScroll: true }));
+                if (err.lineNum > curline)
+                {
+                    msg.className = "error notify";
+                    curline = err.lineNum;
+                }
+                else
+                {
+                    msg.className = "error";
+                }
+                // scope.errorWidgets.push(scope.codemirror.addLineWidget(err.lineNum, msg, { coverGutter: false, noHScroll: true }));
+                scope.errorWidgets.push(ShaderBoy.buffers[bufName].cm.addLineWidget(err.lineNum, msg, { coverGutter: false, noHScroll: true }));
             }
         });
         let info = this.codemirror.getScrollInfo();
         let after = this.codemirror.charCoords({ line: this.codemirror.getCursor().line, ch: 0 }, "local").top;
         if (info.top + info.clientHeight < after)
+        {
             this.codemirror.scrollTo(null, after - info.clientHeight + 3);
+        }
     }
 }

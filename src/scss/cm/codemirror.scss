@@ -1,0 +1,231 @@
+@import '../base';
+@import './theme/default';
+
+.CodeMirror {
+    font-family: Muli;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.1em;
+    height: 100%;
+}
+
+.CodeMirror-scroll {
+    position: relative;
+    padding-top: $gui-size-unit;
+
+    @include mq {
+        padding-top: 0px;
+    }
+}
+
+.CodeMirror-gutters {
+    width: $gui-size-unit;
+    background: $col_bg;
+
+    @include mq {
+        width: $gui-size-unit-sp;
+        background: $col_bg-sp;
+    }
+}
+
+.CodeMirror-gutter-text {
+    color: #aaa;
+    text-align: right;
+    padding: .4em .4em .4em .4em;
+    white-space: pre;
+}
+
+.CodeMirror-focused span.CodeMirror-selected {
+    background: Highlight;
+}
+
+.CodeMirror-matchingbracket {
+    color: #0f0;
+}
+
+.CodeMirror-nonmatchingbracket {
+    color: #f22;
+}
+
+.CodeMirror-dialog {
+    position: absolute;
+    right: 0px;
+    font-family: Muli;
+    font-weight: 400;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    background: $col_bg;
+    height: $gui-size-unit;
+    z-index: 10050;
+    // margin-top: -$gui-size-unit;
+    transition: all $anm-short;
+
+    @include mq {
+        height: $gui-size-unit-sp;
+        background: $col_bg-sp;
+    }
+
+    // top:0px;
+    padding: 0px;
+    color: $col-frnt;
+}
+
+.CodeMirror-dialog-top {
+    // top: 0;
+    top: $gui-size-unit;
+
+    @include mq {
+        top: 0px;
+    }
+}
+
+.CodeMirror-dialog-bottom {
+    bottom: 0;
+}
+
+.CodeMirror-dialog input {
+    font-size: 14px;
+    font-family: Muli, Arial, Helvetica, sans-serif;
+    font-weight: 700;
+
+    // border: 0px solid $col-frnt;
+    height: $gui-size-unit;
+    width: 100%;
+    padding: 10px;
+    padding-bottom: 16px;
+    margin: 0px;
+    color: $col_frnt;
+    background: $col-bg;
+
+    @include mq {
+        height: $gui-size-unit-sp;
+        background: transparent;
+    }
+}
+
+// .CodeMirror-dialog{
+//     background:#eee;
+//     padding:5px;
+//     font-size:0.9rem;
+//     position:absolute;
+//     top:0;
+//     left:0;
+//     width:100%;
+//     z-index:20;
+//     color:black
+// }
+.CodeMirror-dialog .CodeMirror-search-label {
+    font-size: 12px;
+    background: transparent;
+    font-family: Muli, Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    margin-left: $gui-size-unit*0.5;
+    margin-right: $gui-size-unit*0.25;
+    padding-bottom: 3px;
+
+    @include mq {
+        margin-left: $gui-size-unit-sp*0.5;
+        margin-right: $gui-size-unit-sp*0.25;
+    }
+}
+
+.CodeMirror-dialog .CodeMirror-search-hint {
+    display: none
+}
+
+.CodeMirror-dialog .CodeMirror-search-field {
+    width: $gui-size-unit*5 !important;
+
+    @include mq {
+        width: $gui-size-unit-sp*5 !important;
+    }
+
+    // border-bottom: 1px solid darken($col-frnt, 4%);
+    &::selection {
+        background: #d8d4c555;
+    }
+}
+
+.CodeMirror-dialog button {
+    height: $gui-size-unit;
+    margin: 0px;
+    width: $gui-size-unit*2;
+    background: $col-bg;
+    color: $col-frnt;
+    border: none;
+    outline: none;
+    padding-bottom: 2px;
+
+    transition: all $anm-short;
+
+    font-size: 14px;
+    font-family: Muli, Arial, Helvetica, sans-serif;
+    font-weight: 700;
+
+    @include mq {
+        font-size: 12px;
+        background: transparent;
+        height: $gui-size-unit-sp;
+        width: $gui-size-unit-sp*2;
+    }
+
+    &:focus {
+        background: darken($col-bg-bright, 2%);
+    }
+
+    &:hover {
+        cursor: pointer;
+        color: $col-frnt;
+        background: darken($col-bg-bright, 2%);
+    }
+
+    &:active {
+        color: $col-frnt;
+        background: darken($col-bg-bright, 2%);
+    }
+}
+
+.CodeMirror-search-match {
+    background: $col_frnt;
+    border-top: 1px solid $col_bg;
+    border-bottom: 1px solid $col_bg;
+
+    @include mq {
+        border-top: 1px solid $col_bg-sp;
+        border-bottom: 1px solid $col_bg-sp;
+    }
+
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    /* opacity: .5; */
+}
+
+.CodeMirror-guttermarker-subtle {
+    color: transparent;
+}
+
+.CodeMirror-foldmarker {
+    color: blue;
+    font-weight: bold;
+    line-height: .3;
+    cursor: pointer;
+}
+
+.CodeMirror-foldgutter {
+    width: .7em;
+}
+
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded {
+    cursor: pointer;
+}
+
+.CodeMirror-foldgutter-open:after {
+    content: "\25BE";
+}
+
+.CodeMirror-foldgutter-folded:after {
+    content: "\25B8";
+}

@@ -9,16 +9,19 @@
 //            
 
 import ShaderBoy from './shaderboy';
-import ShaderLib from './shader/shaderlib';
+import ShaderLib from './shaderlib';
 import gdrive from './gdrive';
 import CodeMirror from 'codemirror/lib/codemirror';
 import localforage from 'localforage';
+import gui_timeline from './gui/gui_timeline';
+import gui_panel_shaderlist from './gui/gui_panel_shaderlist';
 
 export default ShaderBoy.io = {
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	init: function () {
-
+	init: function ()
+	{
+		console.log('io: init');
 		localforage.config({
 			driver: localforage.INDEXEDDB,
 			name: 'ShaderBoy',
@@ -44,53 +47,89 @@ export default ShaderBoy.io = {
 		this.loadedNum = 0;
 		this.needLoadingNum = 0;
 		this.initLoading = true;
+		this.isNewShader = false;
+		this.createdNum = 0;
+		this.isInitializationSB = false;
 
-		ShaderBoy.gdrive.init(function () {
-			ShaderBoy.gdrive.getFolderByName('ShaderBoy', function (res) {
-				if (res.files.length === 0) {
+		let authDiv = document.getElementById('div_authrise');
+		let authLaterButton = document.getElementById('btn_authrise_later');
+		authLaterButton.onclick = function ()
+		{
+			authDiv.classList.add('hide');
+			setTimeout(() =>
+			{
+				document.getElementById('div_authrise').classList.add('hidden');
+			}, 400);
+			ShaderBoy.runInDevMode = true;
+			ShaderBoy.io.init();
+		};
+
+		this.getShadersFromGD = function ()
+		{
+			gdrive.getFolderByName('ShaderBoy', function (res)
+			{
+				if (res.files.length === 0)
+				{
 					// No folder is named as ShaderBoy. So make it.
-					ShaderBoy.gdrive.createFolder('ShaderBoy', 'root', function (ress) {
-						ShaderBoy.gdrive.createTextFile(ShaderBoy.gdrive.ID_DIR_APP, 'setting.json', ShaderLib.shader.settingJSON);
-						ShaderBoy.activeShaderName = '_defaultShader';
-						ShaderBoy.io.loadShader(ShaderBoy.activeShaderName, true);
+					gdrive.createFolder('ShaderBoy', 'root', function (res)
+					{
+						gdrive.ID_DIR_APP = res.id;
+						ShaderBoy.io.createSetting();
 					});
 				}
-				else {
+				else
+				{
 					// A folder found named as ShaderBoy. So lets load shaders.
-					ShaderBoy.gdrive.ID_DIR_APP = res.files[0].id;
-					ShaderBoy.gdrive.getFileByName('setting.json', ShaderBoy.gdrive.ID_DIR_APP,
-						function cb_loadSettingFile(res) {
-							if (res.files.length !== 0) {
-								for (let i = 0; i < res.files.length; i++) {
+					gdrive.ID_DIR_APP = res.files[0].id;
+					gdrive.getFileByName('setting.json', gdrive.ID_DIR_APP,
+						function cb_loadSettingFile(res)
+						{
+							if (res.files.length !== 0)
+							{
+								for (let i = 0; i < res.files.length; i++)
+								{
 									const file = res.files[i];
-									if (file.name === 'setting.json') {
-										ShaderBoy.gdrive.appData = {};
-										ShaderBoy.gdrive.appData[file.name] = {};
-										ShaderBoy.gdrive.appData[file.name]['name'] = file.name;
-										ShaderBoy.gdrive.appData[file.name]['id'] = file.id;
-										ShaderBoy.gdrive.appData[file.name]['content'] = '';
+									if (file.name === 'setting.json')
+									{
+										gdrive.appData = {};
+										gdrive.appData['Setting'] = {};
+										gdrive.appData['Setting']['name'] = file.name;
+										gdrive.appData['Setting']['id'] = file.id;
+										gdrive.appData['Setting']['content'] = '';
 
-										ShaderBoy.gdrive.getContentBody(file.id, function (res) {
+										gdrive.getContentBody(file.id, function (res)
+										{
 											let value = res.body;
-											if (!value) {
-												value = ShaderLib.shader.settingJSON;
+											if (!value)
+											{
+												value = ShaderLib.shader['Setting'];
 											}
 											let settingObj = JSON.parse(value);
 
 											//active shader name. to be loaded.
 											ShaderBoy.activeShaderName = settingObj.shaders.active;
 											ShaderBoy.setting = settingObj;
-											ShaderBoy.gdrive.getFolders(
-												function cb_listupShaders(res) {
-													for (let i = 0; i < res.files.length; i++) {
+											gdrive.getFolders(
+												function cb_listupShaders(res)
+												{
+													ShaderBoy.setting.shaders.list = [];
+													ShaderBoy.setting.shaders.datalist = [];
+													ShaderBoy.setting.shaders.thumbs = [];
+													for (let i = 0; i < res.files.length; i++)
+													{
 														const file = res.files[i];
+														console.log('file: ', file);
 														console.log(ShaderBoy.setting);
 														console.log(ShaderBoy.setting.shaders);
 														ShaderBoy.setting.shaders.list[i] = file.name;
+														ShaderBoy.setting.shaders.datalist[i] = { name: file.name, id: file.id };
 													}
+
 													let settingText = JSON.stringify(ShaderBoy.setting, null, "\t");
-													// ShaderBoy.gdrive.appData[file.name]['content'] = settingText;
+													// gdrive.appData[file.name]['content'] = settingText;
 													ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(settingText, 'x-shader/x-fragment');
+													console.log('datalist: ', ShaderBoy.setting.shaders.datalist);
+
 													ShaderBoy.io.loadShader(ShaderBoy.activeShaderName, true);
 												}
 											);
@@ -98,207 +137,518 @@ export default ShaderBoy.io = {
 									}
 								}
 							}
-							else {
-								ShaderBoy.gdrive.createTextFile(ShaderBoy.gdrive.ID_DIR_APP, 'setting.json', ShaderLib.shader.settingJSON, ShaderBoy.io.loadShader);
+							else
+							{
+								ShaderBoy.io.createSetting();
 							}
 						}
 					);
 
 				}
 			});
-		});
-	},
+		};
 
-	createDefaultShaderFiles: function (id) {
-		ShaderBoy.gdrive.createTextFile(id, 'config.json', ShaderLib.shader.configJSON);
-		ShaderBoy.gdrive.createTextFile(id, 'common.fs', ShaderLib.shader.commonFS);
-		ShaderBoy.gdrive.createTextFile(id, 'buf_a.fs', ShaderLib.shader.buf_aFS);
-		ShaderBoy.gdrive.createTextFile(id, 'buf_b.fs', ShaderLib.shader.buf_bFS);
-		ShaderBoy.gdrive.createTextFile(id, 'buf_c.fs', ShaderLib.shader.buf_cFS);
-		ShaderBoy.gdrive.createTextFile(id, 'buf_d.fs', ShaderLib.shader.buf_dFS);
-		ShaderBoy.gdrive.createTextFile(id, 'main.fs', ShaderLib.shader.imageFS);
-
-		ShaderBoy.buffers['Setting'].active = true;
-		ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(ShaderLib.shader.settingJSON, 'x-shader/x-fragment');
-
-		ShaderBoy.buffers['Config'].active = true;
-		ShaderBoy.buffers['Config'].cm = CodeMirror.Doc(ShaderLib.shader.configJSON, 'x-shader/x-fragment');
-
-		ShaderBoy.buffers['Common'].active = false;
-		ShaderBoy.buffers['Common'].cm = CodeMirror.Doc(ShaderLib.shader.commonFS, 'x-shader/x-fragment');
-
-		ShaderBoy.buffers['BufferA'].active = false;
-		ShaderBoy.buffers['BufferA'].cm = CodeMirror.Doc(ShaderLib.shader.buf_aFS, 'x-shader/x-fragment');
-
-		ShaderBoy.buffers['BufferB'].active = false;
-		ShaderBoy.buffers['BufferB'].cm = CodeMirror.Doc(ShaderLib.shader.buf_bFS, 'x-shader/x-fragment');
-
-		ShaderBoy.buffers['BufferC'].active = false;
-		ShaderBoy.buffers['BufferC'].cm = CodeMirror.Doc(ShaderLib.shader.buf_cFS, 'x-shader/x-fragment');
-
-		ShaderBoy.buffers['BufferD'].active = false;
-		ShaderBoy.buffers['BufferD'].cm = CodeMirror.Doc(ShaderLib.shader.buf_dFS, 'x-shader/x-fragment');
-
-		ShaderBoy.buffers['MainImage'].active = true;
-		ShaderBoy.buffers['MainImage'].cm = CodeMirror.Doc(ShaderLib.shader.imageFS, 'x-shader/x-fragment');
-
-		ShaderBoy.editor.setBuffer('MainImage');
-		ShaderBoy.bufferManager.resetBufferData(true);
-		ShaderBoy.isPlaying = true;
-		ShaderBoy.gui.header.showCommandInfo('new.', '#d8d4c5', '#fcbd00', false);
-	},
-
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	newShader: function () {
-		if (!this.useGoogleDrive) {
-			ShaderBoy.buffers['Setting'].active = true;
-			ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(ShaderLib.shader.settingJSON, 'x-shader/x-fragment');
-
-			ShaderBoy.buffers['Config'].active = true;
-			ShaderBoy.buffers['Config'].cm = CodeMirror.Doc(ShaderLib.shader.configJSON, 'x-shader/x-fragment');
-
-			ShaderBoy.buffers['Common'].active = false;
-			ShaderBoy.buffers['Common'].cm = CodeMirror.Doc(ShaderLib.shader.commonFS, 'x-shader/x-fragment');
-
-			ShaderBoy.buffers['BufferA'].active = false;
-			ShaderBoy.buffers['BufferA'].cm = CodeMirror.Doc(ShaderLib.shader.buf_aFS, 'x-shader/x-fragment');
-
-			ShaderBoy.buffers['BufferB'].active = false;
-			ShaderBoy.buffers['BufferB'].cm = CodeMirror.Doc(ShaderLib.shader.buf_bFS, 'x-shader/x-fragment');
-
-			ShaderBoy.buffers['BufferC'].active = false;
-			ShaderBoy.buffers['BufferC'].cm = CodeMirror.Doc(ShaderLib.shader.buf_cFS, 'x-shader/x-fragment');
-
-			ShaderBoy.buffers['BufferD'].active = false;
-			ShaderBoy.buffers['BufferD'].cm = CodeMirror.Doc(ShaderLib.shader.buf_dFS, 'x-shader/x-fragment');
-
+		if (!ShaderBoy.runInDevMode)
+		{
+			console.log('production');
+			gdrive.init(this.getShadersFromGD);
+		}
+		else
+		{
+			console.log('Running ShaderBoy as devlopment mode...');
+			ShaderBoy.config = JSON.parse(ShaderBoy.buffers['Config'].cm.getValue());
+			ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(ShaderLib.shader['Setting'], 'x-shader/x-fragment');
+			ShaderBoy.buffers['Config'].cm = CodeMirror.Doc(ShaderLib.shader['Config'], 'x-shader/x-fragment');
+			ShaderBoy.buffers['Common'].cm = CodeMirror.Doc(ShaderLib.shader['Common'], 'x-shader/x-fragment');
+			ShaderBoy.buffers['BufferA'].cm = CodeMirror.Doc(ShaderLib.shader['BufferA'], 'x-shader/x-fragment');
+			ShaderBoy.buffers['BufferB'].cm = CodeMirror.Doc(ShaderLib.shader['BufferB'], 'x-shader/x-fragment');
+			ShaderBoy.buffers['BufferC'].cm = CodeMirror.Doc(ShaderLib.shader['BufferC'], 'x-shader/x-fragment');
+			ShaderBoy.buffers['BufferD'].cm = CodeMirror.Doc(ShaderLib.shader['BufferD'], 'x-shader/x-fragment');
+			ShaderBoy.buffers['MainImage'].cm = CodeMirror.Doc(ShaderLib.shader['MainImage'], 'x-shader/x-fragment');
 			ShaderBoy.buffers['MainImage'].active = true;
-			ShaderBoy.buffers['MainImage'].cm = CodeMirror.Doc(ShaderLib.shader.imageFS, 'x-shader/x-fragment');
+			// ShaderBoy.gui.header.showCommandInfo('loaded.', 'st-sucsess-gdrive', false);
+			ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000, function ()
+			{
+				document.getElementById('cvr-loading').classList.add('loading-hide');
+				setTimeout(() =>
+				{
+					console.log('HIDOOOOOO!!!!!!');
+					document.getElementById('cvr-loading').classList.add('loading-hidden');
+				}, 400);
+			});
+
+			ShaderBoy.bufferManager.buildShaderFromBuffers();
+			ShaderBoy.bufferManager.setFBOsProps();
+
+			let value = ShaderLib.shader['gui_knobs'];
+			let knobsObj = JSON.parse(value);
+			console.log('knobsObj: ', knobsObj);
+			ShaderBoy.gui.knobs.show = knobsObj.show;
+			for (let i = 0; i < knobsObj.knobs.length; i++)
+			{
+				console.log(i);
+				console.log(ShaderBoy.gui.knobs.knobs);
+				ShaderBoy.gui.knobs.knobs[i].value = knobsObj.knobs[i].value;
+				ShaderBoy.gui.knobs.knobs[i].active = knobsObj.knobs[i].active;
+				ShaderBoy.gui.knobs.toggle(i, false);
+			}
+			console.log('ShaderBoy.gui.knobs:2 ', ShaderBoy.gui.knobs);
+
+			value = ShaderLib.shader['gui_timeline'];
+			let timelineObj = JSON.parse(value);
+			console.log(timelineObj);
+			gui_timeline.guidata = timelineObj;
+
 
 			ShaderBoy.editor.setBuffer('MainImage');
-			ShaderBoy.bufferManager.resetBufferData(true);
+			// if (ShaderBoy.io.initLoading === true)
+			// {
+			// } else
+			// {
+			// 	ShaderBoy.editor.setBuffer('Setting');
+			// }
+			// document.getElementById('div_loading').classList.toggle('show');
+			// document.getElementById('div_loading').classList.toggle('hide');
+			// document.getElementById('main').classList.toggle('show');
+			// document.getElementById('main').classList.toggle('hide');
+			// document.getElementById('code').classList.toggle('show');
+			// document.getElementById('code').classList.toggle('hide');
 
-			ShaderBoy.gui.header.showCommandInfo('new.', '#d8d4c5', '#fcbd00', false);
-		} else {
-			// google drive
-			let shaderName = 'yourshader';
-			ShaderBoy.gdrive.getFolderByName(shaderName, function (res) {
-				if (res.files.length === 0) {
-					ShaderBoy.gdrive.createShaderFolder(shaderName, function (ress) {
-						ShaderBoy.gdrive.ID_DIR_SHADER = ress.id;
-						ShaderBoy.io.createDefaultShaderFiles(ress.id);
-					});
-				}
-				else {
-					console.log('It exist. Use a different name.');
-				}
-			});
+			ShaderBoy.isPlaying = true;
+
 		}
 	},
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	saveShader: function () {
-		ShaderBoy.gdrive.saveThumbFile('thumb.png', ShaderBoy.canvas, function (res, err) { console.log(res, err, 'thumbnail was saved.'); });
-		ShaderBoy.gdrive.saveTextFile('setting.json', gdrive.appData['setting.json'].id, JSON.stringify(JSON.parse(ShaderBoy.buffers['Setting'].cm.getValue()), null, "\t"));
-		ShaderBoy.gdrive.saveTextFile('config.json', gdrive.ids_shaderFiles['config.json'].id, JSON.stringify(JSON.parse(ShaderBoy.buffers['Config'].cm.getValue()), null, "\t"));
-		ShaderBoy.gdrive.saveTextFile('buf_a.fs', gdrive.ids_shaderFiles['buf_a.fs'].id, ShaderBoy.buffers['BufferA'].cm.getValue());
-		ShaderBoy.gdrive.saveTextFile('buf_b.fs', gdrive.ids_shaderFiles['buf_b.fs'].id, ShaderBoy.buffers['BufferB'].cm.getValue());
-		ShaderBoy.gdrive.saveTextFile('buf_c.fs', gdrive.ids_shaderFiles['buf_c.fs'].id, ShaderBoy.buffers['BufferC'].cm.getValue());
-		ShaderBoy.gdrive.saveTextFile('buf_d.fs', gdrive.ids_shaderFiles['buf_d.fs'].id, ShaderBoy.buffers['BufferD'].cm.getValue());
-		ShaderBoy.gdrive.saveTextFile('main.fs', gdrive.ids_shaderFiles['main.fs'].id, ShaderBoy.buffers['MainImage'].cm.getValue());
-		ShaderBoy.gdrive.saveTextFile('common.fs', gdrive.ids_shaderFiles['common.fs'].id, ShaderBoy.buffers['Common'].cm.getValue());
-		localforage.setItem('renderScale', ShaderBoy.renderScale, function (err) { if (err) { console.log('db error...') } });
-		localforage.setItem('textSize', ShaderBoy.textSize, function (err) { if (err) { console.log('db error...') } });
-		ShaderBoy.gui.header.showCommandInfo('saved.', '#d8d4c5', '#1794be', false);
+	createSetting: function ()
+	{
+		console.log('io: createSetting');
+		ShaderBoy.setting = JSON.parse(ShaderLib.shader['Setting']);
+		ShaderBoy.setting.shaders.list = [];
+		ShaderBoy.setting.shaders.datalist = [];
+		ShaderBoy.setting.shaders.thumbs = [];
+		ShaderBoy.setting.shaders.list[0] = 'file.name';
+		ShaderBoy.setting.shaders.datalist[0] = { name: '_default', id: null };
+		gdrive.createTextFile(gdrive.ID_DIR_APP, 'setting.json', ShaderLib.shader['Setting'], function (res)
+		{
+			console.log(res);
+			gdrive.appData = {};
+			gdrive.appData['Setting'] = {};
+			gdrive.appData['Setting']['name'] = res.name;
+			gdrive.appData['Setting']['id'] = res.id;
+			gdrive.appData['Setting']['content'] = '';
+			ShaderBoy.activeShaderName = '_default';
+			ShaderBoy.io.isInitializationSB = true;
+			ShaderBoy.io.newShader(ShaderBoy.activeShaderName);
+		});
+		// ShaderBoy.buffers['Setting'].active = true;
+		ShaderBoy.bufferManager.initBufferDoc(['Setting']);
 	},
 
+	createGuiData_Knobs: function ()
+	{
+		console.log('io: createGuiData_Knobs');
+		gdrive.createTextFile(gdrive.ID_DIR_APP, 'gui_data_knobs.json', ShaderLib.shader['gui_knobs'], function (res)
+		{
+			console.log(res);
+		});
+	},
 
-	isLoaded: function (nm) {
-		this.loadedNum++;
-		console.log('isLoaded:' + nm);
-		ShaderBoy.gui.header.showCommandInfo('Loading shader files...(' + this.loadedNum + '/' + ShaderBoy.io.needLoadingNum + ')', '#d8d4c5', '#1E1E1E', false);
-		if (this.loadedNum === ShaderBoy.io.needLoadingNum) {
-			ShaderBoy.gui.header.showCommandInfo('loaded.', '#d8d4c5', '#fcbd00', false);
-			ShaderBoy.bufferManager.resetBufferData(true);
-			if (ShaderBoy.io.initLoading === true) {
-				ShaderBoy.editor.setBuffer('MainImage');
-			} else {
-				ShaderBoy.editor.setBuffer('Setting');
+	createGuiData_Timeline: function ()
+	{
+		console.log('io: createGuiData_Timeline');
+		gdrive.createTextFile(gdrive.ID_DIR_APP, 'gui_data_timeline.json', ShaderLib.shader['gui_timeline'], function (res)
+		{
+			console.log(res);
+		});
+	},
+
+	updateShaderList: function ()
+	{
+		console.log('io: updateShaderList');
+		// let settingObj = ShaderBoy.bufferManager.getSetting();
+		ShaderBoy.setting.shaders.list.push(ShaderBoy.setting.shaders.active);
+		ShaderBoy.setting.shaders.list = Array.from(new Set(ShaderBoy.setting.shaders.list));
+		// ShaderBoy.buffers['Setting'].cm.setValue(JSON.stringify(settingObj, null, "\t"));
+	},
+
+	activateShader: function (name)
+	{
+		console.log('io: activateShader');
+		// let settingObj = ShaderBoy.setting;
+		ShaderBoy.setting.shaders.active = name;
+		// ShaderBoy.buffers['Setting'].cm.setValue(JSON.stringify(settingObj, null, "\t"));
+	},
+
+	createDefaultShaderFiles: function (id)
+	{
+		console.log('io: createDefaultShaderFiles');
+		this.createdNum = 0;
+		let load = function ()
+		{
+			console.log('load.');
+			ShaderBoy.io.createdNum++;
+			if (ShaderBoy.io.createdNum === 8)
+			{
+				// let settingObj = ShaderBoy.bufferManager.getSetting();
+				if (ShaderBoy.io.isInitializationSB === true)
+				{
+					ShaderBoy.io.isInitializationSB = false;
+					ShaderBoy.io.getShadersFromGD();
+				}
+				else
+				{
+					let name = ShaderBoy.setting.shaders.active;
+					ShaderBoy.io.loadShader(name, name === '_default');
+				}
 			}
+		};
+
+		ShaderBoy.config = JSON.parse(ShaderBoy.buffers['Config'].cm.getValue());
+		gdrive.createTextFile(id, 'config.json', ShaderLib.shader['Config'], load);
+		gdrive.createTextFile(id, 'common.fs', ShaderLib.shader['Common'], load);
+		gdrive.createTextFile(id, '_guiknobs.json', ShaderLib.shader['gui_knobs'], load);
+		gdrive.createTextFile(id, '_guitimeline.json', ShaderLib.shader['gui_timeline'], load);
+		gdrive.createTextFile(id, 'buf_a.fs', ShaderLib.shader['BufferA'], load);
+		gdrive.createTextFile(id, 'buf_b.fs', ShaderLib.shader['BufferB'], load);
+		gdrive.createTextFile(id, 'buf_c.fs', ShaderLib.shader['BufferC'], load);
+		gdrive.createTextFile(id, 'buf_d.fs', ShaderLib.shader['BufferD'], load);
+		gdrive.createTextFile(id, 'main.fs', ShaderLib.shader['MainImage'], load);
+		// ShaderBoy.gui.header.showCommandInfo('new.', 'st-sucsess-gdrive', false);
+		ShaderBoy.gui_header.setStatus('suc1', 'New.', 3000);
+		console.log('New shader files were created.');
+	},
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	newShader: function (shaderName)
+	{
+		console.log('io: newShader');
+		gdrive.getFolderByName(shaderName, function (res)
+		{
+			console.log(res);
+			if (res.files.length === 0)
+			{
+				console.log('It is not exist. Create new shader files.');
+				gdrive.createShaderFolder(shaderName, function (ress)
+				{
+					console.log(res);
+					gdrive.ID_DIR_SHADER = ress.id;
+					ShaderBoy.io.isNewShader = true;
+					ShaderBoy.io.createDefaultShaderFiles(ress.id);
+					ShaderBoy.io.activateShader(shaderName);
+					ShaderBoy.io.updateShaderList();
+					// ShaderBoy.io.loadShader(ress.name, false);
+					// ShaderBoy.editor.setBuffer('MainImage');
+					// ShaderBoy.bufferManager.buildShaderFromBuffers(true);
+					// ShaderBoy.isPlaying = true;
+				});
+			}
+			else
+			{
+				console.log('It exist. Use a different name.');
+			}
+		});
+	},
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	saveShader: function ()
+	{
+		console.log('io: saveShader');
+		ShaderBoy.gui_header.setStatus('prgrs', 'Saving...', 0);
+
+		ShaderBoy.io.numNeedSaving = 5;
+		ShaderBoy.io.numSaved = 0;
+		ShaderBoy.io.numNeedSaving += (ShaderBoy.buffers['Common'].active === true) ? 1 : 0;
+		ShaderBoy.io.numNeedSaving += (ShaderBoy.buffers['BufferA'].active === true) ? 1 : 0;
+		ShaderBoy.io.numNeedSaving += (ShaderBoy.buffers['BufferB'].active === true) ? 1 : 0;
+		ShaderBoy.io.numNeedSaving += (ShaderBoy.buffers['BufferC'].active === true) ? 1 : 0;
+		ShaderBoy.io.numNeedSaving += (ShaderBoy.buffers['BufferD'].active === true) ? 1 : 0;
+
+		let confirmSaving = () =>
+		{
+			ShaderBoy.io.numSaved++;
+			console.log('ShaderBoy.io.numSaved: ', ShaderBoy.io.numSaved);
+			console.log('ShaderBoy.io.numNeedSaving: ', ShaderBoy.io.numNeedSaving);
+
+			if (ShaderBoy.io.numNeedSaving === ShaderBoy.io.numSaved)
+			{
+				ShaderBoy.gui_header.setStatus('suc1', 'Saved.', 3000);
+			}
+		};
+
+		gdrive.saveThumbFile('thumb.png', ShaderBoy.canvas, function (res, err) { console.log(res, err, 'thumbnail was saved.'); }, confirmSaving);
+		// gdrive.saveTextFile('setting.json', gdrive.appData['Setting'].id, JSON.stringify(JSON.parse(ShaderBoy.buffers['Setting'].cm.getValue()), null, "\t"), confirmSaving);
+		gdrive.saveTextFile('setting.json', gdrive.appData['Setting'].id, JSON.stringify(ShaderBoy.setting, null, "\t"), confirmSaving);
+		gdrive.saveTextFile('_guiknobs.json', gdrive.ids_shaderFiles['_guiknobs.json'].id, JSON.stringify({ 'show': ShaderBoy.gui.knobs.show, 'knobs': ShaderBoy.gui.knobs.knobs }, null, "\t"), confirmSaving);
+		gdrive.saveTextFile('_guitimeline.json', gdrive.ids_shaderFiles['_guitimeline.json'].id, JSON.stringify(gui_timeline.guidata, null, "\t"), confirmSaving);
+		// gdrive.saveTextFile('config.json', gdrive.ids_shaderFiles['config.json'].id, JSON.stringify(JSON.parse(ShaderBoy.buffers['Config'].cm.getValue()), null, "\t"), confirmSaving);
+		gdrive.saveTextFile('config.json', gdrive.ids_shaderFiles['config.json'].id, JSON.stringify(ShaderBoy.config, null, "\t"), confirmSaving);
+		gdrive.saveTextFile('main.fs', gdrive.ids_shaderFiles['main.fs'].id, ShaderBoy.buffers['MainImage'].cm.getValue(), confirmSaving);
+		if (ShaderBoy.buffers['Common'].active === true) gdrive.saveTextFile('common.fs', gdrive.ids_shaderFiles['common.fs'].id, ShaderBoy.buffers['Common'].cm.getValue(), confirmSaving);
+		if (ShaderBoy.buffers['BufferA'].active === true) gdrive.saveTextFile('buf_a.fs', gdrive.ids_shaderFiles['buf_a.fs'].id, ShaderBoy.buffers['BufferA'].cm.getValue(), confirmSaving);
+		if (ShaderBoy.buffers['BufferB'].active === true) gdrive.saveTextFile('buf_b.fs', gdrive.ids_shaderFiles['buf_b.fs'].id, ShaderBoy.buffers['BufferB'].cm.getValue(), confirmSaving);
+		if (ShaderBoy.buffers['BufferC'].active === true) gdrive.saveTextFile('buf_c.fs', gdrive.ids_shaderFiles['buf_c.fs'].id, ShaderBoy.buffers['BufferC'].cm.getValue(), confirmSaving);
+		if (ShaderBoy.buffers['BufferD'].active === true) gdrive.saveTextFile('buf_d.fs', gdrive.ids_shaderFiles['buf_d.fs'].id, ShaderBoy.buffers['BufferD'].cm.getValue(), confirmSaving);
+		localforage.setItem('renderScale', ShaderBoy.renderScale, function (err) { if (err) { console.log('db error...') } });
+		localforage.setItem('textSize', ShaderBoy.textSize, function (err) { if (err) { console.log('db error...') } });
+		// ShaderBoy.gui.header.showCommandInfo('saved.', 'st-sucsess-gdrive', false);
+		// ShaderBoy.gui_header.setStatus('suc1', 'Saved.', 3000);
+	},
+
+	isLoaded: function (nm)
+	{
+
+		console.log('io: isLoaded');
+		ShaderBoy.io.loadedNum++;
+		console.log('isLoaded:' + nm);
+		console.log('ShaderBoy.io.loadedNum:' + ShaderBoy.io.loadedNum);
+		console.log('ShaderBoy.io.needLoadingNum:' + ShaderBoy.io.needLoadingNum);
+		// ShaderBoy.gui.header.showCommandInfo('Loading shader files...(' + ShaderBoy.io.loadedNum + '/' + ShaderBoy.io.needLoadingNum + ')', 'st-default', false);
+		ShaderBoy.gui_header.setStatus('prgrs', 'Loading shader files...(' + ShaderBoy.io.loadedNum + '/' + ShaderBoy.io.needLoadingNum + ')', 0);
+		if (ShaderBoy.io.loadedNum === ShaderBoy.io.needLoadingNum)
+		{
+			console.log('io: Loaded all files...');
+			// ShaderBoy.gui.header.showCommandInfo('loaded.', 'st-sucsess-local', false);
+			// ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000);
+			ShaderBoy.bufferManager.buildShaderFromBuffers();
+			ShaderBoy.bufferManager.setFBOsProps();
+			ShaderBoy.editor.setBuffer('MainImage');
+			if (ShaderBoy.io.isNewShader === true)
+			{
+				// ShaderBoy.io.saveShader();
+				gdrive.saveThumbFile('thumb.png', ShaderBoy.canvas, function (res, err) { console.log(res, err, 'thumbnail was saved.'); });
+				ShaderBoy.io.isNewShader = false;
+			}
+
+			ShaderBoy.gui_header.resetBtns(ShaderBoy.config.buffers);
+
+			// document.getElementById('div_loading').classList.add('hide');
+			// document.getElementById('div_loading').classList.remove('show');
+			// document.getElementById('main').classList.add('show');
+			// document.getElementById('main').classList.remove('hide');
+			// document.getElementById('code').classList.add('show');
+			// document.getElementById('code').classList.remove('hide');
+			ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000, function ()
+			{
+				document.getElementById('cvr-loading').classList.add('loading-hide');
+				setTimeout(() =>
+				{
+					console.log('HIDEEEEEEE!!!!!!');
+					document.getElementById('cvr-loading').classList.add('loading-hidden');
+				}, 400);
+			});
 			ShaderBoy.isPlaying = true;
 		}
 	},
 
-	getActiveShaderName: function () {
+	getActiveShaderName: function ()
+	{
+		console.log('io: getActiveShaderName');
 		let rowtxt = ShaderBoy.buffers['BufferA'].cm.getValue();
 		return rowtxt;
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	loadShader: function (sn, initLoading) {
-		ShaderBoy.io.initLoading = initLoading;
-		ShaderBoy.buffers['Config'].active = true;
-		this.loadedNum = 0;
-		this.needLoadingNum = 0;
-		ShaderBoy.gui.header.showCommandInfo('Loading from Google Drive...', '#d8d4c5', '#1E1E1E', false);
+	loadShader: function (sn, initLoading)
+	{
+		// document.getElementById('div_loading').classList.remove('hide');
+		// document.getElementById('div_loading').classList.add('show');
+		// document.getElementById('main').classList.remove('show');
+		// document.getElementById('main').classList.add('hide');
+		ShaderBoy.io.activateShader(sn);
 
-		let shaderName = '_defaultShader';
-		if (sn !== undefined) {
+		console.log('initLoading: ', initLoading);
+		if (initLoading === true)
+		{
+			window.idi = 0;
+			const id = ShaderBoy.setting.shaders.datalist[window.idi].id;
+			ShaderBoy.setting.shaders.shaderlist = [];
+
+			window.cb_thumb = function (res)
+			{
+				if (res.files !== undefined)
+				{
+					if (res.files.length !== 0)
+					{
+						for (let i = 0; i < res.files.length; i++)
+						{
+							const file = res.files[i];
+							if (file.name === 'thumb.png')
+							{
+								console.log(file);
+
+								let img = new Image();
+								img.onload = function ()
+								{
+									let div = document.getElementById('gui-layer');
+									// div.appendChild(img);
+									let imgcon = document.createElement('div');
+									div.appendChild(imgcon);
+									imgcon.style.width = '0px';
+									imgcon.style.height = '0px';
+									imgcon.style.backgroundImage = 'url("' + img.src + '")';
+
+									ShaderBoy.setting.shaders.shaderlist[window.idi] = { name: ShaderBoy.setting.shaders.datalist[window.idi].name, thumb: 'url("' + img.src + '")' }
+									console.log('img loaded: ', ShaderBoy.setting.shaders.shaderlist[window.idi]);
+
+									window.idi++;
+									if (ShaderBoy.setting.shaders.datalist[window.idi] !== undefined)
+									{
+										const id = ShaderBoy.setting.shaders.datalist[window.idi].id;
+										gdrive.getFileByName('thumb.png', id, window.cb_thumb);
+									}
+									else
+									{
+										gui_panel_shaderlist.setup(ShaderBoy.setting.shaders.shaderlist);
+										console.log('window.idi: ', window.idi);
+									}
+								};
+								img.src = 'https://drive.google.com/uc?id=' + file.id;
+							}
+						}
+					}
+				}
+			};
+			gdrive.getFileByName('thumb.png', id, window.cb_thumb);
+		}
+
+		console.log('io: loadShader');
+		ShaderBoy.io.initLoading = (initLoading === undefined) ? false : initLoading;
+		ShaderBoy.buffers['Config'].active = true;
+		ShaderBoy.io.loadedNum = 0;
+		ShaderBoy.io.needLoadingNum = 0;
+		// ShaderBoy.gui.header.showCommandInfo('Loading from Google Drive...', 'st-default', false);
+		ShaderBoy.gui_header.setStatus('prgrs', 'Loading from Google Drive...', 0);
+
+		let shaderName = '_default';
+		if (sn !== undefined)
+		{
 			shaderName = sn;
 		}
+
 		// let shaderName =  ShaderBoy.util.deepcopy(ShaderBoy.buffers['BufferA'].cm.getValue());
-		ShaderBoy.gdrive.getFolderByName(shaderName, function (res) {
-			if (res.files[0] !== undefined) {
-				ShaderBoy.gui.header.showCommandInfo('"' + shaderName + '" was found. Loading shader files...', '#d8d4c5', '#1E1E1E', false);
+		gdrive.getFolderByName(shaderName, function (res)
+		{
+			if (res.files[0] !== undefined)
+			{
+				// ShaderBoy.gui.header.showCommandInfo('"' + shaderName + '" was found. Loading shader files...', 'st-sucsess-gdrive', false);
+				ShaderBoy.gui_header.setStatus('prgrs', '"' + shaderName + '" was found. Loading shader files...', 0);
 				let folderId = res.files[0].id;
 
-				ShaderBoy.gdrive.ID_DIR_SHADER = folderId;
+				gdrive.ID_DIR_SHADER = folderId;
 
-				ShaderBoy.gdrive.getFilesInFolder(folderId,
-					function (res) {
+				gdrive.getFilesInFolder(folderId,
+					function (res)
+					{
 
-						if (res.files.length !== 0) {
-							ShaderBoy.gdrive.ids_shaderFiles = {};
-							for (let i = 0; i < res.files.length; i++) {
+						if (res.files.length !== 0)
+						{
+							gdrive.ids_shaderFiles = {};
+							for (let i = 0; i < res.files.length; i++)
+							{
 								const file = res.files[i];
-								ShaderBoy.gdrive.ids_shaderFiles[file.name] = {};
-								ShaderBoy.gdrive.ids_shaderFiles[file.name]['name'] = file.name;
-								ShaderBoy.gdrive.ids_shaderFiles[file.name]['id'] = file.id;
-								ShaderBoy.gdrive.ids_shaderFiles[file.name]['content'] = '';
+								gdrive.ids_shaderFiles[file.name] = {};
+								gdrive.ids_shaderFiles[file.name]['name'] = file.name;
+								gdrive.ids_shaderFiles[file.name]['id'] = file.id;
+								gdrive.ids_shaderFiles[file.name]['content'] = '';
 							}
 
-							let id = ShaderBoy.gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['Config']].id;
-							ShaderBoy.gdrive.getContentBody(id, function (res) {
+							let id = gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['Config']].id;
+							gdrive.getContentBody(id, function (res)
+							{
 								let value = res.body;
-								if (!value) {
-									value = ShaderLib.shader.configJSON;
+								if (!value)
+								{
+									value = ShaderLib.shader['Config'];
 								}
 
 								let configObj = JSON.parse(value);
+								ShaderBoy.config = configObj;
 								console.log('configObj: ', configObj);
-								for (const key in configObj.buffers) {
-									if (configObj.buffers.hasOwnProperty(key)) {
-										const buffer = configObj.buffers[key];
-										console.log(buffer);
-										if (buffer.active === true) {
-											ShaderBoy.io.needLoadingNum++;
-										}
+								for (const key in configObj.buffers)
+								{
+									const buffer = configObj.buffers[key];
+									console.log(buffer);
+									if (buffer.active === true)
+									{
+										ShaderBoy.io.needLoadingNum++;
 									}
 								}
 
-								console.log('commm:', configObj.buffers['Common']);
-								console.log('commm2:', configObj.buffers.Common);
+								// Load GUI jsons...
+								if (gdrive.ids_shaderFiles['_guiknobs.json'] !== undefined)
+								{
+									let id = gdrive.ids_shaderFiles['_guiknobs.json'].id;
+									gdrive.getContentBody(id, function (res)
+									{
+										let value = res.body;
+										console.log('knobbbb: ', res);
+										if (!value)
+										{
+											value = ShaderLib.shader['gui_knobs'];
+										}
+										let knobsObj = JSON.parse(value);
+										ShaderBoy.gui.knobs.show = knobsObj.show;
+										for (let i = 0; i < ShaderBoy.gui.knobs.knobs.length; i++)
+										{
+											ShaderBoy.gui.knobs.knobs[i].value = knobsObj.knobs[i].value;
+											ShaderBoy.gui.knobs.knobs[i].active = knobsObj.knobs[i].active;
+											ShaderBoy.gui.knobs.toggle(i, false);
+										}
+									});
+								}
+								else
+								{
+									gdrive.createTextFile(gdrive.ID_DIR_SHADER, '_guiknobs.json', ShaderLib.shader['gui_knobs'], function (file)
+									{
+										gdrive.ids_shaderFiles['_guiknobs.json'] = {};
+										gdrive.ids_shaderFiles['_guiknobs.json']["name"] = file.name;
+										gdrive.ids_shaderFiles['_guiknobs.json']["id"] = file.id;
+										gdrive.ids_shaderFiles['_guiknobs.json']["content"] = '';
+										console.log('_guiknobs.json was created.');
+									});
+								}
+
+								if (gdrive.ids_shaderFiles['_guitimeline.json'] !== undefined)
+								{
+									let id = gdrive.ids_shaderFiles['_guitimeline.json'].id;
+									gdrive.getContentBody(id, function (res)
+									{
+										let value = res.body;
+										console.log('timeline: ', res);
+										if (!value)
+										{
+											value = ShaderLib.shader['gui_timeline'];
+										}
+										let timelineObj = JSON.parse(value);
+										gui_timeline.guidata = timelineObj;
+									});
+								}
+								else
+								{
+									gdrive.createTextFile(gdrive.ID_DIR_SHADER, '_guitimeline.json', ShaderLib.shader['gui_timeline'], function (file)
+									{
+										gdrive.ids_shaderFiles['_guitimeline.json'] = {};
+										gdrive.ids_shaderFiles['_guitimeline.json']["name"] = file.name;
+										gdrive.ids_shaderFiles['_guitimeline.json']["id"] = file.id;
+										gdrive.ids_shaderFiles['_guitimeline.json']["content"] = '';
+										console.log('_guitimeline.json was created.');
+									});
+								}
+
 
 								let bufferConfig = configObj.buffers;
 
 								console.log(bufferConfig['Common'].active);
 								ShaderBoy.buffers['Common'].active = bufferConfig['Common'].active;
-								if (ShaderBoy.buffers['Common'].active === true) {
-									let id = ShaderBoy.gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['Common']].id;
-									ShaderBoy.gdrive.getContentBody(id, function (res) {
+								if (ShaderBoy.buffers['Common'].active === true)
+								{
+									let id = gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['Common']].id;
+									gdrive.getContentBody(id, function (res)
+									{
 										let value = res.body;
-										if (!value) {
-											value = ShaderLib.shader.commonFS;
+										if (!value)
+										{
+											value = ShaderLib.shader['Common'];
 										}
 										ShaderBoy.buffers['Common'].cm = CodeMirror.Doc(value, 'x-shader/x-fragment');
 										ShaderBoy.io.isLoaded('Common');
@@ -307,12 +657,15 @@ export default ShaderBoy.io = {
 
 								console.log(bufferConfig['BufferA'].active);
 								ShaderBoy.buffers['BufferA'].active = bufferConfig['BufferA'].active;
-								if (ShaderBoy.buffers['BufferA'].active === true) {
-									let id = ShaderBoy.gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['BufferA']].id;
-									ShaderBoy.gdrive.getContentBody(id, function (res) {
+								if (ShaderBoy.buffers['BufferA'].active === true)
+								{
+									let id = gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['BufferA']].id;
+									gdrive.getContentBody(id, function (res)
+									{
 										let value = res.body;
-										if (!value) {
-											value = ShaderLib.shader.buf_aFS;
+										if (!value)
+										{
+											value = ShaderLib.shader['BufferA'];
 										}
 										ShaderBoy.buffers['BufferA'].cm = CodeMirror.Doc(value, 'x-shader/x-fragment');
 										ShaderBoy.io.isLoaded('BufferA');
@@ -321,12 +674,15 @@ export default ShaderBoy.io = {
 
 								console.log(bufferConfig['BufferB'].active);
 								ShaderBoy.buffers['BufferB'].active = bufferConfig['BufferB'].active;
-								if (ShaderBoy.buffers['BufferB'].active === true) {
-									let id = ShaderBoy.gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['BufferB']].id;
-									ShaderBoy.gdrive.getContentBody(id, function (res) {
+								if (ShaderBoy.buffers['BufferB'].active === true)
+								{
+									let id = gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['BufferB']].id;
+									gdrive.getContentBody(id, function (res)
+									{
 										let value = res.body;
-										if (!value) {
-											value = ShaderLib.shader.buf_bFS;
+										if (!value)
+										{
+											value = ShaderLib.shader['BufferB'];
 										}
 										ShaderBoy.buffers['BufferB'].cm = CodeMirror.Doc(value, 'x-shader/x-fragment');
 										ShaderBoy.io.isLoaded('BufferB');
@@ -335,12 +691,15 @@ export default ShaderBoy.io = {
 
 								console.log(bufferConfig['BufferC'].active);
 								ShaderBoy.buffers['BufferC'].active = bufferConfig['BufferC'].active;
-								if (ShaderBoy.buffers['BufferC'].active === true) {
-									let id = ShaderBoy.gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['BufferC']].id;
-									ShaderBoy.gdrive.getContentBody(id, function (res) {
+								if (ShaderBoy.buffers['BufferC'].active === true)
+								{
+									let id = gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['BufferC']].id;
+									gdrive.getContentBody(id, function (res)
+									{
 										let value = res.body;
-										if (!value) {
-											value = ShaderLib.shader.buf_cFS;
+										if (!value)
+										{
+											value = ShaderLib.shader['BufferC'];
 										}
 										ShaderBoy.buffers['BufferC'].cm = CodeMirror.Doc(value, 'x-shader/x-fragment');
 										ShaderBoy.io.isLoaded('BufferC');
@@ -349,12 +708,15 @@ export default ShaderBoy.io = {
 
 								console.log(bufferConfig['BufferD'].active);
 								ShaderBoy.buffers['BufferD'].active = bufferConfig['BufferD'].active;
-								if (ShaderBoy.buffers['BufferD'].active === true) {
-									let id = ShaderBoy.gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['BufferD']].id;
-									ShaderBoy.gdrive.getContentBody(id, function (res) {
+								if (ShaderBoy.buffers['BufferD'].active === true)
+								{
+									let id = gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['BufferD']].id;
+									gdrive.getContentBody(id, function (res)
+									{
 										let value = res.body;
-										if (!value) {
-											value = ShaderLib.shader.buf_dFS;
+										if (!value)
+										{
+											value = ShaderLib.shader['BufferD'];
 										}
 										ShaderBoy.buffers['BufferD'].cm = CodeMirror.Doc(value, 'x-shader/x-fragment');
 										ShaderBoy.io.isLoaded('BufferD');
@@ -363,11 +725,14 @@ export default ShaderBoy.io = {
 
 								console.log(bufferConfig['MainImage'].active);
 								ShaderBoy.buffers['MainImage'].active = bufferConfig['MainImage'].active;
-								if (ShaderBoy.buffers['MainImage'].active === true) {
-									let id = ShaderBoy.gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['MainImage']].id;
-									ShaderBoy.gdrive.getContentBody(id, function (res) {
+								if (ShaderBoy.buffers['MainImage'].active === true)
+								{
+									let id = gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['MainImage']].id;
+									gdrive.getContentBody(id, function (res)
+									{
 										let value = res.body;
-										if (!value) {
+										if (!value)
+										{
 											value = ShaderLib.shader.mainFS;
 										}
 										ShaderBoy.buffers['MainImage'].cm = CodeMirror.Doc(value, 'x-shader/x-fragment');
@@ -378,16 +743,20 @@ export default ShaderBoy.io = {
 								let configText = JSON.stringify(configObj, null, "\t");
 								ShaderBoy.buffers['Config'].cm = CodeMirror.Doc(configText, 'x-shader/x-fragment');
 
-								localforage.getItem('renderScale', function (err, value) {
-									if (!value) {
+								localforage.getItem('renderScale', function (err, value)
+								{
+									if (!value)
+									{
 										value = 2;
 									}
 									ShaderBoy.renderScale = value;
 									// ShaderBoy.io.isLoaded('renderScale');
 								});
 
-								localforage.getItem('textSize', function (err, value) {
-									if (!value) {
+								localforage.getItem('textSize', function (err, value)
+								{
+									if (!value)
+									{
 										value = 16;
 									}
 									ShaderBoy.editor.textSize = value;
@@ -395,13 +764,19 @@ export default ShaderBoy.io = {
 								});
 							});
 						}
-						else {
-							ShaderBoy.io.createDefaultShaderFiles(folderId);
+						else
+						{
+							// ShaderBoy.gui.header.showCommandInfo(shaderName + ' folder is empty! Confirm on your GoogleDrive.', 'st-error', false);
+							ShaderBoy.gui_header.setStatus('error', shaderName + ' folder is empty. Confirm on your GoogleDrive.', 0);
 						}
 					}
 				);
-			} else {
-				ShaderBoy.gui.header.showCommandInfo('"' + shaderName + '" was not found.', '#d8d4c5', '#FF0000', false);
+			} else
+			{
+				// ShaderBoy.gui.header.showCommandInfo(shaderName + ' was not found! Create it.', 'st-error', false);
+				ShaderBoy.gui_header.setStatus('error', shaderName + ' was not found.', 3000);
+				ShaderBoy.io.newShader(shaderName);
+
 			}
 		}
 		);

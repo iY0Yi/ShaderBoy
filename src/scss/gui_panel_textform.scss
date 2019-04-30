@@ -1,0 +1,62 @@
+@import 'gui_panel_base';
+
+// main
+///////////////////////////////////////////////////
+
+.gp-textarea {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: $gui-size-unit;
+
+    &.hide {
+        display: none;
+        height: 0px;
+    }
+}
+
+#textarea-container {
+    display: block;
+    position: absolute;
+    border-bottom: 1px solid $col-frnt;
+    text-align: left;
+    width: 50vw;
+    margin: 0px;
+    padding: 10px 0px;
+
+    color: $col-frnt;
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+
+    span {
+        font-weight: 700;
+        position: absolute;
+        top: 20px;
+        color: $col-frnt;
+        transition: all $anm-short;
+        pointer-events: none;
+        font-size: 14px;
+        line-height: 1;
+        letter-spacing: 0.1em;
+    }
+
+    &.dirty span,
+    #div-textarea:focus+span {
+        color: $col-frnt;
+        font-weight: 700;
+        font-size: 12px;
+        top: -10px;
+    }
+
+    #div-textarea {
+        outline: none;
+    }
+}

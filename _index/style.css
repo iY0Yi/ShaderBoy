@@ -1,336 +1,302 @@
-body{
-	font-family: Arial, Helvetica, sans-serif;
-	color: #d8d4c5;
-	width:100vw;
-	height:100vh;
-	border:0;
-	padding:0;
-	margin:0;
-	background-color:#1E1E1E;
-	-webkit-text-size-adjust: 100%;
-	display: block;
-	text-align: center;
+body {
+    font-family: Muli, Arial, Helvetica, sans-serif;
+    color: #d8d4c5;
+    width: 100vw;
+    height: 100vh;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background-color: #1F1F1F;
+    -webkit-text-size-adjust: 100%;
+    display: block;
+    text-align: center;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-a{
-	text-decoration: none;
+a {
+    text-decoration: none;
 }
 
-#gl_canvas
-{
-	z-index: 1;
+.content {
+    padding: 3vw 2.8vw 3.0vw 2.8vw;
+    position: absolute;
+    top: 49vh;
+    left: 50%;
+    opacity: 1;
+    transform: translateY(-50%) translateX(-50%);
+    -webkit-transform: translateY(-50%) translateX(-50%);
+    animation: fadein-base 3.0s cubic-bezier() 0.5s 1 forwards;
+    -webkit-animation: fadein-base 3.0s ease 0.5s 1 forwards;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
-.container
-{
-	width:100vw;
-	height:100vh;
-	position: relative;
-	z-index: 100;
-	background-color:#1E1E1E;
+.logo {
+    position: relative;
+    width: 300px;
+    height: calc(300px*0.23);
+    top: 5vh;
+    opacity: 0;
+    background-image: url(./img/sb_logo.svg);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    animation: fadein-logo 1.0s cubic-bezier() 0.5s 1 forwards;
+    -webkit-animation: fadein-logo 1.0s ease 0.5s 1 forwards;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: top, opacity;
 }
 
-.content
-{
-	opacity: 1.0;
-	position: absolute;
-	top: 45vh;
-	left: 50%;
-	transform: translateY(-50%) translateX(-50%);
-	-webkit-transform: translateY(-50%) translateX(-50%);
-	transition: all 450ms linear;
-}
-.logo
-{
-	position: relative;
-	width:60vw;
-	height:13.4vw;
-	margin-left: -0.2vw;
-	background-image:url(./img/sb_logo.svg);
-	background-size:100%;
+@-webkit-keyframes fadein-logo {
+    100% {
+        top: 0vh;
+        opacity: 1;
+    }
 }
 
-.discription
-{
-position: relative;
-text-align: justify;
-letter-spacing: 0.03vw;
-text-justify: inter-word;
-line-height: 4vw;
-margin-top: 3vw;
-width:59vw;
-height:35vw;
-font-size: 2.75vw;
+@keyframes fadein-logo {
+    100% {
+        top: 0vh;
+        opacity: 1;
+    }
 }
 
-.alert_ios
-{
-	margin-top: -3.0vw;
-	line-height: 3.5vw;
-	margin-left: 0.0vw;
-	display: flex;
-	text-align: justify;
-	letter-spacing: 0.03vw;
-	font-size: 2.5vw;
-	width:59vw;
-	height:3vw;
+.discription {
+    position: relative;
+    text-align: justify;
+    letter-spacing: 0.3px;
+    text-justify: inter-word;
+    line-height: 17px;
+    margin-top: 5px;
+    width: 295px;
+    height: 113px;
+    font-size: 12px;
+    opacity: 0;
+    animation: fadein-discription 1.5s cubic-bezier() 1.0s 1 forwards;
+    -webkit-animation: fadein-discription 1.5s ease 1.0s 1 forwards;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: opacity;
 }
 
-.btn
-{
-width:59vw;
-height:9vw;
-display: flex;
-overflow: hidden;
-user-select: none;
-white-space: nowrap;
-text-decoration: none !important;
-text-transform: none;
-text-transform: capitalize;
-border-radius: 0.8vw;
-font-size: 2.9vw;
-font-weight: 500;
-line-height: 1.3;
--webkit-appearance: none;
--moz-appearance:none;
-appearance: none;
-
-justify-content: center;
-align-items: center;
-flex: 0 0 32vw;
-margin: 0px;
-mix-blend-mode: lighten;
-
-padding-top: 0.25vw;
+@-webkit-keyframes fadein-discription {
+    100% {
+        opacity: 1;
+    }
 }
 
-.btn.-bold
-{
-font-weight: bold;
-font-size: 3.2vw;
-letter-spacing: 0.05vw;
-border: 0.2vw solid #d8d4c5;
-background-color:#d8d4c5;
-color: #1E1E1E;
+@keyframes fadein-discription {
+    100% {
+        opacity: 1;
+    }
 }
 
-.btn.-regular
-{
-letter-spacing: 0.25vw;
-border: 1px solid #d8d4c5;
-color: #d8d4c5;
+.alert_ios {
+    visibility: visible;
+    display: none;
 }
 
-.footer
-{
-font-size: 1.1vw;
-font-style: italic;
-letter-spacing: 0.1vw;
-width:100vw;
-height:5vh;
-position: absolute;
-
-flex: 0 0 0;
-top: 20vh;
+.btn {
+    width: 295px;
+    height: 45px;
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    white-space: nowrap;
+    text-decoration: none;
+    text-transform: none;
+    text-transform: capitalize;
+    font-size: 14.5px;
+    line-height: 1.3;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 160px;
+    margin: 0px;
+    mix-blend-mode: lighten;
+    padding-top: 0px;
+    padding-bottom: 2px;
+    opacity: 0;
 }
 
-
-#btn_install
-{
-position: relative;
-margin-top: 0vw;
-height: 0px;
-opacity: 0.0;
-display: none;
+.btn.-bold {
+    font-weight: 700;
+    letter-spacing: 0.25px;
+    background-color: #d8d4c5;
+    color: #1F1F1F;
 }
 
-#btn_github
-{
-position: relative;
-margin-top: 12.0vw;
-/* top: 44vh; */
-}
-.icon_install
-{
-width:2.8vw;
-height:2.8vw;
-margin-left: -0.5vw;
-margin-right: 1.0vw;
-background-image:url(./img/install.svg);
-background-size:100%;
-}
-.icon_github
-{
-width:4.6vw;
-height:4.6vw;
-margin-top: -0.25vw;
-margin-left: -1.5vw;
-margin-right: 1.5vw;
-background-image:url(./img/github_logo.svg);
-background-size:100%;
+.btn.-regular {
+    letter-spacing: 0.25px;
+    background-color: #2A2A2A;
+    color: #d8d4c5;
 }
 
-@media screen and (min-width: 750px)
-{
-	body{
-	font-family: Arial, Helvetica, sans-serif;
-	color: #d8d4c5;
-	width:100vw;
-	height:100vh;
-	border:0;
-	padding:0;
-	margin:0;
-	background-color:#1E1E1E;
-	-webkit-text-size-adjust: 100%;
-	display: block;
-	text-align: center;
-	}
-
-	a{
-	text-decoration: none;
-	}
-
-	#gl_canvas
-	{
-	z-index: 1;
-	}
-
-	.container
-	{
-	width:100vw;
-	height:100vh;
-	position: relative;
-	z-index: 100;
-	background-color:#1E1E1E;
-	}
-
-	.content
-	{
-	opacity: 1.0;
-	position: absolute;
-	top: 48vh;
-	left: 50%;
-	transform: translateY(-50%) translateX(-50%);
-	-webkit-transform: translateY(-50%) translateX(-50%);
-	transition: all 450ms linear;
-	}
-	.logo
-	{
-	position: relative;
-	width:300px;
-	height:67px;
-	background-image:url(./img/sb_logo.svg);
-	background-size:100%;
-	}
-
-	.discription
-	{
-	position: relative;
-	text-align: justify;
-	letter-spacing: 0.3px;
-	text-justify: inter-word;
-	line-height: 20px;
-	margin-top: 15px;
-	width:295px;
-	height: 125px;
-	font-size: 12px;
-	}
-
-	.alert_ios
-	{
-		display: none;
-	}
-	.btn
-	{
-	width:295px;
-	height:45px;
-	display: flex;
-	overflow: hidden;
-	user-select: none;
-	white-space: nowrap;
-	text-decoration: none !important;
-	text-transform: none;
-	text-transform: capitalize;
-	border-radius: 4px;
-	font-size: 14.5px;
-	font-weight: 500;
-	line-height: 1.3;
-	-webkit-appearance: none;
-	-moz-appearance:none;
-	appearance: none;
-
-	justify-content: center;
-	align-items: center;
-	flex: 0 0 160px;
-	margin: 0px;
-	mix-blend-mode: lighten;
-
-	padding-top: 0px;
-	}
-
-	.btn.-bold
-	{
-	font-weight: bold;
-	font-size: 16px;
-	letter-spacing: 0.5px;
-	border: 2px solid #d8d4c5;
-	background-color:#d8d4c5;
-	color: #1E1E1E;
-	}
-
-	.btn.-regular
-	{
-	letter-spacing: 2.5px;
-	border: 1px solid #d8d4c5;
-	color: #d8d4c5;
-	}
-
-	.footer
-	{
-	font-size: 11px;
-	font-style: italic;
-	letter-spacing: 1.0px;
-	width:100vw;
-	height:5vh;
-	position: absolute;
-	
-	flex: 0 0 0px;
-	top: 20vh;
-	}
-
-
-	#btn_install
-	{
-	position: relative;
-	margin-top: 10px;
-	height: 45px;
-	opacity: 1.0;
-	display: flex;
-	}
-
-	#btn_github
-	{
-	position: relative;
-	margin-top: 10px;
-	/* top: 44vh; */
-	}
-	.icon_install
-	{
-	width:28px;
-	height:28px;
-	margin-left: -5px;
-	margin-right: 10px;
-	background-image:url(./img/install.svg);
-	background-size:100%;
-	}
-	.icon_github
-	{
-	width:23px;
-	height:23px;
-	margin-left: -1px;
-	margin-right: 10px;
-	margin-top: -0.5px;
-	background-image:url(./img/github_logo.svg);
-	background-size:100%;
-	}
+#btn_install {
+    position: relative;
+    margin-top: 10px;
+    display: flex;
+    letter-spacing: 0.25px;
+    transition: background-color 200ms ease-in-out;
+    animation: fadein-btn 1.5s cubic-bezier() 1.5s 1 forwards;
+    -webkit-animation: fadein-btn 1.5s ease 1.5s 1 forwards;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: opacity;
 }
+
+#btn_install:hover {
+    background-color: #fff9e8;
+}
+
+#btn_github {
+    position: relative;
+    margin-top: 10px;
+    padding-bottom: 0px;
+    transition: background-color 200ms ease-in-out;
+    animation: fadein-btn 1.5s cubic-bezier() 2.0s 1 forwards;
+    -webkit-animation: fadein-btn 1.5s ease 2.0s 1 forwards;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: opacity;
+}
+
+#btn_github:hover {
+    background-color: #2F2F2F;
+}
+
+@-webkit-keyframes fadein-btn {
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadein-btn {
+    100% {
+        opacity: 1;
+    }
+}
+
+.icon_install {
+    width: 28px;
+    height: 28px;
+    margin-left: -5px;
+    margin-right: 10px;
+    background-image: url(./img/install.svg);
+    background-size: 100%;
+}
+
+.icon_github {
+    width: 23px;
+    height: 23px;
+    margin-left: -1px;
+    margin-right: 10px;
+    padding-bottom: 1px;
+    background-image: url(./img/github_logo.svg);
+    background-size: 100%;
+}
+
+@media (orientation: landscape) and (max-width: 768px) {
+    .logo {
+        width: 35vw;
+        height: calc(35vw*0.223);
+    }
+
+    .discription {
+        margin-top: 1vw;
+        width: 33vw;
+        height: 14.7vw;
+        font-size: 1.5vw;
+        line-height: 2.1vw;
+    }
+
+    .btn {
+        width: 33vw;
+        height: 5vw;
+        font-size: 1.8vw;
+        padding-top: 0.25vw;
+    }
+
+    #btn_install {
+        display: none;
+    }
+
+    .alert_ios {
+        margin-top: 1.0vw;
+        margin-left: 0.0vw;
+        display: flex;
+        text-align: justify;
+        letter-spacing: 0.03vw;
+        line-height: 2.2vw;
+        font-size: 1.5vw;
+        width: 33vw;
+        height: 6vw;
+    }
+}
+
+@media screen and (min-width: 0px) and (max-width: 1280px) {}
+
+@media screen and (orientation: portrait) and (min-width: 0px) and (max-width: 768px) {
+    .content {
+        top: 45vh;
+    }
+
+    .logo {
+        width: 60vw;
+        height: calc(60vw*0.225);
+    }
+
+    .discription {
+        letter-spacing: 0.03vw;
+        line-height: 4vw;
+        margin-top: 3vw;
+        width: 59vw;
+        height: 35vw;
+        font-size: 2.75vw;
+    }
+
+    .alert_ios {
+        margin-top: -3.0vw;
+        line-height: 3.5vw;
+        margin-left: 0.0vw;
+        display: flex;
+        text-align: justify;
+        letter-spacing: 0.03vw;
+        font-size: 2.5vw;
+        width: 59vw;
+        height: 3vw;
+    }
+
+    .btn {
+        width: 59vw;
+        height: 9vw;
+        font-size: 2.9vw;
+        padding-top: 0.25vw;
+    }
+
+    .btn.-regular {
+        letter-spacing: 0.25vw;
+    }
+
+    #btn_install {
+        display: none;
+    }
+
+    #btn_github {
+        margin-top: 12.0vw;
+    }
+
+    .icon_github {
+        margin-left: -1.5vw;
+        margin-right: 1.5vw;
+    }
+}
+
+@media screen and (min-width: 0px) and (max-width: 640px) {}
+
+@media screen and (min-width: 0px) and (max-width: 480px) {}
+
+@media screen and (min-width: 0px) and (max-width: 320px) {}

@@ -1,43 +1,61 @@
-var webpack = require('webpack');
-var PROD = true;
-var version = 0;
+var PRODUCTION = false;
+var SOURCE_MAP = false;
 module.exports = {
-	module:
-	{
-		loaders: [
+
+	mode: (!PRODUCTION) ? 'development' : 'production',
+
+	module: {
+		rules: [
 			{
-				loader: 'babel-loader',
+				test: [/\.scss/, /\.css/],
+				use: [
+					'style-loader',
+					{
+						loader: 'css-loader',
+						options: {
+							url: false,
+							sourceMap: SOURCE_MAP,
+							// 0 => no loaders (default);
+							// 1 => postcss-loader;
+							// 2 => postcss-loader, sass-loader
+							importLoaders: 2
+						},
+					},
+					{
+						loader: 'sass-loader',
+						options: {
+							sourceMap: SOURCE_MAP,
+						}
+					}
+				],
+			},
+			{
 				test: /\.js$/,
+				use: "babel-loader",
 				exclude: /node_modules/
 			}
-		]
+		],
 	},
-	// devtool: 'source-map',
-	entry:
-	{
-		main: './src/js/main.js'
-	},
+
+	entry: './src/js/main.js',
+
 	output:
 	{
 		path: __dirname + '/dest/js/',
-		filename: PROD ? '[name].min.js' : '[name].js'
+		publicPath: '/js/',
+		filename: '[name].min.js'
 	},
+
+	devtool: (SOURCE_MAP) ? 'source-map' : 'none',
+	devServer: {
+		port: 1414,
+		inline: true,
+		overlay: true,
+		contentBase: './dest',
+	},
+
 	resolve:
 	{
-		extensions: ['', '.js']
-	},
-	plugins: [
-		// new webpack.optimize.DedupePlugin(),
-		// new webpack.optimize.CommonsChunkPlugin(
-		// 	{
-		// 		name: 'bundle',
-		// 		filename: PROD ? 'bundle.min.js' : 'bundle.js',
-		// 		minChunks: Infinity
-		// 	}),
-		// new webpack.optimize.AggressiveMergingPlugin(),
-		new webpack.optimize.UglifyJsPlugin({
-			include: /\.min\.js$/,
-			minimize: true
-		})
-	]
+		extensions: ['.js']
+	}
 };

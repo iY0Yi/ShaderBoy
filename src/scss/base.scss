@@ -1,0 +1,41 @@
+@import 'theme-default';
+$gui-z-index:1000;
+$gui-size-unit:45px;
+$gui-size-unit-sp: 35px;
+
+$anm-short: 0.2s ease-in-out;
+$anm-middle: 0.4s ease-in-out;
+$anm-long: 0.8s ease-in-out;
+
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+$breakpoint: 735px;
+
+@mixin mq {
+    @media screen and (max-width: $breakpoint) {
+        @content;
+    }
+}

@@ -8,6 +8,7 @@
 //                          
 //                          
 
+import jQuery from 'jquery';
 import ShaderBoy from './shaderboy';
 import time from './time';
 import io from './io';
@@ -16,30 +17,67 @@ import renderer from './renderer';
 import editor from './editor';
 import util from './util';
 import bufferManager from './buffer_manager';
-import ShaderLib from './shader/shaderlib';
-import ShaderList from './shader/shaderlist';
+import ShaderLib from './shaderlib';
+import ShaderList from './shaderlist';
+import 'normalize.css';
+import './codemirror/addon/hint/show-hint.css';
+import './codemirror/lib/codemirror.css';
+import '../scss/main.scss';
+// import './codemirror/theme/3024-day.css';
+// import './codemirror/theme/3024-night.css';
+import './codemirror/theme/3024-monotone.css';
 
 // ShaderBoy init
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ShaderBoy.init = function () {
+ShaderBoy.init = function ()
+{
+	// Convert "img" tag to "svg" tag to attach styles.
+	jQuery('img').each(function ()
+	{
+		var $img = jQuery(this);
+		var imgID = $img.attr('id');
+		var imgClass = $img.attr('class');
+		var imgURL = $img.attr('src');
+		jQuery.get(imgURL, function (data)
+		{
+			// Get the SVG tag, ignore the rest
+			var $svg = jQuery(data).find('svg');
+
+			if (typeof imgID !== 'undefined')
+			{// Add replaced image's ID to the new SVG
+				$svg = $svg.attr('id', imgID);
+			}
+			if (typeof imgClass !== 'undefined')
+			{// Add replaced image's classes to the new SVG
+				$svg = $svg.attr('class', imgClass + ' replaced-svg');
+			}
+			$svg = $svg.removeAttr('xmlns:a');
+			$img.replaceWith($svg);
+		});
+	});
+
 
 	ShaderBoy.capture = null;
 	ShaderBoy.isRecording = false;
 
+	// Detect your OS.
 	ShaderBoy.OS = 'Unknown OS';
 	if (navigator.appVersion.indexOf('Win') != -1) ShaderBoy.OS = 'Windows';
 	if (navigator.appVersion.indexOf('Mac') != -1) ShaderBoy.OS = 'MacOS';
 	if (navigator.appVersion.indexOf('X11') != -1) ShaderBoy.OS = 'UNIX';
 	if (navigator.appVersion.indexOf('Linux') != -1) ShaderBoy.OS = 'Linux';
-	if (navigator.appVersion.indexOf('iphone') != -1) ShaderBoy.OS = 'iOS';
-	if (navigator.appVersion.indexOf('android') != -1) ShaderBoy.OS = 'Android';
-	if (ShaderBoy.OS === 'Unknown OS') {
+	if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) ShaderBoy.OS = 'iOS';
+	if (navigator.userAgent.match(/Android/i)) ShaderBoy.OS = 'Android';
+	if (ShaderBoy.OS === 'Unknown OS')
+	{
 		ShaderBoy.OS = 'Android';
 	}
 
 	console.log('ShaderBoy.OS', ShaderBoy.OS);
 	console.log('navigator.appVersion', navigator.appVersion);
 
+
+	// OK. Let's get WebGL!
 	ShaderBoy.canvas = document.getElementById('gl_canvas');
 	ShaderBoy.canvas.width = window.innerWidth;
 	ShaderBoy.canvas.height = window.innerHeight;
@@ -47,7 +85,8 @@ ShaderBoy.init = function () {
 	ShaderBoy.gl = null;
 	ShaderBoy.glVersion = 0.0;
 
-	try {
+	try
+	{
 		let opts = {
 			alpha: false,
 			depth: false,
@@ -63,7 +102,8 @@ ShaderBoy.init = function () {
 		if (ShaderBoy.gl == null) { ShaderBoy.gl = ShaderBoy.canvas.getContext('experimental-webgl', opts); ShaderBoy.glVersion = 1.0; }
 
 		ShaderBoy.glExt = {};
-		if (ShaderBoy.glVersion === 2.0) {
+		if (ShaderBoy.glVersion === 2.0)
+		{
 			ShaderBoy.glExt.Float32Textures = true;
 			ShaderBoy.glExt.Float32Filter = ShaderBoy.gl.getExtension('OES_texture_float_linear');
 			ShaderBoy.glExt.Float16Textures = true;
@@ -75,7 +115,8 @@ ShaderBoy.init = function () {
 			ShaderBoy.glExt.Anisotropic = ShaderBoy.gl.getExtension('EXT_texture_filter_anisotropic');
 			ShaderBoy.glExt.RenderToFloat32F = ShaderBoy.gl.getExtension('EXT_color_buffer_float');
 		}
-		else {
+		else
+		{
 			ShaderBoy.glExt.Float32Textures = ShaderBoy.gl.getExtension('OES_texture_float');
 			ShaderBoy.glExt.Float32Filter = ShaderBoy.gl.getExtension('OES_texture_float_linear');
 			ShaderBoy.glExt.Float16Textures = ShaderBoy.gl.getExtension('OES_texture_half_float');
@@ -92,7 +133,8 @@ ShaderBoy.init = function () {
 		ShaderBoy.shaderHeaderLines = [];
 		ShaderBoy.shaderHeader[0] = '';
 		ShaderBoy.shaderHeaderLines[0] = 0;
-		if (ShaderBoy.glVersion === 2.0) {
+		if (ShaderBoy.glVersion === 2.0)
+		{
 			ShaderBoy.shaderHeader[0] += "#version 300 es\n" +
 				"#ifdef GL_ES\n" +
 				"precision highp float;\n" +
@@ -101,7 +143,8 @@ ShaderBoy.init = function () {
 				"#endif\n";
 			ShaderBoy.shaderHeaderLines[0] += 6;
 		}
-		else {
+		else
+		{
 			ShaderBoy.shaderHeader[0] += "#ifdef GL_ES\n" +
 				"precision highp float;\n" +
 				"precision highp int;\n" +
@@ -133,7 +176,8 @@ ShaderBoy.init = function () {
 
 		ShaderBoy.shaderHeader[1] = "";
 		ShaderBoy.shaderHeaderLines[1] = 0;
-		if (ShaderBoy.glVersion === 2.0) {
+		if (ShaderBoy.glVersion === 2.0)
+		{
 			ShaderBoy.shaderHeader[1] += "#version 300 es\n" +
 				"#ifdef GL_ES\n" +
 				"precision highp float;\n" +
@@ -143,7 +187,8 @@ ShaderBoy.init = function () {
 				"out vec4 outColor;\n";
 			ShaderBoy.shaderHeaderLines[1] += 6;
 		}
-		else {
+		else
+		{
 			if (ShaderBoy.glExt.Derivatives) { ShaderBoy.shaderHeader[1] += "#ifdef GL_OES_standard_derivatives\n#extension GL_OES_standard_derivatives : enable\n#endif\n"; ShaderBoy.shaderHeaderLines[1] += 3; }
 			if (ShaderBoy.glExt.ShaderTextureLOD) { ShaderBoy.shaderHeader[1] += "#extension GL_EXT_shader_texture_lod : enable\n"; ShaderBoy.shaderHeaderLines[1]++; }
 			ShaderBoy.shaderHeader[1] += "#ifdef GL_ES\n" +
@@ -178,81 +223,132 @@ ShaderBoy.init = function () {
 				"float acsch(float x) { return    log((1.+sqrt(1.+x*x))/x); }\n" +
 				"#define outColor gl_FragColor\n";
 			ShaderBoy.shaderHeaderLines[1] += 30;
-			if (ShaderBoy.glExt.ShaderTextureLOD) {
+			if (ShaderBoy.glExt.ShaderTextureLOD)
+			{
 				ShaderBoy.shaderHeader[1] += "vec4 textureLod(  sampler2D   s, vec2 c, float b)          { return texture2DLodEXT(s,c,b); }\n";
 				ShaderBoy.shaderHeader[1] += "vec4 textureGrad( sampler2D   s, vec2 c, vec2 dx, vec2 dy) { return texture2DGradEXT(s,c,dx,dy); }\n";
 				ShaderBoy.shaderHeaderLines[1] += 2;
 			}
 		}
 	}
-	catch (e) {
+	catch (e)
+	{
 		throw e;
 	}
 
-	if (ShaderBoy.gl) {
+	if (ShaderBoy.gl)
+	{
+		// We got WebGL!
+		ShaderBoy.runInDevMode = process.env.NODE_ENV === 'development';
 
-		ShaderBoy.gui.init();
-		ShaderBoy.time.init();
-		ShaderBoy.bufferManager.init();
-		ShaderBoy.editor.init();
-		ShaderBoy.io.init();
-		ShaderBoy.update();
+		time.init();
+		gui.init();
+		bufferManager.init();
+		editor.init();
+
+		io.init();
+		ShaderBoy.canvas.width = window.innerWidth;
+		ShaderBoy.canvas.height = window.innerHeight;
+		console.log(window.innerWidth);
 	}
-	else {
+	else
+	{
 		throw 'Sorry! Your browser does not support WEBGL!';
 	}
 };
 
 // Update
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// RequestAnimationFrame
-window.requestAnimFrame = (function () {
-	return window.requestAnimationFrame || window.webkitRequestAnimationFrame ||
-		window.mozRequestAnimationFrame || window.oRequestAnimationFrame ||
-		window.msRequestAnimationFrame || function (cb) { window.setTimeout(cb, 1000 / 60); };
-})();
-
-ShaderBoy.update = function () {
-	requestAnimationFrame(ShaderBoy.update);
-	if (ShaderBoy.isPlaying) {
-		if (ShaderBoy.time.needUpdate()) {
-			ShaderBoy.renderer.render();
-			if (ShaderBoy.capture && ShaderBoy.isRecording) {
-				ShaderBoy.capture.capture(ShaderBoy.canvas);
-				let total = ShaderBoy.capture.totalframes;
-				let current = ShaderBoy.capture.currentframes;
-
-				if (current > total) {
-					ShaderBoy.gui.header.showCommandInfo('✓ Finished Recording.', '#FF0000', '#1E1E1E', false);
-					ShaderBoy.capture.stop();
-					console.log('ShaderBoy.capture', ShaderBoy.capture);
-					let canvasWidth = Math.floor(window.innerWidth);
-					let canvasHeight = Math.floor(window.innerHeight);
-					ShaderBoy.canvas.width = canvasWidth;
-					ShaderBoy.canvas.height = canvasHeight;
-					ShaderBoy.bufferManager.initFrameBuffers();
-					ShaderBoy.isRecording = false;
-					ShaderBoy.capture = null;
-					ShaderBoy.time.pause();
-					ShaderBoy.time.reset();
-				}
-				else {
-					ShaderBoy.gui.header.showCommandInfo('● Recording... ' + current + ' / ' + total + ' frames', '#FF0000', '#1E1E1E', true);
-					ShaderBoy.capture.currentframes++;
-				}
-			}
-			ShaderBoy.uniforms.iFrame++;
-		}
+// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+// MIT license
+(function ()
+{
+	let lastTime = 0;
+	let vendors = ['ms', 'moz', 'webkit', 'o'];
+	for (let x = 0; x < vendors.length && !window.requestAnimationFrame; ++x)
+	{
+		window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+		window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame']
+			|| window[vendors[x] + 'CancelRequestAnimationFrame'];
 	}
-	else if (ShaderBoy.forceDraw === true) {
-		ShaderBoy.renderer.render();
+
+	if (!window.requestAnimationFrame)
+		window.requestAnimationFrame = function (callback, element)
+		{
+			let currTime = new Date().getTime();
+			let timeToCall = Math.max(0, 16 - (currTime - lastTime));
+			let id = window.setTimeout(function () { callback(currTime + timeToCall); },
+				timeToCall);
+			lastTime = currTime + timeToCall;
+			return id;
+		};
+
+	if (!window.cancelAnimationFrame)
+		window.cancelAnimationFrame = function (id)
+		{
+			clearTimeout(id);
+		};
+}());
+
+ShaderBoy.update = function ()
+{
+	requestAnimationFrame(ShaderBoy.update);
+
+	gui.update();
+
+	if (ShaderBoy.isPlaying)
+	{
+		// if (time.needUpdate())
+		// {
+
+		renderer.render();
+		if (ShaderBoy.capture && ShaderBoy.isRecording)
+		{
+			ShaderBoy.capture.capture(ShaderBoy.canvas);
+			let total = ShaderBoy.capture.totalframes;
+			let current = ShaderBoy.capture.currentframes;
+
+			if (current > total)
+			{
+				// gui.header.showCommandInfo('✓ Finished Recording.', 'st-error', false);
+				ShaderBoy.gui_header.setStatus('suc3', 'Recording has complete.', 3000);
+
+				ShaderBoy.capture.stop();
+				console.log('ShaderBoy.capture', ShaderBoy.capture);
+				let canvasWidth = Math.floor(window.innerWidth);
+				let canvasHeight = Math.floor(window.innerHeight);
+				ShaderBoy.canvas.width = canvasWidth;
+				ShaderBoy.canvas.height = canvasHeight;
+				bufferManager.setFBOsProps();
+				ShaderBoy.isRecording = false;
+				ShaderBoy.capture = null;
+				// time.pause();
+				// time.reset();
+			}
+			else
+			{
+				// gui.header.showCommandInfo('● Recording... ' + current + ' / ' + total + ' frames', 'st-error', true);
+				ShaderBoy.gui_header.setStatus('prgrs', 'Recording...', 0);
+				ShaderBoy.capture.currentframes++;
+			}
+		}
+		// time.update();
+		// }
+	}
+	else if (ShaderBoy.forceDraw === true)
+	{
+		renderer.render();
+		console.log('forceDraw');
 		ShaderBoy.forceDraw = false;
 	}
-	ShaderBoy.gui.redraw();
+	gui.redraw();
 };
 
 // Entry point
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-window.onload = function () {
+window.onload = function ()
+{
+	document.getElementById('shaderboy').style.display = 'inline';
+	ShaderBoy.gui_header.setStatus('prgrs', 'Loading...', 0);
 	ShaderLib.loadShadersFiles(ShaderList, ShaderBoy.init);
 };

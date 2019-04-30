@@ -24,10 +24,15 @@ let ShaderBoy = {
     editingBuffer: '',
     vsSource: null,
     screenShader: null,
+    oldBufferIds: [],
     activeBufferIds: [],
-    config: {},
-
-    activeShaderName: '_defaultShader',
+    config: null,
+    workspace: {
+        timeline: false,
+        ichannels: false,
+        dev_knobs: false
+    },
+    activeShaderName: undefined,
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     style: {
