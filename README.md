@@ -22,7 +22,9 @@ Your power to go.</br>
 
 # App
 ShaderBoy is a *PWA(Progressive Web Apps).*  
-You can install ShaderBoy app from [here](https://shaderboy.net/).
+You can install the app from [here](https://shaderboy.net/).
+##### *[Howto: Install Progressive Web App (PWA) natively on Windows/macOS via Chrome Browser](https://medium.com/@dhormale/install-pwa-on-windows-desktop-via-google-chrome-browser-6907c01eebe4)
+
 </br>
 </br>
 </br>
