@@ -18,14 +18,12 @@ Your power to go.</br>
 </br>
 </br>
 </br>
-</br>
 
 # App
 ShaderBoy is a *PWA(Progressive Web Apps).*  
 You can install the app from [here](https://shaderboy.net/).
 ##### *[Howto: Install Progressive Web App (PWA) natively on Windows/macOS via Chrome Browser](https://medium.com/@dhormale/install-pwa-on-windows-desktop-via-google-chrome-browser-6907c01eebe4)
 
-</br>
 </br>
 </br>
 </br>
@@ -48,12 +46,9 @@ You can install the app from [here](https://shaderboy.net/).
 </br>
 </br>
 </br>
-</br>
 
-# Shortcuts
-ShaderBoy has no GUI. Works with shortcuts.  
-These are default shortcuts.  
-If you want to change, edit "editor.js", and build it.  
+# Hotkeys
+ShaderBoy works with hotkeys.  
   
 |   | Smartphone | Windows | Mac |
 |:---|:---|:---|:---|
@@ -75,7 +70,6 @@ If you want to change, edit "editor.js", and build it.
 | **Show shaders list** | ctrl+O | ctrl+O | ⌘+O |
 
 ##### *And some of Sublime Text bindings by Codemirror.
-</br>
 </br>
 </br>
 </br>
@@ -103,11 +97,12 @@ If you want to change, edit "editor.js", and build it.
 - [X] uniform samplerXX **iChannel0..3;**          *// input channel. XX = 2D/Cube*
 - [ ] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
   
-### Manipulations
+### GUI/other usefuls
 - [X] Timeline GUI for PC(frame based)
 - [X] x32 uniforms with GUI(knob style) for PC
 - [X] GUI for Shader list
 - [X] GUI for iChannels
+- [ ] snippets for writing SDF(Signed Distance field)
 - [ ] Multiple editor pane
   
 ### Other
@@ -115,7 +110,6 @@ If you want to change, edit "editor.js", and build it.
 - [X] Capturing shader to movie file.(WebM/PNG/JPG/GIF)
 - [ ] Witout Google account(localStrage)
 - [ ] Themes for editor pane
-</br>
 </br>
 </br>
 </br>
@@ -143,7 +137,6 @@ $ npm run build
 ### upload
 And upload files in "dest" directory to your server.  
 That's it! Good luck!  
-</br>
 </br>
 </br>
 </br>
