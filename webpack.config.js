@@ -1,4 +1,4 @@
-var PRODUCTION = false;
+var PRODUCTION = true;
 var SOURCE_MAP = false;
 module.exports = {
 
