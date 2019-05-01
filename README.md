@@ -40,6 +40,7 @@ You can install the app from [here](https://shaderboy.net/).
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc04.jpg"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc05.jpg"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc06.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc07.jpg"></br>
 </br>
 </br> 
 </br>
@@ -99,8 +100,9 @@ You can install the app from [here](https://shaderboy.net/).
 - [ ] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
   
 ### GUI/other usefuls
-- [X] Timeline GUI for PC(frame based)
-- [X] x32 uniforms with GUI(knob style) for PC
+- [X] Timeline GUI(frame based) :PC only
+- [X] x32 uniforms with GUI(knob style) :PC only
+- [X] supports MIDI controller :PC only
 - [X] GUI for Shader list
 - [X] GUI for iChannels
 - [ ] snippets for writing SDF(Signed Distance field)
