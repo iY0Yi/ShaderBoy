@@ -35,7 +35,7 @@ export default ShaderBoy.gui_panel_textform = { // comment out on codepen.
             {
                 this.parentNode.classList.add('dirty');
             }
-            
+
             let characterCode = e.keyCode;
             if (characterCode === 13)
             {
@@ -46,7 +46,6 @@ export default ShaderBoy.gui_panel_textform = { // comment out on codepen.
                 containerEl.classList.toggle("gp-container-hidden");
                 gpbaseEl.classList.toggle("gp-hidden");
                 let result = ShaderBoy.gui_panel_textform.textarea.innerText;
-                console.log(result);
                 ShaderBoy.gui_panel_textform.result = result;
                 ShaderBoy.gui_panel_textform.textarea.innerText = '';
 

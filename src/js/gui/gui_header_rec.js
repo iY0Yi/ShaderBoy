@@ -226,7 +226,6 @@ export default ShaderBoy.gui_header_rec = { // comment out on codepen.
             }
         }, Math.floor(1 / 60 * 1000));
 
-        // ShaderBoy.gui.header.showCommandInfo('● Recording...', 'st-recording', true);
         ShaderBoy.gui_header.setStatus('prgrs', 'Recording...', 0);
     },
 
@@ -247,8 +246,7 @@ export default ShaderBoy.gui_header_rec = { // comment out on codepen.
         ShaderBoy.isRecording = false;
         ShaderBoy.capture = null;
         // ShaderBoy.time.reset();
-        // ShaderBoy.gui.header.showCommandInfo('Finished Recording.', 'st-sucsess-local', false);
-        ShaderBoy.gui_header.setStatus('suc3', 'Recording is complete.', 3000);
+        ShaderBoy.gui_header.setStatus('suc3', 'Recording has been completed.', 3000);
     },
 
     setRecSetting()

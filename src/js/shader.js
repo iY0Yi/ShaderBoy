@@ -90,7 +90,7 @@ export default class Shader
 				console.log(scope.errors);
 				ShaderBoy.editor.updateErrorInfo(scope.bufName, scope.errors);
 				ShaderBoy.gui_header.setErrorOnly(scope.bufName);
-				// ShaderBoy.gui.header.showCommandInfo('failed!', 'st-error', false);
+
 				ShaderBoy.gui_header.setStatus('error', 'Compilation failed.', 0);
 			}
 			else

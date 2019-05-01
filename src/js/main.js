@@ -298,9 +298,6 @@ ShaderBoy.update = function ()
 
 	if (ShaderBoy.isPlaying)
 	{
-		// if (time.needUpdate())
-		// {
-
 		renderer.render();
 		if (ShaderBoy.capture && ShaderBoy.isRecording)
 		{
@@ -310,7 +307,6 @@ ShaderBoy.update = function ()
 
 			if (current > total)
 			{
-				// gui.header.showCommandInfo('✓ Finished Recording.', 'st-error', false);
 				ShaderBoy.gui_header.setStatus('suc3', 'Recording has complete.', 3000);
 
 				ShaderBoy.capture.stop();
@@ -322,18 +318,13 @@ ShaderBoy.update = function ()
 				bufferManager.setFBOsProps();
 				ShaderBoy.isRecording = false;
 				ShaderBoy.capture = null;
-				// time.pause();
-				// time.reset();
 			}
 			else
 			{
-				// gui.header.showCommandInfo('● Recording... ' + current + ' / ' + total + ' frames', 'st-error', true);
 				ShaderBoy.gui_header.setStatus('prgrs', 'Recording...', 0);
 				ShaderBoy.capture.currentframes++;
 			}
 		}
-		// time.update();
-		// }
 	}
 	else if (ShaderBoy.forceDraw === true)
 	{

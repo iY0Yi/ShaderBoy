@@ -1,0 +1,47 @@
+@import '../base';
+
+#gui-header {
+    z-index: $gui-z-index+1;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: $col-bg;
+    width: 100vw;
+    height: $gui-size-unit;
+    margin: 0px;
+    transition: top $anm-middle;
+
+    &.hdr_hide {
+        top: -$gui-size-unit;
+    }
+
+    @include mq {
+        height: $gui-size-unit-sp;
+        background: transparent;
+    }
+}
+
+%btn-interact {
+    transition: all $anm-short;
+    font-family: Muli, Arial, Helvetica, sans-serif;
+    font-weight: 700;
+
+    &:focus {
+        background: $col-bg-bright;
+
+        @include mq {
+            background: transparent;
+        }
+    }
+
+    &:hover {
+        cursor: pointer;
+        color: $col-frnt;
+        background: $col-bg-bright;
+    }
+
+    &:active {
+        color: $col-frnt;
+        background: $col-bg-bright;
+    }
+}

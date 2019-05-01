@@ -53,7 +53,6 @@ export default ShaderBoy.renderer = {
 						gl.bindTexture(gl.TEXTURE_2D, texture);
 					}
 				}
-				// buffer.shader.setSliderUniforms();
 				buffer.shader.setKnobsUniforms();
 				buffer.shader.setMIDIUniforms();
 				buffer.shader.setShadetoyUniforms();

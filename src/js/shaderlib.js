@@ -31,7 +31,7 @@ var ShaderLib = {
 				{
 					let root = this.root;
 					let shaderTxt = request.responseText;
-					// if (debug.SHADER) console.log('loadedShader: ' + name);
+
 					root.loadedNum++;
 					if (root.shader[name] !== null)
 					{

@@ -89,9 +89,6 @@ export default ShaderBoy.time = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     reset: function ()
     {
-        // this.startTime = this.getGlobalTime();
-        // this.pausedTime = this.getGlobalTime();
-        // this.offsetTime = 0;
         ShaderBoy.uniforms.iTime = this.loop.start * (1 / 60);
         ShaderBoy.uniforms.iFrame = this.loop.start;
     },

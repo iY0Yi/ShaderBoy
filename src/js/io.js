@@ -166,13 +166,12 @@ export default ShaderBoy.io = {
 			ShaderBoy.buffers['BufferD'].cm = CodeMirror.Doc(ShaderLib.shader['BufferD'], 'x-shader/x-fragment');
 			ShaderBoy.buffers['MainImage'].cm = CodeMirror.Doc(ShaderLib.shader['MainImage'], 'x-shader/x-fragment');
 			ShaderBoy.buffers['MainImage'].active = true;
-			// ShaderBoy.gui.header.showCommandInfo('loaded.', 'st-sucsess-gdrive', false);
+
 			ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000, function ()
 			{
 				document.getElementById('cvr-loading').classList.add('loading-hide');
 				setTimeout(() =>
 				{
-					console.log('HIDOOOOOO!!!!!!');
 					document.getElementById('cvr-loading').classList.add('loading-hidden');
 				}, 400);
 			});
@@ -186,33 +185,17 @@ export default ShaderBoy.io = {
 			ShaderBoy.gui.knobs.show = knobsObj.show;
 			for (let i = 0; i < knobsObj.knobs.length; i++)
 			{
-				console.log(i);
-				console.log(ShaderBoy.gui.knobs.knobs);
 				ShaderBoy.gui.knobs.knobs[i].value = knobsObj.knobs[i].value;
 				ShaderBoy.gui.knobs.knobs[i].active = knobsObj.knobs[i].active;
 				ShaderBoy.gui.knobs.toggle(i, false);
 			}
-			console.log('ShaderBoy.gui.knobs:2 ', ShaderBoy.gui.knobs);
 
 			value = ShaderLib.shader['gui_timeline'];
 			let timelineObj = JSON.parse(value);
-			console.log(timelineObj);
+			console.log('timelineObj: ', timelineObj);
 			gui_timeline.guidata = timelineObj;
 
-
 			ShaderBoy.editor.setBuffer('MainImage');
-			// if (ShaderBoy.io.initLoading === true)
-			// {
-			// } else
-			// {
-			// 	ShaderBoy.editor.setBuffer('Setting');
-			// }
-			// document.getElementById('div_loading').classList.toggle('show');
-			// document.getElementById('div_loading').classList.toggle('hide');
-			// document.getElementById('main').classList.toggle('show');
-			// document.getElementById('main').classList.toggle('hide');
-			// document.getElementById('code').classList.toggle('show');
-			// document.getElementById('code').classList.toggle('hide');
 
 			ShaderBoy.isPlaying = true;
 
@@ -240,7 +223,6 @@ export default ShaderBoy.io = {
 			ShaderBoy.io.isInitializationSB = true;
 			ShaderBoy.io.newShader(ShaderBoy.activeShaderName);
 		});
-		// ShaderBoy.buffers['Setting'].active = true;
 		ShaderBoy.bufferManager.initBufferDoc(['Setting']);
 	},
 
@@ -265,18 +247,14 @@ export default ShaderBoy.io = {
 	updateShaderList: function ()
 	{
 		console.log('io: updateShaderList');
-		// let settingObj = ShaderBoy.bufferManager.getSetting();
 		ShaderBoy.setting.shaders.list.push(ShaderBoy.setting.shaders.active);
 		ShaderBoy.setting.shaders.list = Array.from(new Set(ShaderBoy.setting.shaders.list));
-		// ShaderBoy.buffers['Setting'].cm.setValue(JSON.stringify(settingObj, null, "\t"));
 	},
 
 	activateShader: function (name)
 	{
 		console.log('io: activateShader');
-		// let settingObj = ShaderBoy.setting;
 		ShaderBoy.setting.shaders.active = name;
-		// ShaderBoy.buffers['Setting'].cm.setValue(JSON.stringify(settingObj, null, "\t"));
 	},
 
 	createDefaultShaderFiles: function (id)
@@ -285,11 +263,10 @@ export default ShaderBoy.io = {
 		this.createdNum = 0;
 		let load = function ()
 		{
-			console.log('load.');
+			console.log('loaded: ', ShaderBoy.io.createdNum + '/8');
 			ShaderBoy.io.createdNum++;
 			if (ShaderBoy.io.createdNum === 8)
 			{
-				// let settingObj = ShaderBoy.bufferManager.getSetting();
 				if (ShaderBoy.io.isInitializationSB === true)
 				{
 					ShaderBoy.io.isInitializationSB = false;
@@ -313,7 +290,7 @@ export default ShaderBoy.io = {
 		gdrive.createTextFile(id, 'buf_c.fs', ShaderLib.shader['BufferC'], load);
 		gdrive.createTextFile(id, 'buf_d.fs', ShaderLib.shader['BufferD'], load);
 		gdrive.createTextFile(id, 'main.fs', ShaderLib.shader['MainImage'], load);
-		// ShaderBoy.gui.header.showCommandInfo('new.', 'st-sucsess-gdrive', false);
+
 		ShaderBoy.gui_header.setStatus('suc1', 'New.', 3000);
 		console.log('New shader files were created.');
 	},
@@ -336,10 +313,6 @@ export default ShaderBoy.io = {
 					ShaderBoy.io.createDefaultShaderFiles(ress.id);
 					ShaderBoy.io.activateShader(shaderName);
 					ShaderBoy.io.updateShaderList();
-					// ShaderBoy.io.loadShader(ress.name, false);
-					// ShaderBoy.editor.setBuffer('MainImage');
-					// ShaderBoy.bufferManager.buildShaderFromBuffers(true);
-					// ShaderBoy.isPlaying = true;
 				});
 			}
 			else
@@ -390,8 +363,6 @@ export default ShaderBoy.io = {
 		if (ShaderBoy.buffers['BufferD'].active === true) gdrive.saveTextFile('buf_d.fs', gdrive.ids_shaderFiles['buf_d.fs'].id, ShaderBoy.buffers['BufferD'].cm.getValue(), confirmSaving);
 		localforage.setItem('renderScale', ShaderBoy.renderScale, function (err) { if (err) { console.log('db error...') } });
 		localforage.setItem('textSize', ShaderBoy.textSize, function (err) { if (err) { console.log('db error...') } });
-		// ShaderBoy.gui.header.showCommandInfo('saved.', 'st-sucsess-gdrive', false);
-		// ShaderBoy.gui_header.setStatus('suc1', 'Saved.', 3000);
 	},
 
 	isLoaded: function (nm)
@@ -402,37 +373,26 @@ export default ShaderBoy.io = {
 		console.log('isLoaded:' + nm);
 		console.log('ShaderBoy.io.loadedNum:' + ShaderBoy.io.loadedNum);
 		console.log('ShaderBoy.io.needLoadingNum:' + ShaderBoy.io.needLoadingNum);
-		// ShaderBoy.gui.header.showCommandInfo('Loading shader files...(' + ShaderBoy.io.loadedNum + '/' + ShaderBoy.io.needLoadingNum + ')', 'st-default', false);
 		ShaderBoy.gui_header.setStatus('prgrs', 'Loading shader files...(' + ShaderBoy.io.loadedNum + '/' + ShaderBoy.io.needLoadingNum + ')', 0);
 		if (ShaderBoy.io.loadedNum === ShaderBoy.io.needLoadingNum)
 		{
 			console.log('io: Loaded all files...');
-			// ShaderBoy.gui.header.showCommandInfo('loaded.', 'st-sucsess-local', false);
-			// ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000);
 			ShaderBoy.bufferManager.buildShaderFromBuffers();
 			ShaderBoy.bufferManager.setFBOsProps();
 			ShaderBoy.editor.setBuffer('MainImage');
 			if (ShaderBoy.io.isNewShader === true)
 			{
-				// ShaderBoy.io.saveShader();
 				gdrive.saveThumbFile('thumb.png', ShaderBoy.canvas, function (res, err) { console.log(res, err, 'thumbnail was saved.'); });
 				ShaderBoy.io.isNewShader = false;
 			}
 
 			ShaderBoy.gui_header.resetBtns(ShaderBoy.config.buffers);
 
-			// document.getElementById('div_loading').classList.add('hide');
-			// document.getElementById('div_loading').classList.remove('show');
-			// document.getElementById('main').classList.add('show');
-			// document.getElementById('main').classList.remove('hide');
-			// document.getElementById('code').classList.add('show');
-			// document.getElementById('code').classList.remove('hide');
 			ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000, function ()
 			{
 				document.getElementById('cvr-loading').classList.add('loading-hide');
 				setTimeout(() =>
 				{
-					console.log('HIDEEEEEEE!!!!!!');
 					document.getElementById('cvr-loading').classList.add('loading-hidden');
 				}, 400);
 			});
@@ -450,10 +410,6 @@ export default ShaderBoy.io = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	loadShader: function (sn, initLoading)
 	{
-		// document.getElementById('div_loading').classList.remove('hide');
-		// document.getElementById('div_loading').classList.add('show');
-		// document.getElementById('main').classList.remove('show');
-		// document.getElementById('main').classList.add('hide');
 		ShaderBoy.io.activateShader(sn);
 
 		console.log('initLoading: ', initLoading);
@@ -516,7 +472,7 @@ export default ShaderBoy.io = {
 		ShaderBoy.buffers['Config'].active = true;
 		ShaderBoy.io.loadedNum = 0;
 		ShaderBoy.io.needLoadingNum = 0;
-		// ShaderBoy.gui.header.showCommandInfo('Loading from Google Drive...', 'st-default', false);
+
 		ShaderBoy.gui_header.setStatus('prgrs', 'Loading from Google Drive...', 0);
 
 		let shaderName = '_default';
@@ -525,12 +481,10 @@ export default ShaderBoy.io = {
 			shaderName = sn;
 		}
 
-		// let shaderName =  ShaderBoy.util.deepcopy(ShaderBoy.buffers['BufferA'].cm.getValue());
 		gdrive.getFolderByName(shaderName, function (res)
 		{
 			if (res.files[0] !== undefined)
 			{
-				// ShaderBoy.gui.header.showCommandInfo('"' + shaderName + '" was found. Loading shader files...', 'st-sucsess-gdrive', false);
 				ShaderBoy.gui_header.setStatus('prgrs', '"' + shaderName + '" was found. Loading shader files...', 0);
 				let folderId = res.files[0].id;
 
@@ -581,7 +535,6 @@ export default ShaderBoy.io = {
 									gdrive.getContentBody(id, function (res)
 									{
 										let value = res.body;
-										console.log('knobbbb: ', res);
 										if (!value)
 										{
 											value = ShaderLib.shader['gui_knobs'];
@@ -614,7 +567,6 @@ export default ShaderBoy.io = {
 									gdrive.getContentBody(id, function (res)
 									{
 										let value = res.body;
-										console.log('timeline: ', res);
 										if (!value)
 										{
 											value = ShaderLib.shader['gui_timeline'];
@@ -750,7 +702,6 @@ export default ShaderBoy.io = {
 										value = 2;
 									}
 									ShaderBoy.renderScale = value;
-									// ShaderBoy.io.isLoaded('renderScale');
 								});
 
 								localforage.getItem('textSize', function (err, value)
@@ -760,20 +711,17 @@ export default ShaderBoy.io = {
 										value = 16;
 									}
 									ShaderBoy.editor.textSize = value;
-									// ShaderBoy.io.isLoaded('textSize');
 								});
 							});
 						}
 						else
 						{
-							// ShaderBoy.gui.header.showCommandInfo(shaderName + ' folder is empty! Confirm on your GoogleDrive.', 'st-error', false);
 							ShaderBoy.gui_header.setStatus('error', shaderName + ' folder is empty. Confirm on your GoogleDrive.', 0);
 						}
 					}
 				);
 			} else
 			{
-				// ShaderBoy.gui.header.showCommandInfo(shaderName + ' was not found! Create it.', 'st-error', false);
 				ShaderBoy.gui_header.setStatus('error', shaderName + ' was not found.', 3000);
 				ShaderBoy.io.newShader(shaderName);
 

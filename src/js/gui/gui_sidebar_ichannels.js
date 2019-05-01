@@ -58,7 +58,6 @@ export default ShaderBoy.gui_sidebar_ichannels = { // comment out on codepen.
             astpnls[i].onclick = this.panelClick;
         }
 
-        // let selectEls = document.getElementsByTagName('select');
         let selectEls = document.querySelectorAll('.ichannels-drpdwn');
         for (let i = 0; i < selectEls.length; i++)
         {

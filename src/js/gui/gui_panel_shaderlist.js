@@ -77,7 +77,6 @@ export default ShaderBoy.gui_panel_shaderlist = { // comment out on codepen.
             btnEl.onclick = function (e)
             {
                 e.stopPropagation();
-                console.log('click');
 
                 let name = '_defaultShader';
                 name = e.target.parentElement.children[1].innerText;
@@ -85,12 +84,9 @@ export default ShaderBoy.gui_panel_shaderlist = { // comment out on codepen.
                 console.log('shadernum: ', shadernum);
                 for (let i = 0; i < shadernum; i++)
                 {
-                    console.log('btns[i].children[1].innerText: ', btns[i].children[1].innerText);
-
                     if (btns[i] == e.target.parentElement)
                     {
                         btns[i].classList.toggle('btn-activate');
-                        console.log('chilll: ', btns[i].children);
 
                         setTimeout(function ()
                         {
@@ -104,7 +100,6 @@ export default ShaderBoy.gui_panel_shaderlist = { // comment out on codepen.
                         {
                             btns[i].classList.toggle('btn-hide');
                         }, Math.floor(1000 * 0.8));
-                        console.log('no');
                     }
                 }
 
@@ -123,13 +118,11 @@ export default ShaderBoy.gui_panel_shaderlist = { // comment out on codepen.
                     gpbaseEl.classList.toggle("gp-hidden");
                 }, Math.floor(1000 * 0.8))
 
-                console.log('name: ', name);
                 ShaderBoy.io.loadShader(name, false);
             };
 
             btnEl.onmouseenter = function (e)
             {
-                console.log('mouseenter');
                 if (e.target.classList.contains('hover') !== true)
                 {
                     e.target.classList.toggle("hover");
@@ -138,7 +131,6 @@ export default ShaderBoy.gui_panel_shaderlist = { // comment out on codepen.
 
             btnEl.onmouseleave = function (e)
             {
-                console.log('mouseleave');
                 if (e.target.classList.contains('hover'))
                 {
                     e.target.classList.remove("hover");
@@ -171,7 +163,6 @@ if (isTest)
     document.body.onclick = function (e)
     {
         e.stopPropagation();
-        console.log('click');
         let containerEl = document.getElementById('gui-panel');
         let gpbaseEl = document.getElementById('gp-base');
         containerEl.classList.toggle("gp-container-appear");

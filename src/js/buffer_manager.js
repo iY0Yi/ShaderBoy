@@ -55,8 +55,6 @@ export default ShaderBoy.bufferManager = {
     {
         let currentBufName = 'MainImage';
         ShaderBoy.activeBufferIds = [];
-        // if (ShaderBoy.buffers['Setting'].active === true) ShaderBoy.activeBufferIds.push('Setting');
-        // if (ShaderBoy.buffers['Config'].active === true) ShaderBoy.activeBufferIds.push('Config');
         if (ShaderBoy.buffers['Common'].active === true) ShaderBoy.activeBufferIds.push('Common');
         if (ShaderBoy.buffers['BufferA'].active === true) ShaderBoy.activeBufferIds.push('BufferA');
         if (ShaderBoy.buffers['BufferB'].active === true) ShaderBoy.activeBufferIds.push('BufferB');
@@ -66,20 +64,6 @@ export default ShaderBoy.bufferManager = {
         console.log('ShaderBoy.activeBufferIds', ShaderBoy.activeBufferIds);
         this.currentBufferDataId = ShaderBoy.activeBufferIds.indexOf(currentBufName);
     },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getSetting: function ()
-    {
-        let setting = JSON.parse(ShaderBoy.buffers['Setting'].cm.getValue());
-        return setting;
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // getConfig: function ()
-    // {
-    //     let config = JSON.parse(ShaderBoy.buffers['Config'].cm.getValue());
-    //     return config;
-    // },
 
     needNewShader: function (settingObj)
     {
@@ -98,54 +82,6 @@ export default ShaderBoy.bufferManager = {
     buildShaderFromBuffers: function ()
     {
         console.log('bufferManager: buildShaderFromBuffers');
-        // if (!ShaderBoy.runInDevMode)
-        // {
-        //     // Setting: check "active" name of Setting buffer, and load or create a shader by name.
-        //     let settingObj = this.getSetting();
-        //     let newShaderName = settingObj.shaders.active;
-        //     if (ShaderBoy.activeShaderName !== newShaderName)
-        //     {
-        //         ShaderBoy.io.updateShaderList();
-        //         ShaderBoy.activeShaderName = newShaderName;
-
-        //         if (this.needNewShader(settingObj))
-        //         {
-        //             //active shader name was not found in "list" of shaders. So, we create new shader.
-        //             ShaderBoy.io.newShader(ShaderBoy.activeShaderName);
-        //         }
-        //         else
-        //         {
-        //             //active shader name. to be loaded.
-        //             ShaderBoy.io.loadShader(ShaderBoy.activeShaderName, false);
-        //         }
-
-        //         return;
-        //     }
-        // }
-
-
-        // Config
-        // let configObj = this.getConfig();
-        // console.log(ShaderBoy.config);
-        // if (ShaderBoy.config === null)
-        // {
-        //     ShaderBoy.config = configObj;
-        //     console.log('Kocchi!')
-        // }
-        // else
-        // {
-        //     ShaderBoy.config.buffers.Common.active = configObj.buffers.Common.active;
-        //     ShaderBoy.config.buffers.MainImage.active = configObj.buffers.MainImage.active;
-        //     ShaderBoy.config.buffers.BufferA.active = configObj.buffers.BufferA.active;
-        //     ShaderBoy.config.buffers.BufferB.active = configObj.buffers.BufferB.active;
-        //     ShaderBoy.config.buffers.BufferC.active = configObj.buffers.BufferC.active;
-        //     ShaderBoy.config.buffers.BufferD.active = configObj.buffers.BufferD.active;
-        //     ShaderBoy.config.buffers.BufferD.active = configObj.buffers.BufferD.active;
-        //     ShaderBoy.config.buffers.MainSound.active = configObj.buffers.MainSound.active;
-        //     ShaderBoy.config.buffers.CubemapA.active = configObj.buffers.CubemapA.active;
-        //     console.log('Acchi!')
-        // }
-
         for (const name in ShaderBoy.buffers)
         {
             if (name !== 'Config' && name !== 'Setting')
@@ -178,7 +114,6 @@ export default ShaderBoy.bufferManager = {
             }
         }
         this.resetActiveBufferIds();
-
 
         // Code
         if (ShaderBoy.util.same(ShaderBoy.oldBufferIds, ShaderBoy.activeBufferIds) === false)
@@ -252,9 +187,7 @@ export default ShaderBoy.bufferManager = {
                         {
                             let loadDiv = document.getElementById('cvr-loading');
                             ShaderBoy.canvas = document.getElementById('gl_canvas');
-                            // loadDiv.style.display = 'none';
                             console.log('updating was started.');
-                            // ShaderBoy.time.reset();
                             ShaderBoy.io.initLoading = false;
                             ShaderBoy.update();
                         }
@@ -317,7 +250,7 @@ export default ShaderBoy.bufferManager = {
             ShaderBoy.gui.midiUniformFS;
 
         ShaderBoy.shaderUniformsLines = uniformCodeStr.split(/\n/).length - 1;
-        // ShaderBoy.shaderUniformsLines = ShaderLib.shader.uniformFS.split(/\n/).length - 1;
+
         let commonShaderCode = this.getCommonShaderCode();
         for (let name in ShaderBoy.buffers)
         {
@@ -334,7 +267,6 @@ export default ShaderBoy.bufferManager = {
                     {
                         callback = function ()
                         {
-                            // ShaderBoy.gui.header.showCommandInfo('compiled.', 'st-sucsess-local', false);
                             ShaderBoy.gui_header.setStatus('suc1', 'Compiled.', 3000);
                         }
                     }

@@ -316,7 +316,6 @@ export default ShaderBoy.gui_timeline = { // comment out on codepen.
 
     onResize()
     {
-        console.log('onresize');
         tlRect.minx = s2i(bsel.offsetLeft);
         tlRect.maxx = s2i(tlRect.minx + bsel.offsetWidth);
         tlRect.width = s2i(bsel.offsetWidth);
@@ -331,7 +330,6 @@ export default ShaderBoy.gui_timeline = { // comment out on codepen.
 
     get guidata()
     {
-        console.log('get guidata');
         return {
             'startFrame': this.startFrame,
             'endFrame': this.endFrame,
@@ -343,7 +341,6 @@ export default ShaderBoy.gui_timeline = { // comment out on codepen.
 
     set guidata(data)
     {
-        console.log('set guidata');
         this.totalFrames = data.totalFrames;
         this.offsetFrames = data.offsetFrames;
         this.startFrame = data.startFrame;

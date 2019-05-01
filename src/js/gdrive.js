@@ -144,7 +144,7 @@ export default ShaderBoy.gdrive = {
         img.src = url;
         img.onload = function ()
         {
-            console.log('An image was loaded.');
+            console.log('Image was loaded.');
             // cvs.width = this.width;
             // cvs.height = this.height;
             // ctx.drawImage(this, 0, 0);

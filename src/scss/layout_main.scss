@@ -87,9 +87,29 @@
 }
 
 .editor {
+    position: relative;
     text-align: left;
     width: 0px;
-    height: auto;
+    height: 100vh;
+    // padding: $gui-size-unit 0px;
+    // overflow: scroll;
     flex: 1;
     margin: 0px;
+}
+
+.editor-gutter-spacer {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: $gui-size-unit;
+    margin: 0px;
+    padding: 0px;
+
+    background: $col-bg;
+
+    @include mq {
+        width: 0px;
+        display: none;
+    }
 }

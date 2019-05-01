@@ -2,16 +2,28 @@
 @import './theme/default';
 
 .CodeMirror {
+    position: absolute;
+    margin-top: $gui-size-unit;
+    height: calc(100% - 90px);
+    width: 100%;
     font-family: Muli;
     font-weight: 400;
     font-size: 12px;
     line-height: 1.1em;
-    height: 100%;
+
+    &.expand-height {
+        height: calc(100% - 45px);
+    }
+
+    @include mq {
+        margin-top: 0px;
+        height: calc(100% - 35px);
+    }
 }
+
 
 .CodeMirror-scroll {
     position: relative;
-    padding-top: $gui-size-unit;
 
     @include mq {
         padding-top: 0px;
@@ -26,6 +38,10 @@
         width: $gui-size-unit-sp;
         background: $col_bg-sp;
     }
+}
+
+.CodeMirror-sizer {
+    margin-bottom: $gui-size-unit;
 }
 
 .CodeMirror-gutter-text {

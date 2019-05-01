@@ -62,6 +62,8 @@ export default ShaderBoy.editor = {
             showInvisibles: true,
             maxInvisibles: 16,
             keyMap: 'sublime',
+            // viewportMargin: 'Infinity',
+            // cursorScrollMargin: 90,
             // theme: '3024-night',
             theme: '3024-monotone',
             styleActiveLine: true,
@@ -91,7 +93,6 @@ export default ShaderBoy.editor = {
 
         this.codemirror.parent = this;
         this.setTextSize();
-        // this.codemirror.setSize('100%', '100%');
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -190,7 +191,6 @@ export default ShaderBoy.editor = {
                 {
                     msg.className = "error";
                 }
-                // scope.errorWidgets.push(scope.codemirror.addLineWidget(err.lineNum, msg, { coverGutter: false, noHScroll: true }));
                 scope.errorWidgets.push(ShaderBoy.buffers[bufName].cm.addLineWidget(err.lineNum, msg, { coverGutter: false, noHScroll: true }));
             }
         });

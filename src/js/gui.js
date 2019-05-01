@@ -29,7 +29,6 @@ export default ShaderBoy.gui = {
 	{
 		ShaderBoy.style.buttonHeight = (window.innerWidth > 750) ? 45 : 35;
 
-
 		this.mousePosX = 0;
 		this.mousePosY = 0;
 		this.mouseOriX = 0;
@@ -46,9 +45,6 @@ export default ShaderBoy.gui = {
 		this.midiUniformFS = '';
 		this.isSlidersHide = true;
 
-		// this.header.init();
-
-		// this.setupSliders();
 		this.setupKnobs();
 		this.setupMidi();
 		gui_header.setup();
@@ -114,10 +110,6 @@ export default ShaderBoy.gui = {
 					ShaderBoy.gui.knobUniformFS += 'uniform float ' + this.knobs[i].name + ';\n';
 					let element = knobs[i].children[1];
 					this.knobs[i].circle = element;
-					// if(this.knob[i].active)
-					// {
-					// 	this.knobs[i].circle.parentElement.classList.toggle('active');
-					// }
 
 					knobs[i].onmousewheel = function (e)
 					{
@@ -152,18 +144,6 @@ export default ShaderBoy.gui = {
 						ShaderBoy.gui.knobs.toggle(i, true);
 					};
 				}
-
-				// let panelEl = document.getElementById('gui-panel-knob');
-				// let knobNameColEl = document.createElement('div');
-				// knobNameColEl.classList.add('knob-name-col');
-				// knobNameColEl.innerHTML = 's0<br>s1<br>s2<br>s3<br>s4<br>s5<br>s6<br>s7<br>';
-				// panelEl.appendChild(knobNameColEl);
-
-				// let knobNameRawEl = document.createElement('div');
-				// knobNameRawEl.classList.add('knob-name-raw');
-				// knobNameRawEl.innerHTML = '<span>x</span><span>y</span><span>z</span>';
-				// panelEl.appendChild(knobNameRawEl);
-
 
 				console.log(ShaderBoy.gui.sldrUniformFS);
 			},
@@ -208,70 +188,9 @@ export default ShaderBoy.gui = {
 				}
 			}
 		});
-		// });
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// header: {
-	// 	content: null,
-	// 	needUpdate: false,
-
-	// 	init: function ()
-	// 	{
-	// 		this.domElement = document.getElementById('gui-header');
-
-	// 		// Buffer name
-	// 		this.bufferName = document.querySelector("#gui-header .info-bufname");
-	// 		this.bufferName.innerText = '';
-
-	// 		// iTime / iFrame / FPS info
-	// 		this.timeInfo = document.querySelector("#gui-header .info-time");
-	// 		this.timeInfo.innerText = '';
-
-	// 	},
-
-	// 	showCommandInfo: function (text, state, isStatic)
-	// 	{
-	// 		console.log(text);
-	// 		this.currentbufferText = ShaderBoy.util.deepcopy(this.bufferName.innerText);
-	// 		this.currentcontentText = ShaderBoy.util.deepcopy(this.timeInfo.innerText);
-	// 		this.needUpdate = true;
-	// 		this.bufferName.innerText = text;
-	// 		this.timeInfo.innerText = '';
-	// 		// let headerEl = document.getElementById('gui-header');
-	// 		// headerEl.className = state;
-
-	// 		if (!isStatic)
-	// 		{
-	// 			if (this.timer !== undefined)
-	// 			{
-	// 				console.log('this.timer: ', this.timer);
-	// 				clearTimeout(this.timer);
-	// 			}
-
-	// 			this.timer = setTimeout(function ()
-	// 			{
-	// 				// ShaderBoy.gui.header.needUpdate = false;
-	// 				// ShaderBoy.gui.header.bufferName.innerText = ShaderBoy.gui.currentbufferText;
-	// 				// ShaderBoy.gui.header.timeInfo.innerText = ShaderBoy.gui.currentcontentText;
-	// 				// headerEl.className = 'st-default';
-	// 				// ShaderBoy.gui.header.bufferName.style.color = '#d8d4c5';
-	// 				// ShaderBoy.gui.header.timeInfo.style.color = '#d8d4c5';
-	// 				// ShaderBoy.gui.header.domElement.style.backgroundColor = '#1F1F1F66';
-	// 			}, 4000);
-	// 		}
-	// 	},
-
-	// 	redraw: function ()
-	// 	{
-	// 		if (this.needUpdate !== true)
-	// 		{
-	// 			this.bufferName.innerText = ShaderBoy.editingBuffer;
-	// 			this.timeInfo.innerText = ShaderBoy.uniforms.iTime.toFixed(3) + ' | ' + ShaderBoy.uniforms.iFrame.toFixed(0) + ' | ' + ShaderBoy.time.fps.toFixed(1);
-	// 		}
-	// 	}
-	// },
-
 	update()
 	{
 		gui_timeline.update();
@@ -281,67 +200,6 @@ export default ShaderBoy.gui = {
 	redraw: function ()
 	{
 		gui_header.redraw();
-	},
-
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	setupSliders: function ()
-	{
-		this.ctrl = { 'domElement': null };
-		this.ctrl.domElement = document.getElementById('ctrl');
-		// this.ctrl.domElement.style.display = 'none';
-
-		this.slidersBaseDiv = document.createElement("div");
-		this.slidersBaseDiv.setAttribute("class", "slidersBox");
-		this.slidersDiv = document.createElement("div");
-		this.slidersDiv.setAttribute("class", "sliderCompsGroup");
-
-		this.slidersBaseDiv.appendChild(this.slidersDiv);
-
-		for (let i = 0; i < 10; i++)
-		{
-			this.sldrUniformFS += 'uniform float sld' + i + ';\n';
-
-			this.sldrs[i] = { 'div': null, 'ui': null, 'btn': null };
-
-			this.sldrs[i].div = document.createElement("div");
-			this.sldrs[i].div.setAttribute("class", "sliderComp");
-
-			let sldid = document.createElement("div");
-			sldid.innerHTML = 'sld' + i;
-			this.sldrs[i].div.appendChild(sldid);
-
-			this.sldrs[i].ui = document.createElement("INPUT");
-			this.sldrs[i].ui.setAttribute("type", "range");
-			this.sldrs[i].ui.setAttribute("min", "0");
-			this.sldrs[i].ui.setAttribute("max", "1000");
-			this.sldrs[i].ui.setAttribute("value", "500");
-			this.sldrs[i].ui.setAttribute("class", "slider");
-			this.sldrs[i].ui.oninput = function ()
-			{
-				ShaderBoy.forceDraw = (ShaderBoy.isPlaying !== true);
-			};
-			this.sldrs[i].div.appendChild(this.sldrs[i].ui);
-
-			this.sldrs[i].btn = document.createElement("div");
-			this.sldrs[i].btn.setAttribute("class", "btnSldBake");
-			this.sldrs[i].btn.onclick = function ()
-			{
-				let bufnames = ['BufferA', 'BufferB', 'BufferC', 'BufferD', 'MainImage'];
-				for (let j = 0; j < bufnames.length; j++)
-				{
-					const name = bufnames[j];
-					if (ShaderBoy.buffers[name].cm !== undefined)
-					{
-						let shdrtxt = ShaderBoy.buffers[name].cm.getValue();
-						shdrtxt = shdrtxt.split('sld' + i).join((ShaderBoy.gui.sldrs[i].ui.value / 1000).toFixed(3));
-						ShaderBoy.buffers[name].cm.setValue(shdrtxt);
-					}
-				}
-			};
-			this.sldrs[i].div.appendChild(this.sldrs[i].btn);
-			this.slidersDiv.appendChild(this.sldrs[i].div);
-		}
-		this.ctrl.domElement.appendChild(this.slidersBaseDiv);
 	},
 
 	// "Web MIDI API Example" by Rumyra:
@@ -421,8 +279,8 @@ export default ShaderBoy.gui = {
 			ShaderBoy.gui.midis[data.name] = data.value;
 		}
 		ShaderBoy.forceDraw = (ShaderBoy.isPlaying !== true);
-		// ShaderBoy.gui.header.showCommandInfo('MIDI uniform: ' + data.name + ' = ' + data.value, 'st-default', false);
-		ShaderBoy.gui_header.setStatus('suc3', 'MIDI uniform: ' + data.name + ' = ' + data.value, 3000);
+
+		ShaderBoy.gui_header.setStatus('suc3', 'MIDI: ' + data.name + ' = ' + data.value, 3000);
 	},
 
 	onMIDIFailure: function ()
@@ -736,6 +594,7 @@ export default ShaderBoy.gui = {
 			ShaderBoy.gui.isSlidersHide = !ShaderBoy.gui.isSlidersHide;
 			let tlel = document.getElementById('timeline');
 			tlel.classList.toggle('tl_hide');
+			document.querySelector('.CodeMirror').classList.toggle('expand-height');
 		};
 
 		this.editorShortcuts['Shift-' + CMD + '-Alt-N'] = function ()
@@ -772,122 +631,133 @@ export default ShaderBoy.gui = {
 		{
 			ShaderBoy.isEditorHide = !ShaderBoy.isEditorHide;
 
-			let hdrEl = document.getElementById('gui-header');
-			let tlEl = document.getElementById('timeline');
-			let codeEl = document.getElementById('code');
-			let ctrlEl = document.getElementById('ctrl');
-			let isHdrElHidden = false;
-			let isTlElHidden = false;
-			let isCodeElHidden = false;
-			let isCtrlElHidden = false;
+			ShaderBoy.gui.hdrEl = document.getElementById('gui-header');
+			ShaderBoy.gui.tlEl = document.getElementById('timeline');
+			ShaderBoy.gui.codeEl = document.getElementById('code');
+			ShaderBoy.gui.ctrlEl = document.getElementById('ctrl');
+			ShaderBoy.gui.isHdrElHidden = false;
+			ShaderBoy.gui.isTlElHidden = false;
+			ShaderBoy.gui.isCodeElHidden = false;
+			ShaderBoy.gui.isCtrlElHidden = false;
 
-			if (hdrEl.classList.contains('hdr_hide'))
+			if (ShaderBoy.gui.ctrlEl.classList.contains('ctrl_hide'))
 			{
-				isHdrElHidden = true;
+				ShaderBoy.gui.isCtrlElHidden = true;
 			}
-			hdrEl.classList.add('hdr_hide');
+			ShaderBoy.gui.ctrlEl.classList.add('ctrl_hide');
 
-			if (tlEl.classList.contains('tl_hide'))
+			let ms = (ShaderBoy.gui.isCtrlElHidden) ? 0 : 400;
+			setTimeout(() =>
 			{
-				isTlElHidden = true;
-			}
-			tlEl.classList.add('tl_hide');
-
-			if (codeEl.classList.contains('code_hide'))
-			{
-				isCodeElHidden = true;
-			}
-			codeEl.classList.add('code_hide');
-
-			if (ctrl.classList.contains('ctrl_hide'))
-			{
-				isCtrlElHidden = true;
-			}
-			ctrl.classList.add('ctrl_hide');
-
-			ShaderBoy.editor.codemirror.display.input.blur();
-
-			key('ctrl+1', function ()
-			{
-				ShaderBoy.renderScale = 1;
-				ShaderBoy.bufferManager.setFBOsProps();
-				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
-			});
-			key('ctrl+2', function ()
-			{
-				ShaderBoy.renderScale = 2;
-				ShaderBoy.bufferManager.setFBOsProps();
-				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
-			});
-			key('ctrl+3', function ()
-			{
-				ShaderBoy.renderScale = 3;
-				ShaderBoy.bufferManager.setFBOsProps();
-				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
-			});
-			key('ctrl+4', function ()
-			{
-				ShaderBoy.renderScale = 4;
-				ShaderBoy.bufferManager.setFBOsProps();
-				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
-			});
-			key('⌥+up', function ()
-			{
-				if (ShaderBoy.isRecording !== true)
+				if (ShaderBoy.gui.hdrEl.classList.contains('hdr_hide'))
 				{
-					ShaderBoy.isPlaying = !ShaderBoy.isPlaying;
-					// ShaderBoy.time.pause();
+					ShaderBoy.gui.isHdrElHidden = true;
 				}
-			});
-			key('⌥+down', function ()
-			{
-				if (ShaderBoy.isRecording !== true)
-				{
-					// ShaderBoy.time.reset();
-				}
-			});
+				ShaderBoy.gui.hdrEl.classList.add('hdr_hide');
 
-			let hide = function ()
-			{
-				if (!isHdrElHidden)
+				if (ShaderBoy.gui.tlEl.classList.contains('tl_hide'))
 				{
-					hdrEl.classList.remove('hdr_hide');
+					ShaderBoy.gui.isTlElHidden = true;
 				}
+				ShaderBoy.gui.tlEl.classList.add('tl_hide');
 
-				if (!isTlElHidden)
+				if (ShaderBoy.gui.codeEl.classList.contains('code_hide'))
 				{
-					tlEl.classList.remove('tl_hide');
+					ShaderBoy.gui.isCodeElHidden = true;
 				}
+				ShaderBoy.gui.codeEl.classList.add('code_hide');
 
-				if (!isCodeElHidden)
+
+
+				ShaderBoy.editor.codemirror.display.input.blur();
+
+				key('ctrl+1', function ()
 				{
-					codeEl.classList.remove('code_hide');
-				}
-
-				if (!isCtrlElHidden)
+					ShaderBoy.renderScale = 1;
+					ShaderBoy.bufferManager.setFBOsProps();
+					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
+				});
+				key('ctrl+2', function ()
 				{
-					ctrl.classList.remove('ctrl_hide');
-				}
+					ShaderBoy.renderScale = 2;
+					ShaderBoy.bufferManager.setFBOsProps();
+					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
+				});
+				key('ctrl+3', function ()
+				{
+					ShaderBoy.renderScale = 3;
+					ShaderBoy.bufferManager.setFBOsProps();
+					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
+				});
+				key('ctrl+4', function ()
+				{
+					ShaderBoy.renderScale = 4;
+					ShaderBoy.bufferManager.setFBOsProps();
+					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
+				});
+				key('⌥+up', function ()
+				{
+					if (ShaderBoy.isRecording !== true)
+					{
+						ShaderBoy.isPlaying = !ShaderBoy.isPlaying;
+						// ShaderBoy.time.pause();
+					}
+				});
+				key('⌥+down', function ()
+				{
+					if (ShaderBoy.isRecording !== true)
+					{
+						// ShaderBoy.time.reset();
+					}
+				});
 
-				ShaderBoy.editor.codemirror.focus();
-				key.unbind('⌘+⇧+⌥+h', 'ctrl+⇧+⌥+h');
-				key.unbind('ctrl+1');
-				key.unbind('ctrl+2');
-				key.unbind('ctrl+3');
-				key.unbind('ctrl+4');
-				key.unbind('⌥+up');
-				key.unbind('⌥+down');
+				let hide = function ()
+				{
+					if (!ShaderBoy.gui.isHdrElHidden)
+					{
+						ShaderBoy.gui.hdrEl.classList.remove('hdr_hide');
+					}
+
+					if (!ShaderBoy.gui.isTlElHidden)
+					{
+						ShaderBoy.gui.tlEl.classList.remove('tl_hide');
+					}
+					
+					if (!ShaderBoy.gui.isCodeElHidden)
+					{
+						ShaderBoy.gui.codeEl.classList.remove('code_hide');
+					}
+					
+					if (!ShaderBoy.gui.isCtrlElHidden)
+					{
+						let ms = 400;
+						setTimeout(() =>
+						{
+							ShaderBoy.gui.ctrlEl.classList.remove('ctrl_hide');
+						},ms);
+					}
+
+					ShaderBoy.editor.codemirror.focus();
+					key.unbind('⌘+⇧+⌥+h', 'ctrl+⇧+⌥+h');
+					key.unbind('ctrl+1');
+					key.unbind('ctrl+2');
+					key.unbind('ctrl+3');
+					key.unbind('ctrl+4');
+					key.unbind('⌥+up');
+					key.unbind('⌥+down');
+					if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
+					{
+						key.unbind('⌥+h');
+					}
+				};
+				key('⌘+⇧+⌥+h', hide);
+				key('ctrl+⇧+⌥+h', hide);
 				if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
 				{
-					key.unbind('⌥+h');
+					key('⌥+h', hide);
 				}
-			};
-			key('⌘+⇧+⌥+h', hide);
-			key('ctrl+⇧+⌥+h', hide);
-			if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
-			{
-				key('⌥+h', hide);
 			}
+				, ms)
 		};
 
 		this.editorShortcuts['Shift-' + CMD + '-Alt-F'] = function (cm)

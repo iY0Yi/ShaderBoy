@@ -1,0 +1,187 @@
+@import '../base';
+
+#ctrl-wrapper {
+    width: $gui-size-unit*5;
+    flex: 0 0 $gui-size-unit*5;
+    transition: width $anm-short;
+
+    &.ctrl-wrapper_hide {
+        width: 0px;
+        flex: 0 0 0px;
+    }
+}
+
+#ctrl {
+    position: absolute;
+    overflow: hidden;
+    top: 0px;
+    right: 0px;
+    width: $gui-size-unit*5;
+
+    height: 100vh;
+
+    transition: width $anm-short;
+
+    &.ctrl_hide {
+        width: 0px;
+    }
+}
+
+.gui-panel-knob {
+    z-index: $gui-z-index;
+    padding: $gui-size-unit;
+    padding-top: $gui-size-unit*2;
+    width: $gui-size-unit*5;
+    height: 100%;
+    background: $col_bg;
+    position: absolute;
+
+    top: 0px;
+    right: 0px;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+
+    @include mq {
+        display: none;
+    }
+}
+
+.gui-knob {
+    z-index: $gui-z-index;
+    text-align: center;
+    padding: 0px; // margin: 0.5px;
+    width: $gui-size-unit;
+    height: $gui-size-unit;
+    font-size: 12px;
+    margin: 0px;
+    background: $col_bg;
+    // border: $col_bg 1px solid;
+    // border-radius: 3px;
+    transition: all $anm-middle;
+}
+
+.knob-name-col {
+    position: absolute;
+    top: $gui-size-unit*1;
+    left: $gui-size-unit*0.5;
+    font-family: "Muli", sans-serif;
+    font-size: 0.6em;
+    line-height: $gui-size-unit;
+    color: #555555;
+}
+
+.knob-name-raw {
+    position: absolute;
+    width: $gui-size-unit*3;
+    height: $gui-size-unit;
+    top: 0px;
+    left: $gui-size-unit;
+
+    &>span {
+        display: inline-block;
+        padding-top: $gui-size-unit*0.5;
+        width: $gui-size-unit;
+        height: $gui-size-unit;
+        margin: 0px;
+        font-family: "Muli", sans-serif;
+        font-size: 0.6em;
+        color: #555555;
+    }
+}
+
+.gui-knob-svg-body {
+    fill: $col_frnt;
+}
+
+.gui-knob-svg-dot {
+    fill: $col_bg;
+
+    @include mq {
+        fill: $col_bg-sp;
+    }
+}
+
+.gui-knob.comp {
+    opacity: 0.2;
+}
+
+.gui-knob.comp.active {
+    background: $col-bg-bright;
+    opacity: 1.0;
+}
+
+.gui-knob.comp:hover {
+    background: $col-bg-bright;
+    opacity: 1.0;
+}
+
+.gui-knob.comp:hover>div>div {
+    opacity: 1.0;
+
+    // &.name,
+    // &.value {
+    //     opacity: 1.0;
+    // }
+}
+
+.gui-knob .name {
+    font-size: 11px;
+    font-weight: 700;
+    margin: 0px;
+    margin-top: 3px;
+    opacity: 0.0;
+}
+
+.gui-knob.comp.active>div+div+div {
+    opacity: 0.5;
+}
+
+.gui-knob.comp.active:hover>div+div+div {
+    opacity: 1.0;
+    transition: all $anm-middle;
+}
+
+.gui-knob.comp.active>div {
+    opacity: 1.0;
+}
+
+svg {
+    width: 100%;
+    height: 100%;
+}
+
+.knob {
+    transform: rotate(0);
+    width: 12px;
+    height: 12px;
+    margin: 0px;
+    margin-top: 2px;
+    margin-left: $gui-size-unit*0.5 - 6px;
+    background: #00000000;
+    cursor: none;
+    transform-origin: 50% 50%;
+}
+
+.gui-knob-svg-body {
+    fill: $col_frnt;
+}
+
+.gui-knob-svg-dot {
+    fill: $col_bg;
+
+    @include mq {
+        fill: $col_bg-sp;
+    }
+}
+
+.gui-knob .value {
+    font-size: 10px;
+    color: $col_frnt;
+    opacity: 0.0;
+    margin: 0px;
+    margin-top: 1.5px;
+    cursor: none;
+}

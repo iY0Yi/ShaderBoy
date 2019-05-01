@@ -1,0 +1,126 @@
+@import '../base';
+
+#gp-base {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100vw;
+    height: 100vh;
+    overflow: scroll;
+}
+
+.gp-shader-list {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100vw;
+    height: 100vh;
+    overflow: scroll;
+    padding: 35px;
+
+    &.hide {
+        display: none;
+        height: 0px;
+    }
+
+    @include mq {
+        padding: 27.5px;
+    }
+}
+
+
+.gp-container-appear {
+    // transform-origin: center top;
+    display: flex;
+    animation: anm-gp-container-appear 0.4s both;
+    animation-timing-function: ease-inout;
+    animation-delay: 0.0s;
+}
+
+.gp-appear {
+    // transform-origin: center top;
+    display: flex;
+    animation: anm-gp-appear 0.4s both;
+    animation-timing-function: ease-out;
+    animation-delay: 0.2s;
+}
+
+.gp-container-hide {
+    // transform-origin: center top;
+    display: flex;
+    animation: anm-gp-container-hide 0.8s both;
+    animation-timing-function: ease-inout;
+    animation-delay: 0.0s;
+}
+
+.gp-hide {
+    // transform-origin: center top;
+    display: flex;
+    animation: anm-gp-hide 0.8s both;
+    animation-timing-function: ease-out;
+    animation-delay: 0.25s;
+}
+
+.gp-container-hidden {
+    // transform-origin: center top;
+    width: 0%;
+    opacity: 0;
+    display: none;
+}
+
+.gp-hidden {
+    // transform-origin: center top;
+    transform: translate(2em, 0);
+    opacity: 0;
+    display: none;
+}
+
+
+
+@keyframes anm-gp-container-appear {
+    0% {
+        opacity: 0;
+        width: 0%;
+    }
+
+    100% {
+        opacity: 1;
+        width: 100%;
+    }
+}
+
+@keyframes anm-gp-appear {
+    0% {
+        transform: translate(2em, 0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes anm-gp-container-hide {
+    0% {
+        opacity: 1;
+        width: 100%;
+    }
+
+    100% {
+        opacity: 0;
+        width: 0%;
+    }
+}
+
+@keyframes anm-gp-hide {
+    0% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+}
