@@ -135,7 +135,7 @@ or to build,
 $ npm run build
 ```
   
-### upload
+### Upload
 And upload files in "dest" directory to your server.  
 That's it! Good luck!  
 </br>
