@@ -144,12 +144,24 @@ That's it! Good luck!
 </br>
 </br>
 
+# Dependencies
+ShaderBoy depends on some awesome js libralies.
+[Codemirror](https://github.com/codemirror/CodeMirror)
+[CCapture.js](https://github.com/spite/ccapture.js)
+[keymaster](https://github.com/madrobby/keymaster)
+[css_browser_selector](https://github.com/rafaelp/css_browser_selector)
+</br>
+</br>
+</br>
+</br>
+</br>
+
 I love writing shaders.  
 And I also love Shadertoy.  
 I want to write it everytime, everywhere.  
 So, I made this one for me.  
 If anybody happy with this, it's my pleasure.  
-  
+
 [iY0Yi](https://twitter.com/iY0Yi/)
 </br>
 </br>
