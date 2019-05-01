@@ -65,7 +65,7 @@ You can install the app from [here](https://shaderboy.net/).
 | **Hide/Show Timeline** | ctrl+⇧+T | ctrl+⇧+⌥+T | ⌘+⇧+⌥+T |
 | **Hide/Show Knobs GUI** | ctrl+⇧+D | ctrl+⇧+⌥+D | ⌘+⇧+⌥+D |
 | **Hide/Show iChannel GUI** | ctrl+⇧+A | ctrl+⇧+⌥+A | ⌘+⇧+⌥+A |
-| **Hide/Show Recording GUI** | ctrl+⇧+A | ctrl+⇧+⌥+A | ⌘+⇧+⌥+A |
+| **Hide/Show Recording GUI** | ctrl+⇧+R | ctrl+⇧+⌥+R | ⌘+⇧+⌥+R |
 | **Save shader files** | ctrl+S | ctrl +S | ⌘+S |
 | **Create a new shader** | ctrl+⇧+N | ctrl+⇧+⌥+N | ⌘+⇧+⌥+N |
 | **Show shaders list** | ctrl+O | ctrl+O | ⌘+O |
