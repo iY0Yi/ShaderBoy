@@ -145,11 +145,11 @@ That's it! Good luck!
 </br>
 
 # Dependencies
-ShaderBoy depends on some awesome js libralies.
-[Codemirror](https://github.com/codemirror/CodeMirror)
-[CCapture.js](https://github.com/spite/ccapture.js)
-[keymaster](https://github.com/madrobby/keymaster)
-[css_browser_selector](https://github.com/rafaelp/css_browser_selector)
+ShaderBoy depends on some awesome js libralies.</br>
+[Codemirror](https://github.com/codemirror/CodeMirror)</br>
+[CCapture.js](https://github.com/spite/ccapture.js)</br>
+[keymaster](https://github.com/madrobby/keymaster)</br>
+[css_browser_selector](https://github.com/rafaelp/css_browser_selector)</br>
 </br>
 </br>
 </br>
