@@ -64,7 +64,7 @@ export default ShaderBoy.editor = {
             keyMap: 'sublime',
             // viewportMargin: 'Infinity',
             // cursorScrollMargin: 90,
-            // theme: '3024-night',
+            // theme: '3024-day',
             theme: '3024-monotone',
             styleActiveLine: true,
             styleSelectedText: true,

@@ -21,6 +21,9 @@
     }
 }
 
+.CodeMirror-linebackground {
+    z-index: 3;
+}
 
 .CodeMirror-scroll {
     position: relative;
@@ -75,7 +78,6 @@
     background: $col_bg;
     height: $gui-size-unit;
     z-index: 10050;
-    // margin-top: -$gui-size-unit;
     transition: all $anm-short;
 
     @include mq {
@@ -89,8 +91,7 @@
 }
 
 .CodeMirror-dialog-top {
-    // top: 0;
-    top: $gui-size-unit;
+    top: 0;
 
     @include mq {
         top: 0px;
@@ -106,7 +107,6 @@
     font-family: Muli, Arial, Helvetica, sans-serif;
     font-weight: 700;
 
-    // border: 0px solid $col-frnt;
     height: $gui-size-unit;
     width: 100%;
     padding: 10px;
@@ -121,17 +121,6 @@
     }
 }
 
-// .CodeMirror-dialog{
-//     background:#eee;
-//     padding:5px;
-//     font-size:0.9rem;
-//     position:absolute;
-//     top:0;
-//     left:0;
-//     width:100%;
-//     z-index:20;
-//     color:black
-// }
 .CodeMirror-dialog .CodeMirror-search-label {
     font-size: 12px;
     background: transparent;
@@ -158,7 +147,6 @@
         width: $gui-size-unit-sp*5 !important;
     }
 
-    // border-bottom: 1px solid darken($col-frnt, 4%);
     &::selection {
         background: #d8d4c555;
     }

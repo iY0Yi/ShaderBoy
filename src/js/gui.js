@@ -560,9 +560,12 @@ export default ShaderBoy.gui = {
 
 		this.editorShortcuts['Shift-' + CMD + '-Alt-D'] = function ()
 		{
-			ShaderBoy.gui.isSlidersHide = !ShaderBoy.gui.isSlidersHide;
-			document.getElementById('ctrl').classList.toggle('ctrl_hide');
-			document.getElementById('ctrl-wrapper').classList.toggle('ctrl-wrapper_hide');
+			if (!ShaderBoy.isConcentrating)
+			{
+				ShaderBoy.gui.isSlidersHide = !ShaderBoy.gui.isSlidersHide;
+				document.getElementById('ctrl').classList.toggle('ctrl_hide');
+				document.getElementById('ctrl-wrapper').classList.toggle('ctrl-wrapper_hide');
+			}
 		};
 
 		this.editorShortcuts['Shift-' + CMD + '-Alt-A'] = function ()
@@ -591,10 +594,14 @@ export default ShaderBoy.gui = {
 
 		this.editorShortcuts['Shift-' + CMD + '-Alt-T'] = function ()
 		{
-			ShaderBoy.gui.isSlidersHide = !ShaderBoy.gui.isSlidersHide;
-			let tlel = document.getElementById('timeline');
-			tlel.classList.toggle('tl_hide');
-			document.querySelector('.CodeMirror').classList.toggle('expand-height');
+			if (!ShaderBoy.isConcentrating)
+			{
+
+				ShaderBoy.gui.isSlidersHide = !ShaderBoy.gui.isSlidersHide;
+				let tlel = document.getElementById('timeline');
+				tlel.classList.toggle('tl_hide');
+				document.querySelector('.CodeMirror').classList.toggle('expand-height');
+			}
 		};
 
 		this.editorShortcuts['Shift-' + CMD + '-Alt-N'] = function ()
@@ -722,19 +729,19 @@ export default ShaderBoy.gui = {
 					{
 						ShaderBoy.gui.tlEl.classList.remove('tl_hide');
 					}
-					
+
 					if (!ShaderBoy.gui.isCodeElHidden)
 					{
 						ShaderBoy.gui.codeEl.classList.remove('code_hide');
 					}
-					
+
 					if (!ShaderBoy.gui.isCtrlElHidden)
 					{
 						let ms = 400;
 						setTimeout(() =>
 						{
 							ShaderBoy.gui.ctrlEl.classList.remove('ctrl_hide');
-						},ms);
+						}, ms);
 					}
 
 					ShaderBoy.editor.codemirror.focus();
@@ -788,6 +795,10 @@ export default ShaderBoy.gui = {
 		this.editorShortcuts['Shift-' + CMD + '-Alt-V'] = function ()
 		{
 			ShaderBoy.isConcentrating = !ShaderBoy.isConcentrating;
+
+			ShaderBoy.gui.tlEl = document.getElementById('timeline');
+			ShaderBoy.gui.ctrlEl = document.getElementById('ctrl');
+
 			if (ShaderBoy.isConcentrating)
 			{
 				ShaderBoy.isPlaying = false;
@@ -795,7 +806,23 @@ export default ShaderBoy.gui = {
 				ShaderBoy.canvas.style.opacity = '0.0';
 				$('.cm-s-3024-monotone span').css('background', '#1e1e1e00');
 				$('.cm-s-3024-monotone .CodeMirror-code').toggleClass('concentrating');
+				$('.cm-s-3024-monotone').toggleClass('color');
 
+				ShaderBoy.gui.isCtrlElHidden = false;
+				ShaderBoy.gui.isTlElHidden = false;
+
+				if (ShaderBoy.gui.ctrlEl.classList.contains('ctrl_hide'))
+				{
+					ShaderBoy.gui.isCtrlElHidden = true;
+				}
+				ShaderBoy.gui.ctrlEl.classList.add('ctrl_hide');
+				document.getElementById('ctrl-wrapper').classList.add('ctrl-wrapper_hide');
+
+				if (ShaderBoy.gui.tlEl.classList.contains('tl_hide'))
+				{
+					ShaderBoy.gui.isTlElHidden = true;
+				}
+				ShaderBoy.gui.tlEl.classList.add('tl_hide');
 			}
 			else
 			{
@@ -803,6 +830,18 @@ export default ShaderBoy.gui = {
 				ShaderBoy.canvas.style.opacity = '1.0';
 				$('.cm-s-3024-monotone span').css('background', '#1e1e1eFF');
 				$('.cm-s-3024-monotone .CodeMirror-code').toggleClass('concentrating');
+				$('.cm-s-3024-monotone').toggleClass('color');
+
+				if (!ShaderBoy.gui.isTlElHidden)
+				{
+					ShaderBoy.gui.tlEl.classList.remove('tl_hide');
+				}
+
+				if (!ShaderBoy.gui.isCtrlElHidden)
+				{
+					ShaderBoy.gui.ctrlEl.classList.remove('ctrl_hide');
+					document.getElementById('ctrl-wrapper').classList.remove('ctrl-wrapper_hide');
+				}
 			}
 		};
 
