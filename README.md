@@ -60,15 +60,15 @@ You can install the app from [here](https://shaderboy.net/).
 | **Search** | ctrl+F | ctrl+F | ⌘+F |
 | **Replace** | ctrl+H | ctrl+H | ⌘+H |
 | **Resolution** | ctrl+1-4 | ctrl+1-4 | ctrl+1-4 |
-| **Go Fullscreen** | - | ctrl+⇧+⌥+F | ⌘+⇧+⌥+F |
-| **Hide/Show WebGL canvas** | ⌥+V | ctrl+⇧+⌥+V | ⌘+⇧+⌥+V |
-| **Hide/Show Code & All GUIs** | ⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
-| **Hide/Show Timeline** | ctrl+⇧+T | ctrl+⇧+⌥+T | ⌘+⇧+⌥+T |
-| **Hide/Show Knobs GUI** | ctrl+⇧+D | ctrl+⇧+⌥+D | ⌘+⇧+⌥+D |
-| **Hide/Show iChannel GUI** | ctrl+⇧+A | ctrl+⇧+⌥+A | ⌘+⇧+⌥+A |
-| **Hide/Show Recording GUI** | ctrl+⇧+R | ctrl+⇧+⌥+R | ⌘+⇧+⌥+R |
+| **Go Fullscreen** | --- | ctrl+⇧+⌥+F | ⌘+⇧+⌥+F |
+| **Hide/Show WebGL canvas** | ctrl+⇧+⌥+V | ctrl+⇧+⌥+V | ⌘+⇧+⌥+V |
+| **Hide/Show Code & All GUIs** | ctrl+⇧+⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
+| **Hide/Show Timeline** | --- | ctrl+⇧+⌥+T | ⌘+⇧+⌥+T |
+| **Hide/Show Knobs GUI** | --- | ctrl+⇧+⌥+D | ⌘+⇧+⌥+D |
+| **Hide/Show iChannel GUI** | ctrl+⇧+⌥+A | ctrl+⇧+⌥+A | ⌘+⇧+⌥+A |
+| **Hide/Show Recording GUI** | --- | ctrl+⇧+⌥+R | ⌘+⇧+⌥+R |
 | **Save shader files** | ctrl+S | ctrl +S | ⌘+S |
-| **Create a new shader** | ctrl+⇧+N | ctrl+⇧+⌥+N | ⌘+⇧+⌥+N |
+| **Create a new shader** | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N | ⌘+⇧+⌥+N |
 | **Show shaders list** | ctrl+O | ctrl+O | ⌘+O |
 
 ##### *And some of Sublime Text bindings by Codemirror.
