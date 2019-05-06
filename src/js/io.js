@@ -119,8 +119,6 @@ export default ShaderBoy.io = {
 													{
 														const file = res.files[i];
 														console.log('file: ', file);
-														console.log(ShaderBoy.setting);
-														console.log(ShaderBoy.setting.shaders);
 														ShaderBoy.setting.shaders.list[i] = file.name;
 														ShaderBoy.setting.shaders.datalist[i] = { name: file.name, id: file.id };
 													}
@@ -128,6 +126,9 @@ export default ShaderBoy.io = {
 													let settingText = JSON.stringify(ShaderBoy.setting, null, "\t");
 													// gdrive.appData[file.name]['content'] = settingText;
 													ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(settingText, 'x-shader/x-fragment');
+													console.log('setting: ', ShaderBoy.setting);
+													console.log('setting.shaders: ', ShaderBoy.setting.shaders);
+
 													console.log('datalist: ', ShaderBoy.setting.shaders.datalist);
 
 													ShaderBoy.io.loadShader(ShaderBoy.activeShaderName, true);
@@ -195,7 +196,7 @@ export default ShaderBoy.io = {
 			console.log('timelineObj: ', timelineObj);
 			gui_timeline.guidata = timelineObj;
 
-			ShaderBoy.editor.setBuffer('MainImage');
+			ShaderBoy.editor.setBuffer('MainImage', true);
 
 			ShaderBoy.isPlaying = true;
 
@@ -379,7 +380,7 @@ export default ShaderBoy.io = {
 			console.log('io: Loaded all files...');
 			ShaderBoy.bufferManager.buildShaderFromBuffers();
 			ShaderBoy.bufferManager.setFBOsProps();
-			ShaderBoy.editor.setBuffer('MainImage');
+			ShaderBoy.editor.setBuffer('MainImage', true);
 			if (ShaderBoy.io.isNewShader === true)
 			{
 				gdrive.saveThumbFile('thumb.png', ShaderBoy.canvas, function (res, err) { console.log(res, err, 'thumbnail was saved.'); });
@@ -432,39 +433,56 @@ export default ShaderBoy.io = {
 							{
 								console.log(file);
 
-								let img = new Image();
-								img.onload = function ()
+								// let img = new Image();
+								// img.onload = function ()
+								// {
+								// 	let div = document.getElementById('gui-layer');
+								// 	// div.appendChild(img);
+								// 	let imgcon = document.createElement('div');
+								// 	div.appendChild(imgcon);
+								// 	imgcon.style.width = '0px';
+								// 	imgcon.style.height = '0px';
+								// 	imgcon.style.backgroundImage = 'url("' + img.src + '")';
+
+								// 	// ShaderBoy.setting.shaders.shaderlist[window.idi] = { name: ShaderBoy.setting.shaders.datalist[window.idi].name, thumb: 'url("' + img.src + '")' }
+								// 	// console.log('img loaded: ', ShaderBoy.setting.shaders.shaderlist[window.idi]);
+
+								// 	// window.idi++;
+								// 	// if (ShaderBoy.setting.shaders.datalist[window.idi] !== undefined)
+								// 	// {
+								// 	// 	const id = ShaderBoy.setting.shaders.datalist[window.idi].id;
+								// 	// 	gdrive.getFileByName('thumb.png', id, window.cb_thumb);
+								// 	// }
+								// 	// else
+								// 	// {
+								// 	// 	gui_panel_shaderlist.setup(ShaderBoy.setting.shaders.shaderlist);
+								// 	// 	console.log('window.idi: ', window.idi);
+								// 	// }
+								// };
+								// img.src = 'https://drive.google.com/uc?id=' + file.id;
+
+
+								ShaderBoy.setting.shaders.shaderlist[window.idi] = { name: ShaderBoy.setting.shaders.datalist[window.idi].name, thumb: 'https://drive.google.com/uc?id=' + file.id };
+								console.log('img loaded: ', ShaderBoy.setting.shaders.shaderlist[window.idi]);
+								window.idi++;
+								if (ShaderBoy.setting.shaders.datalist[window.idi] !== undefined)
 								{
-									let div = document.getElementById('gui-layer');
-									// div.appendChild(img);
-									let imgcon = document.createElement('div');
-									div.appendChild(imgcon);
-									imgcon.style.width = '0px';
-									imgcon.style.height = '0px';
-									imgcon.style.backgroundImage = 'url("' + img.src + '")';
-
-									ShaderBoy.setting.shaders.shaderlist[window.idi] = { name: ShaderBoy.setting.shaders.datalist[window.idi].name, thumb: 'url("' + img.src + '")' }
-									console.log('img loaded: ', ShaderBoy.setting.shaders.shaderlist[window.idi]);
-
-									window.idi++;
-									if (ShaderBoy.setting.shaders.datalist[window.idi] !== undefined)
-									{
-										const id = ShaderBoy.setting.shaders.datalist[window.idi].id;
-										gdrive.getFileByName('thumb.png', id, window.cb_thumb);
-									}
-									else
-									{
-										gui_panel_shaderlist.setup(ShaderBoy.setting.shaders.shaderlist);
-										console.log('window.idi: ', window.idi);
-									}
-								};
-								img.src = 'https://drive.google.com/uc?id=' + file.id;
+									const id = ShaderBoy.setting.shaders.datalist[window.idi].id;
+									gdrive.getFileByName('thumb.png', id, window.cb_thumb);
+								}
+								else
+								{
+									console.log('ShaderBoy.setting.shaders.shaderlist: ', ShaderBoy.setting.shaders.shaderlisti);
+									console.log('window.idi: ', window.idi);
+									gui_panel_shaderlist.setup(ShaderBoy.setting.shaders.shaderlist);
+								}
 							}
 						}
 					}
 				}
 			};
 			gdrive.getFileByName('thumb.png', id, window.cb_thumb);
+			//*/
 		}
 
 		console.log('io: loadShader');
@@ -480,6 +498,8 @@ export default ShaderBoy.io = {
 		{
 			shaderName = sn;
 		}
+
+		console.log('shaderName: ', shaderName);
 
 		gdrive.getFolderByName(shaderName, function (res)
 		{

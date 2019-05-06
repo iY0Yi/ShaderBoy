@@ -16,7 +16,7 @@ export default ShaderBoy.renderer = {
 	render: function ()
 	{
 		let gl = ShaderBoy.gl;
-
+		// console.log(ShaderBoy.activeBufferIds[ShaderBoy.bufferManager.currentBufferDataId]);
 		let canvasWidth = (ShaderBoy.capture === null) ? gl.canvas.clientWidth : ShaderBoy.canvas.width;
 		let canvasHeight = (ShaderBoy.capture === null) ? window.innerHeight : ShaderBoy.canvas.height;
 		gl.viewport(0, 0, canvasWidth / ShaderBoy.renderScale, canvasHeight / ShaderBoy.renderScale);

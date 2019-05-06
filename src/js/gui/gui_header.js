@@ -32,10 +32,22 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
                 bufBtns[i].classList.add('active');
             }
         }
+
+        let id = 0;
+        for (let i = 0; i < ShaderBoy.activeBufferIds.length; i++)
+        {
+            if (ShaderBoy.activeBufferIds[i] === bufName)
+            {
+                id = i;
+                break;
+            }
+        }
+        ShaderBoy.bufferManager.currentBufferDataId = id;
     },
 
     resetBtns(buffers)
     {
+        ShaderBoy.gui_header.bufCount = -1;
         let cmnEl = document.getElementById('ghdr-btn-common');
         let bufaEl = document.getElementById('ghdr-btn-buf-a');
         let bufbEl = document.getElementById('ghdr-btn-buf-b');

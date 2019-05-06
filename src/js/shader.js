@@ -27,6 +27,7 @@ export default class Shader
 		this.program = gl.createProgram();
 		this.errors = [];
 		this.bufName = '';
+
 		this.quadVBO = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVBO);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0]), gl.STATIC_DRAW);
@@ -362,8 +363,8 @@ export default class Shader
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.triVBO);
 		gl.vertexAttribPointer(this.vertAttLocation, 2, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(this.vertAttLocation);
-		// gl.clearColor(0.0, 0.0, 0.0, 1.0);
-		// gl.clear(gl.COLOR_BUFFER_BIT);
+		gl.clearColor(0.0, 0.0, 0.0, 1.0);
+		gl.clear(gl.COLOR_BUFFER_BIT);
 		gl.drawArrays(gl.TRIANGLES, 0, 3);
 	}
 }

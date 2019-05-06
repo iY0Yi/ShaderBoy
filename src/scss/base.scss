@@ -1,4 +1,5 @@
 @import 'theme-default';
+
 $gui-z-index:1000;
 $gui-size-unit:45px;
 $gui-size-unit-sp: 35px;
@@ -30,6 +31,20 @@ $anm-long: 0.8s ease-in-out;
     /* Internet Explorer/Edge */
     user-select: none;
     /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+::-webkit-scrollbar {
+    dispaly: none;
+    width: 0px;
+    /* Remove scrollbar space */
+    background: transparent;
+    /* Optional: just make scrollbar invisible */
+}
+
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    dispaly: none;
+    background: transparent;
 }
 
 $breakpoint: 735px;

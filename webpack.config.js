@@ -1,8 +1,10 @@
-var PRODUCTION = true;
-var SOURCE_MAP = false;
+const TerserPlugin = require('terser-webpack-plugin');
+
+var PRODUCTION = false;
+var SOURCE_MAP = true;
 module.exports = {
 
-	mode: (!PRODUCTION) ? 'development' : 'production',
+	mode: (PRODUCTION) ? 'production' : 'development',
 
 	module: {
 		rules: [
@@ -38,6 +40,22 @@ module.exports = {
 	},
 
 	entry: './src/js/main.js',
+
+	optimization: {
+		minimizer: [
+			new TerserPlugin({
+				extractComments: true,
+				sourceMap: SOURCE_MAP, // Must be set to true if using source-maps in production
+				terserOptions: {
+					compress: {
+						drop_console: PRODUCTION,
+						ecma: 6,
+						unsafe_methods: PRODUCTION
+					},
+				},
+			}),
+		],
+	},
 
 	output:
 	{

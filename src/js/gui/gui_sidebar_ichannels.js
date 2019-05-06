@@ -185,7 +185,7 @@ export default ShaderBoy.gui_sidebar_ichannels = { // comment out on codepen.
         {
             let channelEl = document.getElementById('ichannel' + id);
             let bufClass = channelEl.childNodes[1].classList[1];
-            let bufName = 'null';
+            let bufName = null;
             if (bufClass === 'buf-a') bufName = 'BufferA';
             if (bufClass === 'buf-b') bufName = 'BufferB';
             if (bufClass === 'buf-c') bufName = 'BufferC';
@@ -201,8 +201,8 @@ export default ShaderBoy.gui_sidebar_ichannels = { // comment out on codepen.
         setBufferById(curBufName, 1);
         setBufferById(curBufName, 2);
         setBufferById(curBufName, 3);
-
-        console.log(ShaderBoy.config);
+        ShaderBoy.bufferManager.buildShaderFromBuffers();
+        ShaderBoy.bufferManager.setFBOsProps();
     },
 
     readiChannels(bufName)

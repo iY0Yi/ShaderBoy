@@ -18,6 +18,8 @@ import CodeMirror from 'codemirror/lib/codemirror';
 import gui_header from './gui/gui_header';
 import gui_header_rec from './gui/gui_header_rec';
 import gui_timeline from './gui/gui_timeline';
+import gui_knobs from './gui/gui_knobs';
+import gui_midi from './gui/gui_midi';
 import gui_panel_shaderlist from './gui/gui_panel_shaderlist';
 import gui_panel_textform from './gui/gui_panel_textform';
 import gui_sidebar_ichannels from './gui/gui_sidebar_ichannels';
@@ -41,153 +43,18 @@ export default ShaderBoy.gui = {
 		this.knobs = null;
 		this.midis = null;
 		this.knobUniformFS = '';
-		this.sldrUniformFS = '';
 		this.midiUniformFS = '';
-		this.isSlidersHide = true;
 
-		this.setupKnobs();
-		this.setupMidi();
 		gui_header.setup();
 		gui_header_rec.setup();
+		gui_knobs.setup();
+		gui_midi.setup();
 		gui_timeline.setup();
 		gui_panel_shaderlist.setup();
 		gui_panel_textform.setup();
 		gui_sidebar_ichannels.setup();
 		this.setupInteraction();
 		this.setupEditorShortcuts();
-	},
-
-	setupKnobs: function ()
-	{
-		this.ctrl = { 'domElement': null };
-		this.ctrl.domElement = document.getElementById('ctrl');
-		ShaderBoy.gui.knobs = new Vue({
-			el: '#gui-panel-knob',
-			data: {
-				show: true,
-				knobs:
-					[
-						{ id: 0, name: 's0x', circle: null, value: 0, active: true },
-						{ id: 1, name: 's0y', circle: null, value: 0, active: true },
-						{ id: 2, name: 's0z', circle: null, value: 0, active: true },
-
-						{ id: 3, name: 's1x', circle: null, value: 0, active: true },
-						{ id: 4, name: 's1y', circle: null, value: 0, active: true },
-						{ id: 5, name: 's1z', circle: null, value: 0, active: true },
-
-						{ id: 6, name: 's2x', circle: null, value: 0, active: true },
-						{ id: 7, name: 's2y', circle: null, value: 0, active: true },
-						{ id: 8, name: 's2z', circle: null, value: 0, active: true },
-
-						{ id: 9, name: 's3x', circle: null, value: 0, active: true },
-						{ id: 10, name: 's3y', circle: null, value: 0, active: false },
-						{ id: 11, name: 's3z', circle: null, value: 0, active: false },
-
-						{ id: 12, name: 's4x', circle: null, value: 0, active: false },
-						{ id: 13, name: 's4y', circle: null, value: 0, active: false },
-						{ id: 14, name: 's4z', circle: null, value: 0, active: false },
-
-						{ id: 15, name: 's5x', circle: null, value: 0, active: false },
-						{ id: 16, name: 's5y', circle: null, value: 0, active: false },
-						{ id: 17, name: 's5z', circle: null, value: 0, active: false },
-
-						{ id: 18, name: 's6x', circle: null, value: 0, active: false },
-						{ id: 19, name: 's6y', circle: null, value: 0, active: false },
-						{ id: 20, name: 's6z', circle: null, value: 0, active: false },
-
-						{ id: 21, name: 's7x', circle: null, value: 0, active: false },
-						{ id: 22, name: 's7y', circle: null, value: 0, active: false },
-						{ id: 23, name: 's7z', circle: null, value: 0, active: false },
-					]
-			},
-			mounted()
-			{
-				let knobs = document.getElementsByClassName("gui-knob comp");
-				console.log('knobs:: ', knobs);
-				this.precision = 360 * 5;
-				for (let i = 0; i < knobs.length; i++)
-				{
-					ShaderBoy.gui.knobUniformFS += 'uniform float ' + this.knobs[i].name + ';\n';
-					let element = knobs[i].children[1];
-					this.knobs[i].circle = element;
-
-					knobs[i].onmousewheel = function (e)
-					{
-						e.preventDefault();
-						let velocity = 10;
-						if (e.ctrlKey)
-						{
-							velocity = 100;
-						}
-						if (e.altKey)
-						{
-							velocity = 1;
-						}
-
-						if (ShaderBoy.gui.knobs.knobs[i].active === true)
-						{
-							ShaderBoy.forceDraw = (ShaderBoy.isPlaying !== true);
-							console.log(e);
-							let delta = (e.deltaY < 0) ? 1 : -1;
-							let deg = e.deltaY;
-							ShaderBoy.gui.knobs.knobs[i].value += delta * velocity * (1 / ShaderBoy.gui.knobs.precision);// deg * 1 / ShaderBoy.gui.knobs.precision;
-							ShaderBoy.gui.knobs.knobs[i].value = Math.max(ShaderBoy.gui.knobs.knobs[i].value, -1);
-							ShaderBoy.gui.knobs.knobs[i].value = Math.min(ShaderBoy.gui.knobs.knobs[i].value, 1);
-							ShaderBoy.gui.knobs.knobs[i].value = Number(ShaderBoy.gui.knobs.knobs[i].value.toFixed(3));
-							element.style.transform = 'rotate(' + ShaderBoy.gui.knobs.knobs[i].value * ShaderBoy.gui.knobs.precision + 'deg)';
-						}
-					};
-
-					knobs[i].onclick = function (e)
-					{
-						ShaderBoy.gui.knobs.knobs[i].active = !ShaderBoy.gui.knobs.knobs[i].active;
-						ShaderBoy.gui.knobs.toggle(i, true);
-					};
-				}
-
-				console.log(ShaderBoy.gui.sldrUniformFS);
-			},
-			methods:
-			{
-				toggle(id, clicked)
-				{
-					console.log(ShaderBoy.gui.knobs.knobs[id].circle);
-
-					if (ShaderBoy.gui.knobs.knobs[id].active === false)
-					{
-						ShaderBoy.gui.knobs.knobs[id].circle.style.transition = 'all 600ms ease-in-out';
-						ShaderBoy.gui.knobs.knobs[id].circle.style.transform = 'rotate(0deg)';
-						ShaderBoy.gui.knobs.knobs[id].circle.parentElement.style.transition = 'all 600ms ease-in-out';
-
-						if (clicked)
-						{
-							let bufnames = ['BufferA', 'BufferB', 'BufferC', 'BufferD', 'MainImage'];
-							for (let j = 0; j < bufnames.length; j++)
-							{
-								const name = bufnames[j];
-								if (ShaderBoy.buffers[name].cm !== undefined)
-								{
-									let shdrtxt = ShaderBoy.buffers[name].cm.getValue();
-									shdrtxt = shdrtxt.split(ShaderBoy.gui.knobs.knobs[id].name).join((ShaderBoy.gui.knobs.knobs[id].value).toFixed(3));
-									ShaderBoy.buffers[name].cm.setValue(shdrtxt);
-								}
-							}
-						}
-					}
-					else
-					{
-						ShaderBoy.gui.knobs.knobs[id].circle.style.transition = 'all 0ms ease-in-out';
-						ShaderBoy.gui.knobs.knobs[id].circle.style.transform = 'rotate(' + ShaderBoy.gui.knobs.knobs[id].value * ShaderBoy.gui.knobs.precision + 'deg)';
-						ShaderBoy.gui.knobs.knobs[id].circle.parentElement.style.transition = 'all 600ms ease-in-out';
-					}
-					if (clicked)
-					{
-						ShaderBoy.gui.knobs.knobs[id].circle.parentElement.classList.toggle('active');
-						ShaderBoy.gui.knobs.knobs[id].value = 0;
-					}
-				}
-			}
-		});
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -200,134 +67,6 @@ export default ShaderBoy.gui = {
 	redraw: function ()
 	{
 		gui_header.redraw();
-	},
-
-	// "Web MIDI API Example" by Rumyra:
-	// https://codepen.io/Rumyra/pen/NxdbzL
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	setupMidi: function ()
-	{
-		// start talking to MIDI controller
-		if (navigator.requestMIDIAccess)
-		{
-			navigator.requestMIDIAccess({
-				sysex: false
-			}).then(this.onMIDISuccess, this.onMIDIFailure);
-		} else
-		{
-			console.warn("No MIDI support in your browser");
-		}
-	},
-
-	onMIDISuccess: function (midiData)
-	{
-		// this is all our MIDI data
-		let midi = midiData;
-		let allInputs = midi.inputs.values();
-		// loop over all available inputs and listen for any MIDI input
-		for (let input = allInputs.next(); input && !input.done; input = allInputs.next())
-		{
-			// when a MIDI value is received call the onMIDIMessage function
-			input.value.onmidimessage = ShaderBoy.gui.gotMIDImessage;
-		}
-	},
-
-	gotMIDImessage: function (e)
-	{
-		// "midigui" by pqml:
-		// https://github.com/pqml/midigui/blob/b2739d972fa2522f988ea96e9ddc7fce2054c882/build/midigui.js
-		var cmd = e.data[0] >> 4;
-		function message(channel, pitch, velocity)
-		{
-			return {
-				channel: channel,
-				pitch: pitch,
-				velocity: (velocity / 127).toFixed(3)
-			};
-		}
-		var msg = message(e.data[0] & 0xf, e.data[1], e.data[2]);
-		var data = { 'name': null, 'value': null };
-		if (cmd === 8 || cmd === 9 && msg.velocity === 0)
-		{
-			// noteOff
-			data.name = 'midi_n' + msg.pitch;
-			data.value = msg.velocity;
-		} else if (cmd === 9)
-		{
-			// noteOn
-			data.name = 'midi_n' + msg.pitch;
-			data.value = msg.velocity;
-		} else if (cmd === 11)
-		{
-			// controller message
-			data.name = 'midi_c' + msg.pitch;
-			data.value = msg.velocity;
-		} else
-		{
-			// sysex or other
-			data.name = 'midi_s' + msg.pitch;
-			data.value = msg.velocity;
-		}
-
-		if (ShaderBoy.gui.midis === null)
-		{
-			ShaderBoy.gui.midis = {};
-		}
-
-		if (ShaderBoy.gui.midis !== null && ShaderBoy.gui.midis[data.name] !== undefined)
-		{
-			ShaderBoy.gui.midis[data.name] = data.value;
-		}
-		ShaderBoy.forceDraw = (ShaderBoy.isPlaying !== true);
-
-		ShaderBoy.gui_header.setStatus('suc3', 'MIDI: ' + data.name + ' = ' + data.value, 3000);
-	},
-
-	onMIDIFailure: function ()
-	{
-		console.warn("Not recognising MIDI controller");
-	},
-
-	collectMidiUniforms: function ()
-	{
-		let commonShaderCode = ShaderBoy.bufferManager.getCommonShaderCode();
-
-		let midiUniformNames = [];
-		for (const name in ShaderBoy.buffers)
-		{
-			if (name !== 'Config' && name !== 'Setting' && ShaderBoy.buffers[name].active)
-			{
-				const srctxt = ShaderBoy.buffers[name].cm.getValue();
-				let midi_c = srctxt.match(/midi_c\d+/g);
-				midiUniformNames = midiUniformNames.concat(midi_c);
-				let midi_n = srctxt.match(/midi_n\d+/g);
-				midiUniformNames = midiUniformNames.concat(midi_n);
-			}
-		}
-		midiUniformNames = Array.from(new Set(midiUniformNames));
-		midiUniformNames = midiUniformNames.filter(function (a)
-		{
-			return a !== null;
-		});
-		console.log('midiUniformNames: ', midiUniformNames);
-
-		ShaderBoy.gui.midis = null;
-		ShaderBoy.gui.midiUniformFS = '\n';
-
-		if (midiUniformNames.length >= 0)
-		{
-			ShaderBoy.gui.midis = {};
-
-			for (let i = 0; i < midiUniformNames.length; i++)
-			{
-				const name = midiUniformNames[i];
-				ShaderBoy.gui.midis[name] = 0.0;
-				ShaderBoy.gui.midiUniformFS += 'uniform float ' + name + ';\n';
-			}
-		}
-
-		console.log('ShaderBoy.gui.midis: ', ShaderBoy.gui.midis);
-		console.log('ShaderBoy.gui.midiUniformFS: ', ShaderBoy.gui.midiUniformFS);
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -510,6 +249,7 @@ export default ShaderBoy.gui = {
 				alert('Oops! You are in test mode. Please reload this page and authorize.');
 			}
 		};
+
 		this.editorShortcuts[CMD + '-O'] = function (cm)
 		{
 			let textformEl = document.getElementById('gp-textarea');
@@ -562,7 +302,6 @@ export default ShaderBoy.gui = {
 		{
 			if (!ShaderBoy.isConcentrating)
 			{
-				ShaderBoy.gui.isSlidersHide = !ShaderBoy.gui.isSlidersHide;
 				document.getElementById('ctrl').classList.toggle('ctrl_hide');
 				document.getElementById('ctrl-wrapper').classList.toggle('ctrl-wrapper_hide');
 			}
@@ -596,15 +335,13 @@ export default ShaderBoy.gui = {
 		{
 			if (!ShaderBoy.isConcentrating)
 			{
-
-				ShaderBoy.gui.isSlidersHide = !ShaderBoy.gui.isSlidersHide;
 				let tlel = document.getElementById('timeline');
 				tlel.classList.toggle('tl_hide');
 				document.querySelector('.CodeMirror').classList.toggle('expand-height');
 			}
 		};
 
-		this.editorShortcuts['Shift-' + CMD + '-Alt-N'] = function ()
+		this.editorShortcuts[CMD + '-N'] = function ()
 		{
 			if (!ShaderBoy.runInDevMode)
 			{
@@ -852,115 +589,122 @@ export default ShaderBoy.gui = {
 
 		this.editorShortcuts['Shift-' + CMD + '-Alt-R'] = function ()
 		{
-			let recEl = document.getElementById('ghdr-rec-base');
-			let tlEl = document.getElementById('timeline');
-			let codeEl = document.getElementById('code');
-			let ctrlEl = document.getElementById('ctrl');
+			ShaderBoy.gui.recEl = document.getElementById('ghdr-rec-base');
+			ShaderBoy.gui.tlEl = document.getElementById('timeline');
+			ShaderBoy.gui.codeEl = document.getElementById('code');
+			ShaderBoy.gui.ctrlEl = document.getElementById('ctrl');
 			document.getElementById('res-x').value = ShaderBoy.canvas.width;
 			document.getElementById('res-y').value = ShaderBoy.canvas.height;
 
-			let isTlElHidden = false;
-			let isCodeElHidden = false;
-			let isCtrlElHidden = false;
-			let isPlaying = false;
-			recEl.classList.remove('rec_hide');
+			ShaderBoy.gui.isTlElHidden = false;
+			ShaderBoy.gui.isCodeElHidden = false;
+			ShaderBoy.gui.isCtrlElHidden = false;
+			ShaderBoy.gui.isPlaying = false;
+			ShaderBoy.gui.recEl.classList.remove('rec_hide');
 
-			if (tlEl.classList.contains('tl_hide'))
+			if (ShaderBoy.gui.ctrlEl.classList.contains('ctrl_hide'))
 			{
-				isTlElHidden = true;
+				ShaderBoy.gui.isCtrlElHidden = true;
 			}
-			tlEl.classList.remove('tl_hide');
+			ShaderBoy.gui.ctrlEl.classList.add('ctrl_hide');
 
-			if (codeEl.classList.contains('code_hide'))
+			let ms = (ShaderBoy.gui.isCtrlElHidden) ? 0 : 400;
+			setTimeout(() =>
 			{
-				isCodeElHidden = true;
-			}
-			codeEl.classList.add('code_hide');
-
-			if (ctrl.classList.contains('ctrl_hide'))
-			{
-				isCtrlElHidden = true;
-			}
-			ctrl.classList.add('ctrl_hide');
-
-			ShaderBoy.editor.codemirror.display.input.blur();
-
-
-			isPlaying = ShaderBoy.isPlaying;
-			ShaderBoy.isPlaying = false;
-			gui_timeline.reset();
-
-			key('ctrl+1', function ()
-			{
-				ShaderBoy.renderScale = 1;
-				ShaderBoy.bufferManager.setFBOsProps();
-				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
-			});
-			key('ctrl+2', function ()
-			{
-				ShaderBoy.renderScale = 2;
-				ShaderBoy.bufferManager.setFBOsProps();
-				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
-			});
-			key('ctrl+3', function ()
-			{
-				ShaderBoy.renderScale = 3;
-				ShaderBoy.bufferManager.setFBOsProps();
-				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
-			});
-			key('ctrl+4', function ()
-			{
-				ShaderBoy.renderScale = 4;
-				ShaderBoy.bufferManager.setFBOsProps();
-				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
-			});
-			key('⌥+up', function ()
-			{
-				if (ShaderBoy.isRecording !== true)
+				if (ShaderBoy.gui.tlEl.classList.contains('tl_hide'))
 				{
-					ShaderBoy.isPlaying = !ShaderBoy.isPlaying;
-					// ShaderBoy.time.pause();
+					ShaderBoy.gui.isTlElHidden = true;
 				}
-			});
-			key('⌥+down', function ()
-			{
-				if (ShaderBoy.isRecording !== true)
+				ShaderBoy.gui.tlEl.classList.remove('tl_hide');
+
+				if (ShaderBoy.gui.codeEl.classList.contains('code_hide'))
 				{
-					// ShaderBoy.time.reset();
+					ShaderBoy.gui.isCodeElHidden = true;
 				}
-			});
-			let toEditorMode = function ()
-			{
-				recEl.classList.add('rec_hide');
+				ShaderBoy.gui.codeEl.classList.add('code_hide');
 
-				if (isTlElHidden)
+				ShaderBoy.editor.codemirror.display.input.blur();
+
+				let isPlaying = ShaderBoy.isPlaying;
+				ShaderBoy.isPlaying = false;
+				ShaderBoy.gui_timeline.reset();
+
+				key('ctrl+1', function ()
 				{
-					tlEl.classList.add('tl_hide');
-				}
-
-				if (!isCodeElHidden)
+					ShaderBoy.renderScale = 1;
+					ShaderBoy.bufferManager.setFBOsProps();
+					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
+				});
+				key('ctrl+2', function ()
 				{
-					codeEl.classList.remove('code_hide');
-				}
-
-				if (!isCtrlElHidden)
+					ShaderBoy.renderScale = 2;
+					ShaderBoy.bufferManager.setFBOsProps();
+					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
+				});
+				key('ctrl+3', function ()
 				{
-					ctrl.classList.remove('ctrl_hide');
-				}
+					ShaderBoy.renderScale = 3;
+					ShaderBoy.bufferManager.setFBOsProps();
+					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
+				});
+				key('ctrl+4', function ()
+				{
+					ShaderBoy.renderScale = 4;
+					ShaderBoy.bufferManager.setFBOsProps();
+					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true;
+				});
+				key('⌥+up', function ()
+				{
+					if (ShaderBoy.isRecording !== true)
+					{
+						ShaderBoy.isPlaying = !ShaderBoy.isPlaying;
+						// ShaderBoy.time.pause();
+					}
+				});
+				key('⌥+down', function ()
+				{
+					if (ShaderBoy.isRecording !== true)
+					{
+						// ShaderBoy.time.reset();
+					}
+				});
+				let toEditorMode = function ()
+				{
+					ShaderBoy.gui.recEl.classList.add('rec_hide');
 
-				ShaderBoy.isPlaying = isPlaying;
+					if (ShaderBoy.gui.isTlElHidden)
+					{
+						ShaderBoy.gui.tlEl.classList.add('tl_hide');
+					}
 
-				ShaderBoy.editor.codemirror.focus();
-				key.unbind('⌘+⇧+⌥+r', 'ctrl+⇧+⌥+r');
-				key.unbind('ctrl+1');
-				key.unbind('ctrl+2');
-				key.unbind('ctrl+3');
-				key.unbind('ctrl+4');
-				key.unbind('⌥+up');
-				key.unbind('⌥+down');
-			};
-			key('⌘+⇧+⌥+r', toEditorMode);
-			key('ctrl+⇧+⌥+r', toEditorMode);
+					if (!ShaderBoy.gui.isCodeElHidden)
+					{
+						ShaderBoy.gui.codeEl.classList.remove('code_hide');
+					}
+
+					if (!ShaderBoy.gui.isCtrlElHidden)
+					{
+						let ms = 400;
+						setTimeout(() =>
+						{
+							ShaderBoy.gui.ctrlEl.classList.remove('ctrl_hide');
+						}, ms);
+					}
+
+					ShaderBoy.isPlaying = isPlaying;
+
+					ShaderBoy.editor.codemirror.focus();
+					key.unbind('⌘+⇧+⌥+r', 'ctrl+⇧+⌥+r');
+					key.unbind('ctrl+1');
+					key.unbind('ctrl+2');
+					key.unbind('ctrl+3');
+					key.unbind('ctrl+4');
+					key.unbind('⌥+up');
+					key.unbind('⌥+down');
+				};
+				key('⌘+⇧+⌥+r', toEditorMode);
+				key('ctrl+⇧+⌥+r', toEditorMode);
+			}, ms);
 		};
 
 		// for Smartphone

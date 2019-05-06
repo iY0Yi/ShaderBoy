@@ -44,16 +44,18 @@ export default ShaderBoy.bufferManager = {
         this.initFBOs();
     },
 
-    initBufferDoc: function (name)
+    initBufferDoc(name)
     {
         console.log('io: initBufferDoc');
         ShaderBoy.buffers[name].cm = CodeMirror.Doc(ShaderLib.shader[name], 'x-shader/x-fragment');
+        ShaderBoy.buffers[name].errorWidgets = [];
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    resetActiveBufferIds: function ()
+    resetActiveBufferIds()
     {
-        let currentBufName = 'MainImage';
+        let currentBufName = ShaderBoy.activeBufferIds[ShaderBoy.bufferManager.currentBufferDataId];
+        console.log(ShaderBoy.activeBufferIds[ShaderBoy.bufferManager.currentBufferDataId]);
         ShaderBoy.activeBufferIds = [];
         if (ShaderBoy.buffers['Common'].active === true) ShaderBoy.activeBufferIds.push('Common');
         if (ShaderBoy.buffers['BufferA'].active === true) ShaderBoy.activeBufferIds.push('BufferA');
@@ -65,7 +67,7 @@ export default ShaderBoy.bufferManager = {
         this.currentBufferDataId = ShaderBoy.activeBufferIds.indexOf(currentBufName);
     },
 
-    needNewShader: function (settingObj)
+    needNewShader(settingObj)
     {
         for (let i = 0; i < settingObj.shaders.list.length; i++)
         {
@@ -79,7 +81,7 @@ export default ShaderBoy.bufferManager = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    buildShaderFromBuffers: function ()
+    buildShaderFromBuffers()
     {
         console.log('bufferManager: buildShaderFromBuffers');
         for (const name in ShaderBoy.buffers)
@@ -95,14 +97,18 @@ export default ShaderBoy.bufferManager = {
                         const newChannelSetting = ShaderBoy.config.buffers[name].iChannel[i];
                         if (newChannelSetting.asset !== null)
                         {
+                            console.log('newChannelSetting', newChannelSetting);
                             const ASSETS_NAME = ['BufferA', 'BufferB', 'BufferC', 'BufferD'];
                             if (ASSETS_NAME.indexOf(newChannelSetting.asset) >= 0)
                             {
+                                console.log('YES');
                                 ShaderBoy.buffers[name].iChannel[i] = newChannelSetting;
                             }
                             else
                             {
+                                console.log('NO');
                                 //error!
+                                ShaderBoy.buffers[name].iChannel[i] = null;
                             }
                         }
                         else
@@ -111,18 +117,22 @@ export default ShaderBoy.bufferManager = {
                         }
                     }
                 }
+                console.log('ShaderBoy.buffers[name]', name, ShaderBoy.buffers[name]);
             }
         }
-        this.resetActiveBufferIds();
+        ShaderBoy.config = JSON.parse(JSON.stringify(ShaderBoy.config, null, "\t"));
 
+        this.resetActiveBufferIds();
         // Code
         if (ShaderBoy.util.same(ShaderBoy.oldBufferIds, ShaderBoy.activeBufferIds) === false)
         {
+            console.log('initShaders');
             ShaderBoy.oldBufferIds = ShaderBoy.activeBufferIds.concat();
             this.initShaders();
         }
         else
         {
+            console.log('recompileShaders');
             this.recompileShaders();
         }
 
@@ -130,7 +140,7 @@ export default ShaderBoy.bufferManager = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getCommonShaderCode: function ()
+    getCommonShaderCode()
     {
         let commonShaderCode = '';
         ShaderBoy.shaderCommonLines = 0;
@@ -143,14 +153,13 @@ export default ShaderBoy.bufferManager = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getFragmentCode: function (buffer, commonShaderCode)
+    getFragmentCode(buffer, commonShaderCode)
     {
         let fragCode = '';
         fragCode =
             ShaderBoy.shaderHeader[1] +
             ShaderLib.shader.uniformFS +
             ShaderBoy.gui.knobUniformFS +
-            ShaderBoy.gui.sldrUniformFS +
             ShaderBoy.gui.midiUniformFS +
             commonShaderCode +
             buffer.cm.getValue() +
@@ -159,11 +168,11 @@ export default ShaderBoy.bufferManager = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    initShaders: function ()
+    initShaders()
     {
         console.log('bufferManager: initShaders');
 
-        ShaderBoy.gui.collectMidiUniforms();
+        ShaderBoy.gui_midi.collectUniforms();
 
         if (ShaderBoy.glVersion === 2.0)
             ShaderBoy.vsSource = ShaderBoy.shaderHeader[0] + "in vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }";
@@ -233,39 +242,40 @@ export default ShaderBoy.bufferManager = {
             };
         }
 
-        ShaderBoy.editor.setBuffer('MainImage');
+        // ShaderBoy.editor.setBuffer('MainImage');
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    recompileShaders: function ()
+    recompileShaders()
     {
         console.log('bufferManager: recompileShaders');
 
-        ShaderBoy.gui.collectMidiUniforms();
+        ShaderBoy.gui_midi.collectUniforms();
 
         let uniformCodeStr =
             ShaderLib.shader.uniformFS +
             ShaderBoy.gui.knobUniformFS +
-            ShaderBoy.gui.sldrUniformFS +
             ShaderBoy.gui.midiUniformFS;
 
         ShaderBoy.shaderUniformsLines = uniformCodeStr.split(/\n/).length - 1;
 
         let commonShaderCode = this.getCommonShaderCode();
+        ShaderBoy.bufferManager.numCompiledBuffer = 0;
         for (let name in ShaderBoy.buffers)
         {
             let buffer = ShaderBoy.buffers[name];
+            console.log(name, ': ', buffer);
             if (buffer.active === true && buffer.isRenderable && buffer.shader !== null)
             {
                 let newSource = this.getFragmentCode(buffer, commonShaderCode);
                 let newPureSource = (newSource + '').replace(/\s+/g, '');
                 let curPureSource = (buffer.shader.fragmentSource + '').replace(/\s+/g, '');
-                if (newPureSource !== curPureSource)
+                // if (newPureSource !== curPureSource)
                 {
-                    let callback = undefined;
-                    if (name === 'MainImage')
+                    let callback = function ()
                     {
-                        callback = function ()
+                        ShaderBoy.bufferManager.numCompiledBuffer++;
+                        if (ShaderBoy.bufferManager.numCompiledBuffer === ShaderBoy.activeBufferIds.length)
                         {
                             ShaderBoy.gui_header.setStatus('suc1', 'Compiled.', 3000);
                         }
@@ -274,13 +284,17 @@ export default ShaderBoy.bufferManager = {
                     buffer.shader.fragmentSource = newSource;
                     buffer.shader.compile(callback);
                 }
+                // else
+                // {
+                //     ShaderBoy.bufferManager.numCompiledBuffer++;
+                // }
             }
         }
 
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    setSamplerFilter: function (texture, filter)
+    setSamplerFilter(texture, filter)
     {
         let gl = ShaderBoy.gl;
         gl.bindTexture(gl.TEXTURE_2D, texture);

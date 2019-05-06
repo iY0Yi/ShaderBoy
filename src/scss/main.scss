@@ -1,7 +1,8 @@
 @import 'base';
-@import 'layout_init';
 @import 'layout_main';
 @import 'layout_oauth';
+
+@import './codemirror/codemirror';
 
 @import './gui/gui_knobs';
 @import './gui/gui_panel_shaderlist';
@@ -10,48 +11,3 @@
 @import './gui/gui_header';
 @import './gui/gui_header_rec';
 @import './gui/gui_timeline';
-@import './cm/codemirror';
-
-input:focus,
-textarea:focus,
-textarea:hover {
-    outline: none !important;
-    border: 0px solid $col-bg;
-}
-
-.error {
-    position: relative;
-    font-family: 'Overpass Mono', monospace;
-    font-size: 90%;
-    font-weight: bolder;
-    line-height: 1.3;
-    letter-spacing: -0.05em;
-    background: $col-error;
-    color: $col_bg;
-    margin: 0.5px 0px;
-    border-radius: 0px 10px 10px 0px;
-    display: inline-block;
-    padding: 0px 10px;
-    z-index: 100;
-    -webkit-font-smoothing: subpixel-antialiased;
-    -moz-osx-font-smoothing: auto;
-
-    &.notify::before {
-        content: '';
-        position: absolute;
-        top: -1em;
-        left: -1em;
-        display: block;
-        width: 6px;
-        height: 6px;
-        border-radius: 3px;
-        background: $col-error;
-
-        @include mq {
-            top: -0.95em;
-            left: -0.25em;
-            width: 4px;
-            height: 4px;
-        }
-    }
-}

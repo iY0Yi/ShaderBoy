@@ -124,32 +124,38 @@ export default ShaderBoy.editor = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    setBuffer: function (bufName)
+    setBuffer: function (bufName, needForceChange)
     {
-        ShaderBoy.editingBuffer = bufName;
-        gui_sidebar_ichannels.readiChannels(bufName);
-        ShaderBoy.gui_header.setActive(bufName);
+        let curBufName = ShaderBoy.editingBuffer;
+        let newBufName = bufName;
 
-        let buf = ShaderBoy.buffers[bufName].cm;
-        if (buf.getEditor()) buf = buf.linkedDoc({ sharedHist: true });
-        let old = this.codemirror.swapDoc(buf);
-        let linked;
-        let fnc = function (doc) { linked = doc; };
-        linked = old.iterLinkedDocs(fnc);
-        if (linked)
+        if (curBufName !== newBufName || needForceChange === true)
         {
-            // Make sure the document in ShaderBoy.buffers is the one the other view is looking at
-            for (let name in ShaderBoy.buffers)
-            {
-                if (ShaderBoy.buffers[name].cm == old)
-                {
-                    ShaderBoy.buffers[name].cm = linked;
-                }
-                old.unlinkDoc(linked);
-            }
-        }
+            ShaderBoy.editingBuffer = bufName;
+            gui_sidebar_ichannels.readiChannels(bufName);
+            ShaderBoy.gui_header.setActive(bufName);
 
-        this.codemirror.focus();
+            let buf = ShaderBoy.buffers[bufName].cm;
+            if (buf.getEditor()) buf = buf.linkedDoc({ sharedHist: true });
+            let old = this.codemirror.swapDoc(buf);
+            let linked;
+            let fnc = function (doc) { linked = doc; };
+            linked = old.iterLinkedDocs(fnc);
+            if (linked)
+            {
+                // Make sure the document in ShaderBoy.buffers is the one the other view is looking at
+                for (let name in ShaderBoy.buffers)
+                {
+                    if (ShaderBoy.buffers[name].cm == old)
+                    {
+                        ShaderBoy.buffers[name].cm = linked;
+                    }
+                    old.unlinkDoc(linked);
+                }
+            }
+
+            this.codemirror.focus();
+        }
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,37 +174,72 @@ export default ShaderBoy.editor = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     updateErrorInfo: function (bufName, errors)
     {
-        this.codemirror.operation(function ()
+        if (ShaderBoy.buffers[bufName] !== undefined)
         {
-            let scope = ShaderBoy.editor;
-            for (let i = 0; i < scope.errorWidgets.length; ++i)
-                scope.codemirror.removeLineWidget(scope.errorWidgets[i]);
-            scope.errorWidgets.length = 0;
-
-            let curline = 0;
-            for (let i = 0; i < errors.length; ++i)
+            if (this.direct === undefined)
             {
-                let err = errors[i];
-                if (!err) continue;
-                let msg = document.createElement("div");
-                msg.appendChild(document.createTextNode(err.element + ': ' + err.msg));
-                if (err.lineNum > curline)
+                this.direct = false;
+            }
+
+            let prevDirect = !(!this.direct);
+
+            if (ShaderBoy.buffers['MainImage'].active && !ShaderBoy.buffers['BufferA'].active && !ShaderBoy.buffers['BufferB'].active && !ShaderBoy.buffers['BufferC'].active && !ShaderBoy.buffers['BufferD'].active)
+            {
+                this.direct = true;
+            }
+            console.log('this.direct: ', this.direct);
+
+            this.codemirror.operation(function ()
+            {
+                let scope = ShaderBoy.editor;
+
+
+                if (scope.direct)
                 {
-                    msg.className = "error notify";
-                    curline = err.lineNum;
+                    for (let i = 0; i < ShaderBoy.buffers[bufName].errorWidgets.length; ++i)
+                        ShaderBoy.buffers[bufName].cm.removeLineWidget(ShaderBoy.buffers[bufName].errorWidgets[i]);
+                    ShaderBoy.buffers[bufName].errorWidgets.length = 0;
                 }
                 else
                 {
-                    msg.className = "error";
+                    for (let i = 0; i < ShaderBoy.buffers[bufName].errorWidgets.length; ++i)
+                        ShaderBoy.buffers[bufName].cm.removeLineWidget(ShaderBoy.buffers[bufName].errorWidgets[i]);
+                    ShaderBoy.buffers[bufName].errorWidgets.length = 0;
                 }
-                scope.errorWidgets.push(ShaderBoy.buffers[bufName].cm.addLineWidget(err.lineNum, msg, { coverGutter: false, noHScroll: true }));
+
+                let curline = 0;
+                for (let i = 0; i < errors.length; ++i)
+                {
+                    let err = errors[i];
+                    if (!err) continue;
+                    let msg = document.createElement("div");
+                    msg.appendChild(document.createTextNode(err.element + ': ' + err.msg));
+                    if (err.lineNum > curline)
+                    {
+                        msg.className = "error notify";
+                        curline = err.lineNum;
+                    }
+                    else
+                    {
+                        msg.className = "error";
+                    }
+
+                    if (scope.direct)
+                    {
+                        ShaderBoy.buffers[bufName].errorWidgets.push(ShaderBoy.buffers[bufName].cm.addLineWidget(err.lineNum, msg, { coverGutter: false, noHScroll: true }));
+                    }
+                    else
+                    {
+                        ShaderBoy.buffers[bufName].errorWidgets.push(ShaderBoy.buffers[bufName].cm.addLineWidget(err.lineNum, msg, { coverGutter: false, noHScroll: true }));
+                    }
+                }
+            });
+            let info = this.codemirror.getScrollInfo();
+            let after = this.codemirror.charCoords({ line: this.codemirror.getCursor().line, ch: 0 }, "local").top;
+            if (info.top + info.clientHeight < after)
+            {
+                this.codemirror.scrollTo(null, after - info.clientHeight + 3);
             }
-        });
-        let info = this.codemirror.getScrollInfo();
-        let after = this.codemirror.charCoords({ line: this.codemirror.getCursor().line, ch: 0 }, "local").top;
-        if (info.top + info.clientHeight < after)
-        {
-            this.codemirror.scrollTo(null, after - info.clientHeight + 3);
         }
     }
 }
