@@ -160,7 +160,8 @@ ShaderBoy depends on some awesome js libralies.</br>
 
 
 # Contact
-[iY0Yi](https://twitter.com/iY0Yi/)
+[iY0Yi](https://twitter.com/iY0Yi/)</br>
+[Paypal.me(for donations)](https://www.paypal.me/atsushihashimoto)</br>
 </br>
 </br>
 </br>
