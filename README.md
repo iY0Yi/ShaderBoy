@@ -11,7 +11,7 @@ ShaderBoy uses Google Drive to store your shaders. From any device on which you 
 
 Enjoy ShaderBoy!
 ##### *This is not an official Shadertoy application.* 
-##### *Bug reports, feature requests, and [donations](https://www.paypal.me/atsushihashimoto) are welcome.
+##### *Bug reports, feature requests, and [donations](https://www.paypal.me/atsushihashimoto) are welcome.*
 
 </br>
 </br>
