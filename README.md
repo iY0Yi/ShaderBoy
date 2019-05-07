@@ -167,7 +167,7 @@ ShaderBoy depends on some awesome js libralies.</br>
 </br>
 </br>
 
-# Beer donation
+# Beer
 [Paypal.me](https://www.paypal.me/atsushihashimoto)</br>
 </br>
 </br>
