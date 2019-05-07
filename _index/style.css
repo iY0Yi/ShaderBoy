@@ -65,12 +65,12 @@ a {
 .discription {
     position: relative;
     text-align: justify;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.05px;
     text-justify: inter-word;
     line-height: 17px;
     margin-top: 5px;
-    width: 295px;
-    height: 113px;
+    width: 293px;
+    height: 115px;
     font-size: 12px;
     opacity: 0;
     animation: fadein-discription 1.5s cubic-bezier() 1.0s 1 forwards;
