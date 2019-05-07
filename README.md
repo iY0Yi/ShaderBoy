@@ -1,17 +1,17 @@
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc00.jpg"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_sp00.jpg"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/titlelogo.jpg"></br>
-<strong>ShaderBoy</strong> is a tiny shader editor for mobile devices.</br>
-It is intended to use [physical keyboards](https://www.google.co.jp/search?q=smartphone+bluetooth+keyboard&source=lnms&tbm=isch&sa=X&ved=0ahUKEwi-kZzK_4fdAhXRdd4KHSp3BOcQ_AUICigB&biw=1440&bih=781) to write shaders on a small screen.</br>
-It has compatible uniforms with <a href="https://www.shadertoy.com/"><em>Shadertoy</em></a>.</br>
-And you need Google account, because ShaderBoy works with GoogleDrive to save your shaders.
-
-Enjoy writing your shaders in everywhere.</br>
-in Bed, Toilet, Train, Camping, Fishing...
+<strong>ShaderBoy</strong> is a simple text editor that lets you write <a href="https://www.shadertoy.com/"><em>Shadertoy</em></a> shaders more comfortably, anytime, anywhere. I like writing shaders for Shadertoy, or analyzing other people's esoteric shaders, and I created this especially because I wanted to do that on my smartphone. Whether you're traveling by train or plane, staying in the toilet, fishing or camping, you can write a shader anywhere and anytime.
 Your power to go.</br>
-  
-##### *This is "NOT" Shadertoy official!* 
-##### *And now... ShaderBoy has updated. On PC, It has nice GUIs for writing shaders comfortably. See screenshots.*
+
+There are PC version and smartphone version. Both allow you to write shaders with the same variable/function name as Shadertoy. On the PC version, you can fine-tune your shaders with a rich debugging GUI. It also has a recording mode so you can easily save your shader as a movie.
+The smartphone version consists of a minimal GUI element that assumes the use of a [physical keyboards](https://www.google.co.jp/search?q=smartphone+bluetooth+keyboard&source=lnms&tbm=isch&sa=X&ved=0ahUKEwi-kZzK_4fdAhXRdd4KHSp3BOcQ_AUICigB&biw=1440&bih=781), with a small screen as much coding space as possible.
+
+ShaderBoy uses Google Drive to store your shaders. From any device on which you log in with your Google account, you can continue coding the shader that you last edited.
+
+Enjoy ShaderBoy!
+##### *This is not an official Shadertoy application.* 
+##### *Bug reports, feature requests, and coffee [donations](https://www.paypal.me/atsushihashimoto) are welcome.
 
 </br>
 </br>
@@ -128,7 +128,7 @@ $ npm install
 ```
   
 ### Build
-ShaderBoy uses webpack. so,  
+You then set up a local host for development.
 ```
 $ npm start
 ```
@@ -158,12 +158,8 @@ ShaderBoy depends on some awesome js libralies.</br>
 </br>
 </br>
 
-I love writing shaders.  
-And I also love Shadertoy.  
-I want to write it everytime, everywhere.  
-So, I made this one for me.  
-If anybody happy with this, it's my pleasure.  
 
+# Contact
 [iY0Yi](https://twitter.com/iY0Yi/)
 </br>
 </br>
