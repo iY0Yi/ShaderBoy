@@ -49,7 +49,7 @@ You can install the app from [here](https://shaderboy.net/).
 </br>
 </br>
 
-# Hotkeys
+# Keymaps
   
 |   | Smartphone | Windows | Mac |
 |:---|:---|:---|:---|
