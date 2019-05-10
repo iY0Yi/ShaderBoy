@@ -97,7 +97,7 @@ You can install the app from [here](https://shaderboy.net/).
 - [ ] uniform float     **iChannelTime[4];**       *// channel playback time (in seconds)*
 - [ ] uniform vec3      **iChannelResolution[4];** *// channel resolution (in pixels)*
 - [X] uniform samplerXX **iChannel0..3;**          *// input channel. XX = 2D/Cube*
-- [ ] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
+- [X] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
   
 ### GUI/other usefuls
 - [X] Timeline GUI(frame based) :PC only
