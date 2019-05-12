@@ -14,6 +14,7 @@ import time from './time';
 import io from './io';
 import gui from './gui';
 import renderer from './renderer';
+import soundRenderer from './sound_renderer';
 import editor from './editor';
 import util from './util';
 import bufferManager from './buffer_manager';
@@ -239,17 +240,20 @@ ShaderBoy.init = function ()
 	if (ShaderBoy.gl)
 	{
 		// We got WebGL!
+		ShaderBoy.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 		ShaderBoy.runInDevMode = process.env.NODE_ENV === 'development';
 
 		time.init();
 		gui.init();
+		soundRenderer.init();
 		bufferManager.init();
 		editor.init();
 
 		io.init();
-		ShaderBoy.canvas.width = window.innerWidth;
-		ShaderBoy.canvas.height = window.innerHeight;
+		// ShaderBoy.canvas.width = window.innerWidth;
+		// ShaderBoy.canvas.height = window.innerHeight;
 		console.log(window.innerWidth);
+
 	}
 	else
 	{

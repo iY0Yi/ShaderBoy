@@ -19,7 +19,7 @@ export default class BufferDataContainer
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     constructor(isRenderable)
     {
-        // true: BufferA-D, CubemapA, MainSound and MainImage
+        // true: BufferA-D, CubemapA, MainSound and Image
         // false: Config, Common and Setting
         this.isRenderable = isRenderable;
 

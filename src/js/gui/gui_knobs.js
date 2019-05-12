@@ -108,8 +108,6 @@ export default ShaderBoy.gui_knobs = { // comment out on codepen.
             {
                 toggle(id, clicked)
                 {
-                    console.log(ShaderBoy.gui.knobs.knobs[id].circle);
-
                     if (ShaderBoy.gui.knobs.knobs[id].active === false)
                     {
                         ShaderBoy.gui.knobs.knobs[id].circle.style.transition = 'all 600ms ease-in-out';
@@ -118,7 +116,7 @@ export default ShaderBoy.gui_knobs = { // comment out on codepen.
 
                         if (clicked)
                         {
-                            let bufnames = ['BufferA', 'BufferB', 'BufferC', 'BufferD', 'MainImage'];
+                            let bufnames = ['BufferA', 'BufferB', 'BufferC', 'BufferD', 'Image', 'Sound'];
                             for (let j = 0; j < bufnames.length; j++)
                             {
                                 const name = bufnames[j];

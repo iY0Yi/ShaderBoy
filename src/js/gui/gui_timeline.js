@@ -40,6 +40,7 @@ let hhw = 0;
 let isShiftKey = false;
 let isUpKey = false;
 let isDownKey = false;
+let isSoundPlaying = false;
 
 function s2i(v) { return parseInt(v); }
 function f2x(f) { return Math.floor((s2i(f) - offsetFrames) / (totalFrames - offsetFrames) * tlRect.width); }
@@ -308,6 +309,12 @@ export default ShaderBoy.gui_timeline = { // comment out on codepen.
                 crel.children[0].value = ShaderBoy.uniforms.iFrame;
                 ShaderBoy.uniforms.iTime = ShaderBoy.uniforms.iFrame * step;
                 ShaderBoy.forceDraw = true;
+                if (ShaderBoy.buffers['Sound'] !== undefined && ShaderBoy.buffers['Sound'].active)
+                {
+                    ShaderBoy.soundRenderer.stop();
+                    ShaderBoy.soundRenderer.play();
+                    setTimeout(() => { ShaderBoy.soundRenderer.stop(); }, 100);
+                }
             }
         };
 
@@ -363,9 +370,13 @@ export default ShaderBoy.gui_timeline = { // comment out on codepen.
                 ShaderBoy.uniforms.iTime = ShaderBoy.uniforms.iFrame * step;
                 let wsMin = s2i(stel.children[0].value);
                 let wsMax = s2i(enel.children[0].value);
+
+                let isLooped = false;
                 if (ShaderBoy.uniforms.iFrame > wsMax)
                 {
+                    console.log('Timeline: loop');
                     ShaderBoy.uniforms.iTime = ShaderBoy.uniforms.iFrame = wsMin;
+                    isLooped = true;
                 }
 
                 // if ()
@@ -374,6 +385,12 @@ export default ShaderBoy.gui_timeline = { // comment out on codepen.
                     ShaderBoy.gui_timeline.currentFrame = ShaderBoy.uniforms.iFrame;
                     wsel.style.left = s2i(stel.style.left) + hw + "px";
                     wsel.style.width = (s2i(enel.style.left) - s2i(wsel.style.left)) + "px";
+
+                    if (isLooped && ShaderBoy.buffers['Sound'] !== undefined && ShaderBoy.buffers['Sound'].active && !ShaderBoy.soundRenderer.paused)
+                    {
+                        ShaderBoy.soundRenderer.stop();
+                        ShaderBoy.soundRenderer.play();
+                    }
                 }
             }
         }
@@ -385,6 +402,9 @@ export default ShaderBoy.gui_timeline = { // comment out on codepen.
         let isWsMoved = false;
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0, dstartpos = 0;
         elmnt.onmousedown = dragMouseDown;
+
+
+        let isHeaderEl = false;
 
         function dragMouseDown(e)
         {
@@ -398,6 +418,11 @@ export default ShaderBoy.gui_timeline = { // comment out on codepen.
             framew = Math.max(tlRect.width / (totalFrames - offsetFrames), 1);
             document.onmouseup = closeDragEl;
             document.onmousemove = moveEl;
+            if ((elmnt === crel) && ShaderBoy.buffers['Sound'] !== undefined && ShaderBoy.buffers['Sound'].active)
+            {
+                isSoundPlaying = !ShaderBoy.soundRenderer.paused;
+                ShaderBoy.soundRenderer.stop();
+            }
         }
 
         function moveEl(e)
@@ -488,6 +513,13 @@ export default ShaderBoy.gui_timeline = { // comment out on codepen.
             ShaderBoy.gui_timeline.endFrame = x2f(s2i(enel.style.left));
             ShaderBoy.gui_timeline.startFrame = x2f(s2i(stel.style.left) + hw);
             if (!isWsMoved) ShaderBoy.gui_timeline.currentFrame = x2f(s2i(crel.style.left) + hw);
+
+            if ((elmnt === crel) && ShaderBoy.buffers['Sound'] !== undefined && ShaderBoy.buffers['Sound'].active)
+            {
+                ShaderBoy.soundRenderer.restart();
+                setTimeout(() => { ShaderBoy.soundRenderer.stop(); }, 100);
+            }
+
         }
 
         function closeDragEl()
@@ -497,6 +529,11 @@ export default ShaderBoy.gui_timeline = { // comment out on codepen.
             isDragging = false;
             ShaderBoy.uniforms.iFrame = s2i(crel.children[0].value);
             ShaderBoy.uniforms.iTime = ShaderBoy.uniforms.iFrame * step;
+            if ((elmnt === crel) && ShaderBoy.buffers['Sound'] !== undefined && ShaderBoy.buffers['Sound'].active && ShaderBoy.isPlaying)
+            {
+                ShaderBoy.soundRenderer.restart();
+                isSoundPlaying = true;
+            }
         }
     }
 };

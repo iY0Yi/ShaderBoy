@@ -1,7 +1,7 @@
 const TerserPlugin = require('terser-webpack-plugin');
 
-var PRODUCTION = false;
-var SOURCE_MAP = true;
+var PRODUCTION = true;
+var SOURCE_MAP = false;
 module.exports = {
 
 	mode: (PRODUCTION) ? 'production' : 'development',

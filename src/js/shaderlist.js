@@ -28,8 +28,12 @@ let ShaderList = [
 		url: 'shader/buf_d.fs',
 	},
 	{
-		name: 'MainImage',
+		name: 'Image',
 		url: 'shader/image.fs',
+	},
+	{
+		name: 'Sound',
+		url: 'shader/sound.fs',
 	},
 	{
 		name: 'screenFS',
@@ -38,6 +42,10 @@ let ShaderList = [
 	{
 		name: 'commonfooterFS',
 		url: 'shader/_commonfooter.fs',
+	},
+	{
+		name: 'soundfooterFS',
+		url: 'shader/_soundfooter.fs',
 	},
 	{
 		name: 'Config',

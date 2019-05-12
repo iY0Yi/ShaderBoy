@@ -1,3 +1,18 @@
+//   ___             ___   ___                      
+//  (  _`\         /'___)/'___)                     
+//  | (_) ) _   _ | (__ | (__   __   _ __           
+//  |  _ <'( ) ( )| ,__)| ,__)/'__`\( '__)          
+//  | (_) )| (_) || |   | |  (  ___/| |             
+//  (____/'`\___/'(_)   (_)  `\____)(_)             
+//                                                  
+//  /'\_/`\                                         
+//  |     |   _ _   ___     _ _    __     __   _ __ 
+//  | (_) | /'_` )/' _ `\ /'_` ) /'_ `\ /'__`\( '__)
+//  | | | |( (_| || ( ) |( (_| |( (_) |(  ___/| |   
+//  (_) (_)`\__,_)(_) (_)`\__,_)`\__  |`\____)(_)   
+//                              ( )_) |             
+//                               \___/'             
+
 import ShaderBoy from './shaderboy';
 import BufferDataContainer from './buffer_data_container';
 import ShaderLib from './shaderlib';
@@ -15,29 +30,31 @@ export default ShaderBoy.bufferManager = {
         ShaderBoy.buffers['Setting'] = new BufferDataContainer(false);
         ShaderBoy.buffers['Config'] = new BufferDataContainer(false);
         ShaderBoy.buffers['Common'] = new BufferDataContainer(false);
+        ShaderBoy.buffers['Sound'] = new BufferDataContainer(false);
         ShaderBoy.buffers['BufferA'] = new BufferDataContainer(true);
         ShaderBoy.buffers['BufferB'] = new BufferDataContainer(true);
         ShaderBoy.buffers['BufferC'] = new BufferDataContainer(true);
         ShaderBoy.buffers['BufferD'] = new BufferDataContainer(true);
-        ShaderBoy.buffers['MainImage'] = new BufferDataContainer(true);
-        ShaderBoy.buffers['MainSound'] = new BufferDataContainer(true);
+        ShaderBoy.buffers['Image'] = new BufferDataContainer(true);
 
-        this.initBufferDoc(['Config']);
-        this.initBufferDoc(['Common']);
-        this.initBufferDoc(['BufferA']);
-        this.initBufferDoc(['BufferB']);
-        this.initBufferDoc(['BufferC']);
-        this.initBufferDoc(['BufferD']);
-        this.initBufferDoc(['MainImage']);
+        this.initBufferDoc('Config');
+        this.initBufferDoc('Common');
+        this.initBufferDoc('Sound');
+        this.initBufferDoc('BufferA');
+        this.initBufferDoc('BufferB');
+        this.initBufferDoc('BufferC');
+        this.initBufferDoc('BufferD');
+        this.initBufferDoc('Image');
 
         ShaderBoy.buffers['Setting'].active = false;
         ShaderBoy.buffers['Config'].active = false;
         ShaderBoy.buffers['Common'].active = false;
+        ShaderBoy.buffers['Sound'].active = false;
         ShaderBoy.buffers['BufferA'].active = false;
         ShaderBoy.buffers['BufferB'].active = false;
         ShaderBoy.buffers['BufferC'].active = false;
         ShaderBoy.buffers['BufferD'].active = false;
-        ShaderBoy.buffers['MainImage'].active = true;
+        ShaderBoy.buffers['Image'].active = true;
 
         ShaderBoy.oldBufferIds = [];
 
@@ -62,7 +79,8 @@ export default ShaderBoy.bufferManager = {
         if (ShaderBoy.buffers['BufferB'].active === true) ShaderBoy.activeBufferIds.push('BufferB');
         if (ShaderBoy.buffers['BufferC'].active === true) ShaderBoy.activeBufferIds.push('BufferC');
         if (ShaderBoy.buffers['BufferD'].active === true) ShaderBoy.activeBufferIds.push('BufferD');
-        if (ShaderBoy.buffers['MainImage'].active === true) ShaderBoy.activeBufferIds.push('MainImage');
+        if (ShaderBoy.buffers['Image'].active === true) ShaderBoy.activeBufferIds.push('Image');
+        if (ShaderBoy.buffers['Sound'].active === true) ShaderBoy.activeBufferIds.push('Sound');
         console.log('ShaderBoy.activeBufferIds', ShaderBoy.activeBufferIds);
         this.currentBufferDataId = ShaderBoy.activeBufferIds.indexOf(currentBufName);
     },
@@ -81,16 +99,25 @@ export default ShaderBoy.bufferManager = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    buildShaderFromBuffers()
+    buildShaderFromBuffers(needCompile)
     {
+        needCompile = (needCompile === undefined) ? true : needCompile;
+
         console.log('bufferManager: buildShaderFromBuffers');
         for (const name in ShaderBoy.buffers)
         {
             if (name !== 'Config' && name !== 'Setting')
             {
-                ShaderBoy.buffers[name].active = ShaderBoy.config.buffers[name].active;
+                if (ShaderBoy.config.buffers[name] !== undefined)
+                {
+                    ShaderBoy.buffers[name].active = ShaderBoy.config.buffers[name].active;
+                }
+                else
+                {
+                    ShaderBoy.buffers[name].active = false;
+                }
 
-                if (ShaderBoy.buffers[name].isRenderable && ShaderBoy.buffers[name].active)
+                if (ShaderBoy.buffers[name].isRenderable && ShaderBoy.buffers[name].active && name !== 'Setting')
                 {
                     for (let i = 0; i < 4; i++)
                     {
@@ -101,12 +128,10 @@ export default ShaderBoy.bufferManager = {
                             const ASSETS_NAME = ['BufferA', 'BufferB', 'BufferC', 'BufferD'];
                             if (ASSETS_NAME.indexOf(newChannelSetting.asset) >= 0)
                             {
-                                console.log('YES');
                                 ShaderBoy.buffers[name].iChannel[i] = newChannelSetting;
                             }
                             else
                             {
-                                console.log('NO');
                                 //error!
                                 ShaderBoy.buffers[name].iChannel[i] = null;
                             }
@@ -117,23 +142,21 @@ export default ShaderBoy.bufferManager = {
                         }
                     }
                 }
-                console.log('ShaderBoy.buffers[name]', name, ShaderBoy.buffers[name]);
             }
         }
         ShaderBoy.config = JSON.parse(JSON.stringify(ShaderBoy.config, null, "\t"));
 
         this.resetActiveBufferIds();
+
         // Code
         if (ShaderBoy.util.same(ShaderBoy.oldBufferIds, ShaderBoy.activeBufferIds) === false)
         {
-            console.log('initShaders');
             ShaderBoy.oldBufferIds = ShaderBoy.activeBufferIds.concat();
-            this.initShaders();
         }
-        else
+
+        if (needCompile)
         {
-            console.log('recompileShaders');
-            this.recompileShaders();
+            this.compileShaders();
         }
 
         ShaderBoy.forceDraw = (ShaderBoy.isPlaying !== true);
@@ -142,154 +165,191 @@ export default ShaderBoy.bufferManager = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     getCommonShaderCode()
     {
-        let commonShaderCode = '';
+        let commonCode = '';
         ShaderBoy.shaderCommonLines = 0;
         if (ShaderBoy.buffers['Common'].active === true)
         {
-            commonShaderCode = ShaderBoy.util.deepcopy(ShaderBoy.buffers['Common'].cm.getValue());
-            ShaderBoy.shaderCommonLines = commonShaderCode.split(/\n/).length - 1;
+            commonCode = ShaderBoy.buffers['Common'].cm.getValue();
+            ShaderBoy.shaderCommonLines = commonCode.split(/\n/).length - 1;
         }
-        return commonShaderCode;
+        return commonCode;
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getFragmentCode(buffer, commonShaderCode)
+    createVertexShader()
+    {
+        if (ShaderBoy.glVersion === 2.0)
+            ShaderBoy.vsSource = ShaderBoy.shaderHeader[0] + "in vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }";
+        else
+            ShaderBoy.vsSource = ShaderBoy.shaderHeader[0] + "attribute vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }";
+    },
+
+    getUniformCode()
+    {
+        ShaderBoy.gui_midi.collectUniforms();
+        let uniformCode =
+            ShaderLib.shader.uniformFS +
+            ShaderBoy.gui.knobUniformFS +
+            ShaderBoy.gui.midiUniformFS;
+        ShaderBoy.shaderUniformsLines = uniformCode.split(/\n/).length - 1;
+        return uniformCode;
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    getFragmentCode(buffer, uniformCode, commonCode)
     {
         let fragCode = '';
         fragCode =
             ShaderBoy.shaderHeader[1] +
-            ShaderLib.shader.uniformFS +
-            ShaderBoy.gui.knobUniformFS +
-            ShaderBoy.gui.midiUniformFS +
-            commonShaderCode +
+            uniformCode +
+            commonCode +
             buffer.cm.getValue() +
             ShaderLib.shader.commonfooterFS;
         return fragCode;
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    initShaders()
+    getSoundFragmentCode(buffer, commonCode)
     {
-        console.log('bufferManager: initShaders');
+        let fragCode = '';
+        fragCode =
+            ShaderBoy.shaderHeader[1] +
+            commonCode +
+            buffer.cm.getValue() +
+            ShaderLib.shader.soundfooterFS;
+        return fragCode;
+    },
 
-        ShaderBoy.gui_midi.collectUniforms();
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    compileShaders()
+    {
+        console.log('bufferManager: compileShaders');
 
-        if (ShaderBoy.glVersion === 2.0)
-            ShaderBoy.vsSource = ShaderBoy.shaderHeader[0] + "in vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }";
+        if (ShaderBoy.io.initLoading === true)
+        {
+            this.createVertexShader();
+            if (ShaderBoy.screenShader === null)
+            {
+                let screenFsHeader = '';
+                if (ShaderBoy.glVersion !== 2.0)
+                {
+                    screenFsHeader += '#define outColor gl_FragColor\n';
+                }
+                ShaderBoy.screenShader = new Shader(ShaderBoy.gl, ShaderBoy.vsSource, screenFsHeader + ShaderBoy.shaderHeader[1] + ShaderLib.shader.screenFS + ShaderLib.shader.commonfooterFS);
+                ShaderBoy.screenShader.compile();
+                ShaderBoy.screenShader.uniforms = {
+                    'iResolution': ShaderBoy.uniforms.iResolution,
+                    'frameTexture': 0
+                };
+            }
+        }
         else
-            ShaderBoy.vsSource = ShaderBoy.shaderHeader[0] + "attribute vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }";
+        {
+            if (ShaderBoy.buffers['Sound'].active && !ShaderBoy.soundRenderer.paused)
+            {
+                ShaderBoy.soundRenderer.stop();
+            }
+        }
 
-        let commonShaderCode = this.getCommonShaderCode();
+        let uniformCode = this.getUniformCode();
+        let commonCode = this.getCommonShaderCode();
+
+        ShaderBoy.bufferManager.numCompiledBuffer = (ShaderBoy.buffers['Common'].active === true) ? 1 : 0;
+
+        let callback = function ()
+        {
+            ShaderBoy.bufferManager.numCompiledBuffer++;
+            if (ShaderBoy.bufferManager.numCompiledBuffer === ShaderBoy.activeBufferIds.length)
+            {
+                ShaderBoy.gui_header.setStatus('suc1', 'Compiled.', 3000);
+
+                if (ShaderBoy.buffers['Sound'].active)
+                {
+                    let wasPlaying = ShaderBoy.isPlaying;
+                    console.log('Reset Sound buffer...');
+                    ShaderBoy.isPlaying = false;
+                    ShaderBoy.soundRenderer.render();
+                    // if (wasPlaying || ShaderBoy.io.initLoading === true)
+                    {
+                        ShaderBoy.soundRenderer.restart();
+                        ShaderBoy.isPlaying = true;
+                    }
+
+                }
+                if (ShaderBoy.io.initLoading === true)
+                {
+                    ShaderBoy.io.initLoading = false;
+                    ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000, function ()
+                    {
+                        document.getElementById('cvr-loading').classList.add('loading-hide');
+                        setTimeout(() =>
+                        {
+                            document.getElementById('cvr-loading').classList.add('loading-hidden');
+                        }, 400);
+                    });
+                    ShaderBoy.update();
+                    console.log('updating was started.');
+                }
+            }
+        };
 
         for (const name in ShaderBoy.buffers)
         {
             const buffer = ShaderBoy.buffers[name];
 
-            if (buffer.active && buffer.isRenderable)
+            if (buffer.active && (buffer.isRenderable || name === 'Sound'))
             {
-                let callback = function () { };
-                if (name === 'MainImage' && ShaderBoy.io.initLoading === true)
+                if (name !== 'Sound')
                 {
-                    callback = function ()
+                    let fragmentCode = this.getFragmentCode(buffer, uniformCode, commonCode);
+                    if (buffer.shader === null)
                     {
-                        if (ShaderBoy.io.initLoading === true)
-                        {
-                            let loadDiv = document.getElementById('cvr-loading');
-                            ShaderBoy.canvas = document.getElementById('gl_canvas');
-                            console.log('updating was started.');
-                            ShaderBoy.io.initLoading = false;
-                            ShaderBoy.update();
-                        }
-                    };
-                }
-
-                buffer.shader = new Shader(ShaderBoy.gl, ShaderBoy.vsSource, this.getFragmentCode(buffer, commonShaderCode));
-                buffer.shader.bufName = name;
-                buffer.shader.compile(callback);
-                buffer.shader.uniforms = {
-                    'iResolution': ShaderBoy.uniforms.iResolution,// viewport resolution (in pixels)
-                    'iTime': ShaderBoy.uniforms.iTime,            // shader playback time (in seconds)
-                    'iTimeDelta': ShaderBoy.uniforms.iTimeDelta,  // render time (in seconds)
-                    'iFrame': ShaderBoy.uniforms.iFrame,          // shader playback frame
-                    'iFrameRate': ShaderBoy.uniforms.iFrameRate,  // shader playback frame
-                    'iDate': ShaderBoy.uniforms.iDate,            // (year, month, day, time in seconds)
-                    'iMouse': ShaderBoy.uniforms.iMouse,          // mouse pixel coords. xy: current (if MLB down), zw: click
-                    'iChannel0': 0,                               // input channel. XX = 2D/Cube
-                    'iChannel1': 1,                               // input channel. XX = 2D/Cube
-                    'iChannel2': 2,                               // input channel. XX = 2D/Cube
-                    'iChannel3': 3,                               // input channel. XX = 2D/Cube
-                    // 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
-                    // 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
-                };
-            }
-        }
-
-        if (ShaderBoy.screenShader === null)
-        {
-            let screenFsHeader = '';
-            if (ShaderBoy.glVersion === 2.0)
-            {
-            }
-            else
-            {
-                screenFsHeader += '#define outColor gl_FragColor\n';
-            }
-            ShaderBoy.screenShader = new Shader(ShaderBoy.gl, ShaderBoy.vsSource, screenFsHeader + ShaderBoy.shaderHeader[1] + ShaderLib.shader.screenFS + ShaderLib.shader.commonfooterFS);
-            ShaderBoy.screenShader.compile();
-            ShaderBoy.screenShader.uniforms = {
-                'iResolution': ShaderBoy.uniforms.iResolution,
-                'frameTexture': 0
-            };
-        }
-
-        // ShaderBoy.editor.setBuffer('MainImage');
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    recompileShaders()
-    {
-        console.log('bufferManager: recompileShaders');
-
-        ShaderBoy.gui_midi.collectUniforms();
-
-        let uniformCodeStr =
-            ShaderLib.shader.uniformFS +
-            ShaderBoy.gui.knobUniformFS +
-            ShaderBoy.gui.midiUniformFS;
-
-        ShaderBoy.shaderUniformsLines = uniformCodeStr.split(/\n/).length - 1;
-
-        let commonShaderCode = this.getCommonShaderCode();
-        ShaderBoy.bufferManager.numCompiledBuffer = 0;
-        for (let name in ShaderBoy.buffers)
-        {
-            let buffer = ShaderBoy.buffers[name];
-            console.log(name, ': ', buffer);
-            if (buffer.active === true && buffer.isRenderable && buffer.shader !== null)
-            {
-                let newSource = this.getFragmentCode(buffer, commonShaderCode);
-                let newPureSource = (newSource + '').replace(/\s+/g, '');
-                let curPureSource = (buffer.shader.fragmentSource + '').replace(/\s+/g, '');
-                // if (newPureSource !== curPureSource)
-                {
-                    let callback = function ()
-                    {
-                        ShaderBoy.bufferManager.numCompiledBuffer++;
-                        if (ShaderBoy.bufferManager.numCompiledBuffer === ShaderBoy.activeBufferIds.length)
-                        {
-                            ShaderBoy.gui_header.setStatus('suc1', 'Compiled.', 3000);
-                        }
+                        buffer.shader = new Shader(ShaderBoy.gl, ShaderBoy.vsSource, fragmentCode);
+                        buffer.shader.uniforms = {
+                            'iResolution': ShaderBoy.uniforms.iResolution,// viewport resolution (in pixels)
+                            'iTime': ShaderBoy.uniforms.iTime,            // shader playback time (in seconds)
+                            'iTimeDelta': ShaderBoy.uniforms.iTimeDelta,  // render time (in seconds)
+                            'iFrame': ShaderBoy.uniforms.iFrame,          // shader playback frame
+                            'iFrameRate': ShaderBoy.uniforms.iFrameRate,  // shader playback frame
+                            'iDate': ShaderBoy.uniforms.iDate,            // (year, month, day, time in seconds)
+                            'iMouse': ShaderBoy.uniforms.iMouse,          // mouse pixel coords. xy: current (if MLB down), zw: click
+                            'iChannel0': 0,                               // input channel. XX = 2D/Cube
+                            'iChannel1': 1,                               // input channel. XX = 2D/Cube
+                            'iChannel2': 2,                               // input channel. XX = 2D/Cube
+                            'iChannel3': 3,                               // input channel. XX = 2D/Cube
+                            'iSampleRate': 44100
+                            // 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
+                            // 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
+                        };
+                        buffer.shader.bufName = name;
                     }
-
-                    buffer.shader.fragmentSource = newSource;
-                    buffer.shader.compile(callback);
+                    else
+                    {
+                        buffer.shader.fragmentSource = fragmentCode;
+                    }
                 }
-                // else
-                // {
-                //     ShaderBoy.bufferManager.numCompiledBuffer++;
-                // }
+                else
+                {
+                    let fragmentCode = this.getSoundFragmentCode(buffer, commonCode);
+                    if (buffer.shader === null)
+                    {
+                        buffer.shader = new Shader(ShaderBoy.gl, ShaderBoy.vsSource, fragmentCode);
+                        buffer.shader.uniforms = {
+                            'iBlockOffset': 0,
+                            'iSampleRate': 0
+                        };
+                        buffer.shader.bufName = name;
+                    }
+                    else
+                    {
+                        buffer.shader.fragmentSource = fragmentCode;
+                    }
+                }
+
+                buffer.shader.compile(callback);
             }
         }
+
 
     },
 
@@ -382,6 +442,18 @@ export default ShaderBoy.bufferManager = {
     {
         console.log('bufferManager: initFBOs');
         let gl = ShaderBoy.gl;
+
+        // Just for Shadertoy compativility...
+        this.tempTexture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, this.tempTexture);
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        this.setRenderResolution(this.tempTexture, 256, 256);
+        this.setSamplerFilter(this.tempTexture, 'linear');
+        this.setSamplerWrap(this.tempTexture, 'repeat');
+        gl.bindTexture(gl.TEXTURE_2D, null);
+
         for (const name in ShaderBoy.buffers)
         {
             let buffer = ShaderBoy.buffers[name];
@@ -395,9 +467,9 @@ export default ShaderBoy.bufferManager = {
                     buffer.textures.push(gl.createTexture());
                     gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.framebuffer);
                     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, buffer.textures[i], 0);
+                    gl.bindTexture(gl.TEXTURE_2D, buffer.textures[i]);
                     gl.clearColor(0.0, 0.0, 0.0, 1.0);
                     gl.clear(gl.COLOR_BUFFER_BIT);
-                    gl.bindTexture(gl.TEXTURE_2D, buffer.textures[i]);
                     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
                     gl.bindTexture(gl.TEXTURE_2D, null);
                     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -407,3 +479,4 @@ export default ShaderBoy.bufferManager = {
         this.setFBOsProps();
     },
 };
+

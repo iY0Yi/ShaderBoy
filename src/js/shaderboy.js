@@ -54,7 +54,8 @@ let ShaderBoy = {
         iFrameRate: 0,
         // iChannelTime:[0, 0, 0, 0],
         // iChannelResolution:[0, 0, 0, 0],
-        iMouse: [0, 0, 0, 0]
+        iMouse: [0, 0, 0, 0],
+
     }
 };
 export default ShaderBoy;

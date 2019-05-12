@@ -8,7 +8,7 @@
         "Common": {
             "active": false
         },
-        "MainImage": {
+        "Image": {
             "active": true,
             "iChannel": [
                 {
@@ -153,7 +153,7 @@
                 }
             ]
         },
-        "MainSound": {
+        "Sound": {
             "active": false,
             "iChannel": [
                 {

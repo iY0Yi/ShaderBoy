@@ -183,7 +183,7 @@ export default ShaderBoy.editor = {
 
             let prevDirect = !(!this.direct);
 
-            if (ShaderBoy.buffers['MainImage'].active && !ShaderBoy.buffers['BufferA'].active && !ShaderBoy.buffers['BufferB'].active && !ShaderBoy.buffers['BufferC'].active && !ShaderBoy.buffers['BufferD'].active)
+            if (ShaderBoy.buffers['Image'].active && !ShaderBoy.buffers['BufferA'].active && !ShaderBoy.buffers['BufferB'].active && !ShaderBoy.buffers['BufferC'].active && !ShaderBoy.buffers['BufferD'].active && !ShaderBoy.buffers['Sound'].active)
             {
                 this.direct = true;
             }

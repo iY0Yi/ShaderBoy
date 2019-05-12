@@ -47,17 +47,21 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
 
     resetBtns(buffers)
     {
+        console.log('Otaku: ', buffers);
         ShaderBoy.gui_header.bufCount = -1;
         let cmnEl = document.getElementById('ghdr-btn-common');
         let bufaEl = document.getElementById('ghdr-btn-buf-a');
         let bufbEl = document.getElementById('ghdr-btn-buf-b');
         let bufcEl = document.getElementById('ghdr-btn-buf-c');
         let bufdEl = document.getElementById('ghdr-btn-buf-d');
+        let sndEl = document.getElementById('ghdr-btn-snd');
+        // buffers['Sound'].active = true;
         if (buffers['Common'].active === true) cmnEl.classList.remove('disable'); else cmnEl.classList.add('disable');
         if (buffers['BufferA'].active === true) bufaEl.classList.remove('disable'); else bufaEl.classList.add('disable');
         if (buffers['BufferB'].active === true) bufbEl.classList.remove('disable'); else bufbEl.classList.add('disable');
         if (buffers['BufferC'].active === true) bufcEl.classList.remove('disable'); else bufcEl.classList.add('disable');
         if (buffers['BufferD'].active === true) bufdEl.classList.remove('disable'); else bufdEl.classList.add('disable');
+        if (buffers['Sound'].active === true) sndEl.classList.remove('disable'); else sndEl.classList.add('disable');
 
         let cmnBtnEl = document.getElementById('ghdr-btn-switch-cmn');
         cmnBtnEl.classList.remove('dec');
@@ -69,6 +73,18 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
         else
         {
             cmnBtnEl.classList.add('inc');
+        }
+
+        let sndBtnEl = document.getElementById('ghdr-btn-switch-snd');
+        sndBtnEl.classList.remove('dec');
+        sndBtnEl.classList.remove('inc');
+        if (buffers['Sound'].active === true)
+        {
+            sndBtnEl.classList.add('dec');
+        }
+        else
+        {
+            sndBtnEl.classList.add('inc');
         }
     },
 
@@ -130,6 +146,7 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
         }
 
         document.getElementById('ghdr-btn-common').classList.add('disable');
+        document.getElementById('ghdr-btn-snd').classList.add('disable');
         this.bufOrder[3].classList.add('disable');
         this.bufOrder[2].classList.add('disable');
         this.bufOrder[1].classList.add('disable');
@@ -143,17 +160,48 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
             document.getElementById('ghdr-btn-switch-cmn').classList.toggle('inc');
             document.getElementById('ghdr-btn-switch-cmn').classList.toggle('dec');
             let mainEl = document.getElementById('ghdr-btn-mainimg');
-            if (!mainEl.classList.contains('active') && document.getElementById('ghdr-btn-common').classList.contains('disable'))
+            if (document.getElementById('ghdr-btn-common').classList.contains('disable'))
             {
-                ShaderBoy.gui_header.setActive(mainEl.textContent);
+                if (!mainEl.classList.contains('active'))
+                {
+                    ShaderBoy.editor.setBuffer(mainEl.textContent);
+                }
                 document.getElementById('ghdr-btn-common').classList.remove('active');
                 ShaderBoy.config.buffers['Common'].active = false;
+                ShaderBoy.buffers['Common'].active = false;
             }
             else
             {
                 ShaderBoy.config.buffers['Common'].active = true;
+                ShaderBoy.buffers['Common'].active = true;
             }
-            ShaderBoy.bufferManager.buildShaderFromBuffers();
+            ShaderBoy.bufferManager.buildShaderFromBuffers(false);
+        }
+
+        document.getElementById('ghdr-btn-switch-snd').onclick = function (event)
+        {
+            document.getElementById('ghdr-btn-snd').classList.toggle('disable');
+            document.getElementById('ghdr-btn-switch-snd').classList.toggle('inc');
+            document.getElementById('ghdr-btn-switch-snd').classList.toggle('dec');
+            let mainEl = document.getElementById('ghdr-btn-mainimg');
+            if (document.getElementById('ghdr-btn-snd').classList.contains('disable'))
+            {
+                if (!mainEl.classList.contains('active'))
+                {
+                    ShaderBoy.editor.setBuffer(mainEl.textContent);
+                }
+                document.getElementById('ghdr-btn-snd').classList.remove('active');
+                ShaderBoy.config.buffers['Sound'].active = false;
+                ShaderBoy.buffers['Sound'].active = false;
+                ShaderBoy.soundRenderer.destroyContext();
+            }
+            else
+            {
+                ShaderBoy.config.buffers['Sound'].active = true;
+                ShaderBoy.buffers['Sound'].active = true;
+                ShaderBoy.soundRenderer.initContext();
+            }
+            ShaderBoy.bufferManager.buildShaderFromBuffers(false);
         }
 
         document.getElementById('ghdr-btn-inc-buf').onclick = function (event)
@@ -175,7 +223,7 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
 
             let bufName = ShaderBoy.gui_header.bufOrder[id].textContent;
             ShaderBoy.config.buffers[bufName].active = true;
-            ShaderBoy.bufferManager.buildShaderFromBuffers();
+            ShaderBoy.bufferManager.buildShaderFromBuffers(false);
         }
 
         document.getElementById('ghdr-btn-dec-buf').onclick = function (event)
@@ -195,7 +243,7 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
             {
                 let mainEl = document.getElementById('ghdr-btn-mainimg');
                 {
-                    ShaderBoy.gui_header.setActive(mainEl.textContent);
+                    ShaderBoy.editor.setBuffer(mainEl.textContent);
                 }
                 let cmnEl = document.getElementById('ghdr-btn-common');
                 {
@@ -204,7 +252,7 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
             }
             let bufName = ShaderBoy.gui_header.bufOrder[id].textContent;
             ShaderBoy.config.buffers[bufName].active = false;
-            ShaderBoy.bufferManager.buildShaderFromBuffers();
+            ShaderBoy.bufferManager.buildShaderFromBuffers(false);
         }
 
         let bufBtns = document.querySelectorAll('.btn-buf');
@@ -214,7 +262,8 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
             {
                 if (!event.target.classList.contains('active'))
                 {
-                    ShaderBoy.gui_header.setActive(event.target.textContent);
+                    // ShaderBoy.gui_header.setActive(event.target.textContent);
+                    ShaderBoy.editor.setBuffer(event.target.textContent);
                     let bufName = event.target.textContent;
                     console.log(bufName);
                     ShaderBoy.editor.setBuffer(bufName);
@@ -304,6 +353,10 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
         document.getElementById('cntr_itime').textContent = ShaderBoy.uniforms.iTime.toFixed(3);
         document.getElementById('cntr_iframe').textContent = ShaderBoy.uniforms.iFrame.toFixed(0);
         document.getElementById('cntr_fps').textContent = ShaderBoy.time.fps.toFixed(1);
+        if (ShaderBoy.buffers['Sound'].active)
+        {
+            ShaderBoy.soundRenderer.drawEQ();
+        }
     }
 }
 

@@ -1,3 +1,11 @@
+//   ___    _                 _              
+//  (  _`\ ( )               ( )             
+//  | (_(_)| |__     _ _    _| |   __   _ __ 
+//  `\__ \ |  _ `\ /'_` ) /'_` | /'__`\( '__)
+//  ( )_) || | | |( (_| |( (_| |(  ___/| |   
+//  `\____)(_) (_)`\__,_)`\__,_)`\____)(_)   
+//                                           
+
 import ShaderBoy from './shaderboy';
 import util from './util';
 
@@ -131,6 +139,7 @@ export default class Shader
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	end()
 	{
+		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, null, 0);
 		gl.disableVertexAttribArray(this.vertAttLocation);
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		gl.bindBuffer(gl.ARRAY_BUFFER, null);
@@ -173,10 +182,17 @@ export default class Shader
 		gl.uniform1f(gl.getUniformLocation(this.program, 'iFrameRate'), this.uniforms.iFrameRate);
 		gl.uniform4fv(gl.getUniformLocation(this.program, 'iDate'), new Float32Array(this.uniforms.iDate));
 		gl.uniform4fv(gl.getUniformLocation(this.program, 'iMouse'), new Float32Array(this.uniforms.iMouse));
+		gl.uniform1f(gl.getUniformLocation(this.program, 'iSampleRate'), this.uniforms.iSampleRate);
 		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel0'), 0);
 		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel1'), 1);
 		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel2'), 2);
 		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel3'), 3);
+	}
+
+	setShadetoySoundShaderUniforms()
+	{
+		gl.uniform1f(gl.getUniformLocation(this.program, 'iBlockOffset'), this.uniforms.iBlockOffset);
+		gl.uniform1f(gl.getUniformLocation(this.program, 'iSampleRate'), this.uniforms.iSampleRate);
 	}
 
 
@@ -352,6 +368,7 @@ export default class Shader
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVBO);
 		gl.vertexAttribPointer(this.vertAttLocation, 2, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(this.vertAttLocation);
+		if(ShaderBoy.gui_timeline.offsetFrames >= ShaderBoy.gui_timeline.currentFrame)gl.clear(gl.COLOR_BUFFER_BIT);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
 	}
 
@@ -363,8 +380,7 @@ export default class Shader
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.triVBO);
 		gl.vertexAttribPointer(this.vertAttLocation, 2, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(this.vertAttLocation);
-		gl.clearColor(0.0, 0.0, 0.0, 1.0);
-		gl.clear(gl.COLOR_BUFFER_BIT);
+		if(ShaderBoy.gui_timeline.offsetFrames >= ShaderBoy.gui_timeline.currentFrame)gl.clear(gl.COLOR_BUFFER_BIT);
 		gl.drawArrays(gl.TRIANGLES, 0, 3);
 	}
 }

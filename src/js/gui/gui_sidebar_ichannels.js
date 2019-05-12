@@ -201,7 +201,7 @@ export default ShaderBoy.gui_sidebar_ichannels = { // comment out on codepen.
         setBufferById(curBufName, 1);
         setBufferById(curBufName, 2);
         setBufferById(curBufName, 3);
-        ShaderBoy.bufferManager.buildShaderFromBuffers();
+        ShaderBoy.bufferManager.buildShaderFromBuffers(false);
         ShaderBoy.bufferManager.setFBOsProps();
     },
 

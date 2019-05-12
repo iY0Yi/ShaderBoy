@@ -21,10 +21,10 @@
         display: flex;
         justify-content: flex-start;
         height: 100%;
-        width: $gui-size-unit*2.5*6+$gui-size-unit*3;
+        width: $gui-size-unit*2*6+$gui-size-unit*3;
 
         @include mq {
-            width: $gui-size-unit-sp*2.5*6+$gui-size-unit-sp*3;
+            width: $gui-size-unit-sp*2*6+$gui-size-unit-sp*3;
         }
 
         .ghdr-btn {
@@ -40,7 +40,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                width: $gui-size-unit*2.5;
+                width: $gui-size-unit*2;
 
                 line-height: 0.4;
 
@@ -168,7 +168,122 @@
                 }
 
             }
+
+            &.btn-snd {
+                font-size: 18px;
+                color: $col-frnt;
+                width: $gui-size-unit;
+
+                @include mq {
+                    width: $gui-size-unit-sp;
+                }
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                vertical-align: middle;
+                line-height: 2.0;
+                
+                @extend %btn-interact;
+
+                &.inc>div>div{
+                    transition: all $anm-middle;
+                }
+                &.dec>div>div {
+                    transition: all $anm-zero;
+                }
+
+                &.inc:hover>div>div {
+                    cursor: pointer;
+                    min-height: 9px;
+                }
+
+                &.dec:hover>div>div {
+                    cursor: pointer;
+                    min-height: 0px;
+                }
+
+                &.dec>div>div {
+                    min-height: 2px;
+                }
+
+                // &.inc::after,
+                // &.dec::after {
+                //     content: '';
+                //     display: block;
+                //     width: 20px;
+                //     height: 20px;
+                //     background-repeat: no-repeat;
+                //     background-position: center center;
+                //     background-image: url('data:image/svg+xml;charset=utf8,%3Csvg%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2212.12px%22%20height%3D%228.32px%22%20viewBox%3D%220%200%2012.12%208.32%22%20style%3D%22enable-background%3Anew%200%200%2012.12%208.32%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23D8D4C5%3B%7D%3C%2Fstyle%3E%3Cdefs%3E%3C%2Fdefs%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M11.15%2C3.19c-0.54%2C0-0.97%2C0.44-0.97%2C0.97c0%2C1.22-0.71%2C2.22-1.57%2C2.22S7.03%2C5.38%2C7.03%2C4.16%20C7.03%2C1.87%2C5.45%2C0%2C3.52%2C0C1.58%2C0%2C0%2C1.87%2C0%2C4.16C0%2C4.7%2C0.44%2C5.13%2C0.97%2C5.13S1.94%2C4.7%2C1.94%2C4.16c0-1.22%2C0.71-2.22%2C1.57-2.22%20c0.87%2C0%2C1.57%2C0.99%2C1.57%2C2.22c0%2C2.29%2C1.58%2C4.16%2C3.52%2C4.16c1.94%2C0%2C3.52-1.87%2C3.52-4.16C12.12%2C3.62%2C11.68%2C3.19%2C11.15%2C3.19z%22%2F%3E%3C%2Fsvg%3E');
+                //     // border-radius: 10px;
+
+                //     @include mq {
+                //         // width: 12px;// height: 12px;
+                //         // background: $col-frnt-dark-darken-sp;
+                //     }
+                // }
+
+                // &.inc::after {
+                //     // background: $col-bg-bright-lighten;
+                //     opacity: 0.5;
+
+                //     @include mq {
+                //         // background: $col-frnt-dark-darken-sp;
+                //     }
+                // }
+
+                // &.dec::after {
+                //     // background: $col-frnt;
+                //     opacity: 1.0;
+                // }
+
+                // &:hover+&.dec::after {
+                //     cursor: pointer;
+                //     // background: $col-frnt;
+                //     opacity: 1.0;
+                // }
+
+                // &:hover+&.inc::after {
+                //     cursor: pointer;
+                //     // background: $col-frnt;
+                //     opacity: 1.0;
+                // }
+
+            }
         }
+    }
+
+    #cnv-wave {
+        width: 9px;
+        height: 9px;
+        overflow: hidden;
+        // position: absolute;
+        position: relative;
+        display: flex;
+        // top: 16.5px;
+        // left: 16.5px;
+        background: $col-bg-bright;
+    }
+
+    .wave {
+        position: absolute;
+        width: 3px;
+        max-height: 9px;
+        background: $col-frnt;
+        bottom: 0px;
+    }
+
+    #wave0 {
+        left: 0px;
+    }
+
+    #wave1 {
+        left: 3px;
+    }
+
+    #wave2 {
+        left: 6px;
     }
 
     #fpscounter {

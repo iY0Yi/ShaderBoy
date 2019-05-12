@@ -186,15 +186,21 @@ export default ShaderBoy.gui = {
 				if (ShaderBoy.isRecording !== true)
 				{
 					ShaderBoy.isPlaying = !ShaderBoy.isPlaying;
-					// ShaderBoy.time.pause();
+					if (ShaderBoy.buffers['Sound'].active)
+					{
+						ShaderBoy.soundRenderer.pause();
+					}
 				}
 			},
 			'Alt-Down': function ()
 			{
 				gui_timeline.reset();
-				if (ShaderBoy.isRecording !== true)
+				if (ShaderBoy.isRecording !== true && ShaderBoy.isPlaying)
 				{
-					// ShaderBoy.time.reset();
+					if (ShaderBoy.buffers['Sound'].active)
+					{
+						ShaderBoy.soundRenderer.restart();
+					}
 				}
 			},
 			'Alt-Enter': function (cm) { ShaderBoy.bufferManager.buildShaderFromBuffers(); },
@@ -341,7 +347,7 @@ export default ShaderBoy.gui = {
 			}
 		};
 
-		this.editorShortcuts[CMD + '-N'] = function ()
+		this.editorShortcuts['Shift-' + CMD + '-Alt-N'] = function ()
 		{
 			if (!ShaderBoy.runInDevMode)
 			{
@@ -444,14 +450,12 @@ export default ShaderBoy.gui = {
 					if (ShaderBoy.isRecording !== true)
 					{
 						ShaderBoy.isPlaying = !ShaderBoy.isPlaying;
-						// ShaderBoy.time.pause();
 					}
 				});
 				key('⌥+down', function ()
 				{
 					if (ShaderBoy.isRecording !== true)
 					{
-						// ShaderBoy.time.reset();
 					}
 				});
 
@@ -587,6 +591,14 @@ export default ShaderBoy.gui = {
 			ShaderBoy.util.requestFullScreen();
 		};
 
+		this.editorShortcuts['Shift-' + CMD + '-Alt-M'] = function ()
+		{
+			if (ShaderBoy.buffers['Sound'].active)
+			{
+				ShaderBoy.soundRenderer.mute();
+			}
+		};
+
 		this.editorShortcuts['Shift-' + CMD + '-Alt-R'] = function ()
 		{
 			ShaderBoy.gui.recEl = document.getElementById('ghdr-rec-base');
@@ -658,14 +670,12 @@ export default ShaderBoy.gui = {
 					if (ShaderBoy.isRecording !== true)
 					{
 						ShaderBoy.isPlaying = !ShaderBoy.isPlaying;
-						// ShaderBoy.time.pause();
 					}
 				});
 				key('⌥+down', function ()
 				{
 					if (ShaderBoy.isRecording !== true)
 					{
-						// ShaderBoy.time.reset();
 					}
 				});
 				let toEditorMode = function ()

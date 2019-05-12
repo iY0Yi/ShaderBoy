@@ -25,7 +25,7 @@ export default ShaderBoy.renderer = {
 		for (let i = 0; i < len; i++)
 		{
 			const name = ShaderBoy.activeBufferIds[i];
-			if (ShaderBoy.buffers[name].isRenderable)
+			if (ShaderBoy.buffers[name].isRenderable && ShaderBoy.buffers[name].shader !== null)
 			{
 				let buffer = ShaderBoy.buffers[name];
 				buffer.shader.begin();
@@ -36,6 +36,7 @@ export default ShaderBoy.renderer = {
 				buffer.shader.uniforms.iFrameRate = ShaderBoy.uniforms.iFrameRate;
 				buffer.shader.uniforms.iDate = ShaderBoy.uniforms.iDate;
 				buffer.shader.uniforms.iMouse = [ShaderBoy.uniforms.iMouse[0] / ShaderBoy.renderScale, ShaderBoy.uniforms.iMouse[1] / ShaderBoy.renderScale, ShaderBoy.uniforms.iMouse[2] / ShaderBoy.renderScale, ShaderBoy.uniforms.iMouse[3] / ShaderBoy.renderScale];
+				buffer.shader.uniforms.iSampleRate = 44100;
 				buffer.shader.uniforms.iChannel0 = 0;
 				buffer.shader.uniforms.iChannel1 = 1;
 				buffer.shader.uniforms.iChannel2 = 2;
@@ -43,15 +44,20 @@ export default ShaderBoy.renderer = {
 				for (let j = 0; j < 4; j++)
 				{
 					const iChannelSetting = buffer.iChannel[j];
+					let texture;
 					if (iChannelSetting !== null)
 					{
 						buffer.needSwap = (name === iChannelSetting.asset);
-						let texture = ShaderBoy.buffers[iChannelSetting.asset].textures[(buffer.needSwap) ? 1 : 0];
-						buffer.shader.setTextureSlot(j);
+						texture = ShaderBoy.buffers[iChannelSetting.asset].textures[(buffer.needSwap) ? 1 : 0];
 						bufferManager.setSamplerFilter(texture, iChannelSetting.filter);
 						bufferManager.setSamplerWrap(texture, iChannelSetting.wrap);
-						gl.bindTexture(gl.TEXTURE_2D, texture);
 					}
+					else
+					{
+						texture = bufferManager.tempTexture;
+					}
+					buffer.shader.setTextureSlot(j);
+					gl.bindTexture(gl.TEXTURE_2D, texture);
 				}
 				buffer.shader.setKnobsUniforms();
 				buffer.shader.setMIDIUniforms();
@@ -65,9 +71,9 @@ export default ShaderBoy.renderer = {
 		ShaderBoy.screenShader.begin();
 		ShaderBoy.screenShader.uniforms.iResolution = [ShaderBoy.uniforms.iResolution[0] * ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[1] * ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[2]];
 		ShaderBoy.screenShader.uniforms.frameTexture = 0;
-		bufferManager.setSamplerFilter(ShaderBoy.buffers['MainImage'].textures[0], 'nearest');
-		bufferManager.setSamplerWrap(ShaderBoy.buffers['MainImage'].textures[0], 'clamp');
-		ShaderBoy.screenShader.setTexture2d(0, ShaderBoy.buffers['MainImage'].textures[0]);
+		bufferManager.setSamplerFilter(ShaderBoy.buffers['Image'].textures[0], 'nearest');
+		bufferManager.setSamplerWrap(ShaderBoy.buffers['Image'].textures[0], 'clamp');
+		ShaderBoy.screenShader.setTexture2d(0, ShaderBoy.buffers['Image'].textures[0]);
 		ShaderBoy.screenShader.setUniforms();
 		ShaderBoy.screenShader.drawScreen();
 		ShaderBoy.screenShader.end();

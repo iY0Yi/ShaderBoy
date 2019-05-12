@@ -39,7 +39,8 @@ export default ShaderBoy.io = {
 			'BufferB': 'buf_b.fs',
 			'BufferC': 'buf_c.fs',
 			'BufferD': 'buf_d.fs',
-			'MainImage': 'main.fs',
+			'Image': 'main.fs',
+			'Sound': 'sound.fs',
 			'Common': 'common.fs'
 		};
 
@@ -165,17 +166,28 @@ export default ShaderBoy.io = {
 			ShaderBoy.buffers['BufferB'].cm = CodeMirror.Doc(ShaderLib.shader['BufferB'], 'x-shader/x-fragment');
 			ShaderBoy.buffers['BufferC'].cm = CodeMirror.Doc(ShaderLib.shader['BufferC'], 'x-shader/x-fragment');
 			ShaderBoy.buffers['BufferD'].cm = CodeMirror.Doc(ShaderLib.shader['BufferD'], 'x-shader/x-fragment');
-			ShaderBoy.buffers['MainImage'].cm = CodeMirror.Doc(ShaderLib.shader['MainImage'], 'x-shader/x-fragment');
-			ShaderBoy.buffers['MainImage'].active = true;
+			ShaderBoy.buffers['Image'].cm = CodeMirror.Doc(ShaderLib.shader['Image'], 'x-shader/x-fragment');
+			ShaderBoy.buffers['Sound'].cm = CodeMirror.Doc(ShaderLib.shader['Sound'], 'x-shader/x-fragment');
 
-			ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000, function ()
-			{
-				document.getElementById('cvr-loading').classList.add('loading-hide');
-				setTimeout(() =>
-				{
-					document.getElementById('cvr-loading').classList.add('loading-hidden');
-				}, 400);
-			});
+			ShaderBoy.buffers['Common'].active = ShaderBoy.config.buffers['Common'].active;
+			ShaderBoy.buffers['BufferA'].active = ShaderBoy.config.buffers['BufferA'].active;
+			ShaderBoy.buffers['BufferB'].active = ShaderBoy.config.buffers['BufferB'].active;
+			ShaderBoy.buffers['BufferC'].active = ShaderBoy.config.buffers['BufferC'].active;
+			ShaderBoy.buffers['BufferD'].active = ShaderBoy.config.buffers['BufferD'].active;
+			ShaderBoy.buffers['Image'].active = ShaderBoy.config.buffers['Image'].active;
+			ShaderBoy.buffers['Sound'].active = ShaderBoy.config.buffers['Sound'].active;
+			ShaderBoy.buffers['Image'].active = true;
+
+			ShaderBoy.gui_header.resetBtns(ShaderBoy.buffers);
+
+			// ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000, function ()
+			// {
+			// 	document.getElementById('cvr-loading').classList.add('loading-hide');
+			// 	setTimeout(() =>
+			// 	{
+			// 		document.getElementById('cvr-loading').classList.add('loading-hidden');
+			// 	}, 400);
+			// });
 
 			ShaderBoy.bufferManager.buildShaderFromBuffers();
 			ShaderBoy.bufferManager.setFBOsProps();
@@ -196,7 +208,7 @@ export default ShaderBoy.io = {
 			console.log('timelineObj: ', timelineObj);
 			gui_timeline.guidata = timelineObj;
 
-			ShaderBoy.editor.setBuffer('MainImage', true);
+			ShaderBoy.editor.setBuffer('Image', true);
 
 			ShaderBoy.isPlaying = true;
 
@@ -290,7 +302,8 @@ export default ShaderBoy.io = {
 		gdrive.createTextFile(id, 'buf_b.fs', ShaderLib.shader['BufferB'], load);
 		gdrive.createTextFile(id, 'buf_c.fs', ShaderLib.shader['BufferC'], load);
 		gdrive.createTextFile(id, 'buf_d.fs', ShaderLib.shader['BufferD'], load);
-		gdrive.createTextFile(id, 'main.fs', ShaderLib.shader['MainImage'], load);
+		gdrive.createTextFile(id, 'main.fs', ShaderLib.shader['Image'], load);
+		gdrive.createTextFile(id, 'sound.fs', ShaderLib.shader['Sound'], load);
 
 		ShaderBoy.gui_header.setStatus('suc1', 'New.', 3000);
 		console.log('New shader files were created.');
@@ -356,12 +369,13 @@ export default ShaderBoy.io = {
 		gdrive.saveTextFile('_guitimeline.json', gdrive.ids_shaderFiles['_guitimeline.json'].id, JSON.stringify(gui_timeline.guidata, null, "\t"), confirmSaving);
 		// gdrive.saveTextFile('config.json', gdrive.ids_shaderFiles['config.json'].id, JSON.stringify(JSON.parse(ShaderBoy.buffers['Config'].cm.getValue()), null, "\t"), confirmSaving);
 		gdrive.saveTextFile('config.json', gdrive.ids_shaderFiles['config.json'].id, JSON.stringify(ShaderBoy.config, null, "\t"), confirmSaving);
-		gdrive.saveTextFile('main.fs', gdrive.ids_shaderFiles['main.fs'].id, ShaderBoy.buffers['MainImage'].cm.getValue(), confirmSaving);
+		gdrive.saveTextFile('main.fs', gdrive.ids_shaderFiles['main.fs'].id, ShaderBoy.buffers['Image'].cm.getValue(), confirmSaving);
 		if (ShaderBoy.buffers['Common'].active === true) gdrive.saveTextFile('common.fs', gdrive.ids_shaderFiles['common.fs'].id, ShaderBoy.buffers['Common'].cm.getValue(), confirmSaving);
 		if (ShaderBoy.buffers['BufferA'].active === true) gdrive.saveTextFile('buf_a.fs', gdrive.ids_shaderFiles['buf_a.fs'].id, ShaderBoy.buffers['BufferA'].cm.getValue(), confirmSaving);
 		if (ShaderBoy.buffers['BufferB'].active === true) gdrive.saveTextFile('buf_b.fs', gdrive.ids_shaderFiles['buf_b.fs'].id, ShaderBoy.buffers['BufferB'].cm.getValue(), confirmSaving);
 		if (ShaderBoy.buffers['BufferC'].active === true) gdrive.saveTextFile('buf_c.fs', gdrive.ids_shaderFiles['buf_c.fs'].id, ShaderBoy.buffers['BufferC'].cm.getValue(), confirmSaving);
 		if (ShaderBoy.buffers['BufferD'].active === true) gdrive.saveTextFile('buf_d.fs', gdrive.ids_shaderFiles['buf_d.fs'].id, ShaderBoy.buffers['BufferD'].cm.getValue(), confirmSaving);
+		if (ShaderBoy.buffers['Sound'].active === true) gdrive.saveTextFile('sound.fs', gdrive.ids_shaderFiles['sound.fs'].id, ShaderBoy.buffers['Sound'].cm.getValue(), confirmSaving);
 		localforage.setItem('renderScale', ShaderBoy.renderScale, function (err) { if (err) { console.log('db error...') } });
 		localforage.setItem('textSize', ShaderBoy.textSize, function (err) { if (err) { console.log('db error...') } });
 	},
@@ -380,7 +394,7 @@ export default ShaderBoy.io = {
 			console.log('io: Loaded all files...');
 			ShaderBoy.bufferManager.buildShaderFromBuffers();
 			ShaderBoy.bufferManager.setFBOsProps();
-			ShaderBoy.editor.setBuffer('MainImage', true);
+			ShaderBoy.editor.setBuffer('Image', true);
 			if (ShaderBoy.io.isNewShader === true)
 			{
 				gdrive.saveThumbFile('thumb.png', ShaderBoy.canvas, function (res, err) { console.log(res, err, 'thumbnail was saved.'); });
@@ -388,15 +402,6 @@ export default ShaderBoy.io = {
 			}
 
 			ShaderBoy.gui_header.resetBtns(ShaderBoy.config.buffers);
-
-			ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000, function ()
-			{
-				document.getElementById('cvr-loading').classList.add('loading-hide');
-				setTimeout(() =>
-				{
-					document.getElementById('cvr-loading').classList.add('loading-hidden');
-				}, 400);
-			});
 			ShaderBoy.isPlaying = true;
 		}
 	},
@@ -412,6 +417,11 @@ export default ShaderBoy.io = {
 	loadShader: function (sn, initLoading)
 	{
 		ShaderBoy.io.activateShader(sn);
+
+		if (ShaderBoy.buffers['Sound'].active === true)
+		{
+			ShaderBoy.soundRenderer.stop();
+		}
 
 		console.log('initLoading: ', initLoading);
 		if (initLoading === true)
@@ -537,6 +547,11 @@ export default ShaderBoy.io = {
 
 								let configObj = JSON.parse(value);
 								ShaderBoy.config = configObj;
+								if (configObj.buffers['Sound'] === undefined)
+								{
+									let defcon = JSON.parse(ShaderLib.shader['Config']);
+									configObj.buffers['Sound'] = ShaderBoy.config.buffers['Sound'] = defcon.buffers['Sound'];
+								}
 								console.log('configObj: ', configObj);
 								for (const key in configObj.buffers)
 								{
@@ -609,6 +624,12 @@ export default ShaderBoy.io = {
 
 
 								let bufferConfig = configObj.buffers;
+								if ('MainImage' in bufferConfig)
+								{
+									Object.defineProperty(bufferConfig, 'Image',
+										Object.getOwnPropertyDescriptor(bufferConfig, 'MainImage'));
+									delete bufferConfig['MainImage'];
+								}
 
 								console.log(bufferConfig['Common'].active);
 								ShaderBoy.buffers['Common'].active = bufferConfig['Common'].active;
@@ -695,11 +716,52 @@ export default ShaderBoy.io = {
 									});
 								}
 
-								console.log(bufferConfig['MainImage'].active);
-								ShaderBoy.buffers['MainImage'].active = bufferConfig['MainImage'].active;
-								if (ShaderBoy.buffers['MainImage'].active === true)
+								console.log(bufferConfig['Sound'].active);
+								if (bufferConfig['Sound'] !== undefined)
 								{
-									let id = gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['MainImage']].id;
+									ShaderBoy.buffers['Sound'].active = bufferConfig['Sound'].active;
+								}
+								else
+								{
+									ShaderBoy.buffers['Sound'].active = false;
+									let defcon = JSON.parse(ShaderLib.shader['Config']);
+									bufferConfig['Sound'] = defcon['Sound'];
+								}
+
+								if (gdrive.ids_shaderFiles['sound.fs'] === undefined)
+								{
+									gdrive.createTextFile(gdrive.ID_DIR_SHADER, 'sound.fs', ShaderLib.shader['Sound'], function (file)
+									{
+										gdrive.ids_shaderFiles['sound.fs'] = {};
+										gdrive.ids_shaderFiles['sound.fs']["name"] = file.name;
+										gdrive.ids_shaderFiles['sound.fs']["id"] = file.id;
+										gdrive.ids_shaderFiles['sound.fs']["content"] = '';
+										console.log('sound.fs was created.');
+									});
+								}
+								else
+								{
+									if (ShaderBoy.buffers['Sound'].active === true)
+									{
+										let id = gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['Sound']].id;
+										gdrive.getContentBody(id, function (res)
+										{
+											let value = res.body;
+											if (!value)
+											{
+												value = ShaderLib.shader['Sound'];
+											}
+											ShaderBoy.buffers['Sound'].cm = CodeMirror.Doc(value, 'x-shader/x-fragment');
+											ShaderBoy.io.isLoaded('Sound');
+										});
+									}
+								}
+
+								console.log(bufferConfig['Image'].active);
+								ShaderBoy.buffers['Image'].active = bufferConfig['Image'].active;
+								if (ShaderBoy.buffers['Image'].active === true)
+								{
+									let id = gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['Image']].id;
 									gdrive.getContentBody(id, function (res)
 									{
 										let value = res.body;
@@ -707,8 +769,8 @@ export default ShaderBoy.io = {
 										{
 											value = ShaderLib.shader.mainFS;
 										}
-										ShaderBoy.buffers['MainImage'].cm = CodeMirror.Doc(value, 'x-shader/x-fragment');
-										ShaderBoy.io.isLoaded('MainImage');
+										ShaderBoy.buffers['Image'].cm = CodeMirror.Doc(value, 'x-shader/x-fragment');
+										ShaderBoy.io.isLoaded('Image');
 									});
 								}
 
