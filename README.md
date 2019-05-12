@@ -70,6 +70,7 @@ You can install the app from [here](https://shaderboy.net/).
 | **Save shader files** | ctrl+S | ctrl +S | ⌘+S |
 | **Create a new shader** | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N | ⌘+⇧+⌥+N |
 | **Show shaders list** | ctrl+O | ctrl+O | ⌘+O |
+| **Mute sound** | ctrl+M | ctrl+M | ⌘+M |
 
 ##### *And some of Sublime Text bindings by Codemirror.
 </br>
@@ -83,7 +84,7 @@ You can install the app from [here](https://shaderboy.net/).
 ### Compatibility
 - [X] Shadertoy uniform variables
 - [X] Multipass shader
-- [ ] Sound shader
+- [X] Sound shader
 - [ ] Official assets(textures)
 
 ### Supported Shadertoy Uniforms  
@@ -105,14 +106,15 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] supports MIDI controller :PC only
 - [X] GUI for Shader list
 - [X] GUI for iChannels
+- [ ] Auto completion
 - [ ] snippets for writing SDF(Signed Distance field)
 - [ ] Multiple editor pane
   
 ### Other
 - [X] GoogleDrive integration
 - [X] Capturing shader to movie file.(WebM/PNG/JPG/GIF)
-- [ ] Witout Google account(localStrage)
-- [ ] Themes for editor pane
+- [X] Witout Google account(for testing)
+- [X] Themes for editor pane
 </br>
 </br>
 </br>
