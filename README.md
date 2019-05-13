@@ -68,9 +68,9 @@ You can install the app from [here](https://shaderboy.net/).
 | **Hide/Show iChannel GUI** | ctrl+⇧+⌥+A | ctrl+⇧+⌥+A | ⌘+⇧+⌥+A |
 | **Hide/Show Recording GUI** | --- | ctrl+⇧+⌥+R | ⌘+⇧+⌥+R |
 | **Save shader files** | ctrl+S | ctrl +S | ⌘+S |
-| **Create a new shader** | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N | ⌘+⇧+⌥+N |
+| **Create a new shader** | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N |
 | **Show shaders list** | ctrl+O | ctrl+O | ⌘+O |
-| **Mute sound** | ctrl+M | ctrl+M | ⌘+M |
+| **Mute sound** | ctrl+M | ctrl+⇧+⌥+M | ctrl+⇧+⌥+M |
 
 ##### *And some of Sublime Text bindings by Codemirror.
 </br>
