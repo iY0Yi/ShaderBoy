@@ -30,7 +30,7 @@ export default ShaderBoy.gdrive = {
         authDiv.classList.add('hide');
 
         this.CLIENT_ID = '98134852029-6pccdhcarbel0qfju1f2naj1992697qu.apps.googleusercontent.com';
-        this.SCOPES = 'https://www.googleapis.com/auth/drive';
+        this.SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
         this.ID_DIR_APP;
         this.ID_DIR_SHADER;
