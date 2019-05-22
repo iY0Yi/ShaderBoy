@@ -11,7 +11,7 @@ ShaderBoy uses Google Drive to store your shaders. From any device on which you 
 
 Enjoy ShaderBoy!
 ##### *This is not an official Shadertoy application.* 
-##### *Bug reports, feature requests, and [beer](https://www.paypal.me/atsushihashimoto) are welcome.*
+##### *Bug reports, feature requests, and [🍺](https://www.paypal.me/atsushihashimoto/5USD) are welcome.*
 
 </br>
 </br>
@@ -108,6 +108,7 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] GUI for Shader list
 - [X] GUI for iChannels
 - [ ] Auto completion
+- [ ] Inlined Khronos doc
 - [ ] snippets for writing SDF(Signed Distance field)
 - [ ] Multiple editor pane
   
@@ -171,7 +172,7 @@ ShaderBoy depends on some awesome js libralies.</br>
 </br>
 
 # Beer
-[Paypal.me](https://www.paypal.me/atsushihashimoto)</br>
+[Paypal.me](https://www.paypal.me/atsushihashimoto/5USD)🍺</br>
 </br>
 </br>
 </br>
