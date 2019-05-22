@@ -114,6 +114,7 @@ You can install the app from [here](https://shaderboy.net/).
 - [ ] snippets for writing SDF(Signed Distance field)
 - [ ] Multiple editor pane
 - [ ] Insert value with inlined GUIs.(https://github.com/patriciogonzalezvivo/glslEditor)
+- [ ] Break point.(https://github.com/patriciogonzalezvivo/glslEditor)
   
 ### Other
 - [X] GoogleDrive integration
