@@ -108,6 +108,7 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] GUI for Shader list
 - [X] GUI for iChannels
 - [ ] Auto completion
+- [ ] Inlined Khronos doc
 - [ ] snippets for writing SDF(Signed Distance field)
 - [ ] Multiple editor pane
   
