@@ -170,8 +170,8 @@ ShaderBoy depends on some awesome js libralies.</br>
 </br>
 </br>
 
-# Beer🍺
-[Paypal.me](https://www.paypal.me/atsushihashimoto)</br>
+# Beer
+[Paypal.me](https://www.paypal.me/atsushihashimoto)</br>🍺
 </br>
 </br>
 </br>
