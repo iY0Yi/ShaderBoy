@@ -87,6 +87,7 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] Shadertoy uniform variables
 - [X] Multipass shader
 - [X] Sound shader
+- [ ] Display number of chars
 - [ ] Official assets(textures)
 
 ### Supported Shadertoy Uniforms  
@@ -112,6 +113,7 @@ You can install the app from [here](https://shaderboy.net/).
 - [ ] Inlined Khronos doc
 - [ ] snippets for writing SDF(Signed Distance field)
 - [ ] Multiple editor pane
+- [ ] Insert value with inlined GUIs.(https://github.com/patriciogonzalezvivo/glslEditor)
   
 ### Other
 - [X] GoogleDrive integration
