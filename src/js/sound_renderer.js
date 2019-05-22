@@ -55,6 +55,7 @@ export default ShaderBoy.soundRenderer = {
     initContext()
     {
         console.log('soundRenderer.initContext()');
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
         this.ctx = new AudioContext();
         this.mGainNode = this.ctx.createGain();
         this.mGainNode.connect(this.ctx.destination);
