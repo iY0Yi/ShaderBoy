@@ -8,7 +8,7 @@
 //                          
 //                          
 
-import jQuery from 'jquery';
+import $ from 'jquery';
 import ShaderBoy from './shaderboy';
 import time from './time';
 import io from './io';
@@ -33,16 +33,16 @@ import './codemirror/theme/3024-monotone.css';
 ShaderBoy.init = function ()
 {
 	// Convert "img" tag to "svg" tag to attach styles.
-	jQuery('img').each(function ()
+	$('img').each(function ()
 	{
-		var $img = jQuery(this);
+		var $img = $(this);
 		var imgID = $img.attr('id');
 		var imgClass = $img.attr('class');
 		var imgURL = $img.attr('src');
-		jQuery.get(imgURL, function (data)
+		$.get(imgURL, function (data)
 		{
 			// Get the SVG tag, ignore the rest
-			var $svg = jQuery(data).find('svg');
+			var $svg = $(data).find('svg');
 
 			if (typeof imgID !== 'undefined')
 			{// Add replaced image's ID to the new SVG
@@ -72,6 +72,22 @@ ShaderBoy.init = function ()
 	if (ShaderBoy.OS === 'Unknown OS')
 	{
 		ShaderBoy.OS = 'Android';
+	}
+
+	if (ShaderBoy.OS === 'iOS')
+	{
+		// Set readonly to input and textarea and disabled to select other than the current focus.
+		$('input, textarea, select').on('focus', function ()
+		{
+			$('input, textarea').not(this).attr("readonly", "readonly");
+			$('select').not(this).attr("disabled", "disabled");
+		});
+		// Remove readonly and disabled when the focus goes out.
+		$('input, textarea, select').on('blur', function ()
+		{
+			$('input, textarea').removeAttr("readonly");
+			$('select').removeAttr("disabled");
+		});
 	}
 
 	console.log('ShaderBoy.OS', ShaderBoy.OS);

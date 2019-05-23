@@ -351,6 +351,7 @@ export default ShaderBoy.gui = {
 		{
 			if (!ShaderBoy.runInDevMode)
 			{
+				document.getElementById("div-textarea").contentEditable = "true";
 				gui_panel_textform.reset('New Shader Name', function ()
 				{
 					console.log(ShaderBoy.gui_panel_textform.result);
@@ -365,6 +366,7 @@ export default ShaderBoy.gui = {
 				ShaderBoy.editor.codemirror.display.input.blur();
 				key('esc', function ()
 				{
+					document.getElementById("div-textarea").contentEditable = "false";
 					gui_panel_textform.reset('', function () { });
 					ShaderBoy.isPlaying = true;
 					key.unbind('esc');
