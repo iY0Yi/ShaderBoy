@@ -35,47 +35,6 @@ let shadertoyBuiltins = ("sin cos tan asin acos atan atan radians degrees " +
 
 // Util functions
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Separate line in words with token. Keep token as a word.
-let replaceAndSeparate = function (wordList, reg, str)
-{
-    let id = 0;
-    let word = '';
-    while (true)
-    {
-        word = wordList[id];
-        if (word !== undefined && word.match(reg) && word.length > 1)
-        {
-            word = word.split(reg);
-            wordList.splice(id, 1);
-
-            let addcnt = 0;
-            let cnt = 0;
-            for (let i = 0; i < word.length; i++)
-            {
-                if (word[i] === '' && i < word.length - 1)
-                {
-                    wordList.splice(id + i + cnt, 0, str);
-                    addcnt++;
-                }
-                else if (word[i] !== '')
-                {
-                    wordList.splice(id + i + cnt, 0, word[i]);
-                    addcnt++;
-                    if (word[i] !== '' && i < word.length - 1)
-                    {
-                        wordList.splice(id + i + cnt + 1, 0, str);
-                        cnt++;
-                        addcnt++;
-                    }
-                }
-            }
-            id += addcnt - 1;
-        }
-        id++;
-        if (id >= wordList.length) break;
-    }
-    return wordList;
-};
 
 // Check if the word is a type.
 let isType = function (str)
@@ -87,177 +46,8 @@ let isType = function (str)
     return false;
 };
 
-let sanitize = function (lineStr)
-{
-    let res = '';
-    if (lineStr.match(/#define/))
-    {
-        res =
-            res = res.replace(/(?<=[.])([xyz]+)/g, '');
-        res = res.replace(/[^ a-zA-Z0-9;]/g, ' ');
-        res = res.replace(/(?<=[ ])([0-9]?)(?=[ ])/g, '');
-        res = res.replace(/[ ]+/g, ' ');
-        element = element.split('//')[0].trim();
-        element = element.replace('{', '{;');
-        element = element.replace('}', '');
-    }
-    else
-    {
-        if (lineStr.match(/{/))
-        {
-
-        }
-        else
-        {
-
-        }
-    }
-}
-// Core function for analyzing code.
-// let analyzeLine = function (lineStr)
-// {
-//     let newWords = [];
-
-//     let arrayed = lineStr.split(' ');
-//     if (isType(arrayed[0]))
-//     {
-//         let isFuncDefLine = arrayed.some(item => item.match('{'));
-
-//         if (arrayed[0] === '#define')
-//         {
-//             lineStr = arrayed[0] + " " + arrayed[1];
-//         }
-
-//         if (!isFuncDefLine)
-//         {
-//             // Remove brackets with inside...
-//             let id = 0;
-//             arrayed = replaceAndSeparate([lineStr], /\(/, '(');
-//             lineStr = '';
-//             for (let i = 0; i < arrayed.length; i++)
-//             {
-//                 if (arrayed[i].match(/\)/))
-//                 {
-//                     let arr = replaceAndSeparate([arrayed[i]], /\)/, ')');
-//                     arrayed[i] = arr[arr.length - 1];
-//                 }
-//                 lineStr += arrayed[i];
-//             }
-
-//             // Sanitize for multiple definition. For each variavle words...
-//             if (lineStr.match(/\,/))
-//             {
-//                 // Remove after "="...
-//                 let arr = replaceAndSeparate([lineStr], /\,/, ',');
-//                 lineStr = '';
-//                 for (let i = 0; i < arr.length; i++)
-//                 {
-//                     lineStr += replaceAndSeparate([arr[i]], /\=/, '=')[0];
-//                 }
-
-//                 // Remove empties...
-//                 arr = lineStr.split(' ');
-//                 lineStr = arr[0] + ' '; // First is type keyword.
-//                 for (let i = 1; i < arr.length; i++)
-//                 {
-//                     lineStr += arr[i];
-//                 }
-//             }
-
-//             // Sanitize for single definition....
-//             if (lineStr.match(/\=/))
-//             {
-//                 lineStr = replaceAndSeparate([lineStr], /\=/, '=')[0];
-//             }
-
-//             // Last sanitize:
-//             // Remove fragment alphabets, (, ), ., symbols...
-//             if (lineStr.match(/\(|\)/))
-//             {
-//                 let arr = lineStr.split(',');
-//                 lineStr = arr[0];
-//                 for (let i = 1; i < arr.length; i++)
-//                 {
-//                     if (!arr[i].match(/\(|\)|\.|\W/) && arr[i].match(/\D/))
-//                     {
-//                         lineStr += ',' + arr[i]
-//                     }
-//                 }
-//             }
-//         }
-
-//         if (isFuncDefLine)
-//         {
-//             // Registration Functions...
-//             let arr = lineStr.split('(');
-//             const typename = arr[0].split(' ');
-//             const type = typename[0];
-//             const name = typename[1];
-
-//             let fnargs = [];
-
-//             // Argument as variables
-//             let args = arr[0];
-//             if (arr[1])
-//             {
-//                 args = arr[1].replace('){', '');
-//                 args = args.split(',');
-//             }
-//             for (let i = 0; i < args.length; i++)
-//             {
-//                 const argTypeName = args[i].split(' ');
-//                 for (let j = 0; j < argTypeName.length; j++)
-//                 {
-//                     if (isType(argTypeName[j]))
-//                     {
-//                         let vargs = new Keyword({
-//                             type: argTypeName[j],
-//                             name: argTypeName[j + 1],
-//                             render: '<span class="autocomp-name">' + argTypeName[j + 1] + '</span><div class="icon-code-usr"></div><span class="autocomp-type">' + argTypeName[j] + '</span>'
-//                         });
-//                         newWords.push(vargs); // Register args as variables
-//                         fnargs.push(vargs);
-//                     }
-//                 }
-//             }
-//             let fxName = name + '(';
-//             for (let i = 0; i < fnargs.length; i++)
-//             {
-//                 fxName += fnargs[i].type;
-//                 fxName += '_';
-//                 fxName += fnargs[i].name;
-//                 fxName += (i < fnargs.length - 1) ? ', ' : '';
-//             }
-//             fxName += ')';
-
-//             newWords.push(new Keyword({
-//                 type: type,
-//                 name: fxName,
-//                 args: fnargs,
-//                 render: '<span class="autocomp-name">' + name + '</span><div class="icon-code-usr"></div><span class="autocomp-type">' + 'fx: ' + type + '</span>'
-//             }));
-//         }
-//         else
-//         {
-//             // Registration Variables...
-//             let arr = lineStr.split(' ');
-//             let type = arr[0];
-//             arr = arr[1].split(',');
-
-//             for (let i = 0; i < arr.length; i++)
-//             {
-//                 newWords.push(new Keyword({
-//                     type: type,
-//                     name: arr[i],
-//                     render: '<span class="autocomp-name">' + arr[i] + '</span><div class="icon-code-usr"></div><span class="autocomp-type">' + type + '</span>'
-//                 }));
-//             }
-//         }
-//     }
-
-//     return newWords;
-// };
-
+let strPrevStructCode = '';
+let arrPrevStructs = [];
 let analizeStructs = (str) =>
 {
     let result = [];
@@ -268,20 +58,20 @@ let analizeStructs = (str) =>
     }
     else
     {
-        let strStructs = [];
+        let arrNewStructs = [];
         console.log('str: ', str);
         while (str.match(/struct/g))
         {
             let startPos = str.indexOf('struct');
             let endPos = str.indexOf('}');
-            strStructs.push(str.substr(startPos, endPos - startPos + 1));
-            let strFull = strStructs[strStructs.length - 1];
-            str = str.replace(strFull, '');
+            arrNewStructs.push(str.substr(startPos, endPos - startPos + 1));
+            let strNewStructCode = arrNewStructs[arrNewStructs.length - 1];
+            str = str.replace(strNewStructCode, '');
 
-            startPos = strFull.indexOf('{');
-            endPos = strFull.indexOf('}');
-            let strMembers = strFull.substr(startPos, endPos - startPos + 1);
-            strFull = strFull.replace(strMembers, '');
+            startPos = strNewStructCode.indexOf('{');
+            endPos = strNewStructCode.indexOf('}');
+            let strMembers = strNewStructCode.substr(startPos, endPos - startPos + 1);
+            strNewStructCode = strNewStructCode.replace(strMembers, '');
             strMembers = strMembers.replace(/\{|\}/g, '');
             strMembers = strMembers.replace(/; |;| ;/g, ';');
             strMembers = strMembers.replace(/[ ]+/g, ' ');
@@ -301,7 +91,7 @@ let analizeStructs = (str) =>
                 }
             }
 
-            let typeName = strFull.split(' ');
+            let typeName = strNewStructCode.split(' ');
             let name = typeName[1];
             let type = typeName[0];
             let fxName = name;
@@ -318,7 +108,8 @@ let analizeStructs = (str) =>
             fxName += ');';
             result.push(new Keyword({
                 type: type,
-                name: fxName,
+                name: name,
+                snippet: fxName,
                 members: members,
                 render: '<span class="autocomp-name">' + name + '</span><div class="icon-code-usr"></div><span class="autocomp-type">' + 'st: ' + type + '</span>'
             }));
@@ -362,7 +153,8 @@ let analizeFunctionLine = (str) =>
 
     result.push(new Keyword({
         type: typeName[0],
-        name: fxName,
+        name: name,
+        snippet: fxName,
         args: args,
         render: '<span class="autocomp-name">' + typeName[1] + '</span><div class="icon-code-usr"></div><span class="autocomp-type">' + 'fx: ' + typeName[0] + '</span>'
     }));
@@ -493,6 +285,7 @@ class Keyword
         this.render = (data.render) ? data.render : null;
         this.args = (data.args) ? data.args : null;
         this.members = (data.members) ? data.members : null;
+        this.snippet = (data.snippet) ? data.snippet : null;
     }
 
     getData()
@@ -503,17 +296,18 @@ class Keyword
             render: this.render,
             args: this.args,
             members: this.members,
+            snippet: this.snippet
         }
     }
 
     isFunction()
     {
-        return this.args !== null;
+        return this.snippet !== null && this.args !== null;
     }
 
     isStruct()
     {
-        return this.members !== null;
+        return this.snippet !== null && this.members !== null;
     }
 
     isVariable()
@@ -611,24 +405,6 @@ var filterStructByWord = function (dictName, curWord)
             console.log('filteredDict[0].members: ', filteredDict[0].members);
             postMessage(JSON.stringify({ name: 'filter_succeed', content: { list: filteredDict[0].members } }, null, "\t"));
         }
-        // filteredDict.sort(function (a, b)
-        // {
-        //     // Use toUpperCase() to ignore character casing
-        //     const textA = a.name.toUpperCase();
-        //     const textB = b.name.toUpperCase();
-
-        //     let comparison = 0;
-        //     if (textA > textB)
-        //     {
-        //         comparison = 1;
-        //     } else if (textA < textB)
-        //     {
-        //         comparison = -1;
-        //     }
-        //     return comparison;
-        // });
-
-
     }
     postMessage(JSON.stringify({ name: 'filter_failed', content: null }, null, "\t"));
 };
@@ -651,8 +427,18 @@ var syncUserDict = function (dictName, newCodeStr)
     });
 
     let result = analizeStructs(strNewCodeFull);
+    console.log('result: ', result);
     if (result.renderWords !== undefined)
     {
+        if (arrPrevStructs.length > 0)
+        {
+            for (let i = 0; i < arrPrevStructs.length; i++)
+            {
+                keywordDict[dictName].remove(arrPrevStructs[i]);
+            }
+        }
+
+        arrPrevStructs = result.renderWords.concat();
         // Found structs...
         for (let i = 0; i < result.renderWords.length; i++)
         {
