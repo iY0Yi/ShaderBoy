@@ -30,7 +30,7 @@ export default ShaderBoy.io = {
 		});
 
 		ShaderBoy.renderScale = 2;
-		ShaderBoy.editor.textSize = 16;
+		// ShaderBoy.editor.textSize = 16;
 
 		this.fileNameByBufferName = {
 			'Setting': 'setting.json',
@@ -790,9 +790,9 @@ export default ShaderBoy.io = {
 								{
 									if (!value)
 									{
-										value = 16;
+										// value = 16;
 									}
-									ShaderBoy.editor.textSize = value;
+									// ShaderBoy.editor.textSize = value;
 								});
 							});
 						}

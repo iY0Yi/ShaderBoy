@@ -10,6 +10,7 @@
 
 import ShaderBoy from './shaderboy';
 import bufferManager from './buffer_manager';
+import editor_hint from './editor_hint';
 
 import $ from 'jquery';
 
@@ -35,311 +36,13 @@ import 'codemirror/addon/search/jump-to-line';
 import 'codemirror/addon/selection/selection-pointer';
 import 'codemirror/addon/selection/mark-selection';
 import CodeMirror from 'codemirror/lib/codemirror';
-
 import gui_sidebar_ichannels from './gui/gui_sidebar_ichannels';
-
-import * as Comlink from "comlink";
-// import 'comlink-loader';
-// import { MyClass } from 'comlink-loader!./worker/my-class';
 
 export default ShaderBoy.editor = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     init: function ()
     {
-        // Worker
-        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        this.tryCount = 0;
-        this.curCur = null;
-        this.curToken = '';
-        this.curStart = null;
-        this.curEnd = null;
-        this.curCh = null;
-        this.curLine = null;
-        this.curWord = '';
-        this.workingCm = null;
-
-        let keywordWorker = new Worker('./js/keyword-worker.js');
-        keywordWorker.postMessage(JSON.stringify({ name: 'initBltinDict', content: {} }, null, "\t"));
-
-        keywordWorker.onmessage = (msg) =>
-        {
-            console.log('Worker says: ', msg.data);
-            let data = JSON.parse(msg.data);
-            console.log(data);
-            switch (data.name)
-            {
-                case 'keyword':
-                    let keyObj = data.content;
-                    console.log(keyObj);
-                    break;
-                case 'userDict':
-                    let userDictObj = data.content;
-                    console.log('Main thread: ', userDictObj);
-                    break;
-
-                case 'filter_succeed':
-                    this.showFilteredDict(data.content.list);
-                    break;
-
-                case 'filter_failed':
-                    // this.filterDictByWord();
-                    break;
-
-                default:
-                    break;
-            }
-        };
-
-        this.syncUserDict = function ()
-        {
-            let docLinesStr = ShaderBoy.editor.codemirror.doc.getValue();
-            let curLineInfo = ShaderBoy.editor.codemirror.doc.lineInfo(ShaderBoy.editor.codemirror.getCursor().line);
-            if (!curLineInfo.text.match(/\}/g)) docLinesStr = docLinesStr.replace(curLineInfo.text, '');
-            keywordWorker.postMessage(JSON.stringify({ name: 'syncUserDict', content: { dictName: ShaderBoy.editingBuffer, strCode: docLinesStr } }, null, "\t"));
-        };
-
-        this.filterDictByWord = function ()
-        {
-            let isCalled = false;
-            this.curCh--;
-            while (this.curCh > -1 && !isCalled)
-            {
-                let ch = this.curCh;
-                let line = this.curLine;
-                let tmpToken = this.workingCm.getTokenAt({ ch, line }).string;
-                console.log('tmpToken: ', tmpToken);
-                if (this.curWord.match(/\./g))
-                {
-                    let structName = this.workingCm.getTokenAt({ ch, line }).state.context.info;
-                    isCalled = true;
-                    keywordWorker.postMessage(JSON.stringify({ name: 'filterStructByWord', content: { dictName: ShaderBoy.editingBuffer, curWord: structName } }, null, "\t"));
-                    break;
-                }
-                else if (tmpToken.match(/\D/g) && this.curWord !== undefined)
-                {
-                    isCalled = true;
-                    keywordWorker.postMessage(JSON.stringify({ name: 'filterDictByWord', content: { dictName: ShaderBoy.editingBuffer, curWord: this.curWord } }, null, "\t"));
-                    break;
-                }
-                else
-                {
-                    break;
-                }
-                this.curWord = tmpToken + this.curWord;
-                this.tryCount++;
-                this.curCh -= this.tryCount;
-            }
-        };
-
-        this.showFilteredDict = function (list)
-        {
-            this.filteredlist = [];
-            for (let i = 0; i < list.length; i++)
-            {
-                this.filteredlist[i] = {};
-                this.filteredlist[i].text = list[i].name;
-                if (list[i].render)
-                {
-                    this.filteredlist[i].render = (element) =>
-                    {
-                        element.innerHTML = list[i].render;
-                    };
-                }
-
-                // Function only...
-                if (list[i].args !== null)
-                {
-                    let chOffset = list[i].name.indexOf('(') + 1;
-
-                    let args = list[i].args;
-                    let argStrLen = [];
-                    for (let j = 0; j < args.length; j++)
-                    {
-                        argStrLen[j] = args[j].type.length + args[j].name.length + 1;
-                    }
-
-                    this.filteredlist[i].hint = (cm, data, completion) =>
-                    {
-                        console.log('data: ', data);
-                        console.log('completion: ', completion);
-                        console.log('argStrLen: ', argStrLen);
-
-                        function getText(completion)
-                        {
-                            if (typeof completion == "string") return completion;
-                            else return completion.text;
-                        }
-                        cm.replaceRange(getText(completion), completion.from || data.from,
-                            completion.to || data.to, "complete");
-
-                        data.from.ch += chOffset;
-                        cm.setCursor(data.from);
-                        let to = new CodeMirror.Pos(data.from.line, data.from.ch + argStrLen[0]);
-                        argStrLen.shift();
-                        cm.setSelection(data.from, to);
-
-                        if (argStrLen.length >= 0)
-                        {
-                            ShaderBoy.gui.editorShortcuts.Tab = function (cm)
-                            {
-                                let cur = cm.getCursor();
-                                let from = new CodeMirror.Pos(cur.line, cur.ch + 2);
-                                let to = new CodeMirror.Pos(cur.line, cur.ch + 2 + argStrLen[0]);
-                                argStrLen.shift();
-                                cm.setCursor(new CodeMirror.Pos(cur.line, cur.ch + 2));
-                                cm.setSelection(from, to);
-
-                                if (argStrLen.length <= 0)
-                                {
-                                    ShaderBoy.gui.editorShortcuts.Tab = function (cm)
-                                    { //tab as space
-                                        if (cm.somethingSelected())
-                                        {
-                                            cm.indentSelection("add");
-                                        } else
-                                        {
-                                            cm.replaceSelection(cm.getOption("indentWithTabs") ? "\t" :
-                                                Array(cm.getOption("indentUnit") + 1).join(" "), "end", "+input");
-                                        }
-                                    };
-                                    cm.setOption("extraKeys", ShaderBoy.gui.editorShortcuts);
-                                }
-                            };
-
-                            cm.setOption("extraKeys", ShaderBoy.gui.editorShortcuts);
-                        }
-                    }
-                }
-
-                // Struct only...
-                if (list[i].members !== null)
-                {
-                    let initVarName = 'var_name';
-                    let chOffset = list[i].name.indexOf(initVarName);
-
-                    let members = list[i].members;
-                    let memberStrLen = [];
-                    memberStrLen[0] = initVarName.length;
-                    for (let j = 0; j < members.length; j++)
-                    {
-                        memberStrLen[j + 1] = members[j].type.length + members[j].name.length + 1;
-                    }
-
-                    this.filteredlist[i].hint = (cm, data, completion) =>
-                    {
-                        console.log('data: ', data);
-                        console.log('completion: ', completion);
-                        console.log('memberStrLen: ', memberStrLen);
-
-                        function getText(completion)
-                        {
-                            if (typeof completion == "string") return completion;
-                            else return completion.text;
-                        }
-                        cm.replaceRange(getText(completion), completion.from || data.from,
-                            completion.to || data.to, "complete");
-
-                        data.from.ch += chOffset;
-                        cm.setCursor(data.from);
-
-                        let to = new CodeMirror.Pos(data.from.line, data.from.ch + memberStrLen[0]);
-                        memberStrLen.shift();
-                        cm.setSelection(data.from, to);
-
-                        if (memberStrLen.length >= 0)
-                        {
-                            ShaderBoy.gui.editorShortcuts.Tab = function (cm)
-                            {
-                                let cur = cm.getCursor();
-                                let offset = (memberStrLen.length >= members.length) ? 3 + chOffset : 2;
-                                let from = new CodeMirror.Pos(cur.line, cur.ch + offset);
-                                let to = new CodeMirror.Pos(cur.line, cur.ch + offset + memberStrLen[0]);
-                                console.log('from: ', from);
-                                console.log('to: ', to);
-                                console.log('memberStrLen[0]: ', memberStrLen[0]);
-                                memberStrLen.shift();
-                                cm.setCursor(new CodeMirror.Pos(cur.line, cur.ch + 2));
-                                cm.setSelection(from, to);
-
-                                if (memberStrLen.length <= 0)
-                                {
-                                    ShaderBoy.gui.editorShortcuts.Tab = function (cm)
-                                    { //tab as space
-                                        if (cm.somethingSelected())
-                                        {
-                                            cm.indentSelection("add");
-                                        } else
-                                        {
-                                            cm.replaceSelection(cm.getOption("indentWithTabs") ? "\t" :
-                                                Array(cm.getOption("indentUnit") + 1).join(" "), "end", "+input");
-                                        }
-                                    };
-                                    cm.setOption("extraKeys", ShaderBoy.gui.editorShortcuts);
-                                }
-                            };
-
-                            cm.setOption("extraKeys", ShaderBoy.gui.editorShortcuts);
-                        }
-                    }
-                }
-            }
-
-            // console.log(list);
-            // console.log(this.filteredlist);
-
-            CodeMirror.showHint(
-                this.workingCm,
-                function ()
-                {
-                    let cur = ShaderBoy.editor.workingCm.getCursor();
-                    let token = ShaderBoy.editor.workingCm.getTokenAt(cur);
-                    let start = token.start;
-                    let end = cur.ch;
-                    let word = token.string.slice(0, end - start);
-                    let ch = cur.ch;
-                    let line = cur.line;
-
-                    return {
-                        list: ShaderBoy.editor.filteredlist,
-                        from: CodeMirror.Pos(line, ch - token.string.length),
-                        to: CodeMirror.Pos(line, end)
-                    };
-                },
-                {
-                    completeSingle: false,
-                    alignWithWord: false
-                }
-            );
-
-        }
-
-        ShaderBoy.editor.autoComplete = function (cm)
-        {
-            console.log('autoComplete: ');
-
-            ShaderBoy.editor.curCur = cm.getCursor();
-            ShaderBoy.editor.curToken = cm.getTokenAt(ShaderBoy.editor.curCur);
-            ShaderBoy.editor.curStart = ShaderBoy.editor.curToken.start;
-            ShaderBoy.editor.curEnd = ShaderBoy.editor.curCur.ch;
-            ShaderBoy.editor.curCh = ShaderBoy.editor.curCur.ch;
-            ShaderBoy.editor.curLine = ShaderBoy.editor.curCur.line;
-            ShaderBoy.editor.curWord = ShaderBoy.editor.curToken.string;
-
-
-            if (ShaderBoy.editor.curWord.match(/[a-zA-Z]{2,}/) || ShaderBoy.editor.curWord.match('.'))
-            {
-                // For init...
-                ShaderBoy.editor.syncUserDict();
-
-                console.log('ShaderBoy.editor.curWord: ', ShaderBoy.editor.curWord);
-                // Start filtering with Worker...
-                ShaderBoy.editor.workingCm = cm;
-                ShaderBoy.editor.filterDictByWord();
-            }
-        };
-
-
         // Editor
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         this.domElement = document.getElementById('code');
@@ -349,7 +52,7 @@ export default ShaderBoy.editor = {
         this.textArea.setAttribute('cols', '50');
         this.textArea.value = '';
 
-        this.textSize = (localStorage.textSize !== undefined) ? localStorage.textSize : 11;
+        // this.textSize = (localStorage.textSize !== undefined) ? localStorage.textSize : 11;
 
         this.errorWidgets = [];
 
@@ -381,7 +84,9 @@ export default ShaderBoy.editor = {
             extraKeys: ShaderBoy.gui.editorShortcuts
         });
 
-        this.codemirror.on('change', ShaderBoy.editor.autoComplete);
+        editor_hint.init();
+
+        this.codemirror.on('change', editor_hint.getHintFunction());
 
         this.codemirror.parent = this;
         this.setTextSize();
@@ -392,7 +97,7 @@ export default ShaderBoy.editor = {
     {
         if (this.textSize <= 8) this.textSize = 8;
         if (this.textSize >= 64) this.textSize = 64;
-        $(".CodeMirror").css('font-size', this.textSize + "pt");
+        // $(".CodeMirror").css('font-size', this.textSize + "pt");
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -401,7 +106,7 @@ export default ShaderBoy.editor = {
         if (this.textSize < 64)
         {
             this.textSize++;
-            $(".CodeMirror").css('font-size', this.textSize + "pt");
+            // $(".CodeMirror").css('font-size', this.textSize + "pt");
         }
     },
 
@@ -411,7 +116,7 @@ export default ShaderBoy.editor = {
         if (this.textSize > 8)
         {
             this.textSize--;
-            $(".CodeMirror").css('font-size', this.textSize + "pt");
+            // $(".CodeMirror").css('font-size', this.textSize + "pt");
         }
     },
 
