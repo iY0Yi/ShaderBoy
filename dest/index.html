@@ -3,7 +3,8 @@
 
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<!-- <meta name="viewport" content="width=device-width,initial-scale=1"> -->
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 	<link rel="manifest" href="manifest.json">
 	<link rel="shortcut icon" href="../img/icons/favicon.ico">
 	<link rel="icon" type="image/png" sizes="16x16" href="../img/icons/favicon-16x16.png">
@@ -64,11 +65,20 @@
 
 <body>
 	<style>
+		html {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
 		body {
+			/* position: relative; */
+			position: fixed;
 			font-family: Muli, Arial, Helvetica, sans-serif;
 			color: #d8d4c5FF;
-			width: 100vw;
-			height: 100vh;
+			width: 100%;
+			height: 100%;
 			border: 0;
 			padding: 0;
 			margin: 0;
@@ -80,7 +90,6 @@
 			overflow: hidden;
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
-			position: relative;
 		}
 
 		.cvr-loading {
@@ -125,6 +134,24 @@
 		.show-logo {
 			opacity: 1.0;
 		}
+
+		#DocFrame {
+			position: absolute;
+			top: 144px;
+			left: 82px;
+			width: 400px;
+			height: 300px;
+			z-index: 999999;
+			background: #d8d4c5FF;
+			border: none;
+			-ms-zoom: 0.65;
+			-moz-transform: scale(0.65);
+			-moz-transform-origin: 0 0;
+			-o-transform: scale(0.65);
+			-o-transform-origin: 0 0;
+			-webkit-transform: scale(0.65);
+			-webkit-transform-origin: 0 0;
+		}
 	</style>
 	<script>
 		function loadImage()
@@ -136,6 +163,7 @@
 		<div id="ghdr-notif" style="z-index: 10001; position:absolute; right:0px;" class="ghdr-notif in-panel noselect"></div>
 		<img id="logo-sb" onload="loadImage()" class="logo-sb" src="../img/sb_logo.svg" />
 	</div>
+	<!-- <iframe id="DocFrame" src="https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/acosh.xhtml"></iframe> -->
 	<div id="shaderboy" style="display:none;">
 		<!-- comment out here for viewer mode -->
 		<div id="main">
@@ -329,7 +357,7 @@
 					<div id="gp-shader-list" class="gp-shader-list hide"></div>
 					<div id="gp-textarea" class="gp-textarea hide">
 						<div id="textarea-container">
-							<div id="div-textarea" contenteditable="true"></div>
+							<div id="div-textarea" contenteditable="false"></div>
 							<span id="gp-formname">New Shader Name</span>
 						</div>
 					</div>
