@@ -14,10 +14,10 @@
         height: calc(100% - 45px);
     }
 
-    & .iphone {
-        font-size: 16px;
-        transform: scale(0.75);
-    }
+    // & .iphone {
+    //     font-size: 16px;
+    //     transform: scale(0.75);
+    // }
 
     @include mq {
         margin-top: 0px;

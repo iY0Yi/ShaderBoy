@@ -1,7 +1,7 @@
 const TerserPlugin = require('terser-webpack-plugin');
 
-var PRODUCTION = true;
-var SOURCE_MAP = false;
+var PRODUCTION = false;
+var SOURCE_MAP = true;
 module.exports = {
 
 	mode: (PRODUCTION) ? 'production' : 'development',
@@ -35,9 +35,18 @@ module.exports = {
 				test: /\.js$/,
 				use: "babel-loader",
 				exclude: /node_modules/
+			},
+			{
+				test: /\.worker\.js$/,
+				use: { loader: 'worker-loader' }
 			}
 		],
 	},
+
+	// entry: {
+	// 	main: './src/js/main.js',
+	// 	worker: './src/js/workers/main.worker.js'
+	// },
 
 	entry: './src/js/main.js',
 

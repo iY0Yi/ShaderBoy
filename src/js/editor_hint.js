@@ -1,4 +1,5 @@
 import ShaderBoy from './shaderboy';
+import Worker from './workers/keyword.worker';
 
 import $ from 'jquery';
 
@@ -12,7 +13,8 @@ let isFunction = (renderWordObj) =>
 { return renderWordObj.snippet !== null && renderWordObj.args !== null; };
 let isStruct = (renderWordObj) =>
 { return renderWordObj.snippet !== null && renderWordObj.members !== null; };
-
+let needSnippet = (renderWord) =>
+{ return (isFunction(renderWord) || isStruct(renderWord)); }
 export default ShaderBoy.editor_hint = {
 
     // init
@@ -29,7 +31,7 @@ export default ShaderBoy.editor_hint = {
         this.curWord = '';
         this.workingCm = null;
 
-        this.keywordWorker = new Worker('./js/keyword-worker.js');
+        this.keywordWorker = new Worker();
         this.keywordWorker.postMessage(JSON.stringify({ name: 'initBltinDict', content: {} }, null, "\t"));
         this.keywordWorker.onmessage = (msg) =>
         {
@@ -76,8 +78,8 @@ export default ShaderBoy.editor_hint = {
     filterDictByWord()
     {
         let isCalled = false;
-        this.curCh--;
-        while (this.curCh > -1 && !isCalled)
+        // this.curCh--;
+        // while (this.curCh > -1 && !isCalled)
         {
             let ch = this.curCh;
             let line = this.curLine;
@@ -86,23 +88,24 @@ export default ShaderBoy.editor_hint = {
             if (this.curWord.match(/\./g))
             {
                 let structName = this.workingCm.getTokenAt({ ch, line }).state.context.info;
+                console.log('structName: ', structName);
                 isCalled = true;
                 this.keywordWorker.postMessage(JSON.stringify({ name: 'filterStructByWord', content: { dictName: ShaderBoy.editingBuffer, curWord: structName } }, null, "\t"));
-                break;
+                // break;
             }
-            else if (tmpToken.match(/\D/g) && this.curWord !== undefined)
+            else if (this.curWord.match(/\D/g))
             {
                 isCalled = true;
                 this.keywordWorker.postMessage(JSON.stringify({ name: 'filterDictByWord', content: { dictName: ShaderBoy.editingBuffer, curWord: this.curWord } }, null, "\t"));
-                break;
+                // break;
             }
             else
             {
-                break;
+                // break;
             }
-            this.curWord = tmpToken + this.curWord;
-            this.tryCount++;
-            this.curCh -= this.tryCount;
+            // this.curWord = tmpToken + this.curWord;
+            // this.tryCount++;
+            // this.curCh -= this.tryCount;
         }
     },
 
@@ -203,7 +206,7 @@ export default ShaderBoy.editor_hint = {
         for (let i = 0; i < filteredRenderWords.length; i++)
         {
             this.hintList[i] = {};
-            this.hintList[i].text = (isFunction(filteredRenderWords[i]) || isStruct(filteredRenderWords[i])) ? filteredRenderWords[i].snippet : filteredRenderWords[i].name;
+            this.hintList[i].text = (needSnippet(filteredRenderWords[i])) ? filteredRenderWords[i].snippet : filteredRenderWords[i].name;
             if (filteredRenderWords[i].render)
             {
                 this.hintList[i].render = (element) =>
@@ -226,9 +229,18 @@ export default ShaderBoy.editor_hint = {
                 let ch = cur.ch;
                 let line = cur.line;
 
+                // let isMembers = ()=>{
+                //     let prevPos = new CodeMirror.Pos(line, ch-1);
+                //     let prevToken = ShaderBoy.editor_hint.workingCm.getTokenAt(prevPos);
+                //     return 
+                // };
+                let isPeriod = () => { return ShaderBoy.editor_hint.curWord === '.' ? 1 : 0 };
+                console.log('isPeriod: ', isPeriod());
+                console.log('isPeriod: ', token);
+
                 return {
                     list: ShaderBoy.editor_hint.hintList,
-                    from: CodeMirror.Pos(line, ch - token.string.length),
+                    from: CodeMirror.Pos(line, ch - token.string.length + isPeriod()),
                     to: CodeMirror.Pos(line, end)
                 };
             },
