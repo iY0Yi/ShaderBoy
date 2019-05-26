@@ -43,11 +43,6 @@ module.exports = {
 		],
 	},
 
-	// entry: {
-	// 	main: './src/js/main.js',
-	// 	worker: './src/js/workers/main.worker.js'
-	// },
-
 	entry: './src/js/main.js',
 
 	optimization: {
