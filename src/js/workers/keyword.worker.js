@@ -63,11 +63,11 @@ let analizeStructs = (str) =>
         while (str.match(/struct/g))
         {
             let startPos = str.indexOf('struct');
-            let endPos = str.indexOf('}');
+            let endPos = str.indexOf('}', startPos);
             arrNewStructs.push(str.substr(startPos, endPos - startPos + 1));
             let strNewStructCode = arrNewStructs[arrNewStructs.length - 1];
             str = str.replace(strNewStructCode, '');
-
+            console.log('str: ', str);
             startPos = strNewStructCode.indexOf('{');
             endPos = strNewStructCode.indexOf('}');
             let strMembers = strNewStructCode.substr(startPos, endPos - startPos + 1);
@@ -75,7 +75,7 @@ let analizeStructs = (str) =>
             strMembers = strMembers.replace(/\{|\}/g, '');
             strMembers = strMembers.replace(/; |;| ;/g, ';');
             strMembers = strMembers.replace(/[ ]+/g, ' ');
-            console.log('strMembers: ', strMembers);
+            
             let arrMembers = strMembers.split(';');
             let members = [];
             for (let i = 0; i < arrMembers.length; i++)
@@ -527,7 +527,6 @@ var syncUserDict = function (dictName, newCodeStr)
             console.log('r: ', kw.type, kw.name, kw.isFunction());
         }
     }
-
     strPrevCodeFull = strNewCodeFull;
     strPrevCodeWords = strNewCodeWords;
     linesprevCodeWords = linesnewCodeWords;

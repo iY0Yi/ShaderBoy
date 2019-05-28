@@ -83,7 +83,7 @@ export default ShaderBoy.editor_hint = {
         {
             let ch = this.curCh;
             let line = this.curLine;
-            let tmpToken = this.workingCm.getTokenAt({ ch, line }).string;
+            // let tmpToken = this.workingCm.getTokenAt({ ch, line }).string;
 
             if (this.curWord.match(/\./g))
             {
