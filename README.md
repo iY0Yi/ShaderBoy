@@ -89,6 +89,7 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] Sound shader
 - [ ] Display number of chars
 - [ ] Official assets(textures)
+- [ ] VR
 
 ### Supported Shadertoy Uniforms  
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
