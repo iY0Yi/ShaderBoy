@@ -1,7 +1,7 @@
 import Keyword from './keyword';
 import Builtins from './builtins';
-let Tokenizer;
-export default Tokenizer = {
+
+let Tokenizer = {
     getBetweenStr(str, start, end)
     {
         console.log('getBetweenStr...');
@@ -263,3 +263,5 @@ export default Tokenizer = {
         return result;
     }
 };
+
+export default Tokenizer;
