@@ -96,8 +96,6 @@ let tmpDict = [];
 let res;
 console.log('----RAW CODE----------------------------------------------------------------------------------');
 res=`
-	
-	
 // RAYTRACE
 
 struct C_Intersection
@@ -894,13 +892,29 @@ void mainVR( out vec4 fragColor, in vec2 fragCoord, in vec3 fragRayOri, in vec3 
 }`;
 // console.log(res);
 console.log('----PARSED CODE------------------------------------------------------------------------------');
+let shadertoyTypes = ("float vec2 vec3 vec4 int ivec2 ivec3 ivec4 bool bvec2 bvec3 bvec4 mat2 mat3 mat4 void").split(" ");
+let shadertoyTypes_and_define = shadertoyTypes.concat(); // For detecting "#define" as type.
+shadertoyTypes_and_define.push('#define');
+let allTypes = shadertoyTypes_and_define.concat();
+
+// Check if the word is a type.
+let isType=(str)=>{
+    for (let i = 0; i < allTypes.length; i++)
+    {
+        if (str === allTypes[i]) return true;
+    }
+    return false;
+};
+
 let getBetweenStr =(str, start, end)=>{
   let startPos = str.indexOf(start);
   let endPos = str.indexOf(end, startPos);
   let strComment = str.substr(startPos, endPos-startPos+end.length);
   return strComment;
 };
-
+let removeStr =(str, removeStr)=>{
+  return str.replace(removeStr, '');
+};
 let removeAllBetween=(str, regexp, start, end)=>{
   let res=str+'';
   while(res.match(regexp))
@@ -910,7 +924,6 @@ let removeAllBetween=(str, regexp, start, end)=>{
   }
   return res;
 };
-
 let removeAllNested=(str, regexp, start, end)=>{
   let res = str+'';
   let deepestStart = str.lastIndexOf(start);
@@ -923,7 +936,6 @@ let removeAllNested=(str, regexp, start, end)=>{
   }
   return res;
 };
-
 
 let removeBlockComment =(str)=>{
   let res=str+'';
@@ -952,6 +964,7 @@ let sanitizeLinesForStructs = (str)=>{
   return res;
 };
 let analizeStructs = (str, dict)=>{
+  str = sanitizeLinesForStructs(str);
   let isContainStruct = str.match(/struct/g);
   if(!isContainStruct)
   {
@@ -962,17 +975,13 @@ let analizeStructs = (str, dict)=>{
     let strStructs = [];
     while(str.match(/struct/g))
     {
-      let startPos = str.indexOf('struct');
-      let endPos = str.indexOf('}');
-      strStructs.push(str.substr(startPos, endPos-startPos+1));
+      strStructs.push(getBetweenStr(str, 'struct', '}'));
       let strFull = strStructs[strStructs.length-1];
-      str = str.replace(strFull, '');
+      str = removeStr(str, strFull);
 
-      startPos = strFull.indexOf('{');
-      endPos = strFull.indexOf('}');
-      let strMembers = strFull.substr(startPos, endPos-startPos+1);
-      strFull = strFull.replace(strMembers, '');
-      strMembers = strMembers.replace(/\{|\}/g, '');
+      let strMembers = getBetweenStr(strFull, '{', '}');
+      strFull = removeStr(strFull, strMembers);
+      strMembers = removeStr(strMembers, /\{|\}/g);
       strMembers = strMembers.replace(/; |;| ;/g, ';');
       strMembers = strMembers.replace(/[ ]+/g, ' ');
 
@@ -986,20 +995,23 @@ let analizeStructs = (str, dict)=>{
           members.push(new Keyword({type: typeName[0], name:typeName[1]}));
         }
       }
+      
       let typeName = strFull.split(' ');
-      tmpDict.push(new Keyword({type:typeName[0], name:typeName[1], members:members}));
+      dict.push(new Keyword({type:typeName[0], name:typeName[1], members:members}));
     }
     return str;
   }
 };
 
-let sanitizeLinesForFunctionsVariables = (str)=>{
+let sanitizeLinesForMacroFunctionsVariables = (str)=>{
   let res = '';
-  str.split(/\r\n|\r|\n/).forEach(element =>
+  str = removeAllBetween(str, /struct/g, 'struct', '}');
+  
+  str.split(/\r\n|\r|\n/g).forEach(element =>
   {
       element = element.replace(/\{/g, '{;');
       element = element.replace(/\}/g, '');
-      if (element.match('#define'))
+      if (element.match(/#define/g))
       {
           element += ';';
       }
@@ -1010,18 +1022,21 @@ let sanitizeLinesForFunctionsVariables = (str)=>{
   });
   return res;
 };
+let analizeMacroLine = (str, dict)=>{
+    str = removeAllBetween(str, /\(/g, '(', ')').trim();
+    let typeName = str.split(' ');
+    dict.push(new Keyword({type:typeName[0], name:typeName[1]}));
+};
 let analizeFunctionLine = (str, dict)=>{
-    let openBracket = str.indexOf('(');
-    let closeBracket = str.indexOf(')', openBracket);
-    
     // args
     let args = [];
-    let strArgs = str.substr(openBracket, closeBracket-openBracket+1);
+    let strArgs = getBetweenStr(str, '(', ')');
     strArgs = strArgs.replace(/ ,|, |,/g, ',');
-    strArgs = strArgs.replace(/ in |\(in |\,in /g, '');
-    strArgs = strArgs.replace(/ out |\(out |\,out /g, '');
+    strArgs = removeStr(strArgs, / in |\(in |\,in /g);
+    strArgs = removeStr(strArgs, / out |\(out |\,out /g);
+    strArgs = removeStr(strArgs, / inout |\(inout |\,inout /g);
     strArgs = strArgs.replace(/[ ]+/g, ' ');
-    strArgs = strArgs.replace(/[()]/g, '');
+    strArgs = removeStr(strArgs, /[()]/g);
     strArgs = strArgs.split(',');
     for(let i=0; i<strArgs.length; i++)
     {
@@ -1040,7 +1055,7 @@ let analizeVariables = (str, dict)=>{
     //#2: remove initializing 
     let eqPos = str.indexOf('=');
     let cmPos = str.indexOf(/,/g);
-    cmPos = (cmPos===-1)?str.length:cmPos;
+    cmPos = (cmPos===-1)?str.length : cmPos;
     while(str.match('='))
     {
         str = str.replace(str.substr(eqPos, cmPos-eqPos+1), '');
@@ -1060,26 +1075,7 @@ let analizeVariables = (str, dict)=>{
         }
     }
 };
-let analyzeLine = (lineStr) =>{
-  let isMacro = lineStr.match(/#define/g);
-  let isFunction = lineStr.match(/{/g);
-
-  if(isMacro)
-  {
-    let typeName = lineStr.split(' ');
-    tmpDict.push(new Keyword({type:typeName[0], name:typeName[1]}));
-  }
-  else
-  if(isFunction)
-  {
-    analizeFunctionLine(lineStr, tmpDict);
-  }
-  else
-  {
-    analizeVariables(lineStr, tmpDict);
-  }
-};
-let analyzeFuctionsVariables = (str) =>{
+let getLinesArray=(str)=>{
   let array=[];
   str.split(';').forEach(element =>{
      if(!element.match(/if|else|switch|for|return/g))
@@ -1087,21 +1083,42 @@ let analyzeFuctionsVariables = (str) =>{
          array.push(element);
        }
   });
+  return array;
+};
+let analyzeMacroFuctionsVariables = (str, dict) =>{
+  str = sanitizeLinesForMacroFunctionsVariables(str);
+  let array = getLinesArray(str);
+  
   for(let i=0; i<array.length; i++)
   {
-    analyzeLine(array[i])
+    let lineStr = array[i].trim();
+    let isMacro = lineStr.match(/#define/g);
+    let isFunction = lineStr.match(/{/g);
+    let isDefinition = isType(lineStr.split(' ')[0]);
+
+    if(!isDefinition) continue;
+
+    if(isMacro)
+    {
+      analizeMacroLine(lineStr, dict);
+    }
+    else
+    if(isFunction)
+    {
+      analizeFunctionLine(lineStr, dict);
+    }
+    else
+    {
+      analizeVariables(lineStr, dict);
+    }
   }
 };
 
-res = sanitizeLinesForStructs(res);
-res = analizeStructs(res);
-res = sanitizeLinesForFunctionsVariables(res);
-analyzeFuctionsVariables(res);
+analizeStructs(res, tmpDict);
+analyzeMacroFuctionsVariables(res, tmpDict);
 
 tmpDict.forEach(el=>{
-  //if(el.isFunction())console.log(el);
-  if(el!==undefined)console.log(el);
-//   console.log(el);
+  console.log(el);
 })
 // for(let key in dict.renderWords){
 //   console.log(dict.renderWords[key]);
