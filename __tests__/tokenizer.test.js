@@ -1,7 +1,6 @@
 'use strict';
 const { promisify } = require('util');
 const fs = require('fs');
-// const path = require('path');
 
 import Tokenizer from '../src/js/workers/tokenizer';
 const fileUrl = './__tests__/glsl/'
