@@ -1,11 +1,25 @@
 {
   "scripts": {
     "start": "webpack-dev-server -d",
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+    "test": "jest"
   },
   "babel": {
-    "presets": [
-      "@babel/preset-env"
+    "env": {
+      "test": {
+        "plugins": [
+          "transform-es2015-modules-commonjs"
+        ]
+      }
+    }
+  },
+  "jest": {
+    "verbose": true,
+    "transform": {
+      "^.+\\.js": "<rootDir>/node_modules/babel-jest"
+    },
+    "moduleFileExtensions": [
+      "js"
     ]
   },
   "devDependencies": {
@@ -13,11 +27,14 @@
     "@babel/preset-env": "^7.3.1",
     "babel-core": "^6.3.17",
     "babel-eslint": "^4.1.6",
+    "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.5",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "babel-preset-es2015": "^6.3.13",
     "css-loader": "^2.1.0",
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^2.0.0",
+    "jest": "^24.8.0",
     "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
