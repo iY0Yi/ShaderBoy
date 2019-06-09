@@ -25,7 +25,6 @@ export default class KeywordDictionary
             {
                 const serachPos = item.indexOf('_') + 1
                 const isIncluded = (item.toUpperCase().indexOf(word.toUpperCase(), serachPos) === serachPos ? true : false)
-
                 return isIncluded && (item.toUpperCase() !== word.toUpperCase())
             }
         })
@@ -35,7 +34,7 @@ export default class KeywordDictionary
         filteredKeys.forEach(element =>
         {
             const name = element.substring(element.indexOf("_") + 1)
-            if (!Builtins.isExclusionWord(name))
+            if (word !== name && !Builtins.isExclusionWord(name))
             {
                 filteredRenders.push(this.renderWords[element].getData())
             }

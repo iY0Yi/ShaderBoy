@@ -5,10 +5,21 @@ const Tokenizer = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     removePrecisions(str)
     {
-        let gl_Precisions = ("lowp mediump highp").split(" ")
+        const gl_Precisions = ("lowp mediump highp").split(" ")
         for (const prec of gl_Precisions)
         {
             str = str.replace(new RegExp(prec, 'g'), ' ')
+        }
+        return str
+    },
+
+    removePreProcessor(str)
+    {
+        const gl_PreProcessor = ("#undef #ifdef #ifndef #else #elif #endif #if").split(" ")
+        for (const prec of gl_PreProcessor)
+        {
+            // str = str.replace(new RegExp(prec, 'g'), ' ')
+            str = this.removeAllBetween(str, new RegExp(prec, 'g'), prec, '\n')
         }
         return str
     },
@@ -302,7 +313,7 @@ const Tokenizer = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    parseMacrosFuctionsVariables(str, dict)
+    parseMacrosFunctionsVariables(str, dict)
     {
         str = this.sanitizeLinesForStructs(str)
 

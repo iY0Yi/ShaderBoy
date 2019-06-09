@@ -72,10 +72,8 @@ const filterDictByWord = (dictName, curWord) =>
             }
             return comparison
         })
-
-        postMessage(JSON.stringify({ name: 'filter_succeed', content: { list: filteredDict } }, null, "\t"))
     }
-    postMessage(JSON.stringify({ name: 'filter_failed', content: null }, null, "\t"))
+    postMessage(JSON.stringify({ name: 'filter_succeed', content: { list: filteredDict } }, null, "\t"))
 }
 
 const filterStructByWord = (dictName, curWord) =>
@@ -142,7 +140,7 @@ const syncStructs = (dictName, str) =>
     }
 }
 
-const syncMacrosFuctionsVariables = (dictName, str) =>
+const syncMacrosFunctionsVariables = (dictName, str) =>
 {
     const strNewCodeFull = Tokenizer.sanitizeLinesForMacroFunctionsVariables(str)
     const renewedLineNumbers = getRenewedLineNumbers(strNewCodeFull)
@@ -154,7 +152,7 @@ const syncMacrosFuctionsVariables = (dictName, str) =>
         {
             if (renewedLineNumbers.some(lineId => lineId === i))
             {
-                const renderWords = Tokenizer.parseMacrosFuctionsVariables(prevL[i])
+                const renderWords = Tokenizer.parseMacrosFunctionsVariables(prevL[i])
                 for (let j = 0; j < renderWords.length; j++)
                 {
                     for (let k = 0; k < renderWords[j].length; k++)
@@ -173,7 +171,7 @@ const syncMacrosFuctionsVariables = (dictName, str) =>
         {
             if (renewedLineNumbers.some(lineId => lineId === i))
             {
-                const renderWords = Tokenizer.parseMacrosFuctionsVariables(newL[i])
+                const renderWords = Tokenizer.parseMacrosFunctionsVariables(newL[i])
                 for (let j = 0; j < renderWords.length; j++)
                 {
                     for (let k = 0; k < renderWords[j].length; k++)
@@ -191,8 +189,9 @@ const syncUserDict = (dictName, str) =>
 {
     console.log('started: KeywordWorker.syncUserDict...')
     str = Tokenizer.removePrecisions(str)
+    str = Tokenizer.removePreProcessor(str)
     syncStructs(dictName, str)
-    syncMacrosFuctionsVariables(dictName, str)
+    syncMacrosFunctionsVariables(dictName, str)
     console.log('keywordDict[dictName].renderWords: ', keywordDict[dictName].renderWords)
 }
 

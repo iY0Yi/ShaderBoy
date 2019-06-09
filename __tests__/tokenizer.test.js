@@ -9,41 +9,30 @@ function main()
 {
     describe('Tokenizer', () =>
     {
-        test('getBetweenStr', () =>
+        test('unit: getBetweenStr', () =>
         {
             expect(Tokenizer.getBetweenStr('void TracePlane( out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, float fPlaneDist, float fObjectId )', '(', ')')).toBe('( out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, float fPlaneDist, float fObjectId )')
         })
-        test('removeStr', () =>
+        test('unit: removeStr', () =>
         {
             expect(Tokenizer.removeStr('void TracePlane( out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, float fPlaneDist, float fObjectId )', '(')).toBe('void TracePlane out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, float fPlaneDist, float fObjectId )')
         })
-        test('removeAllBetween', () =>
+        test('unit: removeAllBetween', () =>
         {
             expect(Tokenizer.removeAllBetween('void TracePlane( out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, float fPlaneDist, float fObjectId )', /\(/, '(', ')')).toBe('void TracePlane')
             expect(Tokenizer.removeAllBetween('void TracePlane( out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, float fPlaneDist, float fObjectId )', /\(/, '(', ')')).toBe('void TracePlane')
         })
-        test('removeAllNested', () =>
+        test('unit: removeAllNested', () =>
         {
             expect(Tokenizer.removeAllNested('void TracePlane( out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, float fPlaneDist, float fObjectId )', /\(/, '(', ')')).toBe('void TracePlane')
             expect(Tokenizer.removeAllNested('void TracePlane( out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, float fPlaneDist, (float fObjectId) )', /\(/, '(', ')')).toBe('void TracePlane')
         })
-        test('removeBlockComment', () =>
+        test('unit: removeBlockComment', () =>
         {
             expect(Tokenizer.removeBlockComment('void TracePlane( /*out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, */float fPlaneDist, float fObjectId )', /\(/, '(', ')')).toBe('void TracePlane( float fPlaneDist, float fObjectId )')
         })
-        test('sanitizeLinesForStructs', async () =>
-        {
-            const filenames = await promisify(fs.readdir)(fileUrl)
-            console.log(filenames)
-            for (const filename of filenames)
-            {
-                const fullPath = fileUrl + filename
-                const out = await promisify(fs.readFile)(fullPath, 'utf-8')
-                expect(Tokenizer.sanitizeLinesForStructs(out)).not.toMatch(/MainImage/)
-            }
-        })
 
-        test('parseFunctionLine: whitespace', () =>
+        test('Function: Remove whitespaces & types qualifiers', () =>
         {
             const gl_TypesQualifiers = ['', 'inout']
             const gl_Const = ['', 'const']
@@ -85,15 +74,37 @@ function main()
                     }
                 }
             }
+        })
 
+        test('Actual Shadertoy codes', async () =>
+        {
+            const filenames = await promisify(fs.readdir)(fileUrl)
+            console.log(filenames)
+            for (const filename of filenames)
+            {
+                const fullPath = fileUrl + filename
+                let str = await promisify(fs.readFile)(fullPath, 'utf-8')
+                str = Tokenizer.removePrecisions(str)
+                str = Tokenizer.removePreProcessor(str)
 
-            //  + hBeforews + 'fncName' + hAfterWs + '('+a1BeforeWs+a1BeforeCnstWs+cnst+a1AfterCnstWs
+                let isPassedStructs = true
+                const structsRes = Tokenizer.parseStructs(str)
+                for (const struct of structsRes)
+                {
+                    isPassedStructs = struct.name !== null && struct.type !== null
+                    if (struct.name === null || struct.type === null) console.log(struct)
+                    // console.log(struct)
+                }
 
-
-            // for (const line of patterns)
-            // {
-            //     expect(Tokenizer.parseFunctionLine(line)[0].args.length).toBe(3)
-            // }
+                let isPassedMacrosFunctionsVariables = true
+                const mfvRes = Tokenizer.parseMacrosFunctionsVariables(str)
+                for (const mfv of mfvRes)
+                {
+                    isPassedMacrosFunctionsVariables = mfv.name !== null && mfv.type !== null
+                    if (mfv.name === null || mfv.type === null) console.log(mfv)
+                }
+                expect(isPassedStructs && isPassedMacrosFunctionsVariables).toBeTruthy()
+            }
         })
     })
 }
