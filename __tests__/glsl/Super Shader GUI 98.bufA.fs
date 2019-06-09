@@ -1,3 +1,5 @@
+// Shadertoy URL: https://www.shadertoy.com/view/Xs2cR1
+
 const int
     DATA_UICONTEXT						= 0,	
 	DATA_CHECKBOX_SHOW_IMAGE 			= 1,

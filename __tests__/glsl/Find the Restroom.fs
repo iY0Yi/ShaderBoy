@@ -1,3 +1,5 @@
+//Shadertoy URL: https://www.shadertoy.com/view/ldK3DV
+
 //Find the Restroom by eiffie based on Basic Maze Generator by stb https://www.shadertoy.com/view/XdKGWK
 //Just playing with different maze styles.
 
