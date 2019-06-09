@@ -52,7 +52,7 @@
     "collect-fps": "^2.0.0",
     "dropbox": "^4.0.3",
     "hermite-resize": "git+https://github.com/viliusle/Hermite-resize.git",
-    "jquery": ">=3.4.0",
+    "jquery": "^3.4.1",
     "keymaster": "^1.6.2",
     "localforage": "^1.7.2",
     "normalize.css": "^8.0.1",

@@ -8,12 +8,11 @@
 //                             
 //                             
 
-import ShaderBoy from "./shaderboy";
-import collectFPS from 'collect-fps';
-import gui_timeline from './gui/gui_timeline';
+import ShaderBoy from "./shaderboy"
+import collectFPS from 'collect-fps'
+import gui_timeline from './gui/gui_timeline'
 
 export default ShaderBoy.time = {
-
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     FPS: 60.0,
     FPS_INTERVAL: 1000 / 60,
@@ -28,87 +27,85 @@ export default ShaderBoy.time = {
     totalFrames: 60 * 60,
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    init: function ()
+    init()
     {
-
-        this.time_then = Date.now();
+        this.time_then = Date.now()
         this.getGlobalTime = (function ()
         {
             if ("performance" in window) return function () { return window.performance.now() * 0.001; }
             return function () { return (new Date()).getTime() * 0.001; }
-        })();
-        this.startTime = this.getGlobalTime();
+        })()
+        this.startTime = this.getGlobalTime()
         //FPS counter
-        this.endCollection = collectFPS();
+        this.endCollection = collectFPS()
         setInterval(() =>
         {
-            this.fps = this.endCollection();
-            this.endCollection = collectFPS();
-        }, 1000);
+            this.fps = this.endCollection()
+            this.endCollection = collectFPS()
+        }, 1000)
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    needUpdate: function ()
+    needUpdate()
     {
-        let now = Date.now();
-        this.time_elapsed = now - this.time_then;
-
+        const now = Date.now()
+        this.time_elapsed = now - this.time_then
+        
         if (this.time_elapsed > this.FPS_INTERVAL)
         {
-            this.time_then = now - (this.time_elapsed % this.FPS_INTERVAL);
-            return true;
+            this.time_then = now - (this.time_elapsed % this.FPS_INTERVAL)
+            return true
         }
         else
         {
-            return false;
+            return false
         }
     },
 
     update()
     {
-        ShaderBoy.uniforms.iFrame++;
-        let oldITime = ShaderBoy.uniforms.iTime;
-        ShaderBoy.uniforms.iTime = ShaderBoy.uniforms.iFrame * (1 / 60);//this.getGlobalTime() - this.offsetTime - this.startTime;
-        ShaderBoy.uniforms.iTimeDelta = (1 / 60);//ShaderBoy.uniforms.iTime - oldITime;
-        ShaderBoy.uniforms.iFrameRate = this.fps;
-        let d = new Date();
+        ShaderBoy.uniforms.iFrame++
+        const oldITime = ShaderBoy.uniforms.iTime
+        ShaderBoy.uniforms.iTime = ShaderBoy.uniforms.iFrame * (1 / 60);//this.getGlobalTime() - this.offsetTime - this.startTime
+        ShaderBoy.uniforms.iTimeDelta = (1 / 60);//ShaderBoy.uniforms.iTime - oldITime
+        ShaderBoy.uniforms.iFrameRate = this.fps
+        const d = new Date()
         ShaderBoy.uniforms.iDate = [
             d.getFullYear(), // the year (four digits)
             d.getMonth(),	   // the month (from 0-11)
             d.getDate(),     // the day of the month (from 1-31)
             d.getHours() * 60.0 * 60 + d.getMinutes() * 60 + d.getSeconds() + d.getMilliseconds() / 1000.0
-        ];
-
+        ]
 
         if (ShaderBoy.uniforms.iFrame > this.loop.end)
         {
-            this.reset();
+            this.reset()
         }
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    reset: function ()
+    reset()
     {
-        ShaderBoy.uniforms.iTime = this.loop.start * (1 / 60);
-        ShaderBoy.uniforms.iFrame = this.loop.start;
+        ShaderBoy.uniforms.iTime = this.loop.start * (1 / 60)
+        ShaderBoy.uniforms.iFrame = this.loop.start
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    pause: function ()
+    pause()
     {
         if (ShaderBoy.isPlaying !== true)
         {
-            this.pausedTime = this.getGlobalTime();
-            console.log('Paused.');
+            this.pausedTime = this.getGlobalTime()
+            console.log('Paused.')
         }
         else
         {
             if (ShaderBoy.uniforms.iTime === 0.0)
             {
-                this.reset();
+                this.reset()
             }
-            this.offsetTime += this.getGlobalTime() - this.pausedTime;
-            console.log('Resumed.');
+            this.offsetTime += this.getGlobalTime() - this.pausedTime
+            console.log('Resumed.')
         }
     }
 };

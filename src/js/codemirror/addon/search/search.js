@@ -29,7 +29,7 @@
       query = new RegExp(query.source, query.ignoreCase ? "gi" : "g");
 
     return {
-      token: function (stream)
+      token(stream)
       {
         query.lastIndex = stream.pos;
         var match = query.exec(stream.string);
@@ -76,7 +76,7 @@
       value: deflt,
       selectValueOnOpen: true,
       closeOnEnter: false,
-      onClose: function () { clearSearch(cm); },
+      onClose() { clearSearch(cm); },
       onKeyDown: onKeyDown
     });
   }

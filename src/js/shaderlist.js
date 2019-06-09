@@ -1,4 +1,4 @@
-let ShaderList = [
+const ShaderList = [
 	{
 		name: 'commonVS',
 		url: 'shader/_common.vs',

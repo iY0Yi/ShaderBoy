@@ -10,7 +10,7 @@
 //                                                         `\___/'
 //
 
-let ShaderBoy = {
+const ShaderBoy = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     editor: null,
@@ -57,5 +57,5 @@ let ShaderBoy = {
         iMouse: [0, 0, 0, 0],
 
     }
-};
-export default ShaderBoy;
+}
+export default ShaderBoy

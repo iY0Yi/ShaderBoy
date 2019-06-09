@@ -1,15 +1,17 @@
 export default class Keyword
 {
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     constructor(data)
     {
-        this.type = (data.type) ? data.type : null;
-        this.name = (data.name) ? data.name : null;
-        this.render = (data.render) ? data.render : null;
-        this.args = (data.args) ? data.args : null;
-        this.members = (data.members) ? data.members : null;
-        this.snippet = (data.snippet) ? data.snippet : null;
+        this.type = (data.type) ? data.type : null
+        this.name = (data.name) ? data.name : null
+        this.render = (data.render) ? data.render : null
+        this.args = (data.args) ? data.args : null
+        this.members = (data.members) ? data.members : null
+        this.snippet = (data.snippet) ? data.snippet : null
     }
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     getData()
     {
         return {
@@ -22,18 +24,21 @@ export default class Keyword
         }
     }
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     isFunction()
     {
-        return this.snippet !== null && this.args !== null;
+        return this.snippet !== null && this.args !== null
     }
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     isStruct()
     {
-        return this.snippet !== null && this.members !== null;
+        return this.snippet !== null && this.members !== null
     }
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     isVariable()
     {
-        return !this.isFunction() && !this.isStruct();
+        return !this.isFunction() && !this.isStruct()
     }
 };

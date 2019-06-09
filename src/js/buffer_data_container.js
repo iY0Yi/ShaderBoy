@@ -21,22 +21,22 @@ export default class BufferDataContainer
     {
         // true: BufferA-D, CubemapA, MainSound and Image
         // false: Config, Common and Setting
-        this.isRenderable = isRenderable;
+        this.isRenderable = isRenderable
 
         // Use or not this pass
-        this.active = false;
+        this.active = false
 
         // Frame buffer
-        this.framebuffer = null;
+        this.framebuffer = null
 
         // Render textures
-        this.textures = [];
-        this.needSwap = false;
+        this.textures = []
+        this.needSwap = false
 
         // Shader object
-        this.shader = null;
+        this.shader = null
 
         // iChannel0-3
-        this.iChannel = [null, null, null, null];
+        this.iChannel = [null, null, null, null]
     }
 }
