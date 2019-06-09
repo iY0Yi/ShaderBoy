@@ -41,4 +41,4 @@ export default class Keyword
     {
         return !this.isFunction() && !this.isStruct()
     }
-};
+}

@@ -336,4 +336,4 @@ const Tokenizer = {
     }
 }
 
-export default Tokenizer;
+export default Tokenizer

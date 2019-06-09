@@ -25,7 +25,7 @@ let arrPrevStructs = []
 
 // Dictionaries
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-let keywordDict = {}
+const keywordDict = {}
 keywordDict['Builtins'] = new KeywordDictionary('Builtins')
 keywordDict['BufferA'] = new KeywordDictionary('BufferA')
 keywordDict['BufferB'] = new KeywordDictionary('BufferB')
@@ -38,21 +38,21 @@ keywordDict['Common'] = new KeywordDictionary('Common')
 let strPrevCodeFull = ''
 let linesprevCodeWords = ['']
 
-let initBltinDict = function ()
+const initBltinDict = () =>
 {
     Builtins.init()
     keywordDict['Builtins'] = Builtins.dictionary
 }
 
-let filterDictByWord = function (dictName, curWord)
+const filterDictByWord = (dictName, curWord) =>
 {
     console.log('started: KeywordWorker.filterDictByWord...')
 
-    let filteredBuiltinsList = keywordDict['Builtins'].filter(curWord)
-    let filteredUserList = keywordDict[dictName].filter(curWord)
+    const filteredBuiltinsList = keywordDict['Builtins'].filter(curWord)
+    const filteredUserList = keywordDict[dictName].filter(curWord)
     console.log('filteredUserList: ', filteredUserList)
 
-    let filteredDict = filteredBuiltinsList.concat(filteredUserList)
+    const filteredDict = filteredBuiltinsList.concat(filteredUserList)
     console.log('filteredDict: ', filteredDict)
     if (filteredDict.length >= 1 || (filteredDict[0] !== undefined && filteredDict[0].text !== undefined && filteredDict.length === 1 && filteredDict[0].text.toUpperCase() !== curWord.toUpperCase()))
     {
@@ -78,7 +78,7 @@ let filterDictByWord = function (dictName, curWord)
     postMessage(JSON.stringify({ name: 'filter_failed', content: null }, null, "\t"))
 }
 
-let filterStructByWord = function (dictName, curWord)
+const filterStructByWord = (dictName, curWord) =>
 {
     console.log('started: KeywordWorker.filterStructByWord...')
 
@@ -97,10 +97,10 @@ let filterStructByWord = function (dictName, curWord)
     postMessage(JSON.stringify({ name: 'filter_failed', content: null }, null, "\t"))
 }
 
-let getRenewedLineNumbers = (str) =>
+const getRenewedLineNumbers = (str) =>
 {
     let renewedLineNumbers = []
-    let linesnewCodeWords = str.split(';')
+    const linesnewCodeWords = str.split(';')
     const maxLen = Math.max(linesprevCodeWords.length, linesnewCodeWords.length)
     for (let i = 0; i < maxLen; i++)
     {
@@ -116,7 +116,7 @@ let getRenewedLineNumbers = (str) =>
     return renewedLineNumbers
 }
 
-let syncStructs = (dictName, str) =>
+const syncStructs = (dictName, str) =>
 {
     const result = Tokenizer.parseStructs(str)
     if (result.length >= 1)
@@ -142,7 +142,7 @@ let syncStructs = (dictName, str) =>
     }
 }
 
-let syncMacrosFuctionsVariables = (dictName, str) =>
+const syncMacrosFuctionsVariables = (dictName, str) =>
 {
     const strNewCodeFull = Tokenizer.sanitizeLinesForMacroFunctionsVariables(str)
     const renewedLineNumbers = getRenewedLineNumbers(strNewCodeFull)
@@ -187,7 +187,7 @@ let syncMacrosFuctionsVariables = (dictName, str) =>
     strPrevCodeFull = strNewCodeFull
 }
 
-let syncUserDict = function (dictName, str)
+const syncUserDict = (dictName, str) =>
 {
     console.log('started: KeywordWorker.syncUserDict...')
     str = Tokenizer.removePrecisions(str)
@@ -201,7 +201,7 @@ let syncUserDict = function (dictName, str)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 onmessage = (msg) =>
 {
-    let data = JSON.parse(msg.data)
+    const data = JSON.parse(msg.data)
     switch (data.name)
     {
         case 'initBltinDict':
@@ -223,4 +223,4 @@ onmessage = (msg) =>
         default:
             break
     }
-};
+}

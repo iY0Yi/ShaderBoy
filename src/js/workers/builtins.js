@@ -15,7 +15,7 @@ const gl_Types_and_define = gl_Types.concat(); // For detecting "#define" as typ
 gl_Types_and_define.push('#define')
 const allTypes = gl_Types_and_define.concat()
 
-let Builtins = {
+const Builtins = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     init()
@@ -67,4 +67,4 @@ let Builtins = {
     }
 }
 
-export default Builtins;
+export default Builtins
