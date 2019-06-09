@@ -14,157 +14,153 @@
 //  `\___x___/'`\___/'(_)   (_) (_)`\____)(_)          
 //                                                     
 
-import KeywordDictionary from './keyword_dictionary';
-import Keyword from './keyword';
-import Tokenizer from './tokenizer';
-import Builtins from './builtins';
+import KeywordDictionary from './keyword_dictionary'
+import Keyword from './keyword'
+import Tokenizer from './tokenizer'
+import Builtins from './builtins'
 
 
-
-// Util functions
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-let strPrevStructCode = '';
-let arrPrevStructs = [];
+let strPrevStructCode = ''
+let arrPrevStructs = []
 
 // Dictionaries
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+let keywordDict = {}
+keywordDict['Builtins'] = new KeywordDictionary('Builtins')
+keywordDict['BufferA'] = new KeywordDictionary('BufferA')
+keywordDict['BufferB'] = new KeywordDictionary('BufferB')
+keywordDict['BufferC'] = new KeywordDictionary('BufferC')
+keywordDict['BufferD'] = new KeywordDictionary('BufferD')
+keywordDict['Image'] = new KeywordDictionary('Image')
+keywordDict['Sound'] = new KeywordDictionary('Sound')
+keywordDict['Common'] = new KeywordDictionary('Common')
 
-var keywordDict = {};
-keywordDict['Builtins'] = new KeywordDictionary('Builtins');
-keywordDict['BufferA'] = new KeywordDictionary('BufferA');
-keywordDict['BufferB'] = new KeywordDictionary('BufferB');
-keywordDict['BufferC'] = new KeywordDictionary('BufferC');
-keywordDict['BufferD'] = new KeywordDictionary('BufferD');
-keywordDict['Image'] = new KeywordDictionary('Image');
-keywordDict['Sound'] = new KeywordDictionary('Sound');
-keywordDict['Common'] = new KeywordDictionary('Common');
+let strPrevCodeFull = ''
+let linesprevCodeWords = ['']
 
-var strPrevCodeFull = '';
-var strPrevCodeWords = '';
-var linesprevCodeWords = [''];
-
-var initBltinDict = function ()
+let initBltinDict = function ()
 {
-    Builtins.init();
-    keywordDict['Builtins'] = Builtins.dictionary;
-};
+    Builtins.init()
+    keywordDict['Builtins'] = Builtins.dictionary
+}
 
-var filterDictByWord = function (dictName, curWord)
+let filterDictByWord = function (dictName, curWord)
 {
-    console.log('started: KeywordWorker.filterDictByWord...');
+    console.log('started: KeywordWorker.filterDictByWord...')
 
-    let filteredBuiltinsList = keywordDict['Builtins'].filter(curWord);
-    let filteredUserList = keywordDict[dictName].filter(curWord);
-    console.log('filteredUserList: ', filteredUserList);
+    let filteredBuiltinsList = keywordDict['Builtins'].filter(curWord)
+    let filteredUserList = keywordDict[dictName].filter(curWord)
+    console.log('filteredUserList: ', filteredUserList)
 
-    let filteredDict = filteredBuiltinsList.concat(filteredUserList);
-    console.log('filteredDict: ', filteredDict);
+    let filteredDict = filteredBuiltinsList.concat(filteredUserList)
+    console.log('filteredDict: ', filteredDict)
     if (filteredDict.length >= 1 || (filteredDict[0] !== undefined && filteredDict[0].text !== undefined && filteredDict.length === 1 && filteredDict[0].text.toUpperCase() !== curWord.toUpperCase()))
     {
         filteredDict.sort(function (a, b)
         {
             // Use toUpperCase() to ignore character casing
-            const textA = a.name.toUpperCase();
-            const textB = b.name.toUpperCase();
+            const textA = a.name.toUpperCase()
+            const textB = b.name.toUpperCase()
 
-            let comparison = 0;
+            let comparison = 0
             if (textA > textB)
             {
-                comparison = 1;
+                comparison = 1
             } else if (textA < textB)
             {
-                comparison = -1;
+                comparison = -1
             }
-            return comparison;
-        });
+            return comparison
+        })
 
-        postMessage(JSON.stringify({ name: 'filter_succeed', content: { list: filteredDict } }, null, "\t"));
+        postMessage(JSON.stringify({ name: 'filter_succeed', content: { list: filteredDict } }, null, "\t"))
     }
-    postMessage(JSON.stringify({ name: 'filter_failed', content: null }, null, "\t"));
-};
+    postMessage(JSON.stringify({ name: 'filter_failed', content: null }, null, "\t"))
+}
 
-var filterStructByWord = function (dictName, curWord)
+let filterStructByWord = function (dictName, curWord)
 {
-    console.log('started: KeywordWorker.filterStructByWord...');
+    console.log('started: KeywordWorker.filterStructByWord...')
 
-    let filteredDict = keywordDict[dictName].filter(curWord);
-    console.log('filteredDict: ', filteredDict);
+    let filteredDict = keywordDict[dictName].filter(curWord)
+    console.log('filteredDict: ', filteredDict)
 
     if (filteredDict.length === 1)//|| (filteredDict[0] !== undefined && filteredDict[0].text !== undefined && filteredDict.length === 1 && filteredDict[0].text.toUpperCase() !== curWord.toUpperCase()))
     {
-        filteredDict = keywordDict[dictName].filter(filteredDict[0].type);
+        filteredDict = keywordDict[dictName].filter(filteredDict[0].type)
         if (filteredDict[0].members !== null)
         {
-            console.log('filteredDict[0].members: ', filteredDict[0].members);
-            postMessage(JSON.stringify({ name: 'filter_succeed', content: { list: filteredDict[0].members } }, null, "\t"));
+            console.log('filteredDict[0].members: ', filteredDict[0].members)
+            postMessage(JSON.stringify({ name: 'filter_succeed', content: { list: filteredDict[0].members } }, null, "\t"))
         }
     }
-    postMessage(JSON.stringify({ name: 'filter_failed', content: null }, null, "\t"));
-};
+    postMessage(JSON.stringify({ name: 'filter_failed', content: null }, null, "\t"))
+}
 
-
-
-
-
-
-var syncUserDict = function (dictName, newCodeStr)
+let getRenewedLineNumbers = (str) =>
 {
-    console.log('started: KeywordWorker.syncUserDict...');
-    console.log('newCodeStr@start: ', newCodeStr);
+    let renewedLineNumbers = []
+    let linesnewCodeWords = str.split(';')
+    const maxLen = Math.max(linesprevCodeWords.length, linesnewCodeWords.length)
+    for (let i = 0; i < maxLen; i++)
+    {
+        if (linesprevCodeWords[i] === undefined) linesprevCodeWords[i] = ''
+        if (linesnewCodeWords[i] === undefined) linesnewCodeWords[i] = ''
+        if (linesprevCodeWords[i] !== linesnewCodeWords[i])// || linesnewCodeWords[i].match(/{/))
+        {
+            renewedLineNumbers.push(i)
+        }
+    }
+    linesprevCodeWords = linesnewCodeWords
+    console.log('Renewed Lines: ', renewedLineNumbers.length)
+    return renewedLineNumbers
+}
 
-    const result = Tokenizer.analizeStructs(newCodeStr);
+let syncStructs = (dictName, str) =>
+{
+    const result = Tokenizer.parseStructs(str)
     if (result.length >= 1)
     {
         if (arrPrevStructs.length > 0)
         {
             for (let i = 0; i < arrPrevStructs.length; i++)
             {
-                keywordDict[dictName].remove(arrPrevStructs[i]);
+                for (let j = 0; j < arrPrevStructs[i].length; j++)
+                {
+                    keywordDict[dictName].remove(result[i][j])
+                }
             }
         }
 
-        arrPrevStructs = result.concat();
+        arrPrevStructs = result.concat()
+
         // Found structs...
         for (let i = 0; i < result.length; i++)
         {
-            keywordDict[dictName].add(result[i]);
+            keywordDict[dictName].add(result[i])
         }
     }
+}
 
-    let strNewCodeFull = Tokenizer.sanitizeLinesForStructs(newCodeStr);
-    strNewCodeFull = Tokenizer.sanitizeLinesForMacroFunctionsVariables(strNewCodeFull);
-    console.log('strNewCodeFull: ', strNewCodeFull);
-    const strNewCodeWords = strNewCodeFull + '';
-
-    let linesnewCodeWords = strNewCodeWords.split(';');
-
-    const maxLen = Math.max(linesprevCodeWords.length, linesnewCodeWords.length);
-    let isNewLonger = (linesnewCodeWords.length > linesprevCodeWords.length);
-    let linesNeedAnalyze = [];
-    for (let i = 0; i < maxLen; i++)
-    {
-        if (linesprevCodeWords[i] === undefined) linesprevCodeWords[i] = ' ';
-        if (linesnewCodeWords[i] === undefined) linesnewCodeWords[i] = ' ';
-        if (linesprevCodeWords[i] !== linesnewCodeWords[i] || linesnewCodeWords[i].match(/{/))
-        {
-            linesNeedAnalyze.push(i);
-        }
-    }
+let syncMacrosFuctionsVariables = (dictName, str) =>
+{
+    const strNewCodeFull = Tokenizer.sanitizeLinesForMacroFunctionsVariables(str)
+    const renewedLineNumbers = getRenewedLineNumbers(strNewCodeFull)
 
     if (strPrevCodeFull !== '')
     {
-        const prevL = strPrevCodeFull.split(/\;/);
+        const prevL = strPrevCodeFull.split(/\;/)
         for (let i = 0; i < prevL.length; i++)
         {
-            if (linesNeedAnalyze.some(lineId => lineId === i))
+            if (renewedLineNumbers.some(lineId => lineId === i))
             {
-                const renderWords = Tokenizer.analyzeMacroFuctionsVariables(prevL[i]);
+                const renderWords = Tokenizer.parseMacrosFuctionsVariables(prevL[i])
                 for (let j = 0; j < renderWords.length; j++)
                 {
-                    keywordDict[dictName].remove(renderWords[j]);
+                    for (let k = 0; k < renderWords[j].length; k++)
+                    {
+                        keywordDict[dictName].remove(renderWords[j][k])
+                    }
                 }
             }
         }
@@ -172,64 +168,59 @@ var syncUserDict = function (dictName, newCodeStr)
 
     if (strNewCodeFull !== '')
     {
-        const newL = strNewCodeFull.split(/\;/);
+        const newL = strNewCodeFull.split(/\;/)
         for (let i = 0; i < newL.length; i++)
         {
-            if (linesNeedAnalyze.some(lineId => lineId === i))
+            if (renewedLineNumbers.some(lineId => lineId === i))
             {
-                const renderWords = Tokenizer.analyzeMacroFuctionsVariables(newL[i]);
+                const renderWords = Tokenizer.parseMacrosFuctionsVariables(newL[i])
                 for (let j = 0; j < renderWords.length; j++)
                 {
-                    keywordDict[dictName].add(renderWords[j]);
+                    for (let k = 0; k < renderWords[j].length; k++)
+                    {
+                        keywordDict[dictName].add(renderWords[j][k])
+                    }
                 }
             }
         }
     }
+    strPrevCodeFull = strNewCodeFull
+}
 
-    // console.clear();
-    for (const key in keywordDict[dictName].renderWords)
-    {
-        if (keywordDict[dictName].renderWords.hasOwnProperty(key))
-        {
-            const kw = keywordDict[dictName].renderWords[key];
-            if (kw)
-            {
-                console.log('kw: ', kw);
-                console.log('r: ', kw.type, kw.name, kw.isFunction);
-            }
-        }
-    }
-    console.log('keywordDict[dictName].renderWords: ', keywordDict[dictName].renderWords);
-    strPrevCodeFull = strNewCodeFull;
-    strPrevCodeWords = strNewCodeWords;
-    linesprevCodeWords = linesnewCodeWords;
-};
+let syncUserDict = function (dictName, str)
+{
+    console.log('started: KeywordWorker.syncUserDict...')
+    str = Tokenizer.removePrecisions(str)
+    syncStructs(dictName, str)
+    syncMacrosFuctionsVariables(dictName, str)
+    console.log('keywordDict[dictName].renderWords: ', keywordDict[dictName].renderWords)
+}
 
 
 // Message
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 onmessage = (msg) =>
 {
-    let data = JSON.parse(msg.data);
+    let data = JSON.parse(msg.data)
     switch (data.name)
     {
         case 'initBltinDict':
-            initBltinDict();
-            break;
+            initBltinDict()
+            break
 
         case 'syncUserDict':
-            syncUserDict(data.content.dictName, data.content.strCode);
-            break;
+            syncUserDict(data.content.dictName, data.content.strCode)
+            break
 
         case 'filterDictByWord':
-            filterDictByWord(data.content.dictName, data.content.curWord);
-            break;
+            filterDictByWord(data.content.dictName, data.content.curWord)
+            break
 
         case 'filterStructByWord':
-            filterStructByWord(data.content.dictName, data.content.curWord);
-            break;
+            filterStructByWord(data.content.dictName, data.content.curWord)
+            break
 
         default:
-            break;
+            break
     }
 };
