@@ -160,6 +160,7 @@ ShaderBoy depends on some awesome js libralies.</br>
 [CCapture.js](https://github.com/spite/ccapture.js)</br>
 [keymaster](https://github.com/madrobby/keymaster)</br>
 [css_browser_selector](https://github.com/rafaelp/css_browser_selector)</br>
+[![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
 </br>
 </br>
 </br>
