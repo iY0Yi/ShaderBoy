@@ -58,8 +58,8 @@ export default ShaderBoy.gui_panel_shaderlist = { // comment out on codepen.
                     imgcon.style.width = '0px'
                     imgcon.style.height = '0px'
                     imgcon.style.backgroundImage = 'url("' + img.src + '")'
-                    this.body.style.backgroundImage = 'url("' + img.src + '")'
-                    this.body.style.backgroundSize = '100% 100%'
+                    img.body.style.backgroundImage = 'url("' + img.src + '")'
+                    img.body.style.backgroundSize = '100% 100%'
                 }
                 img.src = shader.thumb
                 img.body = btn_thumb

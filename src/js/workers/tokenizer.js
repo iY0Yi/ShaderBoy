@@ -18,7 +18,6 @@ const Tokenizer = {
         const gl_PreProcessor = ("#undef #ifdef #ifndef #else #elif #endif #if").split(" ")
         for (const prec of gl_PreProcessor)
         {
-            // str = str.replace(new RegExp(prec, 'g'), ' ')
             str = this.removeAllBetween(str, new RegExp(prec, 'g'), prec, '\n')
         }
         return str
@@ -66,6 +65,12 @@ const Tokenizer = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    removeInlineComment(str)
+    {
+        return this.removeAllBetween(str, /\/\//g, '//', '\n')
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     removeBlockComment(str)
     {
         return this.removeAllBetween(str, /\/\*/g, '/*', '*/')
@@ -75,7 +80,6 @@ const Tokenizer = {
     sanitizeLinesForStructs(str)
     {
         let res = ''
-        res = this.removeBlockComment(str)
         res = str.replace(/(?=[ ]+)\,/g, ',')
 
         let tmp = res + ''
@@ -121,9 +125,9 @@ const Tokenizer = {
                 let members = []
                 for (let i = 0; i < arrMembers.length; i++)
                 {
-                    if (arrMembers[i] !== '')
+                    let typeName = arrMembers[i].split(' ')
+                    if (typeName[0] && typeName[1])
                     {
-                        let typeName = arrMembers[i].split(' ')
                         members.push(new Keyword({
                             type: typeName[0],
                             name: typeName[1],
@@ -141,7 +145,7 @@ const Tokenizer = {
                 for (let i = 0; i < members.length; i++)
                 {
                     snippet += members[i].type
-                    snippet += '_'
+                    snippet += '@'
                     snippet += members[i].name
                     snippet += (i < members.length - 1) ? ', ' : ''
                 }
@@ -164,7 +168,6 @@ const Tokenizer = {
     {
         let res = ''
         str = this.removeAllBetween(str, /struct/g, 'struct', '}')
-
         str.split(/\r\n|\r|\n/g).forEach(element =>
         {
             element = element.replace(/\{/g, '{;')
@@ -232,11 +235,14 @@ const Tokenizer = {
         for (let i = 0; i < strArgs.length; i++)
         {
             let arg = strArgs[i].trim().split(/ /g)
-            args.push(new Keyword({
-                type: arg[0],
-                name: arg[1],
-                render: '<span class="autocomp-name">' + arg[1] + '</span><div class="icon-code-user"></div><span class="autocomp-type">' + arg[0] + '</span>'
-            }))
+            if (arg[0] && arg[1])
+            {
+                args.push(new Keyword({
+                    type: arg[0],
+                    name: arg[1],
+                    render: '<span class="autocomp-name">' + arg[1] + '</span><div class="icon-code-user"></div><span class="autocomp-type">' + arg[0] + '</span>'
+                }))
+            }
         }
 
         const typeName = str.split(/[ (]/g)
@@ -245,7 +251,7 @@ const Tokenizer = {
         for (let i = 0; i < args.length; i++)
         {
             snippet += args[i].type
-            snippet += '_'
+            snippet += '@'
             snippet += args[i].name
             snippet += (i < args.length - 1) ? ', ' : ''
         }
@@ -326,7 +332,7 @@ const Tokenizer = {
             const lineStr = array[i].trim()
             const isMacro = lineStr.match(/#define/g)
             const isFunction = lineStr.match(/{/g)
-            const isDefinition = Builtins.isType(lineStr.split(' ')[0])
+            const isDefinition = Builtins.isType(lineStr.split(' ')[0]) || dict.isStructType(lineStr.split(' ')[0])
 
             if (!isDefinition) continue
 

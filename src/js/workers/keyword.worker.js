@@ -78,9 +78,9 @@ const filterDictByWord = (dictName, curWord) =>
 
 const filterStructByWord = (dictName, curWord) =>
 {
-    console.log('started: KeywordWorker.filterStructByWord...')
+    console.log('started: KeywordWorker.filterStructByWord...', curWord)
 
-    let filteredDict = keywordDict[dictName].filter(curWord)
+    let filteredDict = keywordDict[dictName].filter(curWord, true)
     console.log('filteredDict: ', filteredDict)
 
     if (filteredDict.length === 1)//|| (filteredDict[0] !== undefined && filteredDict[0].text !== undefined && filteredDict.length === 1 && filteredDict[0].text.toUpperCase() !== curWord.toUpperCase()))
@@ -152,7 +152,7 @@ const syncMacrosFunctionsVariables = (dictName, str) =>
         {
             if (renewedLineNumbers.some(lineId => lineId === i))
             {
-                const renderWords = Tokenizer.parseMacrosFunctionsVariables(prevL[i])
+                const renderWords = Tokenizer.parseMacrosFunctionsVariables(prevL[i], keywordDict[dictName])
                 for (let j = 0; j < renderWords.length; j++)
                 {
                     for (let k = 0; k < renderWords[j].length; k++)
@@ -171,7 +171,7 @@ const syncMacrosFunctionsVariables = (dictName, str) =>
         {
             if (renewedLineNumbers.some(lineId => lineId === i))
             {
-                const renderWords = Tokenizer.parseMacrosFunctionsVariables(newL[i])
+                const renderWords = Tokenizer.parseMacrosFunctionsVariables(newL[i], keywordDict[dictName])
                 for (let j = 0; j < renderWords.length; j++)
                 {
                     for (let k = 0; k < renderWords[j].length; k++)
@@ -188,6 +188,8 @@ const syncMacrosFunctionsVariables = (dictName, str) =>
 const syncUserDict = (dictName, str) =>
 {
     console.log('started: KeywordWorker.syncUserDict...')
+    str = Tokenizer.removeInlineComment(str)
+    str = Tokenizer.removeBlockComment(str)
     str = Tokenizer.removePrecisions(str)
     str = Tokenizer.removePreProcessor(str)
     syncStructs(dictName, str)

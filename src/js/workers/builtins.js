@@ -1,5 +1,6 @@
 import KeywordDictionary from './keyword_dictionary'
 import Keyword from './keyword'
+import builtins_es300 from './builtins_es300'
 
 // Builtin lists
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -7,7 +8,7 @@ const gl_Types = ("float vec2 vec3 vec4 int ivec2 ivec3 ivec4 bool bvec2 bvec3 b
 const gl_Keywords = ("break continue do for while if else true false lowp mediump highp precision discard return").split(" ")
 const gl_TypesQualifiers = ("in out inout const").split(" ")
 const gl_PreProcessor = ("#define #undef #if #ifdef #ifndef #else #elif #endif").split(" ")
-const gl_Builtins = ("sin cos tan asin acos atan atan radians degrees pow exp log exp2 log2 sqrt inversesqrt abs ceil clamp floor fract max min mix mod sign smoothstep step ftransform cross distance dot faceforward length normalize reflect refract dFdx dFdy fwidth matrixCompMult all any equal greaterThan greaterThanEqual lessThan lessThanEqual notEqual texelFetch texture textureLod").split(" ")
+// const gl_Builtins = ("sin cos tan asin acos atan atan radians degrees pow exp log exp2 log2 sqrt inversesqrt abs ceil clamp floor fract max min mix mod sign smoothstep step ftransform cross distance dot faceforward length normalize reflect refract dFdx dFdy fwidth matrixCompMult all any equal greaterThan greaterThanEqual lessThan lessThanEqual notEqual texelFetch texture textureLod").split(" ")
 const st_Uniforms = ("iResolution iTime iTimeDelta iFrame iFrameRate iDate iMouse iChannel0 iChannel1 iChannel2 iChannel3 iSampleRate").split(" ")
 const st_Variables = ("fragColor fragCoord").split(" ")
 const st_Exclusions = ("mainImage mainSound mainCubemap mainVR").split(" ")
@@ -40,9 +41,14 @@ const Builtins = {
         registerBltins(gl_Keywords, 'keywords', 'gl')
         registerBltins(gl_TypesQualifiers, 'type qualifier', 'gl')
         registerBltins(gl_PreProcessor, 'pre processor', 'gl')
-        registerBltins(gl_Builtins, 'builtin', 'gl')
         registerBltins(st_Uniforms, 'uniform', 'st')
         registerBltins(st_Variables, 'variable', 'st')
+
+        // registerBltins(gl_Builtins, 'builtin', 'gl')
+        for (const builtin of builtins_es300)
+        {
+            this.dictionary.add(new Keyword(builtin))
+        }
     },
 
     // Check if the word is a type.

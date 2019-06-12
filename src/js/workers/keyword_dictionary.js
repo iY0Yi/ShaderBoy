@@ -7,25 +7,26 @@ export default class KeywordDictionary
     {
         this.name = name
         this.renderWords = {}
+        this.structTypes = []
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     search(renderWord)
     {
-        const searchWord = renderWord.type + '_' + renderWord.name
+        const searchWord = renderWord.type + '@' + renderWord.name
         return this.renderWords.hasOwnProperty(searchWord);// return in Boolean
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    filter(word)
+    filter(word, forStruct = false)
     {
         const filteredKeys = Object.keys(this.renderWords).filter((item) =>
         {
             if (item !== undefined && word !== undefined)
             {
-                const serachPos = item.indexOf('_') + 1
+                const serachPos = item.indexOf('@') + 1
                 const isIncluded = (item.toUpperCase().indexOf(word.toUpperCase(), serachPos) === serachPos ? true : false)
-                return isIncluded && (item.toUpperCase() !== word.toUpperCase())
+                return isIncluded && (item.toUpperCase() !== word.toUpperCase() || forStruct)
             }
         })
 
@@ -33,8 +34,8 @@ export default class KeywordDictionary
 
         filteredKeys.forEach(element =>
         {
-            const name = element.substring(element.indexOf("_") + 1)
-            if (word !== name && !Builtins.isExclusionWord(name))
+            const name = element.substring(element.indexOf("@") + 1)
+            if ((word !== name || forStruct) && !Builtins.isExclusionWord(name))
             {
                 filteredRenders.push(this.renderWords[element].getData())
             }
@@ -43,29 +44,46 @@ export default class KeywordDictionary
         return filteredRenders
     }
 
+    // Check if the word is a type.
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    isStructType(str)
+    {
+        for (const type of this.structTypes)
+        {
+            if (str === type) return true
+        }
+        return false
+    }
+
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     add(renderWord)
     {
-        // let val = renderWord
-        // if (Array.isArray(val))
-        // {
-        //     for (let i = 0; i < val.length; i++)
-        //     {
-        //         const renderWord = val[i]
+        const key = renderWord.type + '@' + renderWord.name
 
-        //     }
-        // }
-        // if (renderWord.type === undefined || renderWord.name === undefined) return
-        const key = renderWord.type + '_' + renderWord.name
         this.renderWords[key] = renderWord
-        console.log(this.renderWords[key])
+
+        if (renderWord.type === 'struct')
+        {
+            this.structTypes.push(renderWord.name)
+        }
+        console.log(this.structTypes)
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     remove(renderWord)
     {
         if (renderWord.type === undefined || renderWord.name === undefined) return
-        const key = renderWord.type + '_' + renderWord.name
+
+        const key = renderWord.type + '@' + renderWord.name
         delete this.renderWords[key]
+
+        if (renderWord.type === 'struct')
+        {
+            this.structTypes = this.structTypes.filter(type =>
+            {
+                return type !== renderWord.name
+            })
+        }
     }
 }

@@ -95,7 +95,7 @@ export default ShaderBoy.editor_hint = {
                 isCalled = true
                 this.keywordWorker.postMessage(JSON.stringify({ name: 'filterStructByWord', content: { dictName: ShaderBoy.editingBuffer, curWord: structName } }, null, "\t"))
             }
-            else if (this.curWord.match(/\D/g))
+            else if (this.curWord.match(/\w/g))
             {
                 isCalled = true
                 this.keywordWorker.postMessage(JSON.stringify({ name: 'filterDictByWord', content: { dictName: ShaderBoy.editingBuffer, curWord: this.curWord } }, null, "\t"))
@@ -117,7 +117,7 @@ export default ShaderBoy.editor_hint = {
         if (isFunction(rawItem) || isStruct(rawItem))
         {
             const initVarName = 'var_name'
-            const chOffset = 0
+            let chOffset = 0
             let tabFollowWords = null
             let offset = 0
 
@@ -256,13 +256,16 @@ export default ShaderBoy.editor_hint = {
             ShaderBoy.editor_hint.curEnd = ShaderBoy.editor_hint.curCur.ch
             ShaderBoy.editor_hint.curCh = ShaderBoy.editor_hint.curCur.ch
             ShaderBoy.editor_hint.curLine = ShaderBoy.editor_hint.curCur.line
-            ShaderBoy.editor_hint.curWord = ShaderBoy.editor_hint.curToken.string.replace(/\s/g, "")
+            ShaderBoy.editor_hint.curWord = ShaderBoy.editor_hint.curToken.string.replace(/\s/g, "").trim()
 
-            console.log('curWord: ', ShaderBoy.editor_hint.curWord)
-            console.log('length match: ', ShaderBoy.editor_hint.curWord.match(/[a-zA-Z]{2,}/))
-            console.log('dot match: ', ShaderBoy.editor_hint.curWord.indexOf(/[a-zA-Z]/g) !== -1 && ShaderBoy.editor_hint.curWord.indexOf(/\./) !== -1)
+            const preCh = ShaderBoy.editor_hint.curCh - ShaderBoy.editor_hint.curWord.length
+            const line = ShaderBoy.editor_hint.curLine
+            const prePos = new CodeMirror.Pos(line, preCh)
+            const preToken = cm.getTokenAt(prePos)
+            const preWord = preToken.string
+            const isAfterDot = preWord === '.'
 
-            if (ShaderBoy.editor_hint.curWord.match(/[a-zA-Z]{2,}/))
+            if ((ShaderBoy.editor_hint.curWord.match(/[a-zA-Z_-]{2,}/) && !isAfterDot) || ShaderBoy.editor_hint.curWord === '.')
             {
                 ShaderBoy.editor_hint.syncUserDict()
 

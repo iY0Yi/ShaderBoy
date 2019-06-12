@@ -64,7 +64,7 @@ module.exports = {
 	output:
 	{
 		path: __dirname + '/dest/js/',
-		publicPath: '/js/',
+		publicPath: (PRODUCTION) ? '/app_test' : '' + '/js/',
 		filename: '[name].min.js'
 	},
 
