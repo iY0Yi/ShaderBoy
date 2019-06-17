@@ -12,9 +12,8 @@ const gl_PreProcessor = ("#define #undef #if #ifdef #ifndef #else #elif #endif")
 const st_Uniforms = ("iResolution iTime iTimeDelta iFrame iFrameRate iDate iMouse iChannel0 iChannel1 iChannel2 iChannel3 iSampleRate").split(" ")
 const st_Variables = ("fragColor fragCoord").split(" ")
 const st_Exclusions = ("mainImage mainSound mainCubemap mainVR").split(" ")
-const gl_Types_and_define = gl_Types.concat(); // For detecting "#define" as type.
-gl_Types_and_define.push('#define')
-const allTypes = gl_Types_and_define.concat()
+const allTypes = gl_Types.concat()
+allTypes.push('#define') // For detecting "#define" as type.
 
 const Builtins = {
 
