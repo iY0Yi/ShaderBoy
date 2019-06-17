@@ -20,41 +20,43 @@ import Hermite_class from 'hermite-resize'
 export default ShaderBoy.gdrive = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    init(callback)
+    async init()
     {
-        let loadDiv = document.getElementById('cvr-loading')
-        let authDiv = document.getElementById('div_authrise')
-        // loadDiv.style.display = 'block'
-        // authDiv.style.display = 'none'
-
-        authDiv.classList.add('hide')
-
         this.CLIENT_ID = '98134852029-6pccdhcarbel0qfju1f2naj1992697qu.apps.googleusercontent.com'
         this.SCOPES = 'https://www.googleapis.com/auth/drive.file'
+        this.AUTH_OPT = {
+            'client_id': this.CLIENT_ID,
+            'scope': this.SCOPES,
+            'immediate': true
+        }
 
         this.ID_DIR_APP
-        this.ID_DIR_SHADER
-        this.ID_THUMB_SHADER = null
-        this.ids_shaderFiles = {}
 
-        this.authedCallback = callback
-        this.hermite = new Hermite_class()
+        document.getElementById('btn_authrise_now').onclick = () =>
+        {
+            gapi.auth.authorize(this.AUTH_OPT, this.handleAuthResult)
+        }
 
-        window.setTimeout(this.checkAuth, 1)
-    },
+        document.getElementById('btn_authrise_later').onclick = () =>
+        {
+            document.getElementById('div_authrise').classList.add('hide')
+            setTimeout(() =>
+            {
+                document.getElementById('div_authrise').classList.add('hidden')
+            }, 400)
+            ShaderBoy.runInDevMode = true
+            ShaderBoy.io.init()
+        }
 
-    /**
-     * Check if the current user has authorized the application.
-     */
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    checkAuth()
-    {
-        gapi.auth.authorize({
-            'client_id': ShaderBoy.gdrive.CLIENT_ID,
-            'scope': ShaderBoy.gdrive.SCOPES,
-            'immediate': true,
-        },
-            ShaderBoy.gdrive.handleAuthResult)
+        const response = await new Promise((resolve, reject) =>
+        {
+            gapi.auth.authorize(this.AUTH_OPT, (res) =>
+            {
+                if (res.error) { reject(res) }
+                else { resolve(res) }
+            })
+        })
+        return this.handleAuthResult(response)
     },
 
     /**
@@ -62,137 +64,67 @@ export default ShaderBoy.gdrive = {
      * @param {Object} authResult Authorization result.
      */
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    handleAuthResult(authResult)
+    async handleAuthResult(res)
     {
-        let loadDiv = document.getElementById('cvr-loading')
-        let authDiv = document.getElementById('div_authrise')
-        let authContentDiv = document.getElementById('auth-content')
-        let authNowButton = document.getElementById('btn_authrise_now')
-        let authLaterButton = document.getElementById('btn_authrise_later')
-        console.log('authResult: ', authResult)
-
-        if (authResult && authResult.error === undefined)
+        console.log('handleAuthResult: ', res)
+        if (res.error)
         {
-            // Access token has been successfully retrieved, requests can be sent to the API.
-            authDiv.classList.add('hide')
-            setTimeout(() =>
-            {
-                document.getElementById('div_authrise').classList.add('hidden')
-            }, 400)
-
-            ShaderBoy.gdrive.expireTime = parseInt(authResult.expires_in, 10) * 1000 + 2000
-
-            ShaderBoy.gdrive.regetAccessToken = function ()
-            {
-                setTimeout(
-                    function ()
-                    {
-                        console.log('Retry getting access token...')
-                        gapi.auth.authorize({
-                            'client_id': ShaderBoy.gdrive.CLIENT_ID,
-                            'scope': ShaderBoy.gdrive.SCOPES,
-                            'immediate': true,
-                        },
-                            function (res)
-                            {
-                                console.log('Got a new access token: ', res)
-                                ShaderBoy.gdrive.expireTime = parseInt(res.expires_in, 10) * 1000 + 2000
-                                ShaderBoy.gdrive.regetAccessToken()
-                            }
-                        )
-                    }
-                    , ShaderBoy.gdrive.expireTime)
-            }
-            ShaderBoy.gdrive.regetAccessToken()
-
-
-            gapi.load("client", function ()
-            {
-                gapi.client.load("drive", "v3", function ()
-                {
-                    ShaderBoy.gdrive.getFolderByName('ShaderBoy', function (res)
-                    {
-                        ShaderBoy.gdrive.authedCallback()
-                    })
-                })
-            })
-
+            // No access token could be retrieved, show the button to start the authorization flow.
+            document.getElementById('div_authrise').classList.remove('hide')
+            document.getElementById('auth-content').classList.remove('hide')
+            return Promise.resolve()
         }
         else
         {
-            // No access token could be retrieved, show the button to start the authorization flow.
-            authDiv.classList.remove('hide')
-            authContentDiv.classList.remove('hide')
-
-            authNowButton.onclick = function ()
-            {
-                gapi.auth.authorize({
-                    'client_id': ShaderBoy.gdrive.CLIENT_ID,
-                    'scope': ShaderBoy.gdrive.SCOPES,
-                    'immediate': false
-                },
-                    ShaderBoy.gdrive.handleAuthResult)
-            }
-
-            authLaterButton.onclick = function ()
-            {
-                authDiv.classList.add('hide')
-                setTimeout(() =>
-                {
-                    document.getElementById('div_authrise').classList.add('hidden')
-                }, 400)
-                ShaderBoy.runInDevMode = true
-                ShaderBoy.io.init()
-            }
+            // Access token has been successfully retrieved, requests can be sent to the API.
+            this.refreshAccessToken(res)
+            await new Promise((resolve, reject) => { gapi.load("client", resolve) })
+            await new Promise((resolve, reject) => { gapi.client.load("drive", "v3", resolve) })
+            await this.getFolderByName('ShaderBoy')
+            return Promise.resolve()
         }
+    },
+
+    /**
+     * Check if the current user has authorized the application.
+     */
+    async refreshAccessToken(res)
+    {
+        const expireTime = parseInt(res.expires_in, 10) * 1000 + 2000
+        setTimeout(() =>
+        {
+            console.log('Retry getting access token...')
+            gapi.auth.authorize(this.AUTH_OPT, (res) =>
+            {
+                console.log('Got a new access token: ', res)
+                this.refreshAccessToken(res)
+            }
+            )
+        }, expireTime)
     },
 
     // File management
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    loadFile(input)
+    async createFile(folderId, nm, content, contentType, callback)
     {
-        let file = input.files[0]
-        let url = URL.createObjectURL(file)
-        loadImage(url)
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    loadImage(url)
-    {
-        let img = new Image()
-        img.crossOrigin = "Anonymous"
-        img.src = url
-        img.onload = function ()
-        {
-            console.log('Image was loaded.')
-            // cvs.width = this.width
-            // cvs.height = this.height
-            // ctx.drawImage(this, 0, 0)
-        }
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    createFile(folderId, nm, content, contentType, callback)
-    {
-
         const boundary = '-------314159265358979323846'
         const delimiter = "\r\n--" + boundary + "\r\n"
         const close_delim = "\r\n--" + boundary + "--"
 
-        let metadata = {
+        const metadata = {
             'name': nm,
             'mimeType': contentType,
             'parents': [folderId]
         }
 
-        let base64Data = content
-        let multipartRequestBody = delimiter +
+        const base64Data = content
+        const multipartRequestBody = delimiter +
             'Content-Type: application/json\r\n\r\n' + JSON.stringify(metadata) + delimiter +
             'Content-Type: ' + contentType + '\r\n' +
             'Content-Transfer-Encoding: base64\r\n' +
             '\r\n' + base64Data + close_delim
 
-        let request = gapi.client.request({
+        const request = gapi.client.request({
             'path': '/upload/drive/v3/files',
             'method': 'POST',
             'params': {
@@ -204,22 +136,16 @@ export default ShaderBoy.gdrive = {
             'body': multipartRequestBody,
         })
 
-        request.execute(callback)
+        if (callback) { request.execute(callback) }
+        return request
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    createTextFile(folderId, nm, content, callback)
+    async createTextFile(folderId, nm, content, callback)
     {
         // from http://ecmanaut.blogspot.jp/2006/07/encoding-decoding-utf8-in-javascript.html
-        let utf8_to_b64 = function (str) { return window.btoa(unescape(encodeURIComponent(str))); }
-        this.createFile(folderId, nm, utf8_to_b64(content), 'text/plain', callback)
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    createImageFile(folderId, nm, canvas, callback)
-    {
-        let content = canvas.toDataURL("image/png").replace("data:image/png;base64,", "")
-        ShaderBoy.gdrive.createFile(folderId, nm, content, 'image/png', function (res) { console.log(res); })
+        const utf8_to_b64 = (str) => { return window.btoa(unescape(encodeURIComponent(str))); }
+        return this.createFile(folderId, nm, utf8_to_b64(content), 'text/plain', callback)
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -229,103 +155,83 @@ export default ShaderBoy.gdrive = {
         const delimiter = "\r\n--" + boundary + "\r\n"
         const close_delim = "\r\n--" + boundary + "--"
 
-        let metadata = {
+        const metadata = {
             'name': nm,
             'mimeType': contentType
         }
 
-        let base64Data = content
-        let multipartRequestBody = delimiter +
+        const base64Data = content
+        const multipartRequestBody = delimiter +
             'Content-Type: application/json\r\n\r\n' + JSON.stringify(metadata) + delimiter +
             'Content-Type: ' + contentType + '\r\n' +
             'Content-Transfer-Encoding: base64\r\n' +
             '\r\n' + base64Data + close_delim
 
-        let request = gapi.client.request({
+        const request = gapi.client.request({
             'path': '/upload/drive/v3/files/' + id,
             'method': 'PATCH',
-            'params': {
-                'uploadType': 'multipart'
-            },
-            'headers': {
-                'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
-            },
+            'params': { 'uploadType': 'multipart' },
+            'headers': { 'Content-Type': 'multipart/mixed; boundary="' + boundary + '"' },
             'body': multipartRequestBody,
         })
-        request.execute(callback)
+
+        if (callback) { request.execute(callback) }
+        return request
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    saveTextFile(nm, id, content, callback)
+    async saveTextFile(nm, id, content, callback)
     {
         // from http://ecmanaut.blogspot.jp/2006/07/encoding-decoding-utf8-in-javascript.html
-        let utf8_to_b64 = function (str) { return window.btoa(unescape(encodeURIComponent(str))); }
-        this.saveFile(nm, id, utf8_to_b64(content), 'text/plain', callback)
+        let utf8_to_b64 = (str) => { return window.btoa(unescape(encodeURIComponent(str))); }
+        return this.saveFile(nm, id, utf8_to_b64(content), 'text/plain', callback)
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    saveImageFile(nm, id, canvas, callback)
+    async saveThumbFile(nm, mainCanvas, folderId)
     {
-        let content = canvas.toDataURL("image/png").replace("data:image/jpeg;base64,", "")
-        this.saveFile(nm, id, content, 'image/png', callback)
-    },
+        const thumbCanvas = document.createElement("canvas")
 
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    saveThumbFile(nm, canvas, callback)
-    {
-        this.getFileByName(nm, this.ID_DIR_SHADER, function (res)
+        if (mainCanvas.width / mainCanvas.height > 16 / 9)
         {
-            console.log(res)
-            let resamplecallback = null
+            thumbCanvas.height = mainCanvas.height
+            thumbCanvas.width = Math.floor(mainCanvas.height * (16 / 9))
+            const offsetX = (mainCanvas.width - thumbCanvas.width) * 0.5
+            thumbCanvas.getContext('2d').drawImage(mainCanvas, -offsetX, 0)
+        }
+        else
+        {
+            thumbCanvas.width = mainCanvas.width
+            thumbCanvas.height = Math.floor(mainCanvas.width * (9 / 16))
+            const offsetY = (mainCanvas.height - thumbCanvas.height) * 0.5
+            thumbCanvas.getContext('2d').drawImage(mainCanvas, 0, -offsetY)
+        }
 
-            // Create canvas for resizing
-            ShaderBoy.gdrive.thumbData = {
-                canvas: document.createElement("canvas"),
-                name: nm,
-                callback: callback
-            }
+        await new Promise((resolve, reject) => { new Hermite_class().resample(thumbCanvas, 320, 180, true, resolve) })
+        const content = thumbCanvas.toDataURL("image/png").replace("data:image/png;base64,", "")
 
-            if (res.files.length === 0)
+        let response = await this.getFileInfoByName(nm, folderId, null)
+        const res = response.result
+        if (res.files.length === 0)
+        {
+            this.createFile(folderId, nm, content, 'image/png', null).then(() =>
             {
-                // Create a thumbnail.
-                resamplecallback = function ()
-                {
-                    let data = ShaderBoy.gdrive.thumbData
-                    let content = data.canvas.toDataURL("image/png").replace("data:image/png;base64,", "")
-                    ShaderBoy.gdrive.createFile(ShaderBoy.gdrive.ID_DIR_SHADER, data.name, content, 'image/png', data.callback)
-                }
-            }
-            else
+                return Promise.resolve()
+            }).catch((error) =>
             {
-                // Update a thumbnail.
-                ShaderBoy.gdrive.thumbData.id = res.files[0].id
-                resamplecallback = function ()
-                {
-                    let data = ShaderBoy.gdrive.thumbData
-                    let content = data.canvas.toDataURL("image/png").replace("data:image/png;base64,", "")
-                    ShaderBoy.gdrive.saveFile(data.name, data.id, content, 'image/png', data.callback)
-                }
-            }
-            let offsetX = 0
-            let offsetY = 0
-            if (canvas.width / canvas.height > 16 / 9)
+                return Promise.reject()
+            })
+        }
+        else
+        {
+            this.saveFile(nm, res.files[0].id, content, 'image/png', null).then(() =>
             {
-                ShaderBoy.gdrive.thumbData.canvas.height = canvas.height
-                ShaderBoy.gdrive.thumbData.canvas.width = Math.floor(canvas.height * (16 / 9));
-                offsetX = (canvas.width - ShaderBoy.gdrive.thumbData.canvas.width) * 0.5
-            }
-            else
+                return Promise.resolve()
+            }).catch((error) =>
             {
-                ShaderBoy.gdrive.thumbData.canvas.width = canvas.width
-                ShaderBoy.gdrive.thumbData.canvas.height = Math.floor(canvas.width * (9 / 16))
-                offsetY = (canvas.height - ShaderBoy.gdrive.thumbData.canvas.height) * 0.5
-            }
-
-            let resizeCtx = ShaderBoy.gdrive.thumbData.canvas.getContext('2d')
-            resizeCtx.drawImage(canvas, -offsetX, -offsetY)
-
-            ShaderBoy.gdrive.hermite.resample(ShaderBoy.gdrive.thumbData.canvas, 320, 180, true, resamplecallback)
-        })
+                return Promise.reject()
+            })
+        }
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -338,7 +244,8 @@ export default ShaderBoy.gdrive = {
         if (parentId !== 'root') config.parents = [parentId]
 
         const request = gapi.client.drive.files.create(config)
-        request.execute(callback)
+        if (callback) { request.execute(callback) }
+        return request
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -353,11 +260,27 @@ export default ShaderBoy.gdrive = {
             q: "trashed=false and mimeType='application/vnd.google-apps.folder' and name='" + nm + "'",
             spaces: "drive"
         })
-        request.execute(callback)
+        if (callback) { request.execute(callback) }
+        return request
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getFileByName(nm, id, callback)
+    getFolderByNamePromise(name)
+    {
+        const request = gapi.client.drive.files.list({
+            client_id: this.CLIENT_ID,
+            scope: this.SCOPES,
+            pageSize: 1,
+            orderBy: "name, modifiedTime",
+            fields: "files(id, name, kind, size, mimeType, modifiedTime)",
+            q: "trashed=false and mimeType='application/vnd.google-apps.folder' and name='" + name + "'",
+            spaces: "drive"
+        })
+        return request.getPromise()
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    getFileInfoByName(nm, id, callback)
     {
         const request = gapi.client.drive.files.list({
             client_id: this.CLIENT_ID,
@@ -368,46 +291,38 @@ export default ShaderBoy.gdrive = {
             q: "trashed=false and '" + id + "' in parents and name='" + nm + "'",
             spaces: "drive"
         })
-        request.execute(callback)
+        if (callback) { request.execute(callback) }
+        return request
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getImageFileUrl(id)
+    getFileInfoByNamePromise(name, id)
     {
-        gapi.client.drive.files.get({
-            fileId: id, //id of the file you are looking for
-            alt: 'media'
-        }, {
-                responseType: 'arraybuffer',
-                encoding: null
-            }, function (err, response)
-            {
-                if (err)
-                {
-                    console.log('error: ', err)
-
-                    //handle the error
-                } else
-                {
-                    var imageType = response.headers['content-type']
-                    var base64 = new Buffer(response.data, 'utf8').toString('base64')
-                    var dataURI = 'data:' + imageType + ';base64,' + base64
-                    console.log('URL: ', dataURI)
-                    // res.send(dataURI)
-                }
-            })
+        const request = gapi.client.drive.files.list({
+            client_id: this.CLIENT_ID,
+            scope: this.SCOPES,
+            pageSize: 1,
+            orderBy: "name, modifiedTime",
+            fields: "files(id, name, kind, size, mimeType, modifiedTime)",
+            q: "trashed=false and '" + id + "' in parents and name='" + name + "'",
+            spaces: "drive"
+        })
+        return request.getPromise()
     },
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getFolders(callback)
+    getFolders(appFolderId, callback)
     {
         const request = gapi.client.drive.files.list({
             pageSize: 100,
             orderBy: "name, modifiedTime",
             fields: "files(id, name, kind, size, mimeType, modifiedTime)",
-            q: "trashed=false and mimeType='application/vnd.google-apps.folder' and '" + this.ID_DIR_APP + "' in parents",
+            q: "trashed=false and mimeType='application/vnd.google-apps.folder' and '" + appFolderId + "' in parents",
             spaces: "drive"
         })
-        request.execute(callback)
+
+        if (callback) { request.execute(callback) }
+        return request
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -420,7 +335,9 @@ export default ShaderBoy.gdrive = {
             q: "trashed=false and '" + folderId + "' in parents",
             spaces: "drive"
         })
-        request.execute(callback)
+
+        if (callback) { request.execute(callback) }
+        return request
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -430,12 +347,13 @@ export default ShaderBoy.gdrive = {
             fileId: id,
             alt: 'media'
         })
-        request.then(callback)
+        if (callback) { request.execute(callback) }
+        return request
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    createShaderFolder(nm, callback)
+    createShaderFolder(name, appFolderId, callback)
     {
-        this.createFolder(nm, this.ID_DIR_APP, callback)
+        return this.createFolder(name, appFolderId, callback)
     }
 }

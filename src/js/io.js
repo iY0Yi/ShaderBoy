@@ -19,7 +19,7 @@ import gui_panel_shaderlist from './gui/gui_panel_shaderlist'
 export default ShaderBoy.io = {
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	init()
+	async init()
 	{
 		localforage.config({
 			driver: localforage.INDEXEDDB,
@@ -31,25 +31,16 @@ export default ShaderBoy.io = {
 		ShaderBoy.renderScale = 2
 		// ShaderBoy.editor.textSize = 16
 
-		this.fileNameByBufferName = {
-			'Setting': 'setting.json',
-			'Config': 'config.json',
-			'BufferA': 'buf_a.fs',
-			'BufferB': 'buf_b.fs',
-			'BufferC': 'buf_c.fs',
-			'BufferD': 'buf_d.fs',
-			'Image': 'main.fs',
-			'Sound': 'sound.fs',
-			'Common': 'common.fs'
-		}
-
 		this.useGoogleDrive = true
 		this.loadedNum = 0
 		this.needLoadingNum = 0
 		this.initLoading = true
 		this.isNewShader = false
-		this.createdNum = 0
-		this.isInitializationSB = false
+		this.isAppInit = false
+		this.idList = {}
+
+		this.ID_DIR_APP = ''
+		this.ID_DIR_SHADER = ''
 
 		const authDiv = document.getElementById('div_authrise')
 		const authLaterButton = document.getElementById('btn_authrise_later')
@@ -61,97 +52,28 @@ export default ShaderBoy.io = {
 				document.getElementById('div_authrise').classList.add('hidden')
 			}, 400)
 			ShaderBoy.runInDevMode = true
-			ShaderBoy.io.init()
+			this.init()
 		}
 
-		if (!ShaderBoy.runInDevMode)
+		if (ShaderBoy.runInDevMode)
 		{
-			console.log('production mode...')
-			gdrive.init(this.getShadersFromGdrive)
+			console.log('devlopment mode...')
+			this.setupDevShader()
 		}
 		else
 		{
-			console.log('devlopment mode...')
-			this.setupTestShaders()
+			console.log('production mode...')
+			let authDiv = document.getElementById('div_authrise')
+			authDiv.classList.add('hide')
+			const response = await gdrive.init()
+			await this.getShadersSetting()
+			await this.getShaderFiles(ShaderBoy.activeShaderName, true)
+			this.getThumbFileIds()
 		}
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	getShadersFromGdrive()
-	{
-		gdrive.getFolderByName('ShaderBoy', (res) =>
-		{
-			if (res.files.length === 0)
-			{
-				// No folder is named as ShaderBoy. So make it.
-				gdrive.createFolder('ShaderBoy', 'root', (res) =>
-				{
-					gdrive.ID_DIR_APP = res.id
-					ShaderBoy.io.createSetting()
-				})
-				return
-			}
-
-			// A folder found named as ShaderBoy. So lets load shaders.
-			gdrive.ID_DIR_APP = res.files[0].id
-
-			gdrive.getFileByName('setting.json', gdrive.ID_DIR_APP, (res) =>
-			{
-				if (res.files.length === 0)
-				{
-					ShaderBoy.io.createSetting()
-					return
-				}
-
-				for (const file of res.files)
-				{
-					if (file.name !== 'setting.json')
-					{
-						continue
-					}
-
-					gdrive.appData = {}
-					gdrive.appData['Setting'] = {}
-					gdrive.appData['Setting']['name'] = file.name
-					gdrive.appData['Setting']['id'] = file.id
-					gdrive.appData['Setting']['content'] = ''
-
-					gdrive.getContentBody(file.id, (res) =>
-					{
-						let value = res.body
-						if (!value)
-						{
-							value = ShaderLib.shader['Setting']
-						}
-						const settingObj = JSON.parse(value)
-
-						//active shader name. to be loaded.
-						ShaderBoy.activeShaderName = settingObj.shaders.active
-						ShaderBoy.setting = settingObj
-						gdrive.getFolders((res) =>
-						{
-							ShaderBoy.setting.shaders.list = []
-							ShaderBoy.setting.shaders.datalist = []
-							ShaderBoy.setting.shaders.thumbs = []
-							for (let i = 0; i < res.files.length; i++)
-							{
-								const file = res.files[i]
-								ShaderBoy.setting.shaders.list[i] = file.name
-								ShaderBoy.setting.shaders.datalist[i] = { name: file.name, id: file.id }
-							}
-
-							const settingText = JSON.stringify(ShaderBoy.setting, null, "\t")
-							ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(settingText, 'x-shader/x-fragment')
-							ShaderBoy.io.loadShader(ShaderBoy.activeShaderName, true)
-						})
-					})
-				}
-			})
-		})
-	},
-
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	setupTestShaders()
+	setupDevShader()
 	{
 		ShaderBoy.config = JSON.parse(ShaderBoy.buffers['Config'].cm.getValue())
 		ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(ShaderLib.shader['Setting'], 'x-shader/x-fragment')
@@ -196,97 +118,145 @@ export default ShaderBoy.io = {
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	createSetting()
+	async getShadersSetting()
+	{
+		document.getElementById('div_authrise').classList.add('hide')
+		setTimeout(() =>
+		{
+			document.getElementById('div_authrise').classList.add('hidden')
+		}, 400)
+
+		let request, res
+
+		request = await gdrive.getFolderByName('ShaderBoy')
+		console.log('getShadersSetting', request)
+		res = request.result
+		if (res.files.length === 0)
+		{
+			// No folder is named as ShaderBoy. So make it.
+			request = await gdrive.createFolder('ShaderBoy', 'root')
+			res = request.result
+			this.ID_DIR_APP = res.id
+			this.createSetting()
+			return
+		}
+
+		// A folder found named as ShaderBoy. So lets load shaders.
+		this.ID_DIR_APP = res.files[0].id
+		request = await gdrive.getFileInfoByName('setting.json', this.ID_DIR_APP)
+		res = request.result
+		if (res.files.length === 0)
+		{
+			this.createSetting()
+			return
+		}
+
+		const file = res.files[0]
+		this.idList['setting.json'] = {}
+		this.idList['setting.json'].name = file.name
+		this.idList['setting.json'].id = file.id
+		this.idList['setting.json'].content = ''
+		request = await gdrive.getContentBody(file.id)
+		//active shader name. to be loaded.
+		const settingObj = JSON.parse(request.body)
+		ShaderBoy.setting = settingObj
+		ShaderBoy.activeShaderName = settingObj.shaders.active
+
+		request = await gdrive.getFolders(this.ID_DIR_APP)
+		res = request.result
+		ShaderBoy.setting.shaders.list = []
+		ShaderBoy.setting.shaders.datalist = []
+		for (const folder of res.files)
+		{
+			ShaderBoy.setting.shaders.list.push(folder.name)
+			ShaderBoy.setting.shaders.datalist.push({ name: folder.name, id: folder.id })
+		}
+
+		const settingText = JSON.stringify(ShaderBoy.setting, null, "\t")
+		ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(settingText, 'x-shader/x-fragment')
+	},
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	async createSetting()
 	{
 		ShaderBoy.setting = JSON.parse(ShaderLib.shader['Setting'])
 		ShaderBoy.setting.shaders.list = []
 		ShaderBoy.setting.shaders.datalist = []
-		ShaderBoy.setting.shaders.thumbs = []
 		ShaderBoy.setting.shaders.list[0] = 'file.name'
 		ShaderBoy.setting.shaders.datalist[0] = { name: '_default', id: null }
-		gdrive.createTextFile(gdrive.ID_DIR_APP, 'setting.json', ShaderLib.shader['Setting'], (res) =>
-		{
-			gdrive.appData = {}
-			gdrive.appData['Setting'] = {}
-			gdrive.appData['Setting']['name'] = res.name
-			gdrive.appData['Setting']['id'] = res.id
-			gdrive.appData['Setting']['content'] = ''
-			ShaderBoy.activeShaderName = '_default'
-			ShaderBoy.io.isInitializationSB = true
-			ShaderBoy.io.newShader(ShaderBoy.activeShaderName)
-		})
+		const request = await gdrive.createTextFile(this.ID_DIR_APP, 'setting.json', ShaderLib.shader['Setting'])
+		const res = request.resultult
+		this.idList['setting.json'] = {}
+		this.idList['setting.json'].name = res.name
+		this.idList['setting.json'].id = res.id
+		this.idList['setting.json'].content = ''
+
+		ShaderBoy.activeShaderName = '_default'
+		this.isAppInit = true
+		await this.newShader(ShaderBoy.activeShaderName)
 		ShaderBoy.bufferManager.initBufferDoc(['Setting'])
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	updateShaderList()
+	async createDefaultShaderFiles(id)
 	{
-		ShaderBoy.setting.shaders.list.push(ShaderBoy.setting.shaders.active)
-		ShaderBoy.setting.shaders.list = Array.from(new Set(ShaderBoy.setting.shaders.list))
-	},
-
-	activateShader(name)
-	{
-		ShaderBoy.setting.shaders.active = name
+		let request, res
+		console.log('createDefaultShaderFiles')
+		ShaderBoy.config = JSON.parse(ShaderBoy.buffers['Config'].cm.getValue())
+		Promise.all(
+			[
+				gdrive.createTextFile(id, 'config.json', ShaderLib.shader['Config']),
+				gdrive.createTextFile(id, 'common.fs', ShaderLib.shader['Common']),
+				gdrive.createTextFile(id, '_guiknobs.json', ShaderLib.shader['gui_knobs']),
+				gdrive.createTextFile(id, '_guitimeline.json', ShaderLib.shader['gui_timeline']),
+				gdrive.createTextFile(id, 'buf_a.fs', ShaderLib.shader['BufferA']),
+				gdrive.createTextFile(id, 'buf_b.fs', ShaderLib.shader['BufferB']),
+				gdrive.createTextFile(id, 'buf_c.fs', ShaderLib.shader['BufferC']),
+				gdrive.createTextFile(id, 'buf_d.fs', ShaderLib.shader['BufferD']),
+				gdrive.createTextFile(id, 'main.fs', ShaderLib.shader['Image']),
+				gdrive.createTextFile(id, 'sound.fs', ShaderLib.shader['Sound'])
+			]
+		).then(async () =>
+		{
+			ShaderBoy.gui_header.setStatus('suc1', 'New.', 3000)
+			if (this.isAppInit === true)
+			{
+				this.isAppInit = false
+				await this.getShadersSetting()
+				await this.getShaderFiles(ShaderBoy.activeShaderName, true)
+				this.getThumbFileIds()
+			}
+			else
+			{
+				const name = ShaderBoy.setting.shaders.active
+				this.getShaderFiles(name, name === '_default')
+			}
+		}).catch((error) =>
+		{
+			console.log(error)
+		})
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	createDefaultShaderFiles(id)
+	async newShader(shaderName)
 	{
-		this.createdNum = 0
-		const load = () =>
+		let request, res
+		request = await gdrive.getFolderByName(shaderName)
+		res = request.result
+		if (res.files.length !== 0)
 		{
-			ShaderBoy.io.createdNum++
-			if (ShaderBoy.io.createdNum === 8)
-			{
-				if (ShaderBoy.io.isInitializationSB === true)
-				{
-					ShaderBoy.io.isInitializationSB = false
-					ShaderBoy.io.getShadersFromGdrive()
-				}
-				else
-				{
-					const name = ShaderBoy.setting.shaders.active
-					ShaderBoy.io.loadShader(name, name === '_default')
-				}
-			}
+			return Promise.reject(() => { console.log('It exist. Use a different name.') })
 		}
 
-		ShaderBoy.config = JSON.parse(ShaderBoy.buffers['Config'].cm.getValue())
-		gdrive.createTextFile(id, 'config.json', ShaderLib.shader['Config'], load)
-		gdrive.createTextFile(id, 'common.fs', ShaderLib.shader['Common'], load)
-		gdrive.createTextFile(id, '_guiknobs.json', ShaderLib.shader['gui_knobs'], load)
-		gdrive.createTextFile(id, '_guitimeline.json', ShaderLib.shader['gui_timeline'], load)
-		gdrive.createTextFile(id, 'buf_a.fs', ShaderLib.shader['BufferA'], load)
-		gdrive.createTextFile(id, 'buf_b.fs', ShaderLib.shader['BufferB'], load)
-		gdrive.createTextFile(id, 'buf_c.fs', ShaderLib.shader['BufferC'], load)
-		gdrive.createTextFile(id, 'buf_d.fs', ShaderLib.shader['BufferD'], load)
-		gdrive.createTextFile(id, 'main.fs', ShaderLib.shader['Image'], load)
-		gdrive.createTextFile(id, 'sound.fs', ShaderLib.shader['Sound'], load)
-
-		ShaderBoy.gui_header.setStatus('suc1', 'New.', 3000)
-	},
-
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	newShader(shaderName)
-	{
-		gdrive.getFolderByName(shaderName, (res) =>
-		{
-			if (res.files.length !== 0)
-			{
-				console.log('It exist. Use a different name.')
-				return
-			}
-
-			gdrive.createShaderFolder(shaderName, (ress) =>
-			{
-				gdrive.ID_DIR_SHADER = ress.id
-				ShaderBoy.io.isNewShader = true
-				ShaderBoy.io.createDefaultShaderFiles(ress.id)
-				ShaderBoy.io.activateShader(shaderName)
-				ShaderBoy.io.updateShaderList()
-			})
-		})
+		request = await gdrive.createShaderFolder(shaderName, this.ID_DIR_APP)
+		res = request.result
+		this.ID_DIR_SHADER = res.id
+		ShaderBoy.setting.shaders.active = shaderName
+		this.isNewShader = true
+		this.createDefaultShaderFiles(res.id)
+		ShaderBoy.setting.shaders.list.push(ShaderBoy.setting.shaders.active)
+		ShaderBoy.setting.shaders.list = Array.from(new Set(ShaderBoy.setting.shaders.list))
+		return Promise.resolve()
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -294,315 +264,283 @@ export default ShaderBoy.io = {
 	{
 		ShaderBoy.gui_header.setStatus('prgrs', 'Saving...', 0)
 
-		ShaderBoy.io.numNeedSaving = 5
-		ShaderBoy.io.numSaved = 0
-		ShaderBoy.io.numNeedSaving += (ShaderBoy.buffers['Common'].active === true) ? 1 : 0
-		ShaderBoy.io.numNeedSaving += (ShaderBoy.buffers['BufferA'].active === true) ? 1 : 0
-		ShaderBoy.io.numNeedSaving += (ShaderBoy.buffers['BufferB'].active === true) ? 1 : 0
-		ShaderBoy.io.numNeedSaving += (ShaderBoy.buffers['BufferC'].active === true) ? 1 : 0
-		ShaderBoy.io.numNeedSaving += (ShaderBoy.buffers['BufferD'].active === true) ? 1 : 0
-
-		const confirmSaving = () =>
-		{
-			ShaderBoy.io.numSaved++
-			if (ShaderBoy.io.numNeedSaving === ShaderBoy.io.numSaved)
-			{
-				ShaderBoy.gui_header.setStatus('suc1', 'Saved.', 3000)
-			}
-		}
-
-		gdrive.saveThumbFile('thumb.png', ShaderBoy.canvas, (res, err) => { console.log(res, err, 'thumbnail was saved.'); }, confirmSaving)
-		gdrive.saveTextFile('setting.json', gdrive.appData['Setting'].id, JSON.stringify(ShaderBoy.setting, null, "\t"), confirmSaving)
-		gdrive.saveTextFile('_guiknobs.json', gdrive.ids_shaderFiles['_guiknobs.json'].id, JSON.stringify({ 'show': ShaderBoy.gui.knobs.show, 'knobs': ShaderBoy.gui.knobs.knobs }, null, "\t"), confirmSaving)
-		gdrive.saveTextFile('_guitimeline.json', gdrive.ids_shaderFiles['_guitimeline.json'].id, JSON.stringify(gui_timeline.guidata, null, "\t"), confirmSaving)
-		gdrive.saveTextFile('config.json', gdrive.ids_shaderFiles['config.json'].id, JSON.stringify(ShaderBoy.config, null, "\t"), confirmSaving)
-		gdrive.saveTextFile('main.fs', gdrive.ids_shaderFiles['main.fs'].id, ShaderBoy.buffers['Image'].cm.getValue(), confirmSaving)
-		if (ShaderBoy.buffers['Common'].active === true) gdrive.saveTextFile('common.fs', gdrive.ids_shaderFiles['common.fs'].id, ShaderBoy.buffers['Common'].cm.getValue(), confirmSaving)
-		if (ShaderBoy.buffers['BufferA'].active === true) gdrive.saveTextFile('buf_a.fs', gdrive.ids_shaderFiles['buf_a.fs'].id, ShaderBoy.buffers['BufferA'].cm.getValue(), confirmSaving)
-		if (ShaderBoy.buffers['BufferB'].active === true) gdrive.saveTextFile('buf_b.fs', gdrive.ids_shaderFiles['buf_b.fs'].id, ShaderBoy.buffers['BufferB'].cm.getValue(), confirmSaving)
-		if (ShaderBoy.buffers['BufferC'].active === true) gdrive.saveTextFile('buf_c.fs', gdrive.ids_shaderFiles['buf_c.fs'].id, ShaderBoy.buffers['BufferC'].cm.getValue(), confirmSaving)
-		if (ShaderBoy.buffers['BufferD'].active === true) gdrive.saveTextFile('buf_d.fs', gdrive.ids_shaderFiles['buf_d.fs'].id, ShaderBoy.buffers['BufferD'].cm.getValue(), confirmSaving)
-		if (ShaderBoy.buffers['Sound'].active === true) gdrive.saveTextFile('sound.fs', gdrive.ids_shaderFiles['sound.fs'].id, ShaderBoy.buffers['Sound'].cm.getValue(), confirmSaving)
 		localforage.setItem('renderScale', ShaderBoy.renderScale, (err) => { if (err) { console.log('db error...') } })
 		localforage.setItem('textSize', ShaderBoy.textSize, (err) => { if (err) { console.log('db error...') } })
+
+		const promises = []
+		const saveBufferShader = (buffer, fileName) =>
+		{
+			if (buffer.active) promises.push(gdrive.saveTextFile(fileName, this.idList[fileName].id, buffer.cm.getValue()))
+		}
+
+		promises.push(gdrive.saveThumbFile('thumb.png', ShaderBoy.canvas, this.ID_DIR_SHADER))
+		promises.push(gdrive.saveTextFile('setting.json', this.idList['setting.json'].id, JSON.stringify(ShaderBoy.setting, null, "\t")))
+		promises.push(gdrive.saveTextFile('_guiknobs.json', this.idList['_guiknobs.json'].id, JSON.stringify({ 'show': ShaderBoy.gui.knobs.show, 'knobs': ShaderBoy.gui.knobs.knobs }, null, "\t")))
+		promises.push(gdrive.saveTextFile('_guitimeline.json', this.idList['_guitimeline.json'].id, JSON.stringify(gui_timeline.guidata, null, "\t")))
+		promises.push(gdrive.saveTextFile('config.json', this.idList['config.json'].id, JSON.stringify(ShaderBoy.config, null, "\t")))
+
+		saveBufferShader(ShaderBoy.buffers['Image'], 'main.fs')
+		saveBufferShader(ShaderBoy.buffers['Common'], 'common.fs')
+		saveBufferShader(ShaderBoy.buffers['BufferA'], 'buf_a.fs')
+		saveBufferShader(ShaderBoy.buffers['BufferB'], 'buf_b.fs')
+		saveBufferShader(ShaderBoy.buffers['BufferC'], 'buf_c.fs')
+		saveBufferShader(ShaderBoy.buffers['BufferD'], 'buf_d.fs')
+		saveBufferShader(ShaderBoy.buffers['Sound'], 'sound.fs')
+
+		Promise.all(promises).then(() =>
+		{
+			ShaderBoy.gui_header.setStatus('suc1', 'Saved.', 3000)
+		}).catch((error) =>
+		{
+			console.log(error)
+		})
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	isLoaded(nm)
+	async getThumbFileIds()
 	{
-		ShaderBoy.io.loadedNum++
-		ShaderBoy.gui_header.setStatus('prgrs', 'Loading shader files...(' + ShaderBoy.io.loadedNum + '/' + ShaderBoy.io.needLoadingNum + ')', 0)
-		if (ShaderBoy.io.loadedNum === ShaderBoy.io.needLoadingNum)
+		// console.log('getThumbFileIds')
+		let shaderlist = []
+		for (const shaderData of ShaderBoy.setting.shaders.datalist)
 		{
-			ShaderBoy.bufferManager.buildShaderFromBuffers()
-			ShaderBoy.bufferManager.setFBOsProps()
-			ShaderBoy.editor.setBuffer('Image', true)
-			if (ShaderBoy.io.isNewShader === true)
+			const request = await gdrive.getFileInfoByName('thumb.png', shaderData.id)
+			const res = request.result
+			if (res.files === undefined || res.files.length === 0)
 			{
-				gdrive.saveThumbFile('thumb.png', ShaderBoy.canvas, (res, err) => { console.log(res, err, 'thumbnail was saved.'); })
-				ShaderBoy.io.isNewShader = false
+				continue
 			}
 
-			ShaderBoy.gui_header.resetBtns(ShaderBoy.config.buffers)
-			ShaderBoy.isPlaying = true
+			for (const file of res.files) 
+			{
+				if (file.name === 'thumb.png')
+				{
+					shaderlist.push({ name: shaderData.name, thumb: 'https://drive.google.com/uc?id=' + file.id })
+				}
+			}
 		}
+		// return shaderlist
+		// console.log('getThumbFileIds:done2:', shaderlist)
+		gui_panel_shaderlist.setup(shaderlist)
+
+		// let promises = []
+		// for (const shaderData of ShaderBoy.setting.shaders.datalist)
+		// {
+		// 	promises.push(gdrive.getFileInfoByName('thumb.png', shaderData.id))
+		// }
+		// console.log(promises)
+		// Promise.all(promises).then(
+		// 	(allRequests) =>
+		// 	{
+		// 		console.log(allRequests)
+		// 		for (const request of allRequests)
+		// 		{
+		// 			console.log(request)
+		// 			const res = request.result
+		// 			for (const file of res.files) 
+		// 			{
+		// 				if (file.name === 'thumb.png')
+		// 				{
+		// 					shaderlist.push({ name: shaderData.name, thumb: 'https://drive.google.com/uc?id=' + file.id })
+		// 				}
+		// 			}
+		// 		}
+		// 		return
+		// 	}
+		// ).then(
+		// 	() =>
+		// 	{
+		// 		console.log('getThumbFileIds:done3:', shaderlist)
+		// 		gui_panel_shaderlist.setup(shaderlist)
+		// 	}
+		// ).catch(
+		// 	(allErrors) =>
+		// 	{
+		// 		console.log(allErrors)
+		// 		for (const error of allErrors)
+		// 		{
+		// 			console.log(error)
+		// 		}
+		// 	}
+		// )
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	getActiveShaderName()
+	async versionCompatibilityFallback(configObj)
 	{
-		return ShaderBoy.buffers['BufferA'].cm.getValue()
+		// Rename "MainImage" to "Image"
+		if ('MainImage' in configObj.buffers)
+		{
+			Object.defineProperty(configObj.buffers, 'Image', Object.getOwnPropertyDescriptor(configObj.buffers, 'MainImage'))
+			delete configObj.buffers['MainImage']
+		}
+
+		// Debug GUI feature
+		if (this.idList['_guiknobs.json'] === undefined)
+		{
+			const request = await gdrive.createTextFile(this.ID_DIR_SHADER, '_guiknobs.json', ShaderLib.shader['gui_knobs'])
+			const file = request.result.file
+			this.idList['_guiknobs.json'] = {}
+			this.idList['_guiknobs.json'].name = file.name
+			this.idList['_guiknobs.json'].id = file.id
+			this.idList['_guiknobs.json'].content = ''
+		}
+
+		// Timeline feature
+		if (this.idList['_guitimeline.json'] === undefined)
+		{
+			const request = await gdrive.createTextFile(this.ID_DIR_SHADER, '_guitimeline.json', ShaderLib.shader['gui_timeline'])
+			const file = request.result.file
+			this.idList['_guitimeline.json'] = {}
+			this.idList['_guitimeline.json'].name = file.name
+			this.idList['_guitimeline.json'].id = file.id
+			this.idList['_guitimeline.json'].content = ''
+		}
+
+		// Sound buffer feature
+		if (configObj.buffers['Sound'] === undefined)
+		{
+			const defcon = JSON.parse(ShaderLib.shader['Config'])
+			configObj.buffers['Sound'] = defcon.buffers['Sound']
+		}
+
+		if (this.idList['sound.fs'] === undefined)
+		{
+			const request = await gdrive.createTextFile(this.ID_DIR_SHADER, 'sound.fs', ShaderLib.shader['Sound'])
+			const file = request.result.file
+			this.idList['sound.fs'] = {}
+			this.idList['sound.fs'].name = file.name
+			this.idList['sound.fs'].id = file.id
+			this.idList['sound.fs'].content = ''
+		}
+
+		return configObj
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	loadShader(sn, initLoading)
+	async getShaderFiles(shaderName = '_default', initLoading = false)
 	{
 		if (ShaderBoy.buffers['Sound'].active === true)
 		{
 			ShaderBoy.soundRenderer.stop()
 		}
 
-		if (initLoading === true)
+		localforage.getItem('renderScale', (err, value) =>
 		{
-			window.idi = 0
-			const id = ShaderBoy.setting.shaders.datalist[window.idi].id
-			ShaderBoy.setting.shaders.shaderlist = []
-
-			window.cb_thumb = (res) =>
+			if (!value)
 			{
-				if (res.files === undefined || res.files.length === 0)
-				{
-					return
-				}
-
-				for (const file of res.files) 
-				{
-					if (file.name === 'thumb.png')
-					{
-						ShaderBoy.setting.shaders.shaderlist[window.idi] = { name: ShaderBoy.setting.shaders.datalist[window.idi].name, thumb: 'https://drive.google.com/uc?id=' + file.id }
-						window.idi++
-						if (ShaderBoy.setting.shaders.datalist[window.idi] !== undefined)
-						{
-							const id = ShaderBoy.setting.shaders.datalist[window.idi].id
-							gdrive.getFileByName('thumb.png', id, window.cb_thumb)
-						}
-						else
-						{
-							gui_panel_shaderlist.setup(ShaderBoy.setting.shaders.shaderlist)
-						}
-					}
-
-				}
-
+				value = 2
 			}
-			gdrive.getFileByName('thumb.png', id, window.cb_thumb)
-		}
+			ShaderBoy.renderScale = value
+		})
 
-		ShaderBoy.io.initLoading = (initLoading === undefined) ? false : initLoading
-		ShaderBoy.buffers['Config'].active = true
-		ShaderBoy.io.loadedNum = 0
-		ShaderBoy.io.needLoadingNum = 0
+		localforage.getItem('textSize', (err, value) =>
+		{
+			if (!value)
+			{
+				// value = 16
+			}
+			// ShaderBoy.editor.textSize = value
+		})
+
+		this.initLoading = initLoading
 
 		ShaderBoy.gui_header.setStatus('prgrs', 'Loading from Google Drive...', 0)
 
-		let shaderName = '_default'
-		if (sn !== undefined)
+		let request, res, id, value
+
+		// get shader folder
+		request = await gdrive.getFolderByName(shaderName)
+		res = request.result
+		if (res.files[0] === undefined)
 		{
-			shaderName = sn
+			ShaderBoy.gui_header.setStatus('error', shaderName + ' was not found.', 3000)
+			await this.newShader(shaderName)
+			return Promise.resolve()
+		}
+		this.ID_DIR_SHADER = res.files[0].id
+		ShaderBoy.gui_header.setStatus('prgrs', '"' + shaderName + '" was found. Loading shader files...', 0)
+
+		// get file ids
+		request = await gdrive.getFilesInFolder(this.ID_DIR_SHADER)
+		res = request.result
+		if (res.files.length === 0)
+		{
+			ShaderBoy.gui_header.setStatus('error', shaderName + ' folder is empty. Confirm on your GoogleDrive.', 0)
+			return Promise.reject()
 		}
 
-		gdrive.getFolderByName(shaderName, (res) =>
+		for (const file of res.files)
 		{
-			if (res.files[0] !== undefined)
+			this.idList[file.name] = {}
+			this.idList[file.name].name = file.name
+			this.idList[file.name].id = file.id
+			this.idList[file.name].content = ''
+		}
+
+		id = this.idList['config.json'].id
+		request = await gdrive.getContentBody(id)
+		ShaderBoy.buffers['Config'].cm = CodeMirror.Doc(request.body, 'x-shader/x-fragment')
+		let configObj = JSON.parse(request.body)
+		configObj = await this.versionCompatibilityFallback(configObj)
+		console.log('configObj: ', configObj)
+		ShaderBoy.config = configObj
+
+		// Load GUI jsons...
+		id = this.idList['_guiknobs.json'].id
+		request = await gdrive.getContentBody(id)
+		const knobsObj = JSON.parse(request.body)
+		ShaderBoy.gui.knobs.show = knobsObj.show
+		for (let i = 0; i < ShaderBoy.gui.knobs.knobs.length; i++)
+		{
+			ShaderBoy.gui.knobs.knobs[i].value = knobsObj.knobs[i].value
+			ShaderBoy.gui.knobs.knobs[i].active = knobsObj.knobs[i].active
+			ShaderBoy.gui.knobs.toggle(i, false)
+		}
+
+		id = this.idList['_guitimeline.json'].id
+		request = await gdrive.getContentBody(id)
+		const timelineObj = JSON.parse(request.body)
+		gui_timeline.guidata = timelineObj
+
+		const setupBufferByConfig = async (bufName, config) =>
+		{
+			ShaderBoy.buffers[bufName].active = config.buffers[bufName].active
+			console.log(bufName, config.buffers[bufName].active);
+			if (ShaderBoy.buffers[bufName].active === true)
 			{
-				ShaderBoy.gui_header.setStatus('prgrs', '"' + shaderName + '" was found. Loading shader files...', 0)
-				const folderId = res.files[0].id
-
-				gdrive.ID_DIR_SHADER = folderId
-
-				gdrive.getFilesInFolder(folderId, (res) =>
-				{
-
-					if (res.files.length === 0)
-					{
-						ShaderBoy.gui_header.setStatus('error', shaderName + ' folder is empty. Confirm on your GoogleDrive.', 0)
-						return
-					}
-
-					gdrive.ids_shaderFiles = {}
-					for (const file of res.files)
-					{
-						gdrive.ids_shaderFiles[file.name] = {}
-						gdrive.ids_shaderFiles[file.name]['name'] = file.name
-						gdrive.ids_shaderFiles[file.name]['id'] = file.id
-						gdrive.ids_shaderFiles[file.name]['content'] = ''
-					}
-
-					const id = gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName['Config']].id
-					gdrive.getContentBody(id, (res) =>
-					{
-						let value = res.body
-						if (!value)
-						{
-							value = ShaderLib.shader['Config']
-						}
-
-						const configObj = JSON.parse(value)
-						ShaderBoy.config = configObj
-						if (configObj.buffers['Sound'] === undefined)
-						{
-							const defcon = JSON.parse(ShaderLib.shader['Config'])
-							configObj.buffers['Sound'] = ShaderBoy.config.buffers['Sound'] = defcon.buffers['Sound']
-						}
-
-						for (const key in configObj.buffers)
-						{
-							const buffer = configObj.buffers[key]
-							if (buffer.active === true)
-							{
-								ShaderBoy.io.needLoadingNum++
-							}
-						}
-
-						// Load GUI jsons...
-						if (gdrive.ids_shaderFiles['_guiknobs.json'] !== undefined)
-						{
-							const id = gdrive.ids_shaderFiles['_guiknobs.json'].id
-							gdrive.getContentBody(id, (res) =>
-							{
-								let value = res.body
-								if (!value)
-								{
-									value = ShaderLib.shader['gui_knobs']
-								}
-								const knobsObj = JSON.parse(value)
-								ShaderBoy.gui.knobs.show = knobsObj.show
-								for (let i = 0; i < ShaderBoy.gui.knobs.knobs.length; i++)
-								{
-									ShaderBoy.gui.knobs.knobs[i].value = knobsObj.knobs[i].value
-									ShaderBoy.gui.knobs.knobs[i].active = knobsObj.knobs[i].active
-									ShaderBoy.gui.knobs.toggle(i, false)
-								}
-							})
-						}
-						else
-						{
-							gdrive.createTextFile(gdrive.ID_DIR_SHADER, '_guiknobs.json', ShaderLib.shader['gui_knobs'], (file) =>
-							{
-								gdrive.ids_shaderFiles['_guiknobs.json'] = {}
-								gdrive.ids_shaderFiles['_guiknobs.json']["name"] = file.name
-								gdrive.ids_shaderFiles['_guiknobs.json']["id"] = file.id
-								gdrive.ids_shaderFiles['_guiknobs.json']["content"] = ''
-							})
-						}
-
-						if (gdrive.ids_shaderFiles['_guitimeline.json'] !== undefined)
-						{
-							const id = gdrive.ids_shaderFiles['_guitimeline.json'].id
-							gdrive.getContentBody(id, (res) =>
-							{
-								let value = res.body
-								if (!value)
-								{
-									value = ShaderLib.shader['gui_timeline']
-								}
-								const timelineObj = JSON.parse(value)
-								gui_timeline.guidata = timelineObj
-							})
-						}
-						else
-						{
-							gdrive.createTextFile(gdrive.ID_DIR_SHADER, '_guitimeline.json', ShaderLib.shader['gui_timeline'], (file) =>
-							{
-								gdrive.ids_shaderFiles['_guitimeline.json'] = {}
-								gdrive.ids_shaderFiles['_guitimeline.json']["name"] = file.name
-								gdrive.ids_shaderFiles['_guitimeline.json']["id"] = file.id
-								gdrive.ids_shaderFiles['_guitimeline.json']["content"] = ''
-							})
-						}
-
-						const configText = JSON.stringify(configObj, null, "\t")
-						ShaderBoy.buffers['Config'].cm = CodeMirror.Doc(configText, 'x-shader/x-fragment')
-
-						localforage.getItem('renderScale', (err, value) =>
-						{
-							if (!value)
-							{
-								value = 2
-							}
-							ShaderBoy.renderScale = value
-						})
-
-						localforage.getItem('textSize', (err, value) =>
-						{
-							if (!value)
-							{
-								// value = 16
-							}
-							// ShaderBoy.editor.textSize = value
-						})
-
-						const bufferConfig = configObj.buffers
-						if ('MainImage' in bufferConfig)
-						{
-							Object.defineProperty(bufferConfig, 'Image', Object.getOwnPropertyDescriptor(bufferConfig, 'MainImage'))
-							delete bufferConfig['MainImage']
-						}
-						if (bufferConfig['Sound'] === undefined)
-						{
-							ShaderBoy.buffers['Sound'].active = false
-							const defcon = JSON.parse(ShaderLib.shader['Config'])
-							bufferConfig['Sound'] = defcon['Sound']
-						}
-
-						const setupBufferByConfig = (bufName, config) =>
-						{
-							ShaderBoy.buffers[bufName].active = config[bufName].active
-							if (ShaderBoy.buffers[bufName].active === true)
-							{
-								const id = gdrive.ids_shaderFiles[ShaderBoy.io.fileNameByBufferName[bufName]].id
-								gdrive.getContentBody(id, (res) =>
-								{
-									let value = res.body
-									if (!value)
-									{
-										value = ShaderLib.shader[bufName]
-									}
-									ShaderBoy.buffers[bufName].cm = CodeMirror.Doc(value, 'x-shader/x-fragment')
-									ShaderBoy.io.isLoaded(bufName)
-								})
-							}
-						}
-						setupBufferByConfig('Common', bufferConfig)
-						setupBufferByConfig('BufferA', bufferConfig)
-						setupBufferByConfig('BufferB', bufferConfig)
-						setupBufferByConfig('BufferC', bufferConfig)
-						setupBufferByConfig('BufferD', bufferConfig)
-						setupBufferByConfig('Image', bufferConfig)
-
-						if (gdrive.ids_shaderFiles['sound.fs'] === undefined)
-						{
-							gdrive.createTextFile(gdrive.ID_DIR_SHADER, 'sound.fs', ShaderLib.shader['Sound'], (file) =>
-							{
-								gdrive.ids_shaderFiles['sound.fs'] = {}
-								gdrive.ids_shaderFiles['sound.fs']["name"] = file.name
-								gdrive.ids_shaderFiles['sound.fs']["id"] = file.id
-								gdrive.ids_shaderFiles['sound.fs']["content"] = ''
-							})
-						}
-						else
-						{
-							setupBufferByConfig('Sound', bufferConfig)
-						}
-					})
-
-				}
-				)
-			} else
-			{
-				ShaderBoy.gui_header.setStatus('error', shaderName + ' was not found.', 3000)
-				ShaderBoy.io.newShader(shaderName)
+				const fileName = ShaderBoy.buffers[bufName].fileName
+				const id = this.idList[fileName].id
+				const request = await gdrive.getContentBody(id)
+				ShaderBoy.buffers[bufName].cm = CodeMirror.Doc(request.body, 'x-shader/x-fragment')
 			}
+			return Promise.resolve()
+		}
+
+		Promise.all([
+			setupBufferByConfig('Common', configObj),
+			setupBufferByConfig('BufferA', configObj),
+			setupBufferByConfig('BufferB', configObj),
+			setupBufferByConfig('BufferC', configObj),
+			setupBufferByConfig('BufferD', configObj),
+			setupBufferByConfig('Image', configObj),
+			setupBufferByConfig('Sound', configObj),
+		]).then(() =>
+		{
+			console.log('Loaded all buffers.')
+			ShaderBoy.bufferManager.buildShaderFromBuffers()
+			ShaderBoy.bufferManager.setFBOsProps()
+			ShaderBoy.editor.setBuffer('Image', true)
+			if (this.isNewShader === true)
+			{
+				gdrive.saveThumbFile('thumb.png', ShaderBoy.canvas, this.ID_DIR_SHADER)
+				this.isNewShader = false
+			}
+			ShaderBoy.gui_header.resetBtns(ShaderBoy.config.buffers)
+			ShaderBoy.isPlaying = true
+		}).catch((error) =>
+		{
+			throw new Error(error)
+			return Promise.reject()
 		})
 	}
 }

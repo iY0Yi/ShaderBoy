@@ -140,7 +140,7 @@ export default ShaderBoy.gui_panel_shaderlist = { // comment out on codepen.
                     gpbaseEl.classList.toggle("gp-hidden")
                 }, Math.floor(1000 * 0.8))
 
-                ShaderBoy.io.loadShader(name, false)
+                ShaderBoy.io.getShaderFiles(name)
             }
 
             btnEl.onmouseenter = (e) =>

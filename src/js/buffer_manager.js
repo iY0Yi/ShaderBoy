@@ -47,7 +47,7 @@ export default ShaderBoy.bufferManager = {
         this.initBufferDoc('Image')
 
         ShaderBoy.buffers['Setting'].active = false
-        ShaderBoy.buffers['Config'].active = false
+        ShaderBoy.buffers['Config'].active = true
         ShaderBoy.buffers['Common'].active = false
         ShaderBoy.buffers['Sound'].active = false
         ShaderBoy.buffers['BufferA'].active = false
@@ -55,6 +55,14 @@ export default ShaderBoy.bufferManager = {
         ShaderBoy.buffers['BufferC'].active = false
         ShaderBoy.buffers['BufferD'].active = false
         ShaderBoy.buffers['Image'].active = true
+
+        ShaderBoy.buffers['Image'].fileName = 'main.fs'
+        ShaderBoy.buffers['Common'].fileName = 'common.fs'
+        ShaderBoy.buffers['BufferA'].fileName = 'buf_a.fs'
+        ShaderBoy.buffers['BufferB'].fileName = 'buf_b.fs'
+        ShaderBoy.buffers['BufferC'].fileName = 'buf_c.fs'
+        ShaderBoy.buffers['BufferD'].fileName = 'buf_d.fs'
+        ShaderBoy.buffers['Sound'].fileName = 'sound.fs'
 
         ShaderBoy.oldBufferIds = []
 
@@ -419,7 +427,7 @@ export default ShaderBoy.bufferManager = {
     initFBOs()
     {
         const gl = ShaderBoy.gl
-        
+
         // Just for Shadertoy compativility...
         this.tempTexture = gl.createTexture()
         gl.bindTexture(gl.TEXTURE_2D, this.tempTexture)
