@@ -1,6 +1,6 @@
 const TerserPlugin = require('terser-webpack-plugin');
 
-var PRODUCTION = false;
+var PRODUCTION = true;
 var SOURCE_MAP = true;
 module.exports = {
 
@@ -52,7 +52,7 @@ module.exports = {
 				sourceMap: SOURCE_MAP, // Must be set to true if using source-maps in production
 				terserOptions: {
 					compress: {
-						drop_console: PRODUCTION,
+						drop_console: !SOURCE_MAP,
 						ecma: 6,
 						unsafe_methods: PRODUCTION
 					},
@@ -64,7 +64,7 @@ module.exports = {
 	output:
 	{
 		path: __dirname + '/dest/js/',
-		publicPath: (PRODUCTION) ? '/app_test' : '' + '/js/',
+		publicPath: ((PRODUCTION) ? '/app_test/' : '') + '/js/',
 		filename: '[name].min.js'
 	},
 
