@@ -186,7 +186,7 @@ export default ShaderBoy.gui_sidebar_ichannels = { // comment out on codepen.
     {
         const setBufferById = (curBufName, id) =>
         {
-            const channelEl = document.getElementById('ichannel' + id)
+            const channelEl = document.getElementById(`ichannel${id}`)
             const bufClass = channelEl.childNodes[1].classList[1]
             let bufName = null
             if (bufClass === 'buf-a') bufName = 'BufferA'
@@ -228,7 +228,7 @@ export default ShaderBoy.gui_sidebar_ichannels = { // comment out on codepen.
             const ichannelConfig = ShaderBoy.config.buffers[bufName].iChannel
             let setBufferUIById = (id) =>
             {
-                const channelEl = document.getElementById('ichannel' + id)
+                const channelEl = document.getElementById(`ichannel${id}`)
                 channelEl.classList.remove('null')
                 const assetEl = channelEl.childNodes[1]
                 let bufClass = 'buf-null'
@@ -264,7 +264,7 @@ export default ShaderBoy.gui_sidebar_ichannels = { // comment out on codepen.
                 astpnls[i].classList.remove('buf-c')
                 astpnls[i].classList.remove('buf-d')
                 astpnls[i].classList.add('buf-null')
-                const channelEl = document.getElementById('ichannel' + i)
+                const channelEl = document.getElementById(`ichannel${i}`)
                 channelEl.classList.add('null')
                 const drpdwn = document.querySelectorAll('.dropdown.ichannels-drpdwn')
                 drpdwn[0].childNodes[0].textContent = 'linear'

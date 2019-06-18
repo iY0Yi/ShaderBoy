@@ -56,7 +56,7 @@ const filterDictByWord = (dictName, curWord) =>
     console.log('filteredDict: ', filteredDict)
     if (filteredDict.length >= 1 || (filteredDict[0] !== undefined && filteredDict[0].text !== undefined && filteredDict.length === 1 && filteredDict[0].text.toUpperCase() !== curWord.toUpperCase()))
     {
-        filteredDict.sort(function (a, b)
+        filteredDict.sort((a, b) =>
         {
             // Use toUpperCase() to ignore character casing
             const textA = a.name.toUpperCase()

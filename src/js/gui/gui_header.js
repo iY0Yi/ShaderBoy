@@ -49,7 +49,6 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     resetBtns(buffers)
     {
-        console.log('Otaku: ', buffers)
         ShaderBoy.gui_header.bufCount = -1
         const cmnEl = document.getElementById('ghdr-btn-common')
         const bufaEl = document.getElementById('ghdr-btn-buf-a')
@@ -160,7 +159,7 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
         const mainEl = document.getElementById('ghdr-btn-mainimg')
         ShaderBoy.gui_header.setActive(mainEl.textContent)
 
-        document.getElementById('ghdr-btn-switch-cmn').onclick = function (event)
+        document.getElementById('ghdr-btn-switch-cmn').onclick = (event) =>
         {
             document.getElementById('ghdr-btn-common').classList.toggle('disable')
             document.getElementById('ghdr-btn-switch-cmn').classList.toggle('inc')
@@ -184,7 +183,7 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
             ShaderBoy.bufferManager.buildShaderFromBuffers(false)
         }
 
-        document.getElementById('ghdr-btn-switch-snd').onclick = function (event)
+        document.getElementById('ghdr-btn-switch-snd').onclick = (event) =>
         {
             document.getElementById('ghdr-btn-snd').classList.toggle('disable')
             document.getElementById('ghdr-btn-switch-snd').classList.toggle('inc')
@@ -210,7 +209,7 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
             ShaderBoy.bufferManager.buildShaderFromBuffers(false)
         }
 
-        document.getElementById('ghdr-btn-inc-buf').onclick = function (event)
+        document.getElementById('ghdr-btn-inc-buf').onclick = (event) =>
         {
             ShaderBoy.gui_header.bufCount++
             ShaderBoy.gui_header.bufCount =
@@ -232,7 +231,7 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
             ShaderBoy.bufferManager.buildShaderFromBuffers(false)
         }
 
-        document.getElementById('ghdr-btn-dec-buf').onclick = function (event)
+        document.getElementById('ghdr-btn-dec-buf').onclick = (event) =>
         {
             ShaderBoy.gui_header.bufCount--
             ShaderBoy.gui_header.bufCount = Math.max(-1, ShaderBoy.gui_header.bufCount)
@@ -263,7 +262,7 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
         const bufBtns = document.querySelectorAll('.btn-buf')
         for (let i = 0; i < bufBtns.length; i++)
         {
-            bufBtns[i].onclick = function (event)
+            bufBtns[i].onclick = (event) =>
             {
                 if (!event.target.classList.contains('active'))
                 {
@@ -292,7 +291,7 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
         {
             for (const statusName of this.statusList)
             {
-                const className = 'notif-' + statusName
+                const className = `notif-${statusName}`
                 element.classList.remove(className)
             }
             element.textContent = ''
@@ -342,7 +341,7 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
                 this.timer[1] = this.timer[0]
             }
 
-            this.timer[0] = setTimeout(function (e)
+            this.timer[0] = setTimeout((e) =>
             {
                 ShaderBoy.gui_header.cleanupStatus()
                 if (ShaderBoy.gui_header.statusChangeCallback !== undefined)

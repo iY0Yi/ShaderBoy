@@ -104,9 +104,8 @@ export default ShaderBoy.bufferManager = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    buildShaderFromBuffers(needCompile)
+    buildShaderFromBuffers(needCompile = true)
     {
-        needCompile = (needCompile === undefined) ? true : needCompile
         for (const name in ShaderBoy.buffers)
         {
             if (name !== 'Config' && name !== 'Setting')
@@ -150,7 +149,6 @@ export default ShaderBoy.bufferManager = {
 
         this.resetActiveBufferIds()
 
-        // Code
         if (ShaderBoy.util.same(ShaderBoy.oldBufferIds, ShaderBoy.activeBufferIds) === false)
         {
             ShaderBoy.oldBufferIds = ShaderBoy.activeBufferIds.concat()
@@ -198,6 +196,18 @@ export default ShaderBoy.bufferManager = {
         return uniformCode
     },
 
+    getSoundUniformCode()
+    {
+        ShaderBoy.gui_midi.collectUniforms()
+        const uniformCode =
+            ShaderLib.shader.soundUniformFS +
+            ShaderBoy.gui.knobUniformFS +
+            ShaderBoy.gui.midiUniformFS
+
+        ShaderBoy.shaderSoundUniformsLines = uniformCode.split(/\n/).length - 1
+        return uniformCode
+    },
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     getFragmentCode(buffer, uniformCode, commonCode)
     {
@@ -209,9 +219,10 @@ export default ShaderBoy.bufferManager = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getSoundFragmentCode(buffer, commonCode)
+    getSoundFragmentCode(buffer, uniformCode, commonCode)
     {
         return ShaderBoy.shaderHeader[1] +
+            uniformCode +
             commonCode +
             buffer.cm.getValue() +
             ShaderLib.shader.soundfooterFS
@@ -256,7 +267,10 @@ export default ShaderBoy.bufferManager = {
             ShaderBoy.bufferManager.numCompiledBuffer++
             if (ShaderBoy.bufferManager.numCompiledBuffer === ShaderBoy.activeBufferIds.length)
             {
-                ShaderBoy.gui_header.setStatus('suc1', 'Compiled.', 3000)
+                if (ShaderBoy.io.initLoading !== true)
+                {
+                    ShaderBoy.gui_header.setStatus('suc1', 'Compiled.', 3000)
+                }
 
                 if (ShaderBoy.buffers['Sound'].active)
                 {
@@ -265,19 +279,6 @@ export default ShaderBoy.bufferManager = {
                     ShaderBoy.soundRenderer.render()
                     ShaderBoy.soundRenderer.restart()
                     ShaderBoy.isPlaying = true
-                }
-                if (ShaderBoy.io.initLoading === true)
-                {
-                    ShaderBoy.io.initLoading = false
-                    ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000, () =>
-                    {
-                        document.getElementById('cvr-loading').classList.add('loading-hide')
-                        setTimeout(() =>
-                        {
-                            document.getElementById('cvr-loading').classList.add('loading-hidden')
-                        }, 400)
-                    })
-                    ShaderBoy.update()
                 }
             }
         }
@@ -319,7 +320,8 @@ export default ShaderBoy.bufferManager = {
                 }
                 else
                 {
-                    const fragmentCode = this.getSoundFragmentCode(buffer, commonCode)
+                    const soundUniformCode = this.getSoundUniformCode()
+                    const fragmentCode = this.getSoundFragmentCode(buffer, soundUniformCode, commonCode)
                     if (buffer.shader === null)
                     {
                         buffer.shader = new Shader(ShaderBoy.gl, ShaderBoy.vsSource, fragmentCode)

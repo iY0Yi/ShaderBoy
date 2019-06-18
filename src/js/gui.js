@@ -76,7 +76,7 @@ export default ShaderBoy.gui = {
 		if (ShaderBoy.OS === 'Windows') { scrollMul = 100.0; }
 
 		let mainEl = document.getElementById('main')
-		mainEl.onmousedown = function (ev)
+		mainEl.onmousedown = (ev) =>
 		{
 			if (ev.button == 2) return false
 			if (ShaderBoy.isEditorHide)
@@ -93,7 +93,7 @@ export default ShaderBoy.gui = {
 			}
 		}
 
-		mainEl.onmouseup = function (ev)
+		mainEl.onmouseup = (ev) =>
 		{
 			if (ShaderBoy.isEditorHide)
 			{
@@ -105,7 +105,7 @@ export default ShaderBoy.gui = {
 			}
 		}
 
-		mainEl.onmousemove = function (ev)
+		mainEl.onmousemove = (ev) =>
 		{
 			if (ShaderBoy.isEditorHide)
 			{
@@ -121,12 +121,12 @@ export default ShaderBoy.gui = {
 			}
 		}
 
-		mainEl.contextmenu = function (ev)
+		mainEl.contextmenu = (ev) =>
 		{
 			ev.preventDefault()
 		}
 
-		window.onresize = function (event)
+		window.onresize = (event) =>
 		{
 			// console.log('ShaderBoy.isRecording', ShaderBoy.isRecording)
 			if (!ShaderBoy.isRecording)
@@ -161,7 +161,7 @@ export default ShaderBoy.gui = {
 			{
 				let codeEl = document.getElementById('code')
 				codeEl.classList.add('code-container-mov-l')
-				setTimeout(function ()
+				setTimeout(() =>
 				{
 					let codeEl = document.getElementById('code')
 					codeEl.classList.remove('code-container-mov-l')
@@ -173,7 +173,7 @@ export default ShaderBoy.gui = {
 			{
 				let codeEl = document.getElementById('code')
 				codeEl.classList.add('code-container-mov-l')
-				setTimeout(function ()
+				setTimeout(() =>
 				{
 					let codeEl = document.getElementById('code')
 					codeEl.classList.remove('code-container-mov-l')
@@ -233,7 +233,7 @@ export default ShaderBoy.gui = {
 			"Shift-Cmd-Alt-J": 'unfoldAll', // just for register fold command.
 			"Ctrl-K"(cm)
 			{
-				cm.operation(function ()
+				cm.operation(() =>
 				{
 					for (let i = cm.firstLine(), e = cm.lastLine(); i <= e; i++)
 						cm.foldCode(CodeMirror.Pos(i, 0))
@@ -244,7 +244,7 @@ export default ShaderBoy.gui = {
 
 		const CMD = (ShaderBoy.OS === 'MacOS' || ShaderBoy.OS === 'iOS') ? 'Cmd' : 'Ctrl'
 
-		this.editorShortcuts[CMD + '-S'] = function (cm)
+		this.editorShortcuts[CMD + '-S'] = (cm) =>
 		{
 			if (!ShaderBoy.runInDevMode)
 			{
@@ -256,7 +256,7 @@ export default ShaderBoy.gui = {
 			}
 		}
 
-		this.editorShortcuts[CMD + '-O'] = function (cm)
+		this.editorShortcuts[CMD + '-O'] = (cm) =>
 		{
 			let textformEl = document.getElementById('gp-textarea')
 			let shaderlistEl = document.getElementById('gp-shader-list')
@@ -266,7 +266,7 @@ export default ShaderBoy.gui = {
 			ShaderBoy.isPlaying = false
 
 			ShaderBoy.editor.codemirror.display.input.blur()
-			key('esc', function ()
+			key('esc', () =>
 			{
 				let textformEl = document.getElementById('gp-textarea')
 				let shaderlistEl = document.getElementById('gp-shader-list')
@@ -283,28 +283,28 @@ export default ShaderBoy.gui = {
 			}
 		}
 
-		this.editorShortcuts['Shift-' + CMD + '-Alt-+'] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt-+`] = () =>
 		{
 			ShaderBoy.editor.incTextSize()
 		}
-		this.editorShortcuts['Shift-' + CMD + '-Alt-;'] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt-;`] = () =>
 		{
 			ShaderBoy.editor.incTextSize()
 		}
-		this.editorShortcuts['Shift-' + CMD + '-Alt-='] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt-=`] = () =>
 		{
 			ShaderBoy.editor.incTextSize()
 		}
-		this.editorShortcuts['Shift-' + CMD + '-Alt--'] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt--`] = () =>
 		{
 			ShaderBoy.editor.decTextSize()
 		}
-		this.editorShortcuts['Shift-' + CMD + '-Alt-_'] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt-_`] = () =>
 		{
 			ShaderBoy.editor.decTextSize()
 		}
 
-		this.editorShortcuts['Shift-' + CMD + '-Alt-D'] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt-D`] = () =>
 		{
 			if (!ShaderBoy.isConcentrating)
 			{
@@ -313,7 +313,7 @@ export default ShaderBoy.gui = {
 			}
 		}
 
-		this.editorShortcuts['Shift-' + CMD + '-Alt-A'] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt-A`] = () =>
 		{
 			let leftSidebarEl = document.getElementById('gui-sidebar-left')
 			if (leftSidebarEl.classList.contains('gsbl-container-hidden'))
@@ -337,7 +337,7 @@ export default ShaderBoy.gui = {
 			}
 		}
 
-		this.editorShortcuts['Shift-' + CMD + '-Alt-T'] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt-T`] = () =>
 		{
 			if (!ShaderBoy.isConcentrating)
 			{
@@ -347,143 +347,181 @@ export default ShaderBoy.gui = {
 			}
 		}
 
-		this.editorShortcuts['Shift-' + CMD + '-Alt-N'] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt-N`] = () =>
 		{
-			if (!ShaderBoy.runInDevMode)
-			{
-				document.getElementById("div-textarea").contentEditable = "true"
-				gui_panel_textform.reset('New Shader Name', function ()
-				{
-					console.log(ShaderBoy.gui_panel_textform.result)
-					ShaderBoy.io.newShader(ShaderBoy.gui_panel_textform.result)
-				})
-				let textformEl = document.getElementById('gp-textarea')
-				let shaderlistEl = document.getElementById('gp-shader-list')
-				if (textformEl.classList.contains('hide')) textformEl.classList.remove('hide')
-				if (!shaderlistEl.classList.contains('hide')) shaderlistEl.classList.add('hide')
-				ShaderBoy.isPlaying = false
-
-				ShaderBoy.editor.codemirror.display.input.blur()
-				key('esc', function ()
-				{
-					document.getElementById("div-textarea").contentEditable = "false"
-					gui_panel_textform.reset('', function () { })
-					ShaderBoy.isPlaying = true
-					key.unbind('esc')
-				})
-			}
-			else
+			if (ShaderBoy.runInDevMode)
 			{
 				alert('Oops! You are in test mode. Please reload this page and authorize.')
+				return
 			}
 
+			document.getElementById("div-textarea").contentEditable = "true"
+			gui_panel_textform.reset('New Shader Name', '', () =>
+			{
+				console.log(gui_panel_textform.result)
+				ShaderBoy.io.newShader(gui_panel_textform.result)
+			})
+			let textformEl = document.getElementById('gp-textarea')
+			let shaderlistEl = document.getElementById('gp-shader-list')
+			if (textformEl.classList.contains('hide')) textformEl.classList.remove('hide')
+			if (!shaderlistEl.classList.contains('hide')) shaderlistEl.classList.add('hide')
+			ShaderBoy.isPlaying = false
+
+			ShaderBoy.editor.codemirror.display.input.blur()
+			key('esc', () =>
+			{
+				document.getElementById("div-textarea").contentEditable = "false"
+				gui_panel_textform.reset('', () => { })
+				ShaderBoy.isPlaying = true
+				key.unbind('esc')
+			})
 		}
 
-		this.editorShortcuts['Shift-' + CMD + '-Alt-H'] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt-F`] = () =>
+		{
+			// ShaderBoy.util.requestFullScreen()
+
+			if (ShaderBoy.runInDevMode)
+			{
+				alert('Oops! You are in test mode. Please reload this page and authorize.')
+				return
+			}
+
+			// "Set focus on div contenteditable element":
+			// via: https://stackoverflow.com/questions/2388164/set-focus-on-div-contenteditable-element
+			const form = document.getElementById("div-textarea")
+			form.contentEditable = "true"
+			setTimeout(() =>
+			{
+				form.focus();
+			}, 0);
+
+			gui_panel_textform.reset('Fork:', `${ShaderBoy.activeShaderName}:Forked`, () =>
+			{
+				console.log(gui_panel_textform.result)
+				ShaderBoy.io.newShader(gui_panel_textform.result, true)
+			})
+			let textformEl = document.getElementById('gp-textarea')
+			let shaderlistEl = document.getElementById('gp-shader-list')
+			if (textformEl.classList.contains('hide')) textformEl.classList.remove('hide')
+			if (!shaderlistEl.classList.contains('hide')) shaderlistEl.classList.add('hide')
+			ShaderBoy.isPlaying = false
+
+			ShaderBoy.editor.codemirror.display.input.blur()
+			key('esc', () =>
+			{
+				document.getElementById("div-textarea").contentEditable = "false"
+				gui_panel_textform.reset('', () => { })
+				ShaderBoy.isPlaying = true
+				key.unbind('esc')
+			})
+		}
+
+		this.editorShortcuts[`Shift-${CMD}-Alt-H`] = () =>
 		{
 			ShaderBoy.isEditorHide = !ShaderBoy.isEditorHide
 
-			ShaderBoy.gui.hdrEl = document.getElementById('gui-header')
-			ShaderBoy.gui.tlEl = document.getElementById('timeline')
-			ShaderBoy.gui.codeEl = document.getElementById('code')
-			ShaderBoy.gui.ctrlEl = document.getElementById('ctrl')
-			ShaderBoy.gui.isHdrElHidden = false
-			ShaderBoy.gui.isTlElHidden = false
-			ShaderBoy.gui.isCodeElHidden = false
-			ShaderBoy.gui.isCtrlElHidden = false
+			this.hdrEl = document.getElementById('gui-header')
+			this.tlEl = document.getElementById('timeline')
+			this.codeEl = document.getElementById('code')
+			this.ctrlEl = document.getElementById('ctrl')
+			this.isHdrElHidden = false
+			this.isTlElHidden = false
+			this.isCodeElHidden = false
+			this.isCtrlElHidden = false
 
-			if (ShaderBoy.gui.ctrlEl.classList.contains('ctrl_hide'))
+			if (this.ctrlEl.classList.contains('ctrl_hide'))
 			{
-				ShaderBoy.gui.isCtrlElHidden = true
+				this.isCtrlElHidden = true
 			}
-			ShaderBoy.gui.ctrlEl.classList.add('ctrl_hide')
+			this.ctrlEl.classList.add('ctrl_hide')
 
-			let ms = (ShaderBoy.gui.isCtrlElHidden) ? 0 : 400
+			let ms = (this.isCtrlElHidden) ? 0 : 400
 			setTimeout(() =>
 			{
-				if (ShaderBoy.gui.hdrEl.classList.contains('hdr_hide'))
+				if (this.hdrEl.classList.contains('hdr_hide'))
 				{
-					ShaderBoy.gui.isHdrElHidden = true
+					this.isHdrElHidden = true
 				}
-				ShaderBoy.gui.hdrEl.classList.add('hdr_hide')
+				this.hdrEl.classList.add('hdr_hide')
 
-				if (ShaderBoy.gui.tlEl.classList.contains('tl_hide'))
+				if (this.tlEl.classList.contains('tl_hide'))
 				{
-					ShaderBoy.gui.isTlElHidden = true
+					this.isTlElHidden = true
 				}
-				ShaderBoy.gui.tlEl.classList.add('tl_hide')
+				this.tlEl.classList.add('tl_hide')
 
-				if (ShaderBoy.gui.codeEl.classList.contains('code_hide'))
+				if (this.codeEl.classList.contains('code_hide'))
 				{
-					ShaderBoy.gui.isCodeElHidden = true
+					this.isCodeElHidden = true
 				}
-				ShaderBoy.gui.codeEl.classList.add('code_hide')
+				this.codeEl.classList.add('code_hide')
 
 
 
 				ShaderBoy.editor.codemirror.display.input.blur()
 
-				key('ctrl+1', function ()
+				key('ctrl+1', () =>
 				{
 					ShaderBoy.renderScale = 1
 					ShaderBoy.bufferManager.setFBOsProps()
 					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 				})
-				key('ctrl+2', function ()
+				key('ctrl+2', () =>
 				{
 					ShaderBoy.renderScale = 2
 					ShaderBoy.bufferManager.setFBOsProps()
 					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 				})
-				key('ctrl+3', function ()
+				key('ctrl+3', () =>
 				{
 					ShaderBoy.renderScale = 3
 					ShaderBoy.bufferManager.setFBOsProps()
 					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 				})
-				key('ctrl+4', function ()
+				key('ctrl+4', () =>
 				{
 					ShaderBoy.renderScale = 4
 					ShaderBoy.bufferManager.setFBOsProps()
 					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 				})
-				key('⌥+up', function ()
+				key('⌥+up', () =>
 				{
 					if (ShaderBoy.isRecording !== true)
 					{
 						ShaderBoy.isPlaying = !ShaderBoy.isPlaying
 					}
 				})
-				key('⌥+down', function ()
+				key('⌥+down', () =>
 				{
 					if (ShaderBoy.isRecording !== true)
 					{
 					}
 				})
 
-				let hide = function ()
+				let hide = () =>
 				{
-					if (!ShaderBoy.gui.isHdrElHidden)
+					if (!this.isHdrElHidden)
 					{
-						ShaderBoy.gui.hdrEl.classList.remove('hdr_hide')
+						this.hdrEl.classList.remove('hdr_hide')
 					}
 
-					if (!ShaderBoy.gui.isTlElHidden)
+					if (!this.isTlElHidden)
 					{
-						ShaderBoy.gui.tlEl.classList.remove('tl_hide')
+						this.tlEl.classList.remove('tl_hide')
 					}
 
-					if (!ShaderBoy.gui.isCodeElHidden)
+					if (!this.isCodeElHidden)
 					{
-						ShaderBoy.gui.codeEl.classList.remove('code_hide')
+						this.codeEl.classList.remove('code_hide')
 					}
 
-					if (!ShaderBoy.gui.isCtrlElHidden)
+					if (!this.isCtrlElHidden)
 					{
 						let ms = 400
 						setTimeout(() =>
 						{
-							ShaderBoy.gui.ctrlEl.classList.remove('ctrl_hide')
+							this.ctrlEl.classList.remove('ctrl_hide')
 						}, ms)
 					}
 
@@ -510,37 +548,25 @@ export default ShaderBoy.gui = {
 				, ms)
 		}
 
-		this.editorShortcuts['Shift-' + CMD + '-Alt-F'] = function (cm)
+		this.editorShortcuts[`Alt-${CMD}-F`] = (cm) =>
 		{
-			function getSelectedRange()
+			const getSelectedRange = () =>
 			{
 				return {
 					from: cm.getCursor(true),
 					to: cm.getCursor(false),
 				}
 			}
-			let range = getSelectedRange()
-			cm.autoFormatRange(range.from, range.to)
-		}
-		this.editorShortcuts['Shift-' + CMD + '-F'] = function (cm)
-		{
-			function getSelectedRange()
-			{
-				return {
-					from: cm.getCursor(true),
-					to: cm.getCursor(false),
-				}
-			}
-			let range = getSelectedRange()
+			const range = getSelectedRange()
 			cm.autoFormatRange(range.from, range.to)
 		}
 
-		this.editorShortcuts['Shift-' + CMD + '-Alt-V'] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt-V`] = () =>
 		{
 			ShaderBoy.isConcentrating = !ShaderBoy.isConcentrating
 
-			ShaderBoy.gui.tlEl = document.getElementById('timeline')
-			ShaderBoy.gui.ctrlEl = document.getElementById('ctrl')
+			this.tlEl = document.getElementById('timeline')
+			this.ctrlEl = document.getElementById('ctrl')
 
 			if (ShaderBoy.isConcentrating)
 			{
@@ -551,21 +577,21 @@ export default ShaderBoy.gui = {
 				$('.cm-s-3024-monotone .CodeMirror-code').toggleClass('concentrating')
 				$('.cm-s-3024-monotone').toggleClass('color')
 
-				ShaderBoy.gui.isCtrlElHidden = false
-				ShaderBoy.gui.isTlElHidden = false
+				this.isCtrlElHidden = false
+				this.isTlElHidden = false
 
-				if (ShaderBoy.gui.ctrlEl.classList.contains('ctrl_hide'))
+				if (this.ctrlEl.classList.contains('ctrl_hide'))
 				{
-					ShaderBoy.gui.isCtrlElHidden = true
+					this.isCtrlElHidden = true
 				}
-				ShaderBoy.gui.ctrlEl.classList.add('ctrl_hide')
+				this.ctrlEl.classList.add('ctrl_hide')
 				document.getElementById('ctrl-wrapper').classList.add('ctrl-wrapper_hide')
 
-				if (ShaderBoy.gui.tlEl.classList.contains('tl_hide'))
+				if (this.tlEl.classList.contains('tl_hide'))
 				{
-					ShaderBoy.gui.isTlElHidden = true
+					this.isTlElHidden = true
 				}
-				ShaderBoy.gui.tlEl.classList.add('tl_hide')
+				this.tlEl.classList.add('tl_hide')
 			}
 			else
 			{
@@ -575,25 +601,20 @@ export default ShaderBoy.gui = {
 				$('.cm-s-3024-monotone .CodeMirror-code').toggleClass('concentrating')
 				$('.cm-s-3024-monotone').toggleClass('color')
 
-				if (!ShaderBoy.gui.isTlElHidden)
+				if (!this.isTlElHidden)
 				{
-					ShaderBoy.gui.tlEl.classList.remove('tl_hide')
+					this.tlEl.classList.remove('tl_hide')
 				}
 
-				if (!ShaderBoy.gui.isCtrlElHidden)
+				if (!this.isCtrlElHidden)
 				{
-					ShaderBoy.gui.ctrlEl.classList.remove('ctrl_hide')
+					this.ctrlEl.classList.remove('ctrl_hide')
 					document.getElementById('ctrl-wrapper').classList.remove('ctrl-wrapper_hide')
 				}
 			}
 		}
 
-		this.editorShortcuts['Shift-' + CMD + '-Alt-F'] = function ()
-		{
-			ShaderBoy.util.requestFullScreen()
-		}
-
-		this.editorShortcuts['Shift-' + CMD + '-Alt-M'] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt-M`] = () =>
 		{
 			if (ShaderBoy.buffers['Sound'].active)
 			{
@@ -601,105 +622,105 @@ export default ShaderBoy.gui = {
 			}
 		}
 
-		this.editorShortcuts['Shift-' + CMD + '-Alt-R'] = function ()
+		this.editorShortcuts[`Shift-${CMD}-Alt-R`] = () =>
 		{
-			ShaderBoy.gui.recEl = document.getElementById('ghdr-rec-base')
-			ShaderBoy.gui.tlEl = document.getElementById('timeline')
-			ShaderBoy.gui.codeEl = document.getElementById('code')
-			ShaderBoy.gui.ctrlEl = document.getElementById('ctrl')
+			this.recEl = document.getElementById('ghdr-rec-base')
+			this.tlEl = document.getElementById('timeline')
+			this.codeEl = document.getElementById('code')
+			this.ctrlEl = document.getElementById('ctrl')
 			document.getElementById('res-x').value = ShaderBoy.canvas.width
 			document.getElementById('res-y').value = ShaderBoy.canvas.height
 
-			ShaderBoy.gui.isTlElHidden = false
-			ShaderBoy.gui.isCodeElHidden = false
-			ShaderBoy.gui.isCtrlElHidden = false
-			ShaderBoy.gui.isPlaying = false
-			ShaderBoy.gui.recEl.classList.remove('rec_hide')
+			this.isTlElHidden = false
+			this.isCodeElHidden = false
+			this.isCtrlElHidden = false
+			this.isPlaying = false
+			this.recEl.classList.remove('rec_hide')
 
-			if (ShaderBoy.gui.ctrlEl.classList.contains('ctrl_hide'))
+			if (this.ctrlEl.classList.contains('ctrl_hide'))
 			{
-				ShaderBoy.gui.isCtrlElHidden = true
+				this.isCtrlElHidden = true
 			}
-			ShaderBoy.gui.ctrlEl.classList.add('ctrl_hide')
+			this.ctrlEl.classList.add('ctrl_hide')
 
-			let ms = (ShaderBoy.gui.isCtrlElHidden) ? 0 : 400
+			let ms = (this.isCtrlElHidden) ? 0 : 400
 			setTimeout(() =>
 			{
-				if (ShaderBoy.gui.tlEl.classList.contains('tl_hide'))
+				if (this.tlEl.classList.contains('tl_hide'))
 				{
-					ShaderBoy.gui.isTlElHidden = true
+					this.isTlElHidden = true
 				}
-				ShaderBoy.gui.tlEl.classList.remove('tl_hide')
+				this.tlEl.classList.remove('tl_hide')
 
-				if (ShaderBoy.gui.codeEl.classList.contains('code_hide'))
+				if (this.codeEl.classList.contains('code_hide'))
 				{
-					ShaderBoy.gui.isCodeElHidden = true
+					this.isCodeElHidden = true
 				}
-				ShaderBoy.gui.codeEl.classList.add('code_hide')
+				this.codeEl.classList.add('code_hide')
 
 				ShaderBoy.editor.codemirror.display.input.blur()
 
 				let isPlaying = ShaderBoy.isPlaying
 				ShaderBoy.isPlaying = false
-				ShaderBoy.gui_timeline.reset()
+				gui_timeline.reset()
 
-				key('ctrl+1', function ()
+				key('ctrl+1', () =>
 				{
 					ShaderBoy.renderScale = 1
 					ShaderBoy.bufferManager.setFBOsProps()
 					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 				})
-				key('ctrl+2', function ()
+				key('ctrl+2', () =>
 				{
 					ShaderBoy.renderScale = 2
 					ShaderBoy.bufferManager.setFBOsProps()
 					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 				})
-				key('ctrl+3', function ()
+				key('ctrl+3', () =>
 				{
 					ShaderBoy.renderScale = 3
 					ShaderBoy.bufferManager.setFBOsProps()
 					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 				})
-				key('ctrl+4', function ()
+				key('ctrl+4', () =>
 				{
 					ShaderBoy.renderScale = 4
 					ShaderBoy.bufferManager.setFBOsProps()
 					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 				})
-				key('⌥+up', function ()
+				key('⌥+up', () =>
 				{
 					if (ShaderBoy.isRecording !== true)
 					{
 						ShaderBoy.isPlaying = !ShaderBoy.isPlaying
 					}
 				})
-				key('⌥+down', function ()
+				key('⌥+down', () =>
 				{
 					if (ShaderBoy.isRecording !== true)
 					{
 					}
 				})
-				let toEditorMode = function ()
+				let toEditorMode = () =>
 				{
-					ShaderBoy.gui.recEl.classList.add('rec_hide')
+					this.recEl.classList.add('rec_hide')
 
-					if (ShaderBoy.gui.isTlElHidden)
+					if (this.isTlElHidden)
 					{
-						ShaderBoy.gui.tlEl.classList.add('tl_hide')
+						this.tlEl.classList.add('tl_hide')
 					}
 
-					if (!ShaderBoy.gui.isCodeElHidden)
+					if (!this.isCodeElHidden)
 					{
-						ShaderBoy.gui.codeEl.classList.remove('code_hide')
+						this.codeEl.classList.remove('code_hide')
 					}
 
-					if (!ShaderBoy.gui.isCtrlElHidden)
+					if (!this.isCtrlElHidden)
 					{
 						let ms = 400
 						setTimeout(() =>
 						{
-							ShaderBoy.gui.ctrlEl.classList.remove('ctrl_hide')
+							this.ctrlEl.classList.remove('ctrl_hide')
 						}, ms)
 					}
 
@@ -723,12 +744,12 @@ export default ShaderBoy.gui = {
 		if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
 		{
 			this.editorShortcuts['Alt-Space'] = this.editorShortcuts['Alt-Enter']
-			this.editorShortcuts['Alt-H'] = this.editorShortcuts['Shift-' + CMD + '-Alt-H']
-			this.editorShortcuts['Shift-' + CMD + '-Alt-='] = function ()
+			this.editorShortcuts['Alt-H'] = this.editorShortcuts[`Shift-${CMD}-Alt-H`]
+			this.editorShortcuts[`Shift-${CMD}-Alt-=`] = () =>
 			{
 				ShaderBoy.editor.incTextSize()
 			}
-			this.editorShortcuts['Shift-' + CMD + '-Alt--'] = function ()
+			this.editorShortcuts[`Shift-${CMD}-Alt--`] = () =>
 			{
 				ShaderBoy.editor.decTextSize()
 			}

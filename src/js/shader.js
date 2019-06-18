@@ -49,7 +49,7 @@ export default class Shader
 		// Sampler uniforms need to be uploaded using `gl.uniform1i()` instead of `gl.uniform1f()`.
 		// To do this automatically, we detect and remember all uniform samplers in the source code.
 		let isSampler = {}
-		regexMap(/uniform\s+sampler(1D|2D|3D|Cube)\s+(\w+)\s*;/g, vertexSource + fragmentSource, function (groups)
+		regexMap(/uniform\s+sampler(1D|2D|3D|Cube)\s+(\w+)\s*;/g, vertexSource + fragmentSource, (groups) =>
 		{
 			isSampler[groups[2]] = 1
 		})
@@ -94,7 +94,6 @@ export default class Shader
 
 			if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
 			{
-				// throw new Error('compile error: ' + gl.getShaderInfoLog(shader))
 				scope.errors = splitErrorMsg(gl.getShaderInfoLog(shader))
 				ShaderBoy.editor.updateErrorInfo(scope.bufName, scope.errors)
 				ShaderBoy.gui_header.setErrorOnly(scope.bufName)
@@ -122,8 +121,7 @@ export default class Shader
 
 		if (!gl.getProgramParameter(this.program, gl.LINK_STATUS))
 		{
-			// throw new Error('link error: ' + gl.getProgramInfoLog(this.program))
-			console.log('link error: ' + gl.getProgramInfoLog(this.program))
+			throw new Error(`link error: ${gl.getProgramInfoLog(this.program)}`)
 		}
 	}
 
@@ -187,13 +185,13 @@ export default class Shader
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setUniforms()
 	{
-		const isArray = function (obj)
+		const isArray = (obj) =>
 		{
 			const str = Object.prototype.toString.call(obj)
 			return str === '[object Array]' || str === '[object Float32Array]'
 		}
 
-		const isNumber = function (obj)
+		const isNumber = (obj) =>
 		{
 			const str = Object.prototype.toString.call(obj)
 			return str === '[object Number]' || str === '[object Boolean]'
@@ -268,7 +266,6 @@ export default class Shader
 					default:
 						gl.uniform1fv(location, new Float32Array(value))
 						break
-					// throw new Error('don\'t know how to load uniform "' + name + '" of length ' + value.length)
 				}
 			}
 			else if (isNumber(value))
@@ -277,8 +274,7 @@ export default class Shader
 			}
 			else
 			{
-				console.log('attempted to set uniform "' + name + '" to invalid value ' + value)
-				// throw new Error('attempted to set uniform "' + name + '" to invalid value ' + value)
+				throw new Error(`attempted to set uniform "${name}" to invalid value ${value}`)
 			}
 		}
 		return this
@@ -341,7 +337,7 @@ export default class Shader
 	setTexture3d(id, texture)
 	{
 		gl.bindTexture(gl.TEXTURE_2D, null)
-		eval('this.gl.activeTexture(this.gl.TEXTURE' + id + ');')
+		eval(`this.gl.activeTexture(this.gl.TEXTURE${id});`)
 		gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture)
 	}
 

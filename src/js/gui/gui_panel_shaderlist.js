@@ -57,8 +57,8 @@ export default ShaderBoy.gui_panel_shaderlist = { // comment out on codepen.
                     div.appendChild(imgcon)
                     imgcon.style.width = '0px'
                     imgcon.style.height = '0px'
-                    imgcon.style.backgroundImage = 'url("' + img.src + '")'
-                    img.body.style.backgroundImage = 'url("' + img.src + '")'
+                    imgcon.style.backgroundImage = `url("${img.src}")`
+                    img.body.style.backgroundImage = `url("${img.src}")`
                     img.body.style.backgroundSize = '100% 100%'
                 }
                 img.src = shader.thumb
@@ -140,7 +140,7 @@ export default ShaderBoy.gui_panel_shaderlist = { // comment out on codepen.
                     gpbaseEl.classList.toggle("gp-hidden")
                 }, Math.floor(1000 * 0.8))
 
-                ShaderBoy.io.getShaderFiles(name)
+                ShaderBoy.io.loadShaderFiles(name)
             }
 
             btnEl.onmouseenter = (e) =>

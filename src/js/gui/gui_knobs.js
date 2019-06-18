@@ -65,11 +65,11 @@ export default ShaderBoy.gui_knobs = { // comment out on codepen.
                 this.precision = 360 * 5
                 for (let i = 0; i < knobs.length; i++)
                 {
-                    ShaderBoy.gui.knobUniformFS += 'uniform float ' + this.knobs[i].name + ';\n'
+                    ShaderBoy.gui.knobUniformFS += `uniform float ${this.knobs[i].name};\n`
                     let element = knobs[i].children[1]
                     this.knobs[i].circle = element
 
-                    knobs[i].onmousewheel = function (e)
+                    knobs[i].onmousewheel = (e) =>
                     {
                         e.preventDefault()
                         let velocity = 10
@@ -92,11 +92,11 @@ export default ShaderBoy.gui_knobs = { // comment out on codepen.
                             ShaderBoy.gui.knobs.knobs[i].value = Math.max(ShaderBoy.gui.knobs.knobs[i].value, -1)
                             ShaderBoy.gui.knobs.knobs[i].value = Math.min(ShaderBoy.gui.knobs.knobs[i].value, 1)
                             ShaderBoy.gui.knobs.knobs[i].value = Number(ShaderBoy.gui.knobs.knobs[i].value.toFixed(3))
-                            element.style.transform = 'rotate(' + ShaderBoy.gui.knobs.knobs[i].value * ShaderBoy.gui.knobs.precision + 'deg)'
+                            element.style.transform = `rotate(${ShaderBoy.gui.knobs.knobs[i].value * ShaderBoy.gui.knobs.precision}deg)`
                         }
                     }
 
-                    knobs[i].onclick = function (e)
+                    knobs[i].onclick = (e) =>
                     {
                         ShaderBoy.gui.knobs.knobs[i].active = !ShaderBoy.gui.knobs.knobs[i].active
                         ShaderBoy.gui.knobs.toggle(i, true)
@@ -131,7 +131,7 @@ export default ShaderBoy.gui_knobs = { // comment out on codepen.
                     else
                     {
                         ShaderBoy.gui.knobs.knobs[id].circle.style.transition = 'all 0ms ease-in-out'
-                        ShaderBoy.gui.knobs.knobs[id].circle.style.transform = 'rotate(' + ShaderBoy.gui.knobs.knobs[id].value * ShaderBoy.gui.knobs.precision + 'deg)'
+                        ShaderBoy.gui.knobs.knobs[id].circle.style.transform = `rotate(${ShaderBoy.gui.knobs.knobs[id].value * ShaderBoy.gui.knobs.precision}deg)`
                         ShaderBoy.gui.knobs.knobs[id].circle.parentElement.style.transition = 'all 600ms ease-in-out'
                     }
                     if (clicked)

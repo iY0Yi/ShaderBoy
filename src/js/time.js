@@ -30,10 +30,10 @@ export default ShaderBoy.time = {
     init()
     {
         this.time_then = Date.now()
-        this.getGlobalTime = (function ()
+        this.getGlobalTime = (() =>
         {
-            if ("performance" in window) return function () { return window.performance.now() * 0.001; }
-            return function () { return (new Date()).getTime() * 0.001; }
+            if ("performance" in window) return () => { return window.performance.now() * 0.001; }
+            return () => { return (new Date()).getTime() * 0.001; }
         })()
         this.startTime = this.getGlobalTime()
         //FPS counter
@@ -50,7 +50,7 @@ export default ShaderBoy.time = {
     {
         const now = Date.now()
         this.time_elapsed = now - this.time_then
-        
+
         if (this.time_elapsed > this.FPS_INTERVAL)
         {
             this.time_then = now - (this.time_elapsed % this.FPS_INTERVAL)

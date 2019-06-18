@@ -136,7 +136,7 @@ export default ShaderBoy.editor = {
             if (buf.getEditor()) buf = buf.linkedDoc({ sharedHist: true })
             const old = this.codemirror.swapDoc(buf)
             let linked
-            const fnc = function (doc) { linked = doc; }
+            const fnc = (doc) => { linked = doc; }
             linked = old.iterLinkedDocs(fnc)
             if (linked)
             {
@@ -183,11 +183,9 @@ export default ShaderBoy.editor = {
                 this.direct = true
             }
 
-            this.codemirror.operation(function ()
+            this.codemirror.operation(() =>
             {
-                const scope = ShaderBoy.editor
-
-                if (scope.direct)
+                if (this.direct)
                 {
                     for (let i = 0; i < ShaderBoy.buffers[bufName].errorWidgets.length; ++i)
                         ShaderBoy.buffers[bufName].cm.removeLineWidget(ShaderBoy.buffers[bufName].errorWidgets[i])
@@ -206,7 +204,7 @@ export default ShaderBoy.editor = {
                     const err = errors[i]
                     if (!err) continue
                     const msg = document.createElement("div")
-                    msg.appendChild(document.createTextNode(err.element + ': ' + err.msg))
+                    msg.appendChild(document.createTextNode(`${err.element}: ${err.msg}`))
                     if (err.lineNum > curline)
                     {
                         msg.className = "error notify"
@@ -217,7 +215,7 @@ export default ShaderBoy.editor = {
                         msg.className = "error"
                     }
 
-                    if (scope.direct)
+                    if (this.direct)
                     {
                         ShaderBoy.buffers[bufName].errorWidgets.push(ShaderBoy.buffers[bufName].cm.addLineWidget(err.lineNum, msg, { coverGutter: false, noHScroll: true }))
                     }

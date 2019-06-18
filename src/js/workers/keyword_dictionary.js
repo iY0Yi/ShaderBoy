@@ -13,7 +13,7 @@ export default class KeywordDictionary
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     search(renderWord)
     {
-        const searchWord = renderWord.type + '@' + renderWord.name
+        const searchWord = `${renderWord.type}@${renderWord.name}`
         return this.renderWords.hasOwnProperty(searchWord);// return in Boolean
     }
 
@@ -59,7 +59,7 @@ export default class KeywordDictionary
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     add(renderWord)
     {
-        const key = renderWord.type + '@' + renderWord.name
+        const key = `${renderWord.type}@${renderWord.name}`
 
         this.renderWords[key] = renderWord
 
@@ -75,7 +75,7 @@ export default class KeywordDictionary
     {
         if (renderWord.type === undefined || renderWord.name === undefined) return
 
-        const key = renderWord.type + '@' + renderWord.name
+        const key = `${renderWord.type}@${renderWord.name}`
         delete this.renderWords[key]
 
         if (renderWord.type === 'struct')

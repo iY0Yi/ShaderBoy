@@ -131,7 +131,7 @@ const Tokenizer = {
                         members.push(new Keyword({
                             type: typeName[0],
                             name: typeName[1],
-                            render: '<span class="autocomp-name">' + typeName[1] + '</span><div class="icon-code-user"></div><span class="autocomp-type">' + typeName[0] + '</span>'
+                            render: `<span class="autocomp-name">${typeName[1]}</span><div class="icon-code-user"></div><span class="autocomp-type">${typeName[0]}</span>`
                         }))
                     }
                 }
@@ -144,9 +144,9 @@ const Tokenizer = {
                 snippet += '('
                 for (let i = 0; i < members.length; i++)
                 {
-                    snippet += members[i].type
-                    snippet += '@'
                     snippet += members[i].name
+                    snippet += '@'
+                    snippet += members[i].type
                     snippet += (i < members.length - 1) ? ', ' : ''
                 }
                 snippet += ');'
@@ -155,7 +155,7 @@ const Tokenizer = {
                     type: typeName[0],
                     name: name,
                     members: members,
-                    render: '<span class="autocomp-name">' + name + '</span><div class="icon-code-user"></div><span class="autocomp-type">' + typeName[0] + '</span>',
+                    render: `<span class="autocomp-name">${name}</span><div class="icon-code-user"></div><span class="autocomp-type">${typeName[0]}</span>`,
                     snippet: snippet
                 }))
             }
@@ -204,7 +204,7 @@ const Tokenizer = {
         result.push(new Keyword({
             type: typeName[0],
             name: typeName[1],
-            render: '<span class="autocomp-name">' + typeName[1] + '</span><div class="icon-code-user"></div><span class="autocomp-type">' + typeName[0] + '</span>'
+            render: `<span class="autocomp-name">${typeName[1]}</span><div class="icon-code-user"></div><span class="autocomp-type">${typeName[0]}</span>`
         }))
         return result
     },
@@ -240,7 +240,7 @@ const Tokenizer = {
                 args.push(new Keyword({
                     type: arg[0],
                     name: arg[1],
-                    render: '<span class="autocomp-name">' + arg[1] + '</span><div class="icon-code-user"></div><span class="autocomp-type">' + arg[0] + '</span>'
+                    render: `<span class="autocomp-name">${arg[1]}</span><div class="icon-code-user"></div><span class="autocomp-type">${arg[0]}</span>`
                 }))
             }
         }
@@ -250,9 +250,9 @@ const Tokenizer = {
         let snippet = name + '('
         for (let i = 0; i < args.length; i++)
         {
-            snippet += args[i].type
-            snippet += '@'
             snippet += args[i].name
+            snippet += '@'
+            snippet += args[i].type
             snippet += (i < args.length - 1) ? ', ' : ''
         }
         snippet += ')'
@@ -262,7 +262,7 @@ const Tokenizer = {
             type: typeName[0],
             name: typeName[1],
             args: args,
-            render: '<span class="autocomp-name">' + typeName[1] + '</span><div class="icon-code-user"></div><span class="autocomp-type">' + typeName[0] + '</span>',
+            render: `<span class="autocomp-name">${typeName[1]}</span><div class="icon-code-user"></div><span class="autocomp-type">${typeName[0]}</span>`,
             snippet: snippet
         }))
         return result
@@ -297,7 +297,7 @@ const Tokenizer = {
                 result.push(new Keyword({
                     type: type,
                     name: typeNames[j],
-                    render: '<span class="autocomp-name">' + typeNames[j] + '</span><div class="icon-code-user"></div><span class="autocomp-type">' + type + '</span>'
+                    render: `<span class="autocomp-name">${typeNames[j]}</span><div class="icon-code-user"></div><span class="autocomp-type">${type}</span>`
                 }))
             }
         }

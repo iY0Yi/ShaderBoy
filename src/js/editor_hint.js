@@ -149,7 +149,7 @@ export default ShaderBoy.editor_hint = {
 
             const hintFunction = (cm, data, completion) =>
             {
-                function getText(completion)
+                const getText = (completion) =>
                 {
                     if (typeof completion == "string") return completion
                     else return completion.text
@@ -165,7 +165,7 @@ export default ShaderBoy.editor_hint = {
 
                 if (tabFollowWordsStrLen.length >= 0)
                 {
-                    ShaderBoy.gui.editorShortcuts.Tab = function (cm)
+                    ShaderBoy.gui.editorShortcuts.Tab = (cm) =>
                     {
                         const cur = cm.getCursor()
 
@@ -178,7 +178,7 @@ export default ShaderBoy.editor_hint = {
 
                         if (tabFollowWordsStrLen.length <= 0)
                         {
-                            ShaderBoy.gui.editorShortcuts.Tab = function (cm)
+                            ShaderBoy.gui.editorShortcuts.Tab = (cm) =>
                             { //tab as space
                                 if (cm.somethingSelected())
                                 {
@@ -220,7 +220,7 @@ export default ShaderBoy.editor_hint = {
 
         CodeMirror.showHint(
             this.workingCm,
-            function ()
+            () =>
             {
                 const cur = ShaderBoy.editor_hint.workingCm.getCursor()
                 const token = ShaderBoy.editor_hint.workingCm.getTokenAt(cur)

@@ -21,21 +21,21 @@ export default ShaderBoy.gui_panel_textform = { // comment out on codepen.
     {
         this.textarea = document.getElementById('div-textarea')
 
-        this.textarea.onclick = function (e)
+        this.textarea.onclick = (e) =>
         {
             e.stopPropagation()
         }
 
-        this.textarea.onkeydown = function (e)
+        this.textarea.onkeydown = (e) =>
         {
             e.stopPropagation()
-            if (ShaderBoy.gui_panel_textform.textarea.innerText == "")
+            if (this.textarea.innerText == "")
             {
-                this.parentNode.classList.remove('dirty')
+                document.getElementById('textarea-container').classList.remove('dirty')
             }
             else
             {
-                this.parentNode.classList.add('dirty')
+                document.getElementById('textarea-container').classList.add('dirty')
             }
 
             if (e.keyCode === 13)
@@ -46,32 +46,30 @@ export default ShaderBoy.gui_panel_textform = { // comment out on codepen.
                 gpbaseEl.classList.toggle("gp-appear")
                 containerEl.classList.toggle("gp-container-hidden")
                 gpbaseEl.classList.toggle("gp-hidden")
-                const result = ShaderBoy.gui_panel_textform.textarea.innerText
-                ShaderBoy.gui_panel_textform.result = result
-                ShaderBoy.gui_panel_textform.textarea.innerText = ''
+                const result = this.textarea.innerText
+                this.result = result
+                this.textarea.innerText = ''
 
-                const textareaContainer = document.getElementById('textarea-container')
-                textareaContainer.classList.remove('dirty')
+                document.getElementById('textarea-container').classList.remove('dirty')
 
-                ShaderBoy.gui_panel_textform.callback()
+                this.callback()
                 return
             }
         }
 
-        this.textarea.onkeyup = function (e)
+        this.textarea.onkeyup = (e) =>
         {
             e.stopPropagation()
             if (e.keyCode === 13)
             {
-                const textareaContainer = document.getElementById('textarea-container')
-                textareaContainer.classList.remove('dirty')
-                ShaderBoy.gui_panel_textform.textarea.innerText = ''
+                document.getElementById('textarea-container').classList.remove('dirty')
+                this.textarea.innerText = ''
             }
         }
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    reset(name, callback)
+    reset(formName, shaderName, callback)
     {
         const containerEl = document.getElementById('gui-panel')
         const gpbaseEl = document.getElementById('gp-base')
@@ -79,16 +77,21 @@ export default ShaderBoy.gui_panel_textform = { // comment out on codepen.
         gpbaseEl.classList.toggle("gp-appear")
         containerEl.classList.toggle("gp-container-hidden")
         gpbaseEl.classList.toggle("gp-hidden")
-        const nameEl = document.getElementById('gp-formname')
-        nameEl.innerText = name
+        const formNameEl = document.getElementById('gp-formname')
+        this.textarea.innerText = shaderName
+        formNameEl.innerText = formName
         this.callback = callback
+        if (shaderName !== '')
+        {
+            document.getElementById('textarea-container').classList.add('dirty')
+        }
     }
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if (isTest)
 {
-    document.body.onclick = function (e)
+    document.body.onclick = (e) =>
     {
         e.stopPropagation()
         const containerEl = document.getElementById('gui-panel')

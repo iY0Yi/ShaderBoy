@@ -31,7 +31,7 @@ const Builtins = {
                         {
                             type: 'fixed',
                             name: item,
-                            render: '<span class="autocomp-name">' + item + '</span><div class="icon-code-' + categoryId + '"></div><span class="autocomp-type">' + type + '</span>'
+                            render: `<span class="autocomp-name">${item}</span><div class="icon-code-${categoryId}"></div><span class="autocomp-type">${type}</span>`
                         }),
                 )
             }

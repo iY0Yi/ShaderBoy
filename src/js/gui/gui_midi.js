@@ -56,7 +56,7 @@ export default ShaderBoy.gui_midi = { // comment out on codepen.
         // "midigui" by pqml:
         // https://github.com/pqml/midigui/blob/b2739d972fa2522f988ea96e9ddc7fce2054c882/build/midigui.js
         const cmd = e.data[0] >> 4
-        function message(channel, pitch, velocity)
+        const message = (channel, pitch, velocity) =>
         {
             return {
                 channel: channel,
@@ -69,22 +69,22 @@ export default ShaderBoy.gui_midi = { // comment out on codepen.
         if (cmd === 8 || cmd === 9 && msg.velocity === 0)
         {
             // noteOff
-            data.name = 'midi_n' + msg.pitch
+            data.name = `midi_n${msg.pitch}`
             data.value = msg.velocity
         } else if (cmd === 9)
         {
             // noteOn
-            data.name = 'midi_n' + msg.pitch
+            data.name = `midi_n${msg.pitch}`
             data.value = msg.velocity
         } else if (cmd === 11)
         {
             // controller message
-            data.name = 'midi_c' + msg.pitch
+            data.name = `midi_c${msg.pitch}`
             data.value = msg.velocity
         } else
         {
             // sysex or other
-            data.name = 'midi_s' + msg.pitch
+            data.name = `midi_s${msg.pitch}`
             data.value = msg.velocity
         }
 
@@ -99,7 +99,7 @@ export default ShaderBoy.gui_midi = { // comment out on codepen.
         }
         ShaderBoy.forceDraw = (ShaderBoy.isPlaying !== true)
 
-        ShaderBoy.gui_header.setStatus('suc3', 'MIDI: ' + data.name + ' = ' + data.value, 3000)
+        ShaderBoy.gui_header.setStatus('suc3', `MIDI: ${data.name} = ${data.value}`, 3000)
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -118,7 +118,7 @@ export default ShaderBoy.gui_midi = { // comment out on codepen.
             }
         }
         midiUniformNames = Array.from(new Set(midiUniformNames))
-        midiUniformNames = midiUniformNames.filter(function (a)
+        midiUniformNames = midiUniformNames.filter((a) =>
         {
             return a !== null
         })
@@ -134,7 +134,7 @@ export default ShaderBoy.gui_midi = { // comment out on codepen.
             {
                 const name = midiUniformNames[i]
                 ShaderBoy.gui.midis[name] = 0.0
-                ShaderBoy.gui.midiUniformFS += 'uniform float ' + name + ';\n'
+                ShaderBoy.gui.midiUniformFS += `uniform float ${name};\n`
             }
         }
     }

@@ -19,7 +19,7 @@ export default ShaderBoy.renderer = {
 		const canvasWidth = (ShaderBoy.capture === null) ? gl.canvas.clientWidth : ShaderBoy.canvas.width
 		const canvasHeight = (ShaderBoy.capture === null) ? window.innerHeight : ShaderBoy.canvas.height
 		gl.viewport(0, 0, canvasWidth / ShaderBoy.renderScale, canvasHeight / ShaderBoy.renderScale)
-		
+
 		const len = ShaderBoy.activeBufferIds.length
 		for (const name of ShaderBoy.activeBufferIds)
 		{
@@ -27,7 +27,7 @@ export default ShaderBoy.renderer = {
 			{
 				continue
 			}
-			
+
 			const buffer = ShaderBoy.buffers[name]
 			buffer.shader.begin()
 			buffer.shader.uniforms.iResolution = ShaderBoy.uniforms.iResolution
@@ -65,7 +65,7 @@ export default ShaderBoy.renderer = {
 			buffer.shader.setShadetoyUniforms()
 			buffer.shader.drawTexture(buffer.framebuffer, buffer.textures[0])
 			buffer.shader.end()
-			
+
 		}
 
 		gl.viewport(0, 0, canvasWidth, canvasHeight)
@@ -78,9 +78,9 @@ export default ShaderBoy.renderer = {
 		ShaderBoy.screenShader.setUniforms()
 		ShaderBoy.screenShader.drawScreen()
 		ShaderBoy.screenShader.end()
-		
+
 		gl.flush()
-		
+
 		for (const name of ShaderBoy.activeBufferIds)
 		{
 			if (ShaderBoy.buffers[name].isRenderable && ShaderBoy.buffers[name].needSwap)

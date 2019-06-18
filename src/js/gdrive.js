@@ -15,7 +15,6 @@
 //                                          
 
 import ShaderBoy from './shaderboy'
-import Hermite_class from 'hermite-resize'
 
 export default ShaderBoy.gdrive = {
 
@@ -30,24 +29,7 @@ export default ShaderBoy.gdrive = {
             'immediate': true
         }
 
-        this.ID_DIR_APP
-
-        document.getElementById('btn_authrise_now').onclick = () =>
-        {
-            gapi.auth.authorize(this.AUTH_OPT, this.handleAuthResult)
-        }
-
-        document.getElementById('btn_authrise_later').onclick = () =>
-        {
-            document.getElementById('div_authrise').classList.add('hide')
-            setTimeout(() =>
-            {
-                document.getElementById('div_authrise').classList.add('hidden')
-            }, 400)
-            ShaderBoy.runInDevMode = true
-            ShaderBoy.io.init()
-        }
-
+        // Authorize
         const response = await new Promise((resolve, reject) =>
         {
             gapi.auth.authorize(this.AUTH_OPT, (res) =>
@@ -56,18 +38,9 @@ export default ShaderBoy.gdrive = {
                 else { resolve(res) }
             })
         })
-        return this.handleAuthResult(response)
-    },
 
-    /**
-     * Called when authorization server replies.
-     * @param {Object} authResult Authorization result.
-     */
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    async handleAuthResult(res)
-    {
-        console.log('handleAuthResult: ', res)
-        if (res.error)
+        // Handle Auth Result
+        if (response.error)
         {
             // No access token could be retrieved, show the button to start the authorization flow.
             document.getElementById('div_authrise').classList.remove('hide')
@@ -77,7 +50,7 @@ export default ShaderBoy.gdrive = {
         else
         {
             // Access token has been successfully retrieved, requests can be sent to the API.
-            this.refreshAccessToken(res)
+            this.refreshAccessToken(response) // Start 
             await new Promise((resolve, reject) => { gapi.load("client", resolve) })
             await new Promise((resolve, reject) => { gapi.client.load("drive", "v3", resolve) })
             await this.getFolderByName('ShaderBoy')
@@ -85,9 +58,8 @@ export default ShaderBoy.gdrive = {
         }
     },
 
-    /**
-     * Check if the current user has authorized the application.
-     */
+    // auto refreshing the token
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     async refreshAccessToken(res)
     {
         const expireTime = parseInt(res.expires_in, 10) * 1000 + 2000
@@ -103,16 +75,15 @@ export default ShaderBoy.gdrive = {
         }, expireTime)
     },
 
-    // File management
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    async createFile(folderId, nm, content, contentType, callback)
+    async createFile(folderId, name, content, contentType, callback)
     {
         const boundary = '-------314159265358979323846'
         const delimiter = "\r\n--" + boundary + "\r\n"
         const close_delim = "\r\n--" + boundary + "--"
 
         const metadata = {
-            'name': nm,
+            'name': name,
             'mimeType': contentType,
             'parents': [folderId]
         }
@@ -131,7 +102,7 @@ export default ShaderBoy.gdrive = {
                 'uploadType': 'multipart'
             },
             'headers': {
-                'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+                'Content-Type': `multipart/mixed; boundary='${boundary}'`
             },
             'body': multipartRequestBody,
         })
@@ -141,22 +112,22 @@ export default ShaderBoy.gdrive = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    async createTextFile(folderId, nm, content, callback)
+    async createTextFile(folderId, name, content, callback)
     {
         // from http://ecmanaut.blogspot.jp/2006/07/encoding-decoding-utf8-in-javascript.html
         const utf8_to_b64 = (str) => { return window.btoa(unescape(encodeURIComponent(str))); }
-        return this.createFile(folderId, nm, utf8_to_b64(content), 'text/plain', callback)
+        return this.createFile(folderId, name, utf8_to_b64(content), 'text/plain', callback)
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    saveFile(nm, id, content, contentType, callback)
+    saveFile(name, id, content, contentType, callback)
     {
         const boundary = '-------314159265358979323846'
         const delimiter = "\r\n--" + boundary + "\r\n"
         const close_delim = "\r\n--" + boundary + "--"
 
         const metadata = {
-            'name': nm,
+            'name': name,
             'mimeType': contentType
         }
 
@@ -171,7 +142,7 @@ export default ShaderBoy.gdrive = {
             'path': '/upload/drive/v3/files/' + id,
             'method': 'PATCH',
             'params': { 'uploadType': 'multipart' },
-            'headers': { 'Content-Type': 'multipart/mixed; boundary="' + boundary + '"' },
+            'headers': { 'Content-Type': `multipart/mixed; boundary='${boundary}'` },
             'body': multipartRequestBody,
         })
 
@@ -180,65 +151,18 @@ export default ShaderBoy.gdrive = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    async saveTextFile(nm, id, content, callback)
+    async saveTextFile(name, id, content, callback)
     {
         // from http://ecmanaut.blogspot.jp/2006/07/encoding-decoding-utf8-in-javascript.html
         let utf8_to_b64 = (str) => { return window.btoa(unescape(encodeURIComponent(str))); }
-        return this.saveFile(nm, id, utf8_to_b64(content), 'text/plain', callback)
+        return this.saveFile(name, id, utf8_to_b64(content), 'text/plain', callback)
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    async saveThumbFile(nm, mainCanvas, folderId)
-    {
-        const thumbCanvas = document.createElement("canvas")
-
-        if (mainCanvas.width / mainCanvas.height > 16 / 9)
-        {
-            thumbCanvas.height = mainCanvas.height
-            thumbCanvas.width = Math.floor(mainCanvas.height * (16 / 9))
-            const offsetX = (mainCanvas.width - thumbCanvas.width) * 0.5
-            thumbCanvas.getContext('2d').drawImage(mainCanvas, -offsetX, 0)
-        }
-        else
-        {
-            thumbCanvas.width = mainCanvas.width
-            thumbCanvas.height = Math.floor(mainCanvas.width * (9 / 16))
-            const offsetY = (mainCanvas.height - thumbCanvas.height) * 0.5
-            thumbCanvas.getContext('2d').drawImage(mainCanvas, 0, -offsetY)
-        }
-
-        await new Promise((resolve, reject) => { new Hermite_class().resample(thumbCanvas, 320, 180, true, resolve) })
-        const content = thumbCanvas.toDataURL("image/png").replace("data:image/png;base64,", "")
-
-        let response = await this.getFileInfoByName(nm, folderId, null)
-        const res = response.result
-        if (res.files.length === 0)
-        {
-            this.createFile(folderId, nm, content, 'image/png', null).then(() =>
-            {
-                return Promise.resolve()
-            }).catch((error) =>
-            {
-                return Promise.reject()
-            })
-        }
-        else
-        {
-            this.saveFile(nm, res.files[0].id, content, 'image/png', null).then(() =>
-            {
-                return Promise.resolve()
-            }).catch((error) =>
-            {
-                return Promise.reject()
-            })
-        }
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    createFolder(nm, parentId, callback)
+    createFolder(name, parentId, callback)
     {
         let config = {
-            name: nm,
+            name: name,
             mimeType: 'application/vnd.google-apps.folder'
         }
         if (parentId !== 'root') config.parents = [parentId]
@@ -249,7 +173,7 @@ export default ShaderBoy.gdrive = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getFolderByName(nm, callback)
+    getFolderByName(name, callback)
     {
         const request = gapi.client.drive.files.list({
             client_id: this.CLIENT_ID,
@@ -257,57 +181,11 @@ export default ShaderBoy.gdrive = {
             pageSize: 1,
             orderBy: "name, modifiedTime",
             fields: "files(id, name, kind, size, mimeType, modifiedTime)",
-            q: "trashed=false and mimeType='application/vnd.google-apps.folder' and name='" + nm + "'",
+            q: `trashed=false and mimeType='application/vnd.google-apps.folder' and name='${name}'`,
             spaces: "drive"
         })
         if (callback) { request.execute(callback) }
         return request
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getFolderByNamePromise(name)
-    {
-        const request = gapi.client.drive.files.list({
-            client_id: this.CLIENT_ID,
-            scope: this.SCOPES,
-            pageSize: 1,
-            orderBy: "name, modifiedTime",
-            fields: "files(id, name, kind, size, mimeType, modifiedTime)",
-            q: "trashed=false and mimeType='application/vnd.google-apps.folder' and name='" + name + "'",
-            spaces: "drive"
-        })
-        return request.getPromise()
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getFileInfoByName(nm, id, callback)
-    {
-        const request = gapi.client.drive.files.list({
-            client_id: this.CLIENT_ID,
-            scope: this.SCOPES,
-            pageSize: 1,
-            orderBy: "name, modifiedTime",
-            fields: "files(id, name, kind, size, mimeType, modifiedTime)",
-            q: "trashed=false and '" + id + "' in parents and name='" + nm + "'",
-            spaces: "drive"
-        })
-        if (callback) { request.execute(callback) }
-        return request
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getFileInfoByNamePromise(name, id)
-    {
-        const request = gapi.client.drive.files.list({
-            client_id: this.CLIENT_ID,
-            scope: this.SCOPES,
-            pageSize: 1,
-            orderBy: "name, modifiedTime",
-            fields: "files(id, name, kind, size, mimeType, modifiedTime)",
-            q: "trashed=false and '" + id + "' in parents and name='" + name + "'",
-            spaces: "drive"
-        })
-        return request.getPromise()
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -317,7 +195,7 @@ export default ShaderBoy.gdrive = {
             pageSize: 100,
             orderBy: "name, modifiedTime",
             fields: "files(id, name, kind, size, mimeType, modifiedTime)",
-            q: "trashed=false and mimeType='application/vnd.google-apps.folder' and '" + appFolderId + "' in parents",
+            q: `trashed=false and mimeType='application/vnd.google-apps.folder' and '${appFolderId}' in parents`,
             spaces: "drive"
         })
 
@@ -326,13 +204,29 @@ export default ShaderBoy.gdrive = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getFilesInFolder(folderId, callback)
+    getFileInfoByName(name, folderId, callback)
+    {
+        const request = gapi.client.drive.files.list({
+            client_id: this.CLIENT_ID,
+            scope: this.SCOPES,
+            pageSize: 1,
+            orderBy: "name, modifiedTime",
+            fields: "files(id, name, kind, size, mimeType, modifiedTime)",
+            q: `trashed=false and '${folderId}' in parents and name='${name}'`,
+            spaces: "drive"
+        })
+        if (callback) { request.execute(callback) }
+        return request
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    getFileIdsInFolder(folderId, callback)
     {
         const request = gapi.client.drive.files.list({
             pageSize: 100,
             orderBy: "name, modifiedTime",
             fields: "files(id, name, kind, size, mimeType, modifiedTime, webContentLink)",
-            q: "trashed=false and '" + folderId + "' in parents",
+            q: `trashed=false and '${folderId}' in parents`,
             spaces: "drive"
         })
 
@@ -349,11 +243,5 @@ export default ShaderBoy.gdrive = {
         })
         if (callback) { request.execute(callback) }
         return request
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    createShaderFolder(name, appFolderId, callback)
-    {
-        return this.createFolder(name, appFolderId, callback)
     }
 }

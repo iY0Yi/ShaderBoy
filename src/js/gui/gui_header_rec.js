@@ -62,13 +62,13 @@ export default ShaderBoy.gui_header_rec = { // comment out on codepen.
         let txtEls = document.querySelectorAll('.rec-text')
         for (let i = 0; i < txtEls.length; i++)
         {
-            txtEls[i].onchange = function (event)
+            txtEls[i].onchange = (event) =>
             {
                 event.target.classList.add('defined')
             }
         }
 
-        document.getElementById('ghdr-btn-record').onclick = function (event)
+        document.getElementById('ghdr-btn-record').onclick = (event) =>
         {
             ShaderBoy.isRecording = !ShaderBoy.isRecording
 
@@ -92,8 +92,8 @@ export default ShaderBoy.gui_header_rec = { // comment out on codepen.
                         settings[i].onclick = undefined
                     }
                 }
-                ShaderBoy.gui_header_rec.setRecSetting()
-                ShaderBoy.gui_header_rec.start()
+                this.setRecSetting()
+                this.start()
             }
             else
             {
@@ -108,10 +108,10 @@ export default ShaderBoy.gui_header_rec = { // comment out on codepen.
                     }
                     else
                     {
-                        settings[i].onclick = ShaderBoy.gui_header_rec.dropdownClick
+                        settings[i].onclick = this.dropdownClick
                     }
                 }
-                ShaderBoy.gui_header_rec.stop()
+                this.stop()
             }
         }
 
@@ -157,7 +157,7 @@ export default ShaderBoy.gui_header_rec = { // comment out on codepen.
                     item.innerHTML = options[j].text
                     ul.appendChild(item)
 
-                    item.onclick = function (e)
+                    item.onclick = (e) =>
                     {
                         let op = e.target
                         let opts = op.closest('.list').querySelectorAll('.option')
@@ -179,7 +179,7 @@ export default ShaderBoy.gui_header_rec = { // comment out on codepen.
         }
 
         // Close when clicking outside
-        document.onclick = function (event)
+        document.onclick = (event) =>
         {
             if (event.target.closest('.dropdown') === null)
             {
@@ -219,13 +219,13 @@ export default ShaderBoy.gui_header_rec = { // comment out on codepen.
         ShaderBoy.isConcentrating = false
 
         ShaderBoy.capture.start()
-        this.timer = setInterval(function (e)
+        this.timer = setInterval((e) =>
         {
             console.log('recording...')
             if (ShaderBoy.gui_timeline.currentFrame >= ShaderBoy.gui_timeline.endFrame)
             {
-                ShaderBoy.gui_header_rec.stop()
-                clearInterval(ShaderBoy.gui_header_rec.timer)
+                this.stop()
+                clearInterval(this.timer)
             }
         }, Math.floor(1 / 60 * 1000))
 
@@ -257,7 +257,7 @@ export default ShaderBoy.gui_header_rec = { // comment out on codepen.
     {
         console.log('setRecSetting')
 
-        function getQuality(lv)
+        const getQuality = (lv) =>
         {
             console.log('lv: ', lv)
             let q = 100
@@ -284,7 +284,7 @@ export default ShaderBoy.gui_header_rec = { // comment out on codepen.
             return q
         }
 
-        function getFormat(name)
+        const getFormat = (name) =>
         {
             let f = 'webm'
             switch (name)
@@ -307,7 +307,7 @@ export default ShaderBoy.gui_header_rec = { // comment out on codepen.
             return f
         }
 
-        function getTimeLimit()
+        const getTimeLimit = () =>
         {
             const start = ShaderBoy.gui_timeline.currentFrame
             const end = ShaderBoy.gui_timeline.endFrame

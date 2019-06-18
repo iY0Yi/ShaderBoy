@@ -15,7 +15,7 @@ const ShaderLib = {
 	shaderInitialized: false,
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	loadTextFile: function (name, url)
+	loadTextFile(name, url)
 	{
 		// Set up an asynchronous request
 		const request = new XMLHttpRequest()
@@ -23,44 +23,27 @@ const ShaderLib = {
 		request.setRequestHeader('Pragma', 'no-cache')
 		request.setRequestHeader('Cache-Control', 'no-cache')
 		request.setRequestHeader('If-Modified-Since', 'Thu, 01 Jun 1970 00:00:00 GMT')
-		request.root = this
-		// Hook the event that gets called as the request progresses
-		request.onreadystatechange = function ()
-		{
-			// If the request is "DONE" (completed or failed)
-			if (request.readyState === 4)
-			{
-				// If we got HTTP status 200 (OK)
-				if (request.status === 200)
-				{
-					let root = this.root
-					let shaderTxt = request.responseText
 
-					root.loadedNum++
-					if (root.shader[name] !== null)
+		request.onreadystatechange = () =>
+		{// Hook the event that gets called as the request progresses
+
+			if (request.readyState === 4)
+			{// If the request is "DONE" (completed or failed)
+
+				if (request.status === 200)
+				{// If we got HTTP status 200 (OK)
+					const shaderTxt = request.responseText
+					this.shader[name] = shaderTxt
+					this.loadedNum++
+
+					if (this.loadedNum === this.shaderNum)
 					{
-						root.shader[name] = null
-					}
-					root.shader[name] = shaderTxt
-					if (root.loadedNum === root.shaderNum)
-					{
-						if (root.shaderInitialized === true)
-						{
-							// if (debug.SHADER) {
-							// console.log(shaderTxt)
-							// }
-						}
-						else
-						{
-							root.shaderInitialized = true
-							root.callback()
-						}
-						root.loadedNum = 0
+						this.callback()
 					}
 				}
 				else
 				{ // Failed
-					console.log('Failed to load the shader"' + url + '"')
+					throw new Error(`Failed to load the shader"${url}"`)
 				}
 			}
 		}
@@ -69,10 +52,11 @@ const ShaderLib = {
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	loadShadersFiles: function (ref, callback)
+	loadShadersFiles(ref, callback)
 	{
 		this.callback = callback
 		this.shaderNum = ref.length
+		this.loadedNum = 0
 		for (const shaderfile of ref)
 		{
 			let name = shaderfile.name
