@@ -206,12 +206,14 @@ export default ShaderBoy.soundRenderer = {
 
         const shader = ShaderBoy.buffers['Sound'].shader
         shader.begin()
-        shader.uniforms.iSampleRate = this.mSampleRate
 
         for (let j = 0; j < numBlocks; j++)
         {
             const off = j * this.mTmpBufferSamples
+            shader.uniforms.iSampleRate = this.mSampleRate
             shader.uniforms.iBlockOffset = off / this.mSampleRate
+            shader.setKnobsUniforms()
+            shader.setMIDIUniforms()
             shader.setShadetoySoundShaderUniforms()
             shader.drawTexture(this.framebuffer, this.texture)
 

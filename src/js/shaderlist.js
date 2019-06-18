@@ -8,6 +8,10 @@ const ShaderList = [
 		url: 'shader/_uniform.fs',
 	},
 	{
+		name: 'soundUniformFS',
+		url: 'shader/_sounduniform.fs',
+	},
+	{
 		name: 'Common',
 		url: 'shader/common.fs',
 	},
