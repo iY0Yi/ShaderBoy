@@ -1,3 +1,11 @@
+//   ___              _    _                   
+//  (  _`\         _ (_ ) ( )_  _              
+//  | (_) ) _   _ (_) | | | ,_)(_)  ___    ___ 
+//  |  _ <'( ) ( )| | | | | |  | |/' _ `\/',__)
+//  | (_) )| (_) || | | | | |_ | || ( ) |\__, \
+//  (____/'`\___/'(_)(___)`\__)(_)(_) (_)(____/
+//                                             
+
 import KeywordDictionary from './keyword_dictionary'
 import Keyword from './keyword'
 import builtins_es300 from './builtins_es300'

@@ -1,3 +1,17 @@
+//   ___        _     _                
+//  (  _`\     ( ) _ ( )_              
+//  | (_(_)   _| |(_)| ,_)   _    _ __ 
+//  |  _)_  /'_` || || |   /'_`\ ( '__)
+//  | (_( )( (_| || || |_ ( (_) )| |   
+//  (____/'`\__,_)(_)`\__)`\___/'(_)   
+//   _   _            _                
+//  ( ) ( ) _        ( )_              
+//  | |_| |(_)  ___  | ,_)             
+//  |  _  || |/' _ `\| |               
+//  | | | || || ( ) || |_              
+//  (_) (_)(_)(_) (_)`\__)             
+//                                     
+
 import ShaderBoy from './shaderboy'
 import Worker from './workers/keyword.worker'
 
@@ -18,7 +32,6 @@ const needSnippet = (renderWord) =>
 
 export default ShaderBoy.editor_hint = {
 
-    // init
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     init()
     {
@@ -62,7 +75,6 @@ export default ShaderBoy.editor_hint = {
         }
     },
 
-    // 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     syncUserDict()
     {
@@ -78,7 +90,6 @@ export default ShaderBoy.editor_hint = {
         this.keywordWorker.postMessage(JSON.stringify({ name: 'syncUserDict', content: { dictName: ShaderBoy.editingBuffer, strCode: docLinesStr } }, null, "\t"))
     },
 
-    // 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     filterDictByWord()
     {
@@ -110,7 +121,6 @@ export default ShaderBoy.editor_hint = {
         }
     },
 
-    // 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     setSnippet(rawItem)
     {
@@ -199,7 +209,6 @@ export default ShaderBoy.editor_hint = {
         }
     },
 
-    // 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     showFilteredDict(filteredRenderWords)
     {
@@ -244,7 +253,6 @@ export default ShaderBoy.editor_hint = {
         )
     },
 
-    // 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     getHintFunction()
     {

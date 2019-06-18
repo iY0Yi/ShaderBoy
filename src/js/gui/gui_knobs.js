@@ -1,21 +1,8 @@
-// comment out on codepen.
 import ShaderBoy from '../shaderboy'
-// import Vue from 'vue'
 
-// comment out on ShaderBoy.
-// console.clear()
-// let ShaderBoy = {
-//     isPlaying: true,
-//     uniforms: {
-//         iTime: 0,
-//         iFrame: 0
-//     }
-// }
+export default ShaderBoy.gui_knobs = {
 
-const isTest = false // set "true" on codepen.
-
-export default ShaderBoy.gui_knobs = { // comment out on codepen.
-    // ShaderBoy.gui_knobs = {  // comment out on ShaderBoy.
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     setup()
     {
         ShaderBoy.gui.ctrl = { 'domElement': null }
@@ -143,9 +130,4 @@ export default ShaderBoy.gui_knobs = { // comment out on codepen.
             }
         })
     }
-}
-
-if (isTest)
-{
-    ShaderBoy.gui_knobs.setup(true)
 }

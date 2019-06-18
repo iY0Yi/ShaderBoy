@@ -5,6 +5,7 @@ const fs = require('fs')
 import Tokenizer from '../src/js/workers/tokenizer'
 const fileUrl = './__tests__/glsl/'
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function main()
 {
     describe('Tokenizer', () =>

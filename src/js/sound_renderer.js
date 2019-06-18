@@ -16,6 +16,7 @@ import ShaderBoy from './shaderboy'
 import bufferManager from './buffer_manager'
 
 export default ShaderBoy.soundRenderer = {
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     init()
     {
         this.gl = ShaderBoy.gl
@@ -52,6 +53,7 @@ export default ShaderBoy.soundRenderer = {
         this.wave[2] = document.getElementById('wave2')
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initContext()
     {
         console.log('soundRenderer.initContext()')
@@ -75,6 +77,7 @@ export default ShaderBoy.soundRenderer = {
         this.paused = true
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     destroyContext()
     {
         console.log('soundRenderer.destroyContext')
@@ -96,6 +99,7 @@ export default ShaderBoy.soundRenderer = {
         this.wave[2].style.height = '0px'
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     drawEQ()
     {
         // if (ShaderBoy.buffers['Sound'].active === true && ShaderBoy.isPlaying === true)
@@ -135,7 +139,7 @@ export default ShaderBoy.soundRenderer = {
         }
     },
 
-
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     mute()
     {
         this.mForceMuted = !this.mForceMuted
@@ -145,12 +149,14 @@ export default ShaderBoy.soundRenderer = {
         { this.mGainNode.gain.value = 1.0 }
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     getCurrentTime()
     {
         return Math.floor(ShaderBoy.gui_timeline.currentFrame / 60)
     },
 
     //https://stackoverflow.com/questions/11506180/web-audio-api-resume-from-pause
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     play()
     {
         console.log('soundRenderer.play()')
@@ -163,6 +169,7 @@ export default ShaderBoy.soundRenderer = {
         this.paused = false
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     restart()
     {
         console.log('soundRenderer.restart()')
@@ -170,6 +177,7 @@ export default ShaderBoy.soundRenderer = {
         this.play()
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     stop()
     {
         console.log('soundRenderer.stop()')
@@ -182,6 +190,7 @@ export default ShaderBoy.soundRenderer = {
         }
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     pause()
     {
         if (this.paused) this.play()
@@ -231,4 +240,4 @@ export default ShaderBoy.soundRenderer = {
 
         if (this.mPlayNode != null) { this.mPlayNode.disconnect(); this.mPlayNode.stop(); }
     }
-};
+}

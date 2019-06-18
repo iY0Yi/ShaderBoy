@@ -1,17 +1,6 @@
-import ShaderBoy from '../shaderboy'; // comment out on codepen.
-// comment out on ShaderBoy.
-// let ShaderBoy = {
-//     isPlaying: true,
-//     uniforms: {
-//         iTime: 0,
-//         iFrame: 0
-//     }
-// }
+import ShaderBoy from '../shaderboy'
 
-const isTest = false; // set "true" on codepen.
-
-export default ShaderBoy.gui_sidebar_ichannels = { // comment out on codepen.
-    // ShaderBoy.gui_sidebar_ichannels = {  // comment out on ShaderBoy.
+export default ShaderBoy.gui_sidebar_ichannels = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     bufClasses: ['buf-null', 'buf-a', 'buf-b', 'buf-c', 'buf-d'],
@@ -272,10 +261,4 @@ export default ShaderBoy.gui_sidebar_ichannels = { // comment out on codepen.
             }
         }
     }
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if (isTest)
-{
-    ShaderBoy.gui_sidebar_ichannels.setup(true)
 }

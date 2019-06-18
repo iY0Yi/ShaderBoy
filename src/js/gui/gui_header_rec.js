@@ -1,20 +1,6 @@
-// comment out on codepen.
 import ShaderBoy from '../shaderboy'
 
-// comment out on ShaderBoy.
-// console.clear()
-// let ShaderBoy = {
-//     isPlaying: true,
-//     uniforms: {
-//         iTime: 0,
-//         iFrame: 0
-//     }
-// }
-
-const isTest = false; // set "true" on codepen.
-
-export default ShaderBoy.gui_header_rec = { // comment out on codepen.
-    // ShaderBoy.gui_header_rec = {  // comment out on ShaderBoy.
+export default ShaderBoy.gui_header_rec = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     dropdownClick(event)
@@ -333,10 +319,4 @@ export default ShaderBoy.gui_header_rec = { // comment out on codepen.
         ShaderBoy.config.capture.resolution[1] = Number(document.getElementById('res-y').value) || 1080
 
     }
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if (isTest)
-{
-    ShaderBoy.gui_header_rec.setup(true)
 }

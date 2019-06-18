@@ -69,6 +69,7 @@ export default ShaderBoy.bufferManager = {
         this.initFBOs()
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initBufferDoc(name)
     {
         ShaderBoy.buffers[name].cm = CodeMirror.Doc(ShaderLib.shader[name], 'x-shader/x-fragment')
@@ -91,6 +92,7 @@ export default ShaderBoy.bufferManager = {
         this.currentBufferDataId = ShaderBoy.activeBufferIds.indexOf(currentBufName)
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     needNewShader(settingObj)
     {
         for (const element of settingObj.shaders.list)
@@ -184,6 +186,7 @@ export default ShaderBoy.bufferManager = {
             ShaderBoy.vsSource = ShaderBoy.shaderHeader[0] + "attribute vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }"
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     getUniformCode()
     {
         ShaderBoy.gui_midi.collectUniforms()
@@ -196,6 +199,7 @@ export default ShaderBoy.bufferManager = {
         return uniformCode
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     getSoundUniformCode()
     {
         ShaderBoy.gui_midi.collectUniforms()
@@ -465,4 +469,3 @@ export default ShaderBoy.bufferManager = {
         this.setFBOsProps()
     },
 }
-

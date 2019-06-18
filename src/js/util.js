@@ -73,4 +73,4 @@ export default ShaderBoy.util = {
 
 		return true
 	}
-};
+}

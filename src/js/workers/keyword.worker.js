@@ -38,12 +38,14 @@ keywordDict['Common'] = new KeywordDictionary('Common')
 let strPrevCodeFull = ''
 let linesprevCodeWords = ['']
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const initBltinDict = () =>
 {
     Builtins.init()
     keywordDict['Builtins'] = Builtins.dictionary
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const filterDictByWord = (dictName, curWord) =>
 {
     console.log('started: KeywordWorker.filterDictByWord...')
@@ -76,6 +78,7 @@ const filterDictByWord = (dictName, curWord) =>
     postMessage(JSON.stringify({ name: 'filter_succeed', content: { list: filteredDict } }, null, "\t"))
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const filterStructByWord = (dictName, curWord) =>
 {
     console.log('started: KeywordWorker.filterStructByWord...', curWord)
@@ -95,6 +98,7 @@ const filterStructByWord = (dictName, curWord) =>
     postMessage(JSON.stringify({ name: 'filter_failed', content: null }, null, "\t"))
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const getRenewedLineNumbers = (str) =>
 {
     let renewedLineNumbers = []
@@ -114,6 +118,7 @@ const getRenewedLineNumbers = (str) =>
     return renewedLineNumbers
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const syncStructs = (dictName, str) =>
 {
     const result = Tokenizer.parseStructs(str)
@@ -140,6 +145,7 @@ const syncStructs = (dictName, str) =>
     }
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const syncMacrosFunctionsVariables = (dictName, str) =>
 {
     const strNewCodeFull = Tokenizer.sanitizeLinesForMacroFunctionsVariables(str)
@@ -185,6 +191,7 @@ const syncMacrosFunctionsVariables = (dictName, str) =>
     strPrevCodeFull = strNewCodeFull
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const syncUserDict = (dictName, str) =>
 {
     console.log('started: KeywordWorker.syncUserDict...')

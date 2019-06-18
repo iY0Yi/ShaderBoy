@@ -1,16 +1,4 @@
-import ShaderBoy from '../shaderboy' // comment out on codepen.
-
-// comment out on local.
-// let ShaderBoy = {
-//     isPlaying:true,
-//   uniforms:{
-//       iTime:0,
-//       iFrame:0
-//   }  
-// }
-
-
-const isTest = false // set "true" on codepen.
+import ShaderBoy from '../shaderboy'
 
 let playbackSpeed = 1
 let playbackSpeedCount = 0
@@ -47,8 +35,7 @@ const f2x = (f) => { return Math.floor((s2i(f) - offsetFrames) / (totalFrames - 
 const x2f = (x) => { return Math.floor((totalFrames - offsetFrames) * ((x + 100 / (totalFrames - offsetFrames) - tlRect.minx) / tlRect.width)) + offsetFrames }
 const fit = (x) => { return f2x(x2f(x)) + hw }
 
-export default ShaderBoy.gui_timeline = { // comment out on codepen.
-    // ShaderBoy.gui_timeline = {  // comment out on local.
+export default ShaderBoy.gui_timeline = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     get totalFrames()
@@ -534,5 +521,3 @@ export default ShaderBoy.gui_timeline = { // comment out on codepen.
         elmnt.onmousedown = dragMouseDown
     }
 }
-
-if (isTest) ShaderBoy.gui_timeline.setup(true)

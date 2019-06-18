@@ -1,17 +1,7 @@
-import ShaderBoy from '../shaderboy' // comment out on codepen.
-// comment out on ShaderBoy.
-// let ShaderBoy = {
-//     isPlaying: true,
-//     uniforms: {
-//         iTime: 0,
-//         iFrame: 0
-//     }
-// }
+import ShaderBoy from '../shaderboy'
 
-const isTest = false // set "true" on codepen.
+export default ShaderBoy.gui_panel_textform = {
 
-export default ShaderBoy.gui_panel_textform = { // comment out on codepen.
-    // ShaderBoy.gui_panel_textform = {  // comment out on ShaderBoy.
     textarea: null,
     result: null,
     callback: null,
@@ -86,20 +76,4 @@ export default ShaderBoy.gui_panel_textform = { // comment out on codepen.
             document.getElementById('textarea-container').classList.add('dirty')
         }
     }
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if (isTest)
-{
-    document.body.onclick = (e) =>
-    {
-        e.stopPropagation()
-        const containerEl = document.getElementById('gui-panel')
-        const gpbaseEl = document.getElementById('gp-base')
-        containerEl.classList.toggle("gp-container-appear")
-        gpbaseEl.classList.toggle("gp-appear")
-        containerEl.classList.toggle("gp-container-hidden")
-        gpbaseEl.classList.toggle("gp-hidden")
-    }
-    ShaderBoy.gui_panel_textform.setup(true)
 }

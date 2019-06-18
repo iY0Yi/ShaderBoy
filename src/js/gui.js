@@ -755,4 +755,4 @@ export default ShaderBoy.gui = {
 			}
 		}
 	}
-};
+}

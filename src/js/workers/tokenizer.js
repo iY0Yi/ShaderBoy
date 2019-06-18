@@ -1,3 +1,10 @@
+//   _____       _                                         
+//  (_   _)     ( )                   _                    
+//    | |   _   | |/')    __    ___  (_) ____    __   _ __ 
+//    | | /'_`\ | , <   /'__`\/' _ `\| |(_  ,) /'__`\( '__)
+//    | |( (_) )| |\`\ (  ___/| ( ) || | /'/_ (  ___/| |   
+//    (_)`\___/'(_) (_)`\____)(_) (_)(_)(____)`\____)(_)   
+
 import Keyword from './keyword'
 import Builtins from './builtins'
 
@@ -13,6 +20,7 @@ const Tokenizer = {
         return str
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     removePreProcessor(str)
     {
         const gl_PreProcessor = ("#undef #ifdef #ifndef #else #elif #endif #if").split(" ")

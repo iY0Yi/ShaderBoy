@@ -66,4 +66,4 @@ const ShaderLib = {
 	}
 }
 
-export default ShaderLib;
+export default ShaderLib

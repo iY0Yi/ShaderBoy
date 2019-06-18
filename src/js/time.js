@@ -62,6 +62,7 @@ export default ShaderBoy.time = {
         }
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     update()
     {
         ShaderBoy.uniforms.iFrame++
@@ -108,4 +109,4 @@ export default ShaderBoy.time = {
             console.log('Resumed.')
         }
     }
-};
+}

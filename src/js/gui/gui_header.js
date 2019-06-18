@@ -1,18 +1,6 @@
-// console.clear()
-import ShaderBoy from '../shaderboy' // comment out on codepen.
-// comment out on ShaderBoy.
-// let ShaderBoy = {
-//     isPlaying: true,
-//     uniforms: {
-//         iTime: 0,
-//         iFrame: 0
-//     }
-// }
+import ShaderBoy from '../shaderboy'
 
-const isTest = false // set "true" on codepen.
-
-export default ShaderBoy.gui_header = { // comment out on codepen.
-    // ShaderBoy.gui_header = {  // comment out on ShaderBoy.
+export default ShaderBoy.gui_header = {
 
     bufCount: -1,
     bufOrder: [],
@@ -366,10 +354,4 @@ export default ShaderBoy.gui_header = { // comment out on codepen.
             ShaderBoy.soundRenderer.drawEQ()
         }
     }
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if (isTest)
-{
-    ShaderBoy.gui_header.setup(true)
 }

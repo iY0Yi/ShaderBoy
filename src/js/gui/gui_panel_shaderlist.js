@@ -1,21 +1,10 @@
-import ShaderBoy from '../shaderboy' // comment out on codepen.
-// comment out on ShaderBoy.
-// let ShaderBoy = {
-//     isPlaying: true,
-//     uniforms: {
-//         iTime: 0,
-//         iFrame: 0
-//     }
-// }
-
-const isTest = false // set "true" on codepen.
+import ShaderBoy from '../shaderboy'
 
 let panelEl = null
 let btns = []
 let list_local = []
 
-export default ShaderBoy.gui_panel_shaderlist = { // comment out on codepen.
-    // ShaderBoy.gui_panel_shaderlist = {  // comment out on ShaderBoy.
+export default ShaderBoy.gui_panel_shaderlist = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     setup(list)
@@ -178,20 +167,4 @@ export default ShaderBoy.gui_panel_shaderlist = { // comment out on codepen.
         containerEl.classList.toggle("gp-container-hidden")
         gpbaseEl.classList.toggle("gp-hidden")
     }
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if (isTest)
-{
-    document.body.onclick = (e) =>
-    {
-        e.stopPropagation()
-        const containerEl = document.getElementById('gui-panel')
-        const gpbaseEl = document.getElementById('gp-base')
-        containerEl.classList.toggle("gp-container-appear")
-        gpbaseEl.classList.toggle("gp-appear")
-        containerEl.classList.toggle("gp-container-hidden")
-        gpbaseEl.classList.toggle("gp-hidden")
-    }
-    ShaderBoy.gui_panel_shaderlist.setup(true)
 }

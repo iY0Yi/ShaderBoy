@@ -272,6 +272,7 @@ ShaderBoy.init = () =>
 	}
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ShaderBoy.update = () =>
 {
 	requestAnimationFrame(ShaderBoy.update)

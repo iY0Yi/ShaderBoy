@@ -1,20 +1,7 @@
-// comment out on codepen.
 import ShaderBoy from '../shaderboy'
 
-// comment out on ShaderBoy.
-// console.clear()
-// let ShaderBoy = {
-//     isPlaying: true,
-//     uniforms: {
-//         iTime: 0,
-//         iFrame: 0
-//     }
-// }
+export default ShaderBoy.gui_midi = {
 
-const isTest = false; // set "true" on codepen.
-
-export default ShaderBoy.gui_midi = { // comment out on codepen.
-    // ShaderBoy.gui_midi = {  // comment out on ShaderBoy.
     // "Web MIDI API Example" by Rumyra:
     // https://codepen.io/Rumyra/pen/NxdbzL
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -138,10 +125,4 @@ export default ShaderBoy.gui_midi = { // comment out on codepen.
             }
         }
     }
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if (isTest)
-{
-    ShaderBoy.gui_midi.setup(true)
 }

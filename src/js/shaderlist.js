@@ -67,5 +67,5 @@ const ShaderList = [
 		name: 'gui_timeline',
 		url: 'shader/_guitimeline.json',
 	},
-];
-export default ShaderList;
+]
+export default ShaderList

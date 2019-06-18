@@ -279,6 +279,7 @@ export default ShaderBoy.io = {
 		})
 	},
 
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	getConflictSafeName(shaderName)
 	{
 		let isSafeName = false
