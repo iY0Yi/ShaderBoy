@@ -193,6 +193,8 @@ export default ShaderBoy.gui_header_rec = {
 
         ShaderBoy.canvas.width = config.resolution[0]
         ShaderBoy.canvas.height = config.resolution[1]
+        const timestamp = new Date().toISOString()
+        config.name = `sb-image-${timestamp}`
 
         ShaderBoy.capture = new CCapture(config)
 
@@ -204,7 +206,12 @@ export default ShaderBoy.gui_header_rec = {
         ShaderBoy.isPlaying = true
         ShaderBoy.isConcentrating = false
 
+        if (ShaderBoy.buffers['Sound'].active)
+        {
+            ShaderBoy.soundRenderer.downloadWav(`sb-sound-${timestamp}`)
+        }
         ShaderBoy.capture.start()
+
         this.timer = setInterval((e) =>
         {
             console.log('recording...')
@@ -234,6 +241,10 @@ export default ShaderBoy.gui_header_rec = {
         ShaderBoy.isPlaying = true
         ShaderBoy.isRecording = false
         ShaderBoy.capture = null
+        if (ShaderBoy.buffers['Sound'].active)
+        {
+            ShaderBoy.soundRenderer.play()
+        }
         // ShaderBoy.time.reset()
         ShaderBoy.gui_header.setStatus('suc3', 'Recording has been completed.', 3000)
     },

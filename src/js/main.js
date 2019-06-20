@@ -290,16 +290,7 @@ ShaderBoy.update = () =>
 
 			if (current > total)
 			{
-				ShaderBoy.gui_header.setStatus('suc3', 'Recording has complete.', 3000)
-
-				ShaderBoy.capture.stop()
-				const canvasWidth = Math.floor(window.innerWidth)
-				const canvasHeight = Math.floor(window.innerHeight)
-				ShaderBoy.canvas.width = canvasWidth
-				ShaderBoy.canvas.height = canvasHeight
-				bufferManager.setFBOsProps()
-				ShaderBoy.isRecording = false
-				ShaderBoy.capture = null
+				ShaderBoy.gui_header_rec.stop()
 			}
 			else
 			{
