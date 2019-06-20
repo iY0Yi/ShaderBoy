@@ -50,7 +50,7 @@ export default ShaderBoy.editor = {
         this.textArea.setAttribute('cols', '50')
         this.textArea.value = ''
 
-        // this.textSize = (localStorage.textSize !== undefined) ? localStorage.textSize : 11
+        this.textSize = (localStorage.textSize !== undefined) ? localStorage.textSize : 11
 
         this.errorWidgets = []
 
@@ -95,7 +95,7 @@ export default ShaderBoy.editor = {
     {
         if (this.textSize <= 8) this.textSize = 8
         if (this.textSize >= 64) this.textSize = 64
-        // $(".CodeMirror").css('font-size', this.textSize + "pt")
+        $(".CodeMirror").css('font-size', this.textSize + "pt")
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -104,7 +104,7 @@ export default ShaderBoy.editor = {
         if (this.textSize < 64)
         {
             this.textSize++
-            // $(".CodeMirror").css('font-size', this.textSize + "pt")
+            $(".CodeMirror").css('font-size', this.textSize + "pt")
         }
     },
 
@@ -114,7 +114,7 @@ export default ShaderBoy.editor = {
         if (this.textSize > 8)
         {
             this.textSize--
-            // $(".CodeMirror").css('font-size', this.textSize + "pt")
+            $(".CodeMirror").css('font-size', this.textSize + "pt")
         }
     },
 

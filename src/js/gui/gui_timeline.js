@@ -307,8 +307,6 @@ export default ShaderBoy.gui_timeline = {
                 }
             }
         }
-
-        if (isTest) ShaderBoy.gui_timeline.update()
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -350,7 +348,6 @@ export default ShaderBoy.gui_timeline = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     update()
     {
-        if (isTest) requestAnimationFrame(ShaderBoy.gui_timeline.update)
         if (ShaderBoy.isPlaying && isEditting === false && isDragging === false)
         {
             playbackSpeedCount += playbackSpeed

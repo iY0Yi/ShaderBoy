@@ -12,7 +12,6 @@ import util from './util'
 let gl = null
 export default class Shader
 {
-
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	constructor(gGl, vertexSource, fragmentSource)
 	{
