@@ -30,12 +30,13 @@ export default ShaderBoy.io = {
 		})
 
 		ShaderBoy.renderScale = 2
-		// ShaderBoy.editor.textSize = 16
+		ShaderBoy.editor.textSize = 16
 
 		this.initLoading = true
 		this.isNewShader = false
 		this.isAppInit = false
 		this.idList = {}
+
 
 		this.ID_DIR_APP = ''
 		this.ID_DIR_SHADER = ''
@@ -87,6 +88,15 @@ export default ShaderBoy.io = {
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	setActiveShaderName(name)
+	{
+		ShaderBoy.activeShaderName = name
+		ShaderBoy.setting.shaders.active = name
+		document.getElementById('asn_name').textContent = name
+
+	},
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setupDevShader()
 	{
 		ShaderBoy.config = JSON.parse(ShaderBoy.buffers['Config'].cm.getValue())
@@ -129,6 +139,27 @@ export default ShaderBoy.io = {
 		ShaderBoy.editor.setBuffer('Image', true)
 
 		ShaderBoy.isPlaying = true
+
+		document.getElementById('div_authrise').classList.add('hide')
+		setTimeout(() =>
+		{
+			document.getElementById('div_authrise').classList.add('hidden')
+		}, 400)
+
+		ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000, () =>
+		{
+			document.getElementById('cvr-loading').classList.add('loading-hide')
+			setTimeout(() =>
+			{
+				document.getElementById('cvr-loading').classList.add('loading-hidden')
+			}, 400)
+			if (this.initLoading === true)
+			{
+				this.initLoading = false
+				ShaderBoy.update()
+			}
+		})
+
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -169,7 +200,7 @@ export default ShaderBoy.io = {
 
 		const settingObj = JSON.parse(request.body)
 		ShaderBoy.setting = settingObj
-		ShaderBoy.activeShaderName = settingObj.shaders.active
+		this.setActiveShaderName(settingObj.shaders.active)
 
 		request = await gdrive.getFolders(this.ID_DIR_APP)
 		res = request.result
@@ -200,7 +231,8 @@ export default ShaderBoy.io = {
 		this.idList['setting.json'].id = res.id
 		this.idList['setting.json'].content = ''
 
-		ShaderBoy.activeShaderName = '_default'
+		// ShaderBoy.activeShaderName = '_default'
+		this.setActiveShaderName('_default')
 		this.isAppInit = true
 		await this.newShader(ShaderBoy.activeShaderName)
 		ShaderBoy.bufferManager.initBufferDoc(['Setting'])
@@ -270,8 +302,7 @@ export default ShaderBoy.io = {
 			}
 			else
 			{
-				const name = ShaderBoy.setting.shaders.active
-				this.loadShaderFiles(name, name === '_default')
+				this.loadShaderFiles(ShaderBoy.activeShaderName)
 			}
 		}).catch((error) =>
 		{
@@ -323,10 +354,11 @@ export default ShaderBoy.io = {
 		request = await gdrive.createFolder(safeShaderName, this.ID_DIR_APP)
 		res = request.result
 		this.ID_DIR_SHADER = res.id
-		ShaderBoy.setting.shaders.active = safeShaderName
+		// ShaderBoy.setting.shaders.active = safeShaderName
+		this.setActiveShaderName(safeShaderName)
 		this.isNewShader = true
 		this.createShaderFiles(res.id, isFork)
-		ShaderBoy.setting.shaders.list.push(ShaderBoy.setting.shaders.active)
+		ShaderBoy.setting.shaders.list.push(safeShaderName)
 		ShaderBoy.setting.shaders.list = Array.from(new Set(ShaderBoy.setting.shaders.list))
 		return Promise.resolve()
 	},
@@ -362,6 +394,7 @@ export default ShaderBoy.io = {
 		Promise.all(promises).then(() =>
 		{
 			ShaderBoy.gui_header.setStatus('suc1', 'Saved.', 3000)
+			ShaderBoy.gui_header.setDirty(false)
 		}).catch((error) =>
 		{
 			console.log(error)
@@ -496,9 +529,9 @@ export default ShaderBoy.io = {
 		{
 			if (!value)
 			{
-				// value = 16
+				value = 16
 			}
-			// ShaderBoy.editor.textSize = value
+			ShaderBoy.editor.textSize = value
 		})
 
 		return Promise.resolve()
@@ -671,7 +704,8 @@ export default ShaderBoy.io = {
 			ShaderBoy.soundRenderer.stop()
 		}
 
-		ShaderBoy.activeShaderName = shaderName
+		// ShaderBoy.activeShaderName = shaderName
+		this.setActiveShaderName(shaderName)
 		this.initLoading = initLoading
 
 		this.ID_DIR_SHADER = await this.getShaderFolder(shaderName);

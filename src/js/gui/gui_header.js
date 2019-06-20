@@ -7,120 +7,6 @@ export default ShaderBoy.gui_header = {
     activeBufs: [],
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    setActive(bufName)
-    {
-        let bufBtns = document.querySelectorAll('.btn-buf')
-        for (let i = 0; i < bufBtns.length; i++)
-        {
-            if (bufBtns[i].textContent !== bufName)
-            {
-                bufBtns[i].classList.remove('active')
-            }
-            else
-            {
-                bufBtns[i].classList.add('active')
-            }
-        }
-
-        let id = 0
-        for (let i = 0; i < ShaderBoy.activeBufferIds.length; i++)
-        {
-            if (ShaderBoy.activeBufferIds[i] === bufName)
-            {
-                id = i
-                break
-            }
-        }
-        ShaderBoy.bufferManager.currentBufferDataId = id
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    resetBtns(buffers)
-    {
-        ShaderBoy.gui_header.bufCount = -1
-        const cmnEl = document.getElementById('ghdr-btn-common')
-        const bufaEl = document.getElementById('ghdr-btn-buf-a')
-        const bufbEl = document.getElementById('ghdr-btn-buf-b')
-        const bufcEl = document.getElementById('ghdr-btn-buf-c')
-        const bufdEl = document.getElementById('ghdr-btn-buf-d')
-        const sndEl = document.getElementById('ghdr-btn-snd')
-        // buffers['Sound'].active = true
-        if (buffers['Common'].active === true) cmnEl.classList.remove('disable'); else cmnEl.classList.add('disable')
-        if (buffers['BufferA'].active === true) bufaEl.classList.remove('disable'); else bufaEl.classList.add('disable')
-        if (buffers['BufferB'].active === true) bufbEl.classList.remove('disable'); else bufbEl.classList.add('disable')
-        if (buffers['BufferC'].active === true) bufcEl.classList.remove('disable'); else bufcEl.classList.add('disable')
-        if (buffers['BufferD'].active === true) bufdEl.classList.remove('disable'); else bufdEl.classList.add('disable')
-        if (buffers['Sound'].active === true) sndEl.classList.remove('disable'); else sndEl.classList.add('disable')
-
-        const cmnBtnEl = document.getElementById('ghdr-btn-switch-cmn')
-        cmnBtnEl.classList.remove('dec')
-        cmnBtnEl.classList.remove('inc')
-        if (buffers['Common'].active === true)
-        {
-            cmnBtnEl.classList.add('dec')
-        }
-        else
-        {
-            cmnBtnEl.classList.add('inc')
-        }
-
-        const sndBtnEl = document.getElementById('ghdr-btn-switch-snd')
-        sndBtnEl.classList.remove('dec')
-        sndBtnEl.classList.remove('inc')
-        if (buffers['Sound'].active === true)
-        {
-            sndBtnEl.classList.add('dec')
-        }
-        else
-        {
-            sndBtnEl.classList.add('inc')
-        }
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    setError(bufName)
-    {
-        const bufBtns = document.querySelectorAll('.btn-buf')
-        for (let i = 0; i < bufBtns.length; i++)
-        {
-            if (bufBtns[i].textContent !== bufName)
-            {
-                bufBtns[i].classList.remove('notify-error')
-            }
-            else
-            {
-                bufBtns[i].classList.add('notify-error')
-            }
-        }
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    setErrorOnly(bufName)
-    {
-        const bufBtns = document.querySelectorAll('.btn-buf')
-        for (let i = 0; i < bufBtns.length; i++)
-        {
-            if (bufBtns[i].textContent === bufName)
-            {
-                bufBtns[i].classList.add('notify-error')
-            }
-        }
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    removeErrorOnly(bufName)
-    {
-        const bufBtns = document.querySelectorAll('.btn-buf')
-        for (let i = 0; i < bufBtns.length; i++)
-        {
-            if (bufBtns[i].textContent === bufName)
-            {
-                bufBtns[i].classList.remove('notify-error')
-            }
-        }
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     setup()
     {
         this.bufOrder.push(document.getElementById('ghdr-btn-buf-a'))
@@ -262,6 +148,167 @@ export default ShaderBoy.gui_header = {
                 }
             }
         }
+
+        document.getElementById('fpscounter').onclick = this.switchInfo
+        document.getElementById('active-shader-name').onclick = this.switchInfo
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    setActive(bufName)
+    {
+        let bufBtns = document.querySelectorAll('.btn-buf')
+        for (let i = 0; i < bufBtns.length; i++)
+        {
+            if (bufBtns[i].textContent !== bufName)
+            {
+                bufBtns[i].classList.remove('active')
+            }
+            else
+            {
+                bufBtns[i].classList.add('active')
+            }
+        }
+
+        let id = 0
+        for (let i = 0; i < ShaderBoy.activeBufferIds.length; i++)
+        {
+            if (ShaderBoy.activeBufferIds[i] === bufName)
+            {
+                id = i
+                break
+            }
+        }
+        ShaderBoy.bufferManager.currentBufferDataId = id
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    setDirty(isDirty)
+    {
+        if (ShaderBoy.io.initLoading === false)
+        {
+            if (isDirty)
+            {
+                document.getElementById('asn_dirty').classList.add('dirty')
+            }
+            else
+            {
+                document.getElementById('asn_dirty').classList.remove('dirty')
+            }
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    switchInfo()
+    {
+        const fpsClassList = document.getElementById('fpscounter').classList
+        const nameClassList = document.getElementById('active-shader-name').classList
+
+        if (nameClassList.contains('hidden'))
+        {
+            fpsClassList.add('hide')
+            setTimeout(() =>
+            {
+                fpsClassList.add('hidden')
+                nameClassList.remove('hidden')
+                nameClassList.remove('hide')
+            }, 200)
+        }
+        else
+        {
+            nameClassList.add('hide')
+            setTimeout(() =>
+            {
+                nameClassList.add('hidden')
+                fpsClassList.remove('hidden')
+                fpsClassList.remove('hide')
+            }, 200)
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    resetBtns(buffers)
+    {
+        ShaderBoy.gui_header.bufCount = -1
+        const cmnEl = document.getElementById('ghdr-btn-common')
+        const bufaEl = document.getElementById('ghdr-btn-buf-a')
+        const bufbEl = document.getElementById('ghdr-btn-buf-b')
+        const bufcEl = document.getElementById('ghdr-btn-buf-c')
+        const bufdEl = document.getElementById('ghdr-btn-buf-d')
+        const sndEl = document.getElementById('ghdr-btn-snd')
+        // buffers['Sound'].active = true
+        if (buffers['Common'].active === true) cmnEl.classList.remove('disable'); else cmnEl.classList.add('disable')
+        if (buffers['BufferA'].active === true) bufaEl.classList.remove('disable'); else bufaEl.classList.add('disable')
+        if (buffers['BufferB'].active === true) bufbEl.classList.remove('disable'); else bufbEl.classList.add('disable')
+        if (buffers['BufferC'].active === true) bufcEl.classList.remove('disable'); else bufcEl.classList.add('disable')
+        if (buffers['BufferD'].active === true) bufdEl.classList.remove('disable'); else bufdEl.classList.add('disable')
+        if (buffers['Sound'].active === true) sndEl.classList.remove('disable'); else sndEl.classList.add('disable')
+
+        const cmnBtnEl = document.getElementById('ghdr-btn-switch-cmn')
+        cmnBtnEl.classList.remove('dec')
+        cmnBtnEl.classList.remove('inc')
+        if (buffers['Common'].active === true)
+        {
+            cmnBtnEl.classList.add('dec')
+        }
+        else
+        {
+            cmnBtnEl.classList.add('inc')
+        }
+
+        const sndBtnEl = document.getElementById('ghdr-btn-switch-snd')
+        sndBtnEl.classList.remove('dec')
+        sndBtnEl.classList.remove('inc')
+        if (buffers['Sound'].active === true)
+        {
+            sndBtnEl.classList.add('dec')
+        }
+        else
+        {
+            sndBtnEl.classList.add('inc')
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    setError(bufName)
+    {
+        const bufBtns = document.querySelectorAll('.btn-buf')
+        for (let i = 0; i < bufBtns.length; i++)
+        {
+            if (bufBtns[i].textContent !== bufName)
+            {
+                bufBtns[i].classList.remove('notify-error')
+            }
+            else
+            {
+                bufBtns[i].classList.add('notify-error')
+            }
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    setErrorOnly(bufName)
+    {
+        const bufBtns = document.querySelectorAll('.btn-buf')
+        for (let i = 0; i < bufBtns.length; i++)
+        {
+            if (bufBtns[i].textContent === bufName)
+            {
+                bufBtns[i].classList.add('notify-error')
+            }
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    removeErrorOnly(bufName)
+    {
+        const bufBtns = document.querySelectorAll('.btn-buf')
+        for (let i = 0; i < bufBtns.length; i++)
+        {
+            if (bufBtns[i].textContent === bufName)
+            {
+                bufBtns[i].classList.remove('notify-error')
+            }
+        }
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -287,10 +334,9 @@ export default ShaderBoy.gui_header = {
         }
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     timer: [null, null],
     statusChangeCallback: undefined,
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     setStatus(statusName, text, ms, callback)
     {
         const statusEl = document.querySelectorAll('.ghdr-notif')

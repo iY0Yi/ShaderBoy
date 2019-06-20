@@ -183,12 +183,13 @@
                 align-items: center;
                 vertical-align: middle;
                 line-height: 2.0;
-                
+
                 @extend %btn-interact;
 
-                &.inc>div>div{
+                &.inc>div>div {
                     transition: all $anm-middle;
                 }
+
                 &.dec>div>div {
                     transition: all $anm-zero;
                 }
@@ -287,7 +288,7 @@
     }
 
     #fpscounter {
-        width: auto;
+        width: $gui-size-unit*5;
         height: 100%;
         display: flex;
         justify-content: flex-start;
@@ -296,6 +297,7 @@
         padding-left: $gui-size-unit*0.25;
         padding-right: $gui-size-unit*0.25;
         background: $col-bg;
+        opacity: 1;
 
         @include mq {
             padding-left: $gui-size-unit-sp*0.25;
@@ -303,6 +305,18 @@
             background: transparent;
         }
 
+        transition: all $anm-short;
+
+        &.hide {
+            opacity: 0;
+            display: flex;
+        }
+
+        &.hidden {
+            opacity: 0;
+            width: 0px;
+            display: none;
+        }
 
         &>span {
             -webkit-font-smoothing: subpixel-antialiased;
@@ -322,6 +336,80 @@
             }
 
         }
+    }
+
+    #active-shader-name {
+        width: $gui-size-unit*5;
+        position: relative;
+        height: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        vertical-align: middle;
+        padding-left: $gui-size-unit*0.25;
+        padding-right: $gui-size-unit*0.25;
+        background: $col-bg;
+        opacity: 1;
+
+        @include mq {
+            padding-left: $gui-size-unit-sp*0.25;
+            padding-right: $gui-size-unit-sp*0.25;
+            background: transparent;
+        }
+
+        transition: all $anm-short;
+
+        &.hide {
+            opacity: 0;
+            display: flex;
+        }
+
+        &.hidden {
+            opacity: 0;
+            width: 0px;
+            display: none;
+        }
+
+        &>span {
+            -webkit-font-smoothing: subpixel-antialiased;
+            -moz-osx-font-smoothing: auto;
+            display: block;
+            width: $gui-size-unit*4.5;
+
+            margin: 0px;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            color: $col-frnt;
+
+            @include mq {
+                font-size: 10px;
+                width: $gui-size-unit-sp*4.5;
+            }
+        }
+    }
+}
+
+#asn_dirty {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background: $col-bg-bright;
+
+    transition: background $anm-long;
+
+    @include mq {
+        top: 4px;
+        right: 4px;
+        width: 4px;
+        height: 4px;
+    }
+
+    &.dirty {
+        background: $col-frnt;
     }
 }
 

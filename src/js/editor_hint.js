@@ -258,6 +258,7 @@ export default ShaderBoy.editor_hint = {
     {
         return (cm) =>
         {
+            ShaderBoy.gui_header.setDirty(true)
             ShaderBoy.editor_hint.curCur = cm.getCursor()
             ShaderBoy.editor_hint.curToken = cm.getTokenAt(ShaderBoy.editor_hint.curCur)
             ShaderBoy.editor_hint.curStart = ShaderBoy.editor_hint.curToken.start

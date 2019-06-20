@@ -283,6 +283,10 @@ export default ShaderBoy.gui = {
 			}
 		}
 
+		this.editorShortcuts[`${CMD}-I`] = () =>
+		{
+			ShaderBoy.gui_header.switchInfo()
+		}
 		this.editorShortcuts[`Shift-${CMD}-Alt-+`] = () =>
 		{
 			ShaderBoy.editor.incTextSize()
@@ -664,6 +668,11 @@ export default ShaderBoy.gui = {
 				ShaderBoy.isPlaying = false
 				gui_timeline.reset()
 
+				if (ShaderBoy.buffers['Sound'].active)
+				{
+					ShaderBoy.soundRenderer.stop()
+				}
+
 				key('ctrl+1', () =>
 				{
 					ShaderBoy.renderScale = 1
@@ -725,6 +734,11 @@ export default ShaderBoy.gui = {
 					}
 
 					ShaderBoy.isPlaying = isPlaying
+
+					if (ShaderBoy.buffers['Sound'].active && isPlaying)
+					{
+						ShaderBoy.soundRenderer.restart()
+					}
 
 					ShaderBoy.editor.codemirror.focus()
 					key.unbind('⌘+⇧+⌥+r', 'ctrl+⇧+⌥+r')
