@@ -1,7 +1,8 @@
-const TerserPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin')
 
-var PRODUCTION = true;
-var SOURCE_MAP = true;
+const PRODUCTION = false
+const SOURCE_MAP = true
+
 module.exports = {
 
 	mode: (PRODUCTION) ? 'production' : 'development',
@@ -38,12 +39,16 @@ module.exports = {
 			},
 			{
 				test: /\.worker\.js$/,
-				use: { loader: 'worker-loader' }
+				use: {
+					loader: 'worker-loader',
+					options: { name: 'worker.min.js' }
+				}
 			}
 		],
 	},
 
 	entry: './src/js/main.js',
+	// entry: { main: './src/js/main', worker: './src/js/workers/keyword.worker' },
 
 	optimization: {
 		minimizer: [
@@ -80,4 +85,4 @@ module.exports = {
 	{
 		extensions: ['.js']
 	}
-};
+}
