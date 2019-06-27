@@ -19,7 +19,6 @@ import Keyword from './keyword'
 import Tokenizer from './tokenizer'
 import Builtins from './builtins'
 
-
 let strPrevStructCode = ''
 let arrPrevStructs = []
 
@@ -49,13 +48,10 @@ const initBltinDict = () =>
 const filterDictByWord = (dictName, curWord) =>
 {
     console.log('started: KeywordWorker.filterDictByWord...')
-
     const filteredBuiltinsList = keywordDict['Builtins'].filter(curWord)
     const filteredUserList = keywordDict[dictName].filter(curWord)
-    console.log('filteredUserList: ', filteredUserList)
-
     const filteredDict = filteredBuiltinsList.concat(filteredUserList)
-    console.log('filteredDict: ', filteredDict)
+
     if (filteredDict.length >= 1 || (filteredDict[0] !== undefined && filteredDict[0].text !== undefined && filteredDict.length === 1 && filteredDict[0].text.toUpperCase() !== curWord.toUpperCase()))
     {
         filteredDict.sort((a, b) =>
@@ -72,9 +68,11 @@ const filterDictByWord = (dictName, curWord) =>
             {
                 comparison = -1
             }
+
             return comparison
         })
     }
+
     postMessage(JSON.stringify({ name: 'filter_succeed', content: { list: filteredDict } }, null, "\t"))
 }
 
@@ -84,14 +82,12 @@ const filterStructByWord = (dictName, curWord) =>
     console.log('started: KeywordWorker.filterStructByWord...', curWord)
 
     let filteredDict = keywordDict[dictName].filter(curWord, true)
-    console.log('filteredDict: ', filteredDict)
 
     if (filteredDict.length === 1)//|| (filteredDict[0] !== undefined && filteredDict[0].text !== undefined && filteredDict.length === 1 && filteredDict[0].text.toUpperCase() !== curWord.toUpperCase()))
     {
         filteredDict = keywordDict[dictName].filter(filteredDict[0].type)
         if (filteredDict[0].members !== null)
         {
-            console.log('filteredDict[0].members: ', filteredDict[0].members)
             postMessage(JSON.stringify({ name: 'filter_succeed', content: { list: filteredDict[0].members } }, null, "\t"))
         }
     }
@@ -114,7 +110,6 @@ const getRenewedLineNumbers = (str) =>
         }
     }
     linesprevCodeWords = linesnewCodeWords
-    console.log('Renewed Lines: ', renewedLineNumbers.length)
     return renewedLineNumbers
 }
 
@@ -158,7 +153,7 @@ const syncMacrosFunctionsVariables = (dictName, str) =>
         {
             if (renewedLineNumbers.some(lineId => lineId === i))
             {
-                const renderWords = Tokenizer.parseMacrosFunctionsVariables(prevL[i], keywordDict[dictName])
+                const renderWords = Tokenizer.parseMacrosFunctionsVariables(prevL[i], keywordDict[dictName].structTypes)
                 for (let j = 0; j < renderWords.length; j++)
                 {
                     for (let k = 0; k < renderWords[j].length; k++)
@@ -177,7 +172,7 @@ const syncMacrosFunctionsVariables = (dictName, str) =>
         {
             if (renewedLineNumbers.some(lineId => lineId === i))
             {
-                const renderWords = Tokenizer.parseMacrosFunctionsVariables(newL[i], keywordDict[dictName])
+                const renderWords = Tokenizer.parseMacrosFunctionsVariables(newL[i], keywordDict[dictName].structTypes)
                 for (let j = 0; j < renderWords.length; j++)
                 {
                     for (let k = 0; k < renderWords[j].length; k++)
@@ -194,22 +189,22 @@ const syncMacrosFunctionsVariables = (dictName, str) =>
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const syncUserDict = (dictName, str) =>
 {
-    console.log('started: KeywordWorker.syncUserDict...')
-    str = Tokenizer.removeInlineComment(str)
     str = Tokenizer.removeBlockComment(str)
+    str = Tokenizer.removeInlineComment(str)
     str = Tokenizer.removePrecisions(str)
     str = Tokenizer.removePreProcessor(str)
-    syncStructs(dictName, str)
-    syncMacrosFunctionsVariables(dictName, str)
-    console.log('keywordDict[dictName].renderWords: ', keywordDict[dictName].renderWords)
-}
 
+    syncStructs(dictName, str)
+
+    syncMacrosFunctionsVariables(dictName, str)
+}
 
 // Message
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 onmessage = (msg) =>
 {
     const data = JSON.parse(msg.data)
+    console.log('Worker got message: ', data)
     switch (data.name)
     {
         case 'initBltinDict':

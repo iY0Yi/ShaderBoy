@@ -26,7 +26,7 @@ const Tokenizer = {
         const gl_PreProcessor = ("#undef #ifdef #ifndef #else #elif #endif #if").split(" ")
         for (const prec of gl_PreProcessor)
         {
-            str = this.removeAllBetween(str, new RegExp(prec, 'g'), prec, '\n')
+            str = this.removeAllBetween(str, new RegExp(prec, 'g'), /\\n/g, prec, '\n')
         }
         return str
     },
@@ -46,12 +46,18 @@ const Tokenizer = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    removeAllBetween(str, regexp, start, end)
+    removeAllBetween(str, startRx, endRx, start, end)
     {
         let res = str + ''
-        while (res.match(regexp))
+        if (!(res.match(startRx) && res.match(endRx)))
+        {
+            return str
+        }
+
+        while (res.match(startRx) && res.match(endRx))
         {
             const strComment = this.getBetweenStr(res, start, end)
+            console.log(strComment)
             res = res.replace(strComment, '')
         }
         return res
@@ -63,6 +69,11 @@ const Tokenizer = {
         let res = str + ''
         let deepestStart = str.lastIndexOf(start)
         let deepestEnd = str.indexOf(end, deepestStart)
+        if (!res.match(regexp))
+        {
+            return str
+        }
+
         while (res.match(regexp))
         {
             res = res.replace(res.substr(deepestStart, deepestEnd - deepestStart + 1), '')
@@ -75,13 +86,13 @@ const Tokenizer = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     removeInlineComment(str)
     {
-        return this.removeAllBetween(str, /\/\//g, '//', '\n')
+        return this.removeAllBetween(str, /\/\//g, /\\n/g, '//', '\n')
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     removeBlockComment(str)
     {
-        return this.removeAllBetween(str, /\/\*/g, '/*', '*/')
+        return this.removeAllBetween(str, /\/\*/g, /\*\//g, '/*', '*/')
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -105,69 +116,69 @@ const Tokenizer = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    parseStructs(str, dict)
+    parseStructs(str)
     {
         let result = []
         str = this.sanitizeLinesForStructs(str)
         const isContainStruct = str.match(/struct/g)
+
         if (!isContainStruct)
         {
             return []
         }
-        else
+
+        let strStructs = []
+        while (str.match(/struct/g))
         {
-            let strStructs = []
-            while (str.match(/struct/g))
+            strStructs.push(this.getBetweenStr(str, 'struct', '}'))
+            let strFull = strStructs[strStructs.length - 1]
+            str = this.removeStr(str, strFull)
+
+            let strMembers = this.getBetweenStr(strFull, '{', '}')
+            strFull = this.removeStr(strFull, strMembers)
+            strMembers = this.removeStr(strMembers, /\{|\}/g)
+            strMembers = strMembers.replace(/; |;| ;/g, ';')
+            strMembers = strMembers.replace(/[ ]+/g, ' ')
+
+            const arrMembers = strMembers.split(';')
+            let members = []
+            for (let i = 0; i < arrMembers.length; i++)
             {
-                strStructs.push(this.getBetweenStr(str, 'struct', '}'))
-                let strFull = strStructs[strStructs.length - 1]
-                str = this.removeStr(str, strFull)
-
-                let strMembers = this.getBetweenStr(strFull, '{', '}')
-                strFull = this.removeStr(strFull, strMembers)
-                strMembers = this.removeStr(strMembers, /\{|\}/g)
-                strMembers = strMembers.replace(/; |;| ;/g, ';')
-                strMembers = strMembers.replace(/[ ]+/g, ' ')
-
-                const arrMembers = strMembers.split(';')
-                let members = []
-                for (let i = 0; i < arrMembers.length; i++)
+                let typeName = arrMembers[i].split(' ')
+                if (typeName[0] && typeName[1])
                 {
-                    let typeName = arrMembers[i].split(' ')
-                    if (typeName[0] && typeName[1])
-                    {
-                        members.push(new Keyword({
-                            type: typeName[0],
-                            name: typeName[1],
-                            render: `<span class="autocomp-name">${typeName[1]}</span><div class="icon-code-user"></div><span class="autocomp-type">${typeName[0]}</span>`
-                        }))
-                    }
+                    members.push(new Keyword({
+                        type: typeName[0],
+                        name: typeName[1],
+                        render: `<span class="autocomp-name">${typeName[1]}</span><div class="icon-code-usr-vr"></div><span class="autocomp-type">${typeName[0]}</span>`
+                    }))
                 }
-
-                const typeName = strFull.split(' ')
-                const name = typeName[1]
-                let snippet = name
-                snippet += ' var_name = '
-                snippet += name
-                snippet += '('
-                for (let i = 0; i < members.length; i++)
-                {
-                    snippet += members[i].name
-                    snippet += '@'
-                    snippet += members[i].type
-                    snippet += (i < members.length - 1) ? ', ' : ''
-                }
-                snippet += ');'
-
-                result.push(new Keyword({
-                    type: typeName[0],
-                    name: name,
-                    members: members,
-                    render: `<span class="autocomp-name">${name}</span><div class="icon-code-user"></div><span class="autocomp-type">${typeName[0]}</span>`,
-                    snippet: snippet
-                }))
             }
+
+            const typeName = strFull.split(' ')
+            const name = typeName[1]
+            let snippet = name
+            snippet += ' var_name = '
+            snippet += name
+            snippet += '('
+            for (let i = 0; i < members.length; i++)
+            {
+                snippet += members[i].name
+                snippet += '@'
+                snippet += members[i].type
+                snippet += (i < members.length - 1) ? ', ' : ''
+            }
+            snippet += ');'
+
+            result.push(new Keyword({
+                type: typeName[0],
+                name: name,
+                members: members,
+                render: `<span class="autocomp-name">${name}</span><div class="icon-code-usr-st"></div><span class="autocomp-type">${typeName[0]}</span>`,
+                snippet: snippet
+            }))
         }
+
         return result
     },
 
@@ -175,7 +186,7 @@ const Tokenizer = {
     sanitizeLinesForMacroFunctionsVariables(str)
     {
         let res = ''
-        str = this.removeAllBetween(str, /struct/g, 'struct', '}')
+        str = this.removeAllBetween(str, /struct/g, /\}/g, 'struct', '}')
         str.split(/\r\n|\r|\n/g).forEach(element =>
         {
             element = element.replace(/\{/g, '{;')
@@ -204,21 +215,21 @@ const Tokenizer = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    parseMacroLine(str, dict)
+    parseMacroLine(str)
     {
         let result = []
-        str = this.removeAllBetween(str, /\(/g, '(', ')').trim()
+        str = this.removeAllBetween(str, /\(/g, /\)/g, '(', ')').trim()
         const typeName = str.split(' ')
         result.push(new Keyword({
             type: typeName[0],
             name: typeName[1],
-            render: `<span class="autocomp-name">${typeName[1]}</span><div class="icon-code-user"></div><span class="autocomp-type">${typeName[0]}</span>`
+            render: `<span class="autocomp-name">${typeName[1]}</span><div class="icon-code-usr-m"></div><span class="autocomp-type">${typeName[0]}</span>`
         }))
         return result
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    parseFunctionLine(str, dict)
+    parseFunctionLine(str)
     {
         let result = []
 
@@ -229,15 +240,35 @@ const Tokenizer = {
         // args
         let args = []
         let strArgs = this.getBetweenStr(str, '(', ')')
+
         strArgs = this.removeStr(strArgs, /[()]/g)
+
+        // strArgs = 'inout int pepe, int in pepein , out int pepein ' // rncd
+
         strArgs = strArgs.trim()
-        strArgs = strArgs.replace(/\s/g, ' ')
+        strArgs = strArgs.replace(/\s+/g, ' ')
         strArgs = strArgs.replace(/	',/g, ' ')
-        strArgs = strArgs.replace(/inout/g, ' ')
-        strArgs = strArgs.replace(/const/g, ' ')
-        strArgs = strArgs.replace(/in/g, ' ')
-        strArgs = strArgs.replace(/out/g, ' ')
+
+        strArgs = strArgs.replace(/^inout\s/g, ' ')
+        strArgs = strArgs.replace(/\sinout\s/g, ' ')
+        strArgs = strArgs.replace(/\,inout\s/g, ' ')
+
+        strArgs = strArgs.replace(/^const\s/g, ' ')
+        strArgs = strArgs.replace(/\sconst\s/g, ' ')
+        strArgs = strArgs.replace(/\,const\s/g, ' ')
+
+        strArgs = strArgs.replace(/^out\s/g, ' ')
+        strArgs = strArgs.replace(/\sout\s/g, ' ')
+        strArgs = strArgs.replace(/\,out\s/g, ' ')
+
+        strArgs = strArgs.replace(/^in\s/g, ' ')
+        strArgs = strArgs.replace(/\sin\s/g, ' ')
+        strArgs = strArgs.replace(/\,in\s/g, ' ')
+
         strArgs = strArgs.replace(/[ ]+/g, ' ')
+        strArgs = strArgs.trim()
+
+        // console.log(strArgs) // rncd
 
         strArgs = strArgs.split(',')
         for (let i = 0; i < strArgs.length; i++)
@@ -248,7 +279,7 @@ const Tokenizer = {
                 args.push(new Keyword({
                     type: arg[0],
                     name: arg[1],
-                    render: `<span class="autocomp-name">${arg[1]}</span><div class="icon-code-user"></div><span class="autocomp-type">${arg[0]}</span>`
+                    render: `<span class="autocomp-name">${arg[1]}</span><div class="icon-code-usr-vr"></div><span class="autocomp-type">${arg[0]}</span>`
                 }))
             }
         }
@@ -270,14 +301,14 @@ const Tokenizer = {
             type: typeName[0],
             name: typeName[1],
             args: args,
-            render: `<span class="autocomp-name">${typeName[1]}</span><div class="icon-code-user"></div><span class="autocomp-type">${typeName[0]}</span>`,
+            render: `<span class="autocomp-name">${typeName[1]}</span><div class="icon-code-usr-fx"></div><span class="autocomp-type">${typeName[0]}</span>`,
             snippet: snippet
         }))
         return result
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    parseVariables(str, dict)
+    parseVariables(str)
     {
         let result = []
         //#1: remove brackets
@@ -287,13 +318,18 @@ const Tokenizer = {
         let eqPos = str.indexOf('=')
         let cmPos = str.indexOf(/,/g)
         cmPos = (cmPos === -1) ? str.length : cmPos
-        while (str.match('='))
+
+        if (str.match('='))
         {
-            str = str.replace(str.substr(eqPos, cmPos - eqPos + 1), '')
-            eqPos = str.indexOf('=')
-            cmPos = str.indexOf(/,/g)
-            cmPos = (cmPos === -1) ? str.length : cmPos
+            while (str.match('='))
+            {
+                str = str.replace(str.substr(eqPos, cmPos - eqPos + 1), '')
+                eqPos = str.indexOf('=')
+                cmPos = str.indexOf(/,/g)
+                cmPos = (cmPos === -1) ? str.length : cmPos
+            }
         }
+
         str = str.replace(/ ,|, |,/g, ',')
 
         const typeNames = str.split(/[ ,]/g)
@@ -305,7 +341,7 @@ const Tokenizer = {
                 result.push(new Keyword({
                     type: type,
                     name: typeNames[j],
-                    render: `<span class="autocomp-name">${typeNames[j]}</span><div class="icon-code-user"></div><span class="autocomp-type">${type}</span>`
+                    render: `<span class="autocomp-name">${typeNames[j]}</span><div class="icon-code-usr"></div><span class="autocomp-type">${type}</span>`
                 }))
             }
         }
@@ -327,8 +363,17 @@ const Tokenizer = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    parseMacrosFunctionsVariables(str, dict)
+    parseMacrosFunctionsVariables(str, structTypes = [])
     {
+        const isStructType = (str, list) =>
+        {
+            for (const type of list)
+            {
+                if (str === type) return true
+            }
+            return false
+        }
+
         str = this.sanitizeLinesForStructs(str)
 
         let result = []
@@ -340,23 +385,24 @@ const Tokenizer = {
             const lineStr = array[i].trim()
             const isMacro = lineStr.match(/#define/g)
             const isFunction = lineStr.match(/{/g)
-            const isDefinition = Builtins.isType(lineStr.split(' ')[0]) || dict.isStructType(lineStr.split(' ')[0])
+            const isDefinition = Builtins.isType(lineStr.split(' ')[0]) || isStructType(lineStr.split(' ')[0], structTypes)
 
             if (!isDefinition) continue
 
             if (isMacro)
             {
-                result.push(this.parseMacroLine(lineStr, dict))
+                result.push(this.parseMacroLine(lineStr))
             }
             else if (isFunction)
             {
-                result.push(this.parseFunctionLine(lineStr, dict))
+                result.push(this.parseFunctionLine(lineStr))
             }
             else
             {
-                result.push(this.parseVariables(lineStr, dict))
+                result.push(this.parseVariables(lineStr))
             }
         }
+        // console.log('parseMacrosFunctionsVariables:result: ', result)
         return result
     }
 }

@@ -84,7 +84,6 @@ export default class KeywordDictionary
         {
             this.structTypes.push(renderWord.name)
         }
-        console.log(this.structTypes)
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -20,8 +20,8 @@ function main()
         })
         test('unit: removeAllBetween', () =>
         {
-            expect(Tokenizer.removeAllBetween('void TracePlane( out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, float fPlaneDist, float fObjectId )', /\(/, '(', ')')).toBe('void TracePlane')
-            expect(Tokenizer.removeAllBetween('void TracePlane( out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, float fPlaneDist, float fObjectId )', /\(/, '(', ')')).toBe('void TracePlane')
+            expect(Tokenizer.removeAllBetween('void TracePlane( out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, float fPlaneDist, float fObjectId )', /\(/, /\)/, '(', ')')).toBe('void TracePlane')
+            expect(Tokenizer.removeAllBetween('void TracePlane( out C_Span span, const in vec3 vRayOrigin, const in vec3 vRayDir, vec3 vPlaneNormal, float fPlaneDist, float fObjectId )', /\(/, /\)/, '(', ')')).toBe('void TracePlane')
         })
         test('unit: removeAllNested', () =>
         {
@@ -123,8 +123,8 @@ function main()
                     // console.log(filename)
                     const fullPath = fileUrl + filename
                     let str = await promisify(fs.readFile)(fullPath, 'utf-8')
-                    str = Tokenizer.removeInlineComment(str)
                     str = Tokenizer.removeBlockComment(str)
+                    str = Tokenizer.removeInlineComment(str)
                     str = Tokenizer.removePrecisions(str)
                     str = Tokenizer.removePreProcessor(str)
 
