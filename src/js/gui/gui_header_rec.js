@@ -246,7 +246,7 @@ export default ShaderBoy.gui_header_rec = {
             ShaderBoy.soundRenderer.play()
         }
         // ShaderBoy.time.reset()
-        ShaderBoy.gui_header.setStatus('suc3', 'Recording has been completed.', 3000)
+        ShaderBoy.gui_header.setStatus('suc', 'Recording has been completed.', 3000)
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

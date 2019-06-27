@@ -318,7 +318,7 @@ export default ShaderBoy.gui_header = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    statusList: ['suc1', 'suc2', 'suc3', 'error', 'prgrs', 'gdrv', 'ldrv'],
+    statusList: ['gsuc', 'suc', 'wrn', 'error', 'prgrs', 'gdrv', 'ldrv'],
     cleanupStatus()
     {
         const statusEl = document.querySelectorAll('.ghdr-notif')
