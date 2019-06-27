@@ -25,7 +25,6 @@ export default ShaderBoy.gui_sidebar_ichannels = {
             event.target.classList.add(nxtBuf)
             if (curBuf === 'buf-null' || nxtBuf === 'buf-null')
             {
-                console.log(event.target.parentNode)
                 event.target.parentNode.classList.toggle('null')
             }
             ShaderBoy.gui_sidebar_ichannels.setiChannels()
@@ -58,7 +57,6 @@ export default ShaderBoy.gui_sidebar_ichannels = {
                 drpdwnDiv.classList = selectEls[i].classList
                 drpdwnDiv.classList.add('dropdown')
                 drpdwnDiv.classList.add('ichannels-drpdwn')
-                console.log(drpdwnDiv.classList)
                 drpdwnDiv.tabIndex = '0'
                 const currentSpn = document.createElement('span')
                 const listDiv = document.createElement('div')

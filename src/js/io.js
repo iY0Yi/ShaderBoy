@@ -1,12 +1,9 @@
-//
 //   _  _____ 
 //  (_)(  _  )
 //  | || ( ) |
 //  | || | | |
 //  | || (_) |
 //  (_)(_____)
-//            
-//            
 
 import ShaderBoy from './shaderboy'
 import ShaderLib from './shaderlib'
@@ -20,7 +17,7 @@ import Hermite_class from 'hermite-resize'
 export default ShaderBoy.io = {
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	async init()
+	init()
 	{
 		localforage.config({
 			driver: localforage.INDEXEDDB,
@@ -37,7 +34,6 @@ export default ShaderBoy.io = {
 		this.isAppInit = false
 		this.idList = {}
 
-
 		this.ID_DIR_APP = ''
 		this.ID_DIR_SHADER = ''
 
@@ -49,41 +45,27 @@ export default ShaderBoy.io = {
 		else
 		{
 			console.log('production mode...')
+			gdrive.init()
+		}
+	},
 
-			document.getElementById('div_authrise').classList.add('hide')
-			setTimeout(() =>
-			{
-				document.getElementById('div_authrise').classList.add('hidden')
-			}, 400)
-
-			document.getElementById('btn_authrise_now').onclick = () =>
-			{
-				gapi.auth.authorize(this.AUTH_OPT, this.handleAuthResult)
-			}
-
-			document.getElementById('btn_authrise_later').onclick = () =>
-			{
-				document.getElementById('div_authrise').classList.add('hide')
-				setTimeout(() =>
-				{
-					document.getElementById('div_authrise').classList.add('hidden')
-				}, 400)
-				ShaderBoy.runInDevMode = true
-				ShaderBoy.io.init()
-			}
-
-			ShaderBoy.gui_header.setStatus('prgrs', `Authrizing...`, 0)
-			await gdrive.init()
-			ShaderBoy.gui_header.setStatus('suc1', `Succeeded Authorizing.`, 3000)
-
-			ShaderBoy.gui_header.setStatus('prgrs', 'Loading from Google Drive...', 0)
-			await this.loadSetting()
+	async loadGdrive()
+	{
+		console.log('loadGdrive')
+		ShaderBoy.gui_header.setStatus('prgrs', 'Loading from Google Drive...', 0)
+		const isLoaded = await this.loadSetting()
+		if (isLoaded)
+		{
 			await this.loadShaderFiles(ShaderBoy.activeShaderName, true)
-
 			const thumbsInfo = await this.getThumbFileIds()
-			ShaderBoy.gui_header.setStatus('suc2', `Loaded shader list.`, 3000)
-
 			gui_panel_shaderlist.setup(thumbsInfo)
+		}
+		else
+		{
+			this.isAppInit = true
+			this.setActiveShaderName('_default')
+			await this.newShader(ShaderBoy.activeShaderName)
+			ShaderBoy.bufferManager.initBufferDoc(['Setting'])
 		}
 	},
 
@@ -93,14 +75,16 @@ export default ShaderBoy.io = {
 		ShaderBoy.activeShaderName = name
 		ShaderBoy.setting.shaders.active = name
 		document.getElementById('asn_name').textContent = name
-
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	setupDevShader()
+	setupDevShader(withError = false)
 	{
 		ShaderBoy.config = JSON.parse(ShaderBoy.buffers['Config'].cm.getValue())
-		ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(ShaderLib.shader['Setting'], 'x-shader/x-fragment')
+		if (!withError)
+		{
+			ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(ShaderLib.shader['Setting'], 'x-shader/x-fragment')
+		}
 		ShaderBoy.buffers['Config'].cm = CodeMirror.Doc(ShaderLib.shader['Config'], 'x-shader/x-fragment')
 		ShaderBoy.buffers['Common'].cm = CodeMirror.Doc(ShaderLib.shader['Common'], 'x-shader/x-fragment')
 		ShaderBoy.buffers['BufferA'].cm = CodeMirror.Doc(ShaderLib.shader['BufferA'], 'x-shader/x-fragment')
@@ -140,25 +124,35 @@ export default ShaderBoy.io = {
 
 		ShaderBoy.isPlaying = true
 
-		document.getElementById('div_authrise').classList.add('hide')
+		ShaderBoy.gui.hideAuth()
+
+		if (withError)
+		{
+			ShaderBoy.gui_header.setStatus('error', `"${ShaderBoy.activeShaderName}" was not found!`, 3000)
+		}
+		else
+		{
+			ShaderBoy.gui_header.setStatus('gsuc', 'Loaded.', 3000)
+		}
+
 		setTimeout(() =>
 		{
-			document.getElementById('div_authrise').classList.add('hidden')
-		}, 400)
-
-		ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000, () =>
-		{
-			document.getElementById('cvr-loading').classList.add('loading-hide')
-			setTimeout(() =>
-			{
-				document.getElementById('cvr-loading').classList.add('loading-hidden')
-			}, 400)
+			ShaderBoy.gui.hideLoading()
 			if (this.initLoading === true)
 			{
 				this.initLoading = false
 				ShaderBoy.update()
 			}
-		})
+
+			if (withError)
+			{
+				ShaderBoy.gui_header.setStatus('error', `"${ShaderBoy.activeShaderName}" was not found! Try other.`, 0)
+				setTimeout(() =>
+				{
+					gui_panel_shaderlist.show()
+				}, 3000)
+			}
+		}, 3000)
 
 	},
 
@@ -166,6 +160,8 @@ export default ShaderBoy.io = {
 	async loadSetting()
 	{
 		let request, res
+
+		this.loadLocalSettings()
 
 		request = await gdrive.getFolderByName('ShaderBoy')
 		console.log('loadSetting', request)
@@ -177,7 +173,7 @@ export default ShaderBoy.io = {
 			res = request.result
 			this.ID_DIR_APP = res.id
 			this.createSetting()
-			return
+			return Promise.resolve(false)
 		}
 
 		// A folder found named as ShaderBoy. So lets load shaders.
@@ -188,7 +184,7 @@ export default ShaderBoy.io = {
 		if (res.files.length === 0)
 		{
 			this.createSetting()
-			return
+			return Promise.resolve(false)
 		}
 
 		const file = res.files[0]
@@ -214,6 +210,7 @@ export default ShaderBoy.io = {
 
 		const settingText = JSON.stringify(ShaderBoy.setting, null, "\t")
 		ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(settingText, 'x-shader/x-fragment')
+		return Promise.resolve(true)
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -225,17 +222,11 @@ export default ShaderBoy.io = {
 		ShaderBoy.setting.shaders.list[0] = 'file.name'
 		ShaderBoy.setting.shaders.datalist[0] = { name: '_default', id: null }
 		const request = await gdrive.createTextFile(this.ID_DIR_APP, 'setting.json', ShaderLib.shader['Setting'])
-		const res = request.resultult
+		const res = request.result
 		this.idList['setting.json'] = {}
 		this.idList['setting.json'].name = res.name
 		this.idList['setting.json'].id = res.id
 		this.idList['setting.json'].content = ''
-
-		// ShaderBoy.activeShaderName = '_default'
-		this.setActiveShaderName('_default')
-		this.isAppInit = true
-		await this.newShader(ShaderBoy.activeShaderName)
-		ShaderBoy.bufferManager.initBufferDoc(['Setting'])
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -285,11 +276,11 @@ export default ShaderBoy.io = {
 		{
 			if (isFork)
 			{
-				ShaderBoy.gui_header.setStatus('suc1', 'Fork.', 3000)
+				ShaderBoy.gui_header.setStatus('gsuc', 'Fork.', 3000)
 			}
 			else
 			{
-				ShaderBoy.gui_header.setStatus('suc1', 'New.', 3000)
+				ShaderBoy.gui_header.setStatus('gsuc', 'New.', 3000)
 			}
 
 			if (this.isAppInit === true)
@@ -306,7 +297,7 @@ export default ShaderBoy.io = {
 			}
 		}).catch((error) =>
 		{
-			console.log(error)
+			throw new Error(error)
 		})
 	},
 
@@ -331,7 +322,7 @@ export default ShaderBoy.io = {
 
 		if (safeNewShaderName !== shaderName)
 		{
-			ShaderBoy.gui_header.setStatus('suc2', 'Name confliction. Rename on GoogleDrive.', 3000)
+			ShaderBoy.gui_header.setStatus('wrn', 'Name confliction. Rename on GoogleDrive.', 3000)
 		}
 
 		return safeNewShaderName
@@ -354,10 +345,9 @@ export default ShaderBoy.io = {
 		request = await gdrive.createFolder(safeShaderName, this.ID_DIR_APP)
 		res = request.result
 		this.ID_DIR_SHADER = res.id
-		// ShaderBoy.setting.shaders.active = safeShaderName
 		this.setActiveShaderName(safeShaderName)
 		this.isNewShader = true
-		this.createShaderFiles(res.id, isFork)
+		await this.createShaderFiles(res.id, isFork)
 		ShaderBoy.setting.shaders.list.push(safeShaderName)
 		ShaderBoy.setting.shaders.list = Array.from(new Set(ShaderBoy.setting.shaders.list))
 		return Promise.resolve()
@@ -368,8 +358,8 @@ export default ShaderBoy.io = {
 	{
 		ShaderBoy.gui_header.setStatus('prgrs', 'Saving...', 0)
 
-		localforage.setItem('renderScale', ShaderBoy.renderScale, (err) => { if (err) { console.log('db error...') } })
-		localforage.setItem('textSize', ShaderBoy.textSize, (err) => { if (err) { console.log('db error...') } })
+		localforage.setItem('renderScale', ShaderBoy.renderScale, (error) => { if (error) { throw new Error(error) } })
+		localforage.setItem('textSize', ShaderBoy.editor.textSize, (error) => { if (error) { throw new Error(error) } })
 
 		const promises = []
 		const saveBufferShader = (buffer, fileName) =>
@@ -393,11 +383,11 @@ export default ShaderBoy.io = {
 
 		Promise.all(promises).then(() =>
 		{
-			ShaderBoy.gui_header.setStatus('suc1', 'Saved.', 3000)
+			ShaderBoy.gui_header.setStatus('gsuc', 'Saved.', 3000)
 			ShaderBoy.gui_header.setDirty(false)
 		}).catch((error) =>
 		{
-			console.log(error)
+			throw new Error(error)
 		})
 	},
 
@@ -451,87 +441,74 @@ export default ShaderBoy.io = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	async getThumbFileIds()
 	{
-		let thumbsInfo = []
-		for (const shaderData of ShaderBoy.setting.shaders.datalist)
+		const thumbsInfo = []
+
+		const REQUEST_LIMIT = 4
+		const dataList = ShaderBoy.setting.shaders.datalist.concat()
+		while (dataList.length > 0)
 		{
-			const request = await gdrive.getFileInfoByName('thumb.png', shaderData.id)
-			const res = request.result
-			if (res.files === undefined || res.files.length === 0)
+			const promises = []
+			const data = []
+
+			for (let i = 0; i < REQUEST_LIMIT; i++)
 			{
-				continue
+				data.push(dataList.shift())
+				promises.push(gdrive.getFileInfoByName('thumb.png', data[i].id))
+				if (dataList.length <= 0)
+				{
+					break
+				}
 			}
 
-			for (const file of res.files) 
+			const allRequests = await Promise.all(promises)
+
+			for (const request of allRequests)
 			{
-				if (file.name === 'thumb.png')
+				const res = request.result
+				for (const file of res.files) 
 				{
-					thumbsInfo.push({ name: shaderData.name, thumb: `https://drive.google.com/uc?id=${file.id}` })
+					if (file.name === 'thumb.png')
+					{
+						thumbsInfo.push({ name: data.shift().name, thumb: `https://drive.google.com/uc?id=${file.id}` })
+					}
 				}
 			}
 		}
-		return thumbsInfo
 
-		// let promises = []
-		// for (const shaderData of ShaderBoy.setting.shaders.datalist)
-		// {
-		// 	promises.push(gdrive.getFileInfoByName('thumb.png', shaderData.id))
-		// }
-		// console.log(promises)
-		// Promise.all(promises).then(
-		// 	(allRequests) =>
-		// 	{
-		// 		console.log(allRequests)
-		// 		for (const request of allRequests)
-		// 		{
-		// 			console.log(request)
-		// 			const res = request.result
-		// 			for (const file of res.files) 
-		// 			{
-		// 				if (file.name === 'thumb.png')
-		// 				{
-		// 					shaderlist.push({ name: shaderData.name, thumb: `https://drive.google.com/uc?id=${file.id}` })
-		// 				}
-		// 			}
-		// 		}
-		// 		return
-		// 	}
-		// ).then(
-		// 	() =>
-		// 	{
-		// 		console.log('getThumbFileIds:done3:', shaderlist)
-		// 		gui_panel_shaderlist.setup(shaderlist)
-		// 	}
-		// ).catch(
-		// 	(allErrors) =>
-		// 	{
-		// 		console.log(allErrors)
-		// 		for (const error of allErrors)
-		// 		{
-		// 			console.log(error)
-		// 		}
-		// 	}
-		// )
+		return thumbsInfo
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	async loadLocalSettings()
 	{
-		localforage.getItem('renderScale', (err, value) =>
+		localforage.getItem('renderScale', (error, value) =>
 		{
+			if (error)
+			{
+				throw new Error(error)
+			}
+
 			if (!value)
 			{
 				value = 2
 			}
+
 			ShaderBoy.renderScale = value
 		})
 
-		localforage.getItem('textSize', (err, value) =>
+		localforage.getItem('textSize', (error, value) =>
 		{
+			if (error)
+			{
+				throw new Error(error)
+			}
+
 			if (!value)
 			{
 				value = 16
 			}
-			ShaderBoy.editor.textSize = value
+
+			ShaderBoy.editor.setTextSize(value)
 		})
 
 		return Promise.resolve()
@@ -544,11 +521,8 @@ export default ShaderBoy.io = {
 		const res = request.result
 		if (res.files[0] === undefined)
 		{
-			ShaderBoy.gui_header.setStatus('error', `${shaderName} was not found.`, 3000)
-			await this.newShader(shaderName)
 			return null
 		}
-		ShaderBoy.gui_header.setStatus('prgrs', `${shaderName} was found. Loading shader files...`, 0)
 		return res.files[0].id
 	},
 
@@ -559,7 +533,7 @@ export default ShaderBoy.io = {
 		const res = request.result
 		if (res.files.length === 0)
 		{
-			ShaderBoy.gui_header.setStatus('error', `${shaderName} folder is empty. Confirm on your GoogleDrive.`, 0)
+			ShaderBoy.gui_header.setStatus('error', `"${shaderName}" folder is empty! Confirm on your GoogleDrive.`, 0)
 			return Promise.reject()
 		}
 
@@ -709,47 +683,45 @@ export default ShaderBoy.io = {
 		this.initLoading = initLoading
 
 		this.ID_DIR_SHADER = await this.getShaderFolder(shaderName);
-		if (this.ID_DIR_SHADER === null) { return }
+		if (this.ID_DIR_SHADER === null)
+		{
+			this.setupDevShader(true)
+			return
+		}
 
-		ShaderBoy.gui_header.setStatus('prgrs', `${shaderName} : Collecting shader file IDs...`, 0)
+		ShaderBoy.gui_header.setStatus('prgrs', `"${shaderName}" : Loading...`, 0)
 		await this.collectShaderFileIds(shaderName)
-
-		ShaderBoy.gui_header.setStatus('prgrs', `${shaderName} : Loading confg file...`, 0)
 		await this.setShaderConfig()
 
-		ShaderBoy.gui_header.setStatus('prgrs', `Loading editor setting...`, 0)
-		this.loadLocalSettings()
-
-		ShaderBoy.gui_header.setStatus('prgrs', `${shaderName} : Loading GUI setting...`, 0)
 		this.loadGUIdata()
 
-		ShaderBoy.gui_header.setStatus('prgrs', `${shaderName} : Loading shader codes...`, 0)
 		try
 		{
 			await this.loadShaderCodes()
-			ShaderBoy.gui_header.setStatus('suc2', 'Loaded.', 3000, () =>
+
+			ShaderBoy.gui_header.setStatus('gsuc', 'Loaded.', 3000)
+			setTimeout(() =>
 			{
-				document.getElementById('cvr-loading').classList.add('loading-hide')
-				setTimeout(() =>
-				{
-					document.getElementById('cvr-loading').classList.add('loading-hidden')
-				}, 400)
+				ShaderBoy.gui.hideLoading()
 				if (this.initLoading === true)
 				{
 					this.initLoading = false
 					ShaderBoy.update()
 				}
-			})
-			ShaderBoy.bufferManager.buildShaderFromBuffers()
+			}, 3000)
+
+			ShaderBoy.bufferManager.buildShaderFromBuffers(false)
+			ShaderBoy.gui_header.resetBtns(ShaderBoy.config.buffers)
+
 			ShaderBoy.bufferManager.setFBOsProps()
 			ShaderBoy.editor.setBuffer('Image', true)
+			ShaderBoy.bufferManager.compileShaders()
+
 			if (this.isNewShader === true)
 			{
 				this.saveThumbFile('thumb.png', ShaderBoy.canvas, this.ID_DIR_SHADER)
 				this.isNewShader = false
 			}
-			ShaderBoy.gui_header.resetBtns(ShaderBoy.config.buffers)
-			ShaderBoy.isPlaying = true
 		}
 		catch (error)
 		{

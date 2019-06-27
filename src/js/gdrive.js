@@ -19,42 +19,70 @@ import ShaderBoy from './shaderboy'
 export default ShaderBoy.gdrive = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    async init()
+    init()
     {
         this.CLIENT_ID = '98134852029-6pccdhcarbel0qfju1f2naj1992697qu.apps.googleusercontent.com'
         this.SCOPES = 'https://www.googleapis.com/auth/drive.file'
         this.AUTH_OPT = {
-            'client_id': this.CLIENT_ID,
-            'scope': this.SCOPES,
-            'immediate': true
+            client_id: this.CLIENT_ID,
+            scope: this.SCOPES,
+            immediate: true
         }
 
-        // Authorize
-        const response = await new Promise((resolve, reject) =>
+        ShaderBoy.gui_header.setStatus('prgrs', `Authrizing...`, 0)
+        setTimeout(() =>
         {
-            gapi.auth.authorize(this.AUTH_OPT, (res) =>
-            {
-                if (res.error) { reject(res) }
-                else { resolve(res) }
-            })
-        })
+            gapi.auth.authorize({
+                client_id: ShaderBoy.gdrive.CLIENT_ID,
+                scope: ShaderBoy.gdrive.SCOPES,
+                immediate: true
+            }, ShaderBoy.gdrive.handleAuthResult)
+        }, 1)
+    },
 
-        // Handle Auth Result
-        if (response.error)
+    handleAuthResult(authResult)
+    {
+        console.log('authResult', authResult)
+
+
+        if (authResult.error)
         {
             // No access token could be retrieved, show the button to start the authorization flow.
-            document.getElementById('div_authrise').classList.remove('hide')
-            document.getElementById('auth-content').classList.remove('hide')
-            return Promise.resolve()
+            console.log('No access token could be retrieved.')
+            ShaderBoy.gui.showAuth()
+
+            document.getElementById('btn_authrise_now').onclick = () =>
+            {
+                ShaderBoy.gui.hideAuth()
+                gapi.auth.authorize({
+                    client_id: ShaderBoy.gdrive.CLIENT_ID,
+                    scope: ShaderBoy.gdrive.SCOPES,
+                    immediate: false
+                }, ShaderBoy.gdrive.handleAuthResult)
+            }
+
+            document.getElementById('btn_authrise_later').onclick = () =>
+            {
+                ShaderBoy.gui.hideAuth()
+                ShaderBoy.runInDevMode = true
+                ShaderBoy.io.init()
+            }
         }
         else
         {
             // Access token has been successfully retrieved, requests can be sent to the API.
-            this.refreshAccessToken(response) // Start 
-            await new Promise((resolve, reject) => { gapi.load("client", resolve) })
-            await new Promise((resolve, reject) => { gapi.client.load("drive", "v3", resolve) })
-            await this.getFolderByName('ShaderBoy')
-            return Promise.resolve()
+            console.log('Access token has been successfully retrieved.')
+            ShaderBoy.gui_header.setStatus('gsuc', `Succeeded Authorizing.`, 3000)
+            ShaderBoy.gui.hideAuth()
+            ShaderBoy.gdrive.refreshAccessToken(authResult) // Start 
+
+            gapi.load("client", () =>
+            {
+                gapi.client.load("drive", "v3", () =>
+                {
+                    ShaderBoy.io.loadGdrive()
+                })
+            })
         }
     },
 

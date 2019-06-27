@@ -33,7 +33,7 @@ const needSnippet = (renderWord) =>
 export default ShaderBoy.editor_hint = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    init()
+    setup()
     {
         this.tryCount = 0
         this.curCur = null
@@ -93,31 +93,17 @@ export default ShaderBoy.editor_hint = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     filterDictByWord()
     {
-        let isCalled = false
-        // this.curCh--
-        // while (this.curCh > -1 && !isCalled)
-        {
-            const ch = this.curCh
-            const line = this.curLine
+        const ch = this.curCh
+        const line = this.curLine
 
-            if (this.curWord.match(/\./g))
-            {
-                const structName = this.workingCm.getTokenAt({ ch, line }).state.context.info
-                isCalled = true
-                this.keywordWorker.postMessage(JSON.stringify({ name: 'filterStructByWord', content: { dictName: ShaderBoy.editingBuffer, curWord: structName } }, null, "\t"))
-            }
-            else if (this.curWord.match(/\w/g))
-            {
-                isCalled = true
-                this.keywordWorker.postMessage(JSON.stringify({ name: 'filterDictByWord', content: { dictName: ShaderBoy.editingBuffer, curWord: this.curWord } }, null, "\t"))
-            }
-            else
-            {
-                // break
-            }
-            // this.curWord = tmpToken + this.curWord
-            // this.tryCount++
-            // this.curCh -= this.tryCount
+        if (this.curWord.match(/\./g))
+        {
+            const structName = this.workingCm.getTokenAt({ ch, line }).state.context.info
+            this.keywordWorker.postMessage(JSON.stringify({ name: 'filterStructByWord', content: { dictName: ShaderBoy.editingBuffer, curWord: structName } }, null, "\t"))
+        }
+        else if (this.curWord.match(/\w/g))
+        {
+            this.keywordWorker.postMessage(JSON.stringify({ name: 'filterDictByWord', content: { dictName: ShaderBoy.editingBuffer, curWord: this.curWord } }, null, "\t"))
         }
     },
 
@@ -175,7 +161,7 @@ export default ShaderBoy.editor_hint = {
 
                 if (tabFollowWordsStrLen.length >= 0)
                 {
-                    ShaderBoy.gui.editorShortcuts.Tab = (cm) =>
+                    ShaderBoy.editor_hotkeys.keys.Tab = (cm) =>
                     {
                         const cur = cm.getCursor()
 
@@ -188,7 +174,7 @@ export default ShaderBoy.editor_hint = {
 
                         if (tabFollowWordsStrLen.length <= 0)
                         {
-                            ShaderBoy.gui.editorShortcuts.Tab = (cm) =>
+                            ShaderBoy.editor_hotkeys.keys.Tab = (cm) =>
                             { //tab as space
                                 if (cm.somethingSelected())
                                 {
@@ -199,10 +185,10 @@ export default ShaderBoy.editor_hint = {
                                         Array(cm.getOption("indentUnit") + 1).join(" "), "end", "+input")
                                 }
                             }
-                            cm.setOption("extraKeys", ShaderBoy.gui.editorShortcuts)
+                            cm.setOption("extraKeys", ShaderBoy.editor_hotkeys.keys)
                         }
                     }
-                    cm.setOption("extraKeys", ShaderBoy.gui.editorShortcuts)
+                    cm.setOption("extraKeys", ShaderBoy.editor_hotkeys.keys)
                 }
             }
             return hintFunction

@@ -160,11 +160,20 @@ export default ShaderBoy.gui_panel_shaderlist = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     show()
     {
+        let textformEl = document.getElementById('gp-textarea')
+        let shaderlistEl = document.getElementById('gp-shader-list')
+        if (!textformEl.classList.contains('hide')) textformEl.classList.add('hide')
+        if (shaderlistEl.classList.contains('hide')) shaderlistEl.classList.remove('hide')
+
         const containerEl = document.getElementById('gui-panel')
         const gpbaseEl = document.getElementById('gp-base')
         containerEl.classList.toggle("gp-container-appear")
         gpbaseEl.classList.toggle("gp-appear")
         containerEl.classList.toggle("gp-container-hidden")
         gpbaseEl.classList.toggle("gp-hidden")
+
+        ShaderBoy.isPlaying = false
+
+        ShaderBoy.editor.codemirror.display.input.blur()
     }
 }

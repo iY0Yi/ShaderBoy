@@ -1,12 +1,9 @@
-//
 //   ___        _     _                
 //  (  _`\     ( ) _ ( )_              
 //  | (_(_)   _| |(_)| ,_)   _    _ __ 
 //  |  _)_  /'_` || || |   /'_`\ ( '__)
 //  | (_( )( (_| || || |_ ( (_) )| |   
 //  (____/'`\__,_)(_)`\__)`\___/'(_)   
-//                                     
-//                                     
 
 import ShaderBoy from './shaderboy'
 import bufferManager from './buffer_manager'
@@ -37,21 +34,23 @@ import 'codemirror/addon/selection/selection-pointer'
 import 'codemirror/addon/selection/mark-selection'
 import CodeMirror from 'codemirror/lib/codemirror'
 import gui_sidebar_ichannels from './gui/gui_sidebar_ichannels'
+import editor_hotkeys from './editor_hotkeys'
 
 export default ShaderBoy.editor = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     init()
     {
-        this.domElement = document.getElementById('code')
+        editor_hint.setup()
+        editor_hotkeys.setup()
 
+        this.domElement = document.getElementById('code')
         this.textArea = document.getElementById('editor')
         this.textArea.setAttribute('rows', '200')
         this.textArea.setAttribute('cols', '50')
         this.textArea.value = ''
 
         this.textSize = (localStorage.textSize !== undefined) ? localStorage.textSize : 11
-
         this.errorWidgets = []
 
         this.codemirror = CodeMirror(this.textArea, {
@@ -79,20 +78,19 @@ export default ShaderBoy.editor = {
             continuousScanning: 500,
             foldGutter: true,
             gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-            extraKeys: ShaderBoy.gui.editorShortcuts
+            extraKeys: ShaderBoy.editor_hotkeys.keys
         })
-
-        editor_hint.init()
 
         this.codemirror.on('change', editor_hint.getHintFunction())
 
         this.codemirror.parent = this
-        this.setTextSize()
+        this.setTextSize(this.textSize)
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    setTextSize()
+    setTextSize(size)
     {
+        this.textSize = size
         if (this.textSize <= 8) this.textSize = 8
         if (this.textSize >= 64) this.textSize = 64
         $(".CodeMirror").css('font-size', this.textSize + "pt")
