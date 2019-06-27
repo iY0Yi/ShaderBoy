@@ -65,7 +65,8 @@ export default ShaderBoy.bufferManager = {
         ShaderBoy.buffers['Sound'].fileName = 'sound.fs'
 
         ShaderBoy.oldBufferIds = []
-
+        this.createVertexShader()
+        this.createScreenShader()
         this.initFBOs()
     },
 
@@ -187,6 +188,26 @@ export default ShaderBoy.bufferManager = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    createScreenShader()
+    {
+        if (ShaderBoy.screenShader === null)
+        {
+            let screenFsHeader = ''
+            if (ShaderBoy.glVersion !== 2.0)
+            {
+                screenFsHeader += '#define outColor gl_FragColor\n'
+            }
+            ShaderBoy.screenShader = new Shader(ShaderBoy.gl, ShaderBoy.vsSource, screenFsHeader + ShaderBoy.shaderHeader[1] + ShaderLib.shader.screenFS + ShaderLib.shader.commonfooterFS)
+            ShaderBoy.screenShader.compile()
+            ShaderBoy.screenShader.uniforms = {
+                'iResolution': ShaderBoy.uniforms.iResolution,
+                'frameTexture': 0
+            }
+        }
+    },
+
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     getUniformCode()
     {
         ShaderBoy.gui_midi.collectUniforms()
@@ -235,30 +256,12 @@ export default ShaderBoy.bufferManager = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     compileShaders()
     {
-        if (ShaderBoy.io.initLoading === true)
+        const gl = ShaderBoy.gl
+        const vertexCode = ShaderBoy.vsSource
+
+        if (ShaderBoy.buffers['Sound'].active && !ShaderBoy.soundRenderer.paused)
         {
-            this.createVertexShader()
-            if (ShaderBoy.screenShader === null)
-            {
-                let screenFsHeader = ''
-                if (ShaderBoy.glVersion !== 2.0)
-                {
-                    screenFsHeader += '#define outColor gl_FragColor\n'
-                }
-                ShaderBoy.screenShader = new Shader(ShaderBoy.gl, ShaderBoy.vsSource, screenFsHeader + ShaderBoy.shaderHeader[1] + ShaderLib.shader.screenFS + ShaderLib.shader.commonfooterFS)
-                ShaderBoy.screenShader.compile()
-                ShaderBoy.screenShader.uniforms = {
-                    'iResolution': ShaderBoy.uniforms.iResolution,
-                    'frameTexture': 0
-                }
-            }
-        }
-        else
-        {
-            if (ShaderBoy.buffers['Sound'].active && !ShaderBoy.soundRenderer.paused)
-            {
-                ShaderBoy.soundRenderer.stop()
-            }
+            ShaderBoy.soundRenderer.stop()
         }
 
         const uniformCode = this.getUniformCode()
@@ -271,17 +274,16 @@ export default ShaderBoy.bufferManager = {
             ShaderBoy.bufferManager.numCompiledBuffer++
             if (ShaderBoy.bufferManager.numCompiledBuffer === ShaderBoy.activeBufferIds.length)
             {
-                if (ShaderBoy.io.initLoading !== true)
-                {
-                    ShaderBoy.gui_header.setStatus('suc1', 'Compiled.', 3000)
-                }
-
+                
                 if (ShaderBoy.buffers['Sound'].active)
                 {
-                    console.log('Reset Sound buffer...')
-                    ShaderBoy.isPlaying = false
                     ShaderBoy.soundRenderer.render()
                     ShaderBoy.soundRenderer.restart()
+                }
+
+                if (ShaderBoy.io.initLoading !== true)
+                {
+                    ShaderBoy.gui_header.setStatus('suc', 'Compiled.', 3000)
                     ShaderBoy.isPlaying = true
                 }
             }
@@ -291,14 +293,17 @@ export default ShaderBoy.bufferManager = {
         {
             const buffer = ShaderBoy.buffers[name]
 
-            if (buffer.active && (buffer.isRenderable || name === 'Sound'))
+            if (buffer.active)
             {
-                if (name !== 'Sound')
+                if (buffer.isRenderable)
                 {
                     const fragmentCode = this.getFragmentCode(buffer, uniformCode, commonCode)
+
                     if (buffer.shader === null)
                     {
-                        buffer.shader = new Shader(ShaderBoy.gl, ShaderBoy.vsSource, fragmentCode)
+                        buffer.shader = new Shader(gl, vertexCode, fragmentCode)
+                        buffer.shader.bufName = name
+
                         buffer.shader.uniforms = {
                             'iResolution': ShaderBoy.uniforms.iResolution,// viewport resolution (in pixels)
                             'iTime': ShaderBoy.uniforms.iTime,            // shader playback time (in seconds)
@@ -315,25 +320,27 @@ export default ShaderBoy.bufferManager = {
                             // 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
                             // 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
                         }
-                        buffer.shader.bufName = name
+
+
                     }
                     else
                     {
                         buffer.shader.fragmentSource = fragmentCode
                     }
                 }
-                else
+                else if (name === 'Sound')
                 {
                     const soundUniformCode = this.getSoundUniformCode()
                     const fragmentCode = this.getSoundFragmentCode(buffer, soundUniformCode, commonCode)
+
                     if (buffer.shader === null)
                     {
-                        buffer.shader = new Shader(ShaderBoy.gl, ShaderBoy.vsSource, fragmentCode)
+                        buffer.shader = new Shader(gl, vertexCode, fragmentCode)
+                        buffer.shader.bufName = name
                         buffer.shader.uniforms = {
                             'iBlockOffset': 0,
                             'iSampleRate': 0
                         }
-                        buffer.shader.bufName = name
                     }
                     else
                     {
@@ -341,7 +348,10 @@ export default ShaderBoy.bufferManager = {
                     }
                 }
 
-                buffer.shader.compile(callback)
+                if (buffer.shader !== null)
+                {
+                    buffer.shader.compile(callback)
+                }
             }
         }
     },

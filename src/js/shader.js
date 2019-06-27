@@ -85,7 +85,9 @@ export default class Shader
 			return res
 		}
 
-		const compileSource = (scope, gl, type, source) =>
+		let isCompiled = false
+
+		const compileSource = (gl, type, source) =>
 		{
 			const shader = gl.createShader(type)
 			gl.shaderSource(shader, source)
@@ -93,34 +95,47 @@ export default class Shader
 
 			if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
 			{
-				scope.errors = splitErrorMsg(gl.getShaderInfoLog(shader))
-				ShaderBoy.editor.updateErrorInfo(scope.bufName, scope.errors)
-				ShaderBoy.gui_header.setErrorOnly(scope.bufName)
-				ShaderBoy.gui_header.setStatus('error', 'Compilation failed.', 0)
+				this.errors = splitErrorMsg(gl.getShaderInfoLog(shader))
+				ShaderBoy.editor.updateErrorInfo(this.bufName, this.errors)
+				ShaderBoy.gui_header.setErrorOnly(this.bufName)
+				isCompiled = false
 			}
 			else
 			{
-				scope.errors = []
-				ShaderBoy.editor.updateErrorInfo(scope.bufName, scope.errors)
-				ShaderBoy.gui_header.removeErrorOnly(scope.bufName)
-				if (succeedCallback !== undefined && type === gl.FRAGMENT_SHADER)
-				{
-					succeedCallback()
-				}
+				this.errors = []
+				ShaderBoy.editor.updateErrorInfo(this.bufName, this.errors)
+				ShaderBoy.gui_header.removeErrorOnly(this.bufName)
+				isCompiled = true
 			}
 			return shader
 		}
 
 		this.source = this.vertexSource + this.fragmentSource
-		gl.attachShader(this.program, compileSource(this, gl, gl.VERTEX_SHADER, this.vertexSource))
-		gl.attachShader(this.program, compileSource(this, gl, gl.FRAGMENT_SHADER, this.fragmentSource))
+		gl.attachShader(this.program, compileSource(gl, gl.VERTEX_SHADER, this.vertexSource))
+		gl.attachShader(this.program, compileSource(gl, gl.FRAGMENT_SHADER, this.fragmentSource))
 		gl.linkProgram(this.program)
 		this.vertAttLocation = gl.getAttribLocation(this.program, 'pos')
 		gl.enableVertexAttribArray(this.vertAttLocation)
 
 		if (!gl.getProgramParameter(this.program, gl.LINK_STATUS))
 		{
-			throw new Error(`link error: ${gl.getProgramInfoLog(this.program)}`)
+			// throw new Error(`link error: ${gl.getProgramInfoLog(this.program)}`)
+		}
+
+		if (isCompiled)
+		{
+			if (succeedCallback !== undefined)
+			{
+				succeedCallback()
+			}
+		}
+		else
+		{
+			ShaderBoy.commands.stopTimeline()
+			if (!ShaderBoy.io.initLoading)
+			{
+				ShaderBoy.gui_header.setStatus('error', 'Compilation failed!', 0)
+			}
 		}
 	}
 
