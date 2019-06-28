@@ -428,6 +428,10 @@ export default ShaderBoy.bufferManager = {
     initFBOs()
     {
         const gl = ShaderBoy.gl
+        const canvasWidth = Math.floor(((ShaderBoy.capture === null) ? gl.canvas.clientWidth : ShaderBoy.canvas.width) / ShaderBoy.renderScale)
+        const canvasHeight = Math.floor(((ShaderBoy.capture === null) ? window.innerHeight : ShaderBoy.canvas.height) / ShaderBoy.renderScale)
+        ShaderBoy.uniforms.iResolution[0] = canvasWidth
+        ShaderBoy.uniforms.iResolution[1] = canvasHeight
 
         // Just for Shadertoy compativility...
         this.tempTexture = gl.createTexture()
@@ -449,13 +453,18 @@ export default ShaderBoy.bufferManager = {
                 buffer.textures = []
                 for (let i = 0; i < 2; i++)
                 {
-                    buffer.textures.push(gl.createTexture())
+                    buffer.textures[i] = gl.createTexture()
+                    gl.bindTexture(gl.TEXTURE_2D, buffer.textures[i])
                     gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.framebuffer)
                     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, buffer.textures[i], 0)
-                    gl.bindTexture(gl.TEXTURE_2D, buffer.textures[i])
-                    gl.clearColor(0.0, 0.0, 0.0, 1.0)
-                    gl.clear(gl.COLOR_BUFFER_BIT)
                     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, canvasWidth, canvasHeight, 0, gl.RGBA, gl.FLOAT, null)
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
+                    gl.clear(gl.COLOR_BUFFER_BIT)
+                    gl.clearColor(0.0, 0.0, 0.0, 1.0)
                     gl.bindTexture(gl.TEXTURE_2D, null)
                     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
                 }
