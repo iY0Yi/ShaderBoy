@@ -9,14 +9,13 @@
 //                          
 
 import $ from 'jquery'
+import collectFPS from 'collect-fps'
 import ShaderBoy from './shaderboy'
-import time from './time'
 import io from './io'
 import gui from './gui'
 import renderer from './renderer'
 import soundRenderer from './sound_renderer'
 import editor from './editor'
-import util from './util'
 import bufferManager from './buffer_manager'
 import ShaderLib from './shaderlib'
 import ShaderList from './shaderlist'
@@ -24,6 +23,7 @@ import 'normalize.css'
 import './codemirror/addon/hint/show-hint.css'
 import './codemirror/lib/codemirror.css'
 import '../scss/main.scss'
+
 // import './codemirror/theme/3024-day.css'
 // import './codemirror/theme/3024-night.css'
 import './codemirror/theme/3024-monotone.css'
@@ -258,7 +258,14 @@ ShaderBoy.init = () =>
 		ShaderBoy.gl.clearColor(0.0, 0.0, 0.0, 1.0)
 		ShaderBoy.runInDevMode = process.env.NODE_ENV === 'development'
 
-		time.init()
+		//FPS counter
+		ShaderBoy.lastFPS = collectFPS()
+		setInterval(() =>
+		{
+			ShaderBoy.uniforms.iFrameRate = ShaderBoy.lastFPS()
+			ShaderBoy.lastFPS = collectFPS()
+		}, 1000)
+
 		gui.init()
 		soundRenderer.init()
 		bufferManager.init()

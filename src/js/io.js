@@ -707,6 +707,7 @@ export default ShaderBoy.io = {
 				if (this.initLoading === true)
 				{
 					this.initLoading = false
+					ShaderBoy.isPlaying = true
 					ShaderBoy.update()
 				}
 			}, 3000)

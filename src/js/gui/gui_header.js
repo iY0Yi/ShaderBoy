@@ -394,7 +394,7 @@ export default ShaderBoy.gui_header = {
     {
         document.getElementById('cntr_itime').textContent = ShaderBoy.uniforms.iTime.toFixed(3)
         document.getElementById('cntr_iframe').textContent = ShaderBoy.uniforms.iFrame.toFixed(0)
-        document.getElementById('cntr_fps').textContent = ShaderBoy.time.fps.toFixed(1)
+        document.getElementById('cntr_fps').textContent = ShaderBoy.uniforms.iFrameRate.toFixed(1)
         if (ShaderBoy.buffers['Sound'].active)
         {
             ShaderBoy.soundRenderer.drawEQ()

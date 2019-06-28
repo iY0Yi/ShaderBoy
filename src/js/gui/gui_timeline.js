@@ -357,6 +357,8 @@ export default ShaderBoy.gui_timeline = {
             {
                 ShaderBoy.uniforms.iFrame++
                 ShaderBoy.uniforms.iTime = ShaderBoy.uniforms.iFrame * step
+                ShaderBoy.uniforms.iTimeDelta = (1 / 60);//ShaderBoy.uniforms.iTime - oldITime
+
                 const wsMin = s2i(stel.children[0].value)
                 const wsMax = s2i(enel.children[0].value)
 
@@ -377,6 +379,14 @@ export default ShaderBoy.gui_timeline = {
                 }
             }
         }
+
+        const d = new Date()
+        ShaderBoy.uniforms.iDate = [
+            d.getFullYear(), // the year (four digits)
+            d.getMonth(),	   // the month (from 0-11)
+            d.getDate(),     // the day of the month (from 1-31)
+            d.getHours() * 60.0 * 60 + d.getMinutes() * 60 + d.getSeconds() + d.getMilliseconds() / 1000.0
+        ]
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

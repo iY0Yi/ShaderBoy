@@ -37,7 +37,7 @@ export default ShaderBoy.commands = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    setNestBuffer()
+    setNextBuffer()
     {
         let codeEl = document.getElementById('code')
         codeEl.classList.add('code-container-mov-l')
@@ -174,8 +174,6 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     forkShader()
     {
-        // ShaderBoy.util.requestFullScreen()
-
         if (ShaderBoy.runInDevMode)
         {
             alert('Oops! You are in test mode. Please reload this page and authorize.')
@@ -611,6 +609,29 @@ export default ShaderBoy.commands = {
             key('⌘+⇧+⌥+r', toEditorMode)
             key('ctrl+⇧+⌥+r', toEditorMode)
         }, ms)
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    fullScreen()
+    {
+        const element = document.body
+        // Supports most browsers and their versions.
+        const requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen
+
+        if (requestMethod)
+        {
+            // Native full screen.
+            requestMethod.call(element)
+        }
+        else if (typeof window.ActiveXObject !== "undefined")
+        {
+            // Older IE.
+            const wscript = new ActiveXObject("WScript.Shell")
+            if (wscript !== null)
+            {
+                wscript.SendKeys("{F11}")
+            }
+        }
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

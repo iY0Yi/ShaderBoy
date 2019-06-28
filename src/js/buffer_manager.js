@@ -14,7 +14,7 @@
 //                               \___/'             
 
 import ShaderBoy from './shaderboy'
-import BufferDataContainer from './buffer_data_container'
+import Buffer from './buffer'
 import ShaderLib from './shaderlib'
 import Shader from './shader'
 import CodeMirror from 'codemirror/lib/codemirror'
@@ -27,15 +27,15 @@ export default ShaderBoy.bufferManager = {
         // buffer ids for moving buffer to buffer
         this.currentBufferDataId = 0
 
-        ShaderBoy.buffers['Setting'] = new BufferDataContainer(false)
-        ShaderBoy.buffers['Config'] = new BufferDataContainer(false)
-        ShaderBoy.buffers['Common'] = new BufferDataContainer(false)
-        ShaderBoy.buffers['Sound'] = new BufferDataContainer(false)
-        ShaderBoy.buffers['BufferA'] = new BufferDataContainer(true)
-        ShaderBoy.buffers['BufferB'] = new BufferDataContainer(true)
-        ShaderBoy.buffers['BufferC'] = new BufferDataContainer(true)
-        ShaderBoy.buffers['BufferD'] = new BufferDataContainer(true)
-        ShaderBoy.buffers['Image'] = new BufferDataContainer(true)
+        ShaderBoy.buffers['Setting'] = new Buffer(false)
+        ShaderBoy.buffers['Config'] = new Buffer(false)
+        ShaderBoy.buffers['Common'] = new Buffer(false)
+        ShaderBoy.buffers['Sound'] = new Buffer(false)
+        ShaderBoy.buffers['BufferA'] = new Buffer(true)
+        ShaderBoy.buffers['BufferB'] = new Buffer(true)
+        ShaderBoy.buffers['BufferC'] = new Buffer(true)
+        ShaderBoy.buffers['BufferD'] = new Buffer(true)
+        ShaderBoy.buffers['Image'] = new Buffer(true)
 
         this.initBufferDoc('Config')
         this.initBufferDoc('Common')
@@ -94,19 +94,6 @@ export default ShaderBoy.bufferManager = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    needNewShader(settingObj)
-    {
-        for (const element of settingObj.shaders.list)
-        {
-            if (element === settingObj.shaders.active)
-            {
-                return false
-            }
-        }
-        return true
-    },
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     buildShaderFromBuffers(needCompile = true)
     {
         for (const name in ShaderBoy.buffers)
@@ -152,7 +139,7 @@ export default ShaderBoy.bufferManager = {
 
         this.resetActiveBufferIds()
 
-        if (ShaderBoy.util.same(ShaderBoy.oldBufferIds, ShaderBoy.activeBufferIds) === false)
+        if (ShaderBoy.oldBufferIds.toString() !== ShaderBoy.activeBufferIds.toString())
         {
             ShaderBoy.oldBufferIds = ShaderBoy.activeBufferIds.concat()
         }
@@ -274,7 +261,6 @@ export default ShaderBoy.bufferManager = {
             ShaderBoy.bufferManager.numCompiledBuffer++
             if (ShaderBoy.bufferManager.numCompiledBuffer === ShaderBoy.activeBufferIds.length)
             {
-                
                 if (ShaderBoy.buffers['Sound'].active)
                 {
                     ShaderBoy.soundRenderer.render()
@@ -284,7 +270,6 @@ export default ShaderBoy.bufferManager = {
                 if (ShaderBoy.io.initLoading !== true)
                 {
                     ShaderBoy.gui_header.setStatus('suc', 'Compiled.', 3000)
-                    ShaderBoy.isPlaying = true
                 }
             }
         }

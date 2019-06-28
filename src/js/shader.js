@@ -7,7 +7,6 @@
 //                                           
 
 import ShaderBoy from './shaderboy'
-import util from './util'
 
 let gl = null
 export default class Shader
@@ -148,7 +147,6 @@ export default class Shader
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	end()
 	{
-		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, null, 0)
 		gl.disableVertexAttribArray(this.vertAttLocation)
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 		gl.bindBuffer(gl.ARRAY_BUFFER, null)
@@ -213,7 +211,6 @@ export default class Shader
 
 		for (const name in this.uniforms)
 		{
-
 			const realName = name.replace(/\"/g, '')
 			const location = this.uniformLocations[realName] || gl.getUniformLocation(this.program, name)
 
@@ -297,7 +294,6 @@ export default class Shader
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setTextureSlot(id)
 	{
-
 		switch (id)
 		{
 			case 0:
@@ -321,7 +317,6 @@ export default class Shader
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setTexture2d(id, texture)
 	{
-
 		switch (id)
 		{
 			case 0:

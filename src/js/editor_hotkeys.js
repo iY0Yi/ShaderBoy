@@ -25,7 +25,7 @@ export default ShaderBoy.editor_hotkeys = {
 
 		this.keys = {
 			'Alt-Right': commands.setPrevBuffer,
-			'Alt-Left': commands.setNestBuffer,
+			'Alt-Left': commands.setNextBuffer,
 			'Alt-Up': commands.pauseTimeline,
 			'Alt-Down': commands.resetTimeline,
 			'Alt-Enter': commands.compileShader,
