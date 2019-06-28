@@ -12,7 +12,7 @@ import $ from 'jquery'
 import collectFPS from 'collect-fps'
 import ShaderBoy from './shaderboy'
 import io from './io'
-import gui from './gui'
+import gui from './gui/gui'
 import renderer from './renderer'
 import soundRenderer from './sound_renderer'
 import editor from './editor'
@@ -254,9 +254,8 @@ ShaderBoy.init = () =>
 
 	if (ShaderBoy.gl)
 	{
-		// We got WebGL!
 		ShaderBoy.gl.clearColor(0.0, 0.0, 0.0, 1.0)
-		ShaderBoy.runInDevMode = process.env.NODE_ENV === 'development'
+		ShaderBoy.runInDevMode = false //process.env.NODE_ENV === 'development'
 
 		//FPS counter
 		ShaderBoy.lastFPS = collectFPS()

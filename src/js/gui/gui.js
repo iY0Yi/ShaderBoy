@@ -8,21 +8,15 @@
 //                   
 //                   
 
-import ShaderBoy from './shaderboy'
-import key from 'keymaster'
-import 'codemirror/addon/fold/foldcode'
-import 'codemirror/addon/fold/foldgutter'
-import 'codemirror/addon/fold/brace-fold'
-import $ from 'jquery'
-import CodeMirror from 'codemirror/lib/codemirror'
-import gui_header from './gui/gui_header'
-import gui_header_rec from './gui/gui_header_rec'
-import gui_timeline from './gui/gui_timeline'
-import gui_knobs from './gui/gui_knobs'
-import gui_midi from './gui/gui_midi'
-import gui_panel_shaderlist from './gui/gui_panel_shaderlist'
-import gui_panel_textform from './gui/gui_panel_textform'
-import gui_sidebar_ichannels from './gui/gui_sidebar_ichannels'
+import ShaderBoy from '../shaderboy'
+import gui_header from './gui_header'
+import gui_header_rec from './gui_header_rec'
+import gui_timeline from './gui_timeline'
+import gui_knobs from './gui_knobs'
+import gui_midi from './gui_midi'
+import gui_panel_shaderlist from './gui_panel_shaderlist'
+import gui_panel_textform from './gui_panel_textform'
+import gui_sidebar_ichannels from './gui_sidebar_ichannels'
 
 export default ShaderBoy.gui = {
 
