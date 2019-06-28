@@ -5,8 +5,8 @@
 //  | (_( )( (_| || || |_ ( (_) )| |   
 //  (____/'`\__,_)(_)`\__)`\___/'(_)   
 
-import ShaderBoy from './shaderboy'
-import bufferManager from './buffer_manager'
+import ShaderBoy from '../shaderboy'
+import bufferManager from '../buffer/buffer_manager'
 import editor_hint from './editor_hint'
 
 import $ from 'jquery'
@@ -33,7 +33,7 @@ import 'codemirror/addon/search/jump-to-line'
 import 'codemirror/addon/selection/selection-pointer'
 import 'codemirror/addon/selection/mark-selection'
 import CodeMirror from 'codemirror/lib/codemirror'
-import gui_sidebar_ichannels from './gui/gui_sidebar_ichannels'
+import gui_sidebar_ichannels from '../gui/gui_sidebar_ichannels'
 import editor_hotkeys from './editor_hotkeys'
 
 export default ShaderBoy.editor = {

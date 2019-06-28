@@ -12,8 +12,8 @@
 //  (_) (_)(_)(_) (_)`\__)             
 //                                     
 
-import ShaderBoy from './shaderboy'
-import Worker from './workers/keyword.worker'
+import ShaderBoy from '../shaderboy'
+import Worker from '../workers/keyword.worker'
 
 import $ from 'jquery'
 

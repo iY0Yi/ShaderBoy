@@ -6,7 +6,7 @@
 //  `\____)(_) (_)`\__,_)`\__,_)`\____)(_)   
 //                                           
 
-import ShaderBoy from './shaderboy'
+import ShaderBoy from '../shaderboy'
 
 let gl = null
 export default class Shader

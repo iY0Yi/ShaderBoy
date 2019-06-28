@@ -8,10 +8,10 @@
 //                                                       
 //                                                       
 
-import ShaderBoy from './shaderboy'
-import bufferManager from './buffer_manager'
+import ShaderBoy from '../shaderboy'
+import bufferManager from '../buffer/buffer_manager'
 
-export default ShaderBoy.renderer = {
+export default ShaderBoy.imageRenderer = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	render()
 	{

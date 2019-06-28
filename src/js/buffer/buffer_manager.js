@@ -13,10 +13,10 @@
 //                              ( )_) |             
 //                               \___/'             
 
-import ShaderBoy from './shaderboy'
+import ShaderBoy from '../shaderboy'
 import Buffer from './buffer'
-import ShaderLib from './shaderlib'
-import Shader from './shader'
+import ShaderLib from '../shader/shaderlib'
+import Shader from '../shader/shader'
 import CodeMirror from 'codemirror/lib/codemirror'
 
 export default ShaderBoy.bufferManager = {
@@ -463,7 +463,7 @@ export default ShaderBoy.bufferManager = {
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
-                    gl.clear(gl.COLOR_BUFFER_BIT)
+                    // gl.clear(gl.COLOR_BUFFER_BIT)
                     gl.clearColor(0.0, 0.0, 0.0, 1.0)
                     gl.bindTexture(gl.TEXTURE_2D, null)
                     gl.bindFramebuffer(gl.FRAMEBUFFER, null)

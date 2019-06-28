@@ -11,22 +11,22 @@
 import $ from 'jquery'
 import collectFPS from 'collect-fps'
 import ShaderBoy from './shaderboy'
-import io from './io'
+import io from './io/io'
 import gui from './gui/gui'
-import renderer from './renderer'
-import soundRenderer from './sound_renderer'
-import editor from './editor'
-import bufferManager from './buffer_manager'
-import ShaderLib from './shaderlib'
-import ShaderList from './shaderlist'
+import imageRenderer from './renderer/image_renderer'
+import soundRenderer from './renderer/sound_renderer'
+import editor from './editor/editor'
+import bufferManager from './buffer/buffer_manager'
+import ShaderLib from './shader/shaderlib'
+import ShaderList from './shader/shaderlist'
 import 'normalize.css'
-import './codemirror/addon/hint/show-hint.css'
-import './codemirror/lib/codemirror.css'
+import './editor/codemirror/addon/hint/show-hint.css'
+import './editor/codemirror/lib/codemirror.css'
 import '../scss/main.scss'
 
-// import './codemirror/theme/3024-day.css'
-// import './codemirror/theme/3024-night.css'
-import './codemirror/theme/3024-monotone.css'
+// import './editor/codemirror/theme/3024-day.css'
+// import './editor/codemirror/theme/3024-night.css'
+import './editor/codemirror/theme/3024-monotone.css'
 
 // ShaderBoy init
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -287,7 +287,7 @@ ShaderBoy.update = () =>
 
 	if (ShaderBoy.isPlaying)
 	{
-		renderer.render()
+		imageRenderer.render()
 		if (ShaderBoy.capture && ShaderBoy.isRecording)
 		{
 			ShaderBoy.capture.capture(ShaderBoy.canvas)
@@ -307,7 +307,7 @@ ShaderBoy.update = () =>
 	}
 	else if (ShaderBoy.forceDraw === true)
 	{
-		renderer.render()
+		imageRenderer.render()
 		ShaderBoy.forceDraw = false
 	}
 	gui.redraw()

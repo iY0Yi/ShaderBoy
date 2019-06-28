@@ -6,8 +6,6 @@
 //  `\____)(_) (_)`\__,_)`\__,_)`\____)(_)   (____/'(_)(_,__/'
 //                                                            
 
-import ShaderBoy from './shaderboy'
-
 const ShaderLib = {
 	shader: {},
 	loadedNum: 0,

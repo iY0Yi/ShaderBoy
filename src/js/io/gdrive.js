@@ -14,7 +14,7 @@
 //  (____/'(_)   (_)`\___/'`\____)          
 //                                          
 
-import ShaderBoy from './shaderboy'
+import ShaderBoy from '../shaderboy'
 
 export default ShaderBoy.gdrive = {
 

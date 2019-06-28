@@ -5,13 +5,13 @@
 //  | || (_) |
 //  (_)(_____)
 
-import ShaderBoy from './shaderboy'
-import ShaderLib from './shaderlib'
+import ShaderBoy from '../shaderboy'
+import ShaderLib from '../shader/shaderlib'
 import gdrive from './gdrive'
 import CodeMirror from 'codemirror/lib/codemirror'
 import localforage from 'localforage'
-import gui_timeline from './gui/gui_timeline'
-import gui_panel_shaderlist from './gui/gui_panel_shaderlist'
+import gui_timeline from '../gui/gui_timeline'
+import gui_panel_shaderlist from '../gui/gui_panel_shaderlist'
 import Hermite_class from 'hermite-resize'
 
 export default ShaderBoy.io = {

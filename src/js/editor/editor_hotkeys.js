@@ -13,8 +13,8 @@
 //                                   ( )_| |      
 //                                   `\___/'      
 
-import ShaderBoy from './shaderboy'
-import commands from './commands'
+import ShaderBoy from '../shaderboy'
+import commands from '../commands'
 
 export default ShaderBoy.editor_hotkeys = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
