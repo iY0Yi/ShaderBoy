@@ -13,13 +13,14 @@
 //                                                       
 
 import ShaderBoy from '../shaderboy'
-import bufferManager from '../buffer/buffer_manager'
+import gui_timeline from '../gui/gui_timeline'
+let gl = null
 
 export default ShaderBoy.soundRenderer = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     init()
     {
-        this.gl = ShaderBoy.gl
+        gl = ShaderBoy.gl
 
         this.mSampleRate = 44100
         this.mPlayTime = 60 * 3
@@ -28,7 +29,7 @@ export default ShaderBoy.soundRenderer = {
         this.mTmpBufferSamples = this.mTextureDimensions * this.mTextureDimensions
         this.initContext()
 
-        const gl = this.gl
+
         this.framebuffer = gl.createFramebuffer()
         this.texture = gl.createTexture()
         gl.bindTexture(gl.TEXTURE_2D, this.texture)
@@ -106,7 +107,7 @@ export default ShaderBoy.soundRenderer = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     drawEQ()
     {
-        // if (ShaderBoy.buffers['Sound'].active === true && ShaderBoy.isPlaying === true)
+        if (ShaderBoy.buffers['Sound'].active === true && ShaderBoy.isPlaying === true)
         {
             this.analyser.getByteFrequencyData(this.frequency)
             let vals = [0, 0, 0]
@@ -156,7 +157,7 @@ export default ShaderBoy.soundRenderer = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     getCurrentTime()
     {
-        return Math.floor(ShaderBoy.gui_timeline.currentFrame / 60)
+        return Math.floor(gui_timeline.currentFrame / 60)
     },
 
     //https://stackoverflow.com/questions/11506180/web-audio-api-resume-from-pause
@@ -204,7 +205,6 @@ export default ShaderBoy.soundRenderer = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     render()
     {
-        const gl = this.gl
         gl.viewport(0, 0, this.mTextureDimensions, this.mTextureDimensions)
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer)

@@ -18,13 +18,13 @@ import gui_panel_shaderlist from './gui_panel_shaderlist'
 import gui_panel_textform from './gui_panel_textform'
 import gui_sidebar_ichannels from './gui_sidebar_ichannels'
 
+import collectFPS from 'collect-fps'
+
 export default ShaderBoy.gui = {
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	init()
 	{
-		ShaderBoy.style.buttonHeight = (window.innerWidth > 750) ? 45 : 35
-
 		this.mousePosX = 0
 		this.mousePosY = 0
 		this.mouseOriX = 0
@@ -50,6 +50,19 @@ export default ShaderBoy.gui = {
 
 		this.setupMouse()
 		this.setupWindow()
+		this.setupFPSCounter()
+	},
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	setupFPSCounter()
+	{
+		//FPS counter
+		ShaderBoy.io.lastFPS = collectFPS()
+		setInterval(() =>
+		{
+			ShaderBoy.uniforms.iFrameRate = ShaderBoy.io.lastFPS()
+			ShaderBoy.io.lastFPS = collectFPS()
+		}, 1000)
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -71,7 +84,6 @@ export default ShaderBoy.gui = {
 				this.mousePosX = this.mouseOriX
 				this.mousePosY = this.mouseOriY
 				this.mouseIsDown = true
-				if (!ShaderBoy.isPlaying) ShaderBoy.forceFrame = true
 				ShaderBoy.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY]
 			}
 		}
@@ -83,7 +95,6 @@ export default ShaderBoy.gui = {
 				this.mouseIsDown = false
 				this.mouseOriX = -Math.abs(this.mouseOriX)
 				this.mouseOriY = -Math.abs(this.mouseOriY)
-				if (!ShaderBoy.isPlaying) ShaderBoy.forceFrame = true
 				ShaderBoy.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY]
 			}
 		}
@@ -98,7 +109,6 @@ export default ShaderBoy.gui = {
 					let rect = c.getBoundingClientRect()
 					this.mousePosX = Math.floor((ev.clientX - rect.left) / (rect.right - rect.left) * c.width)
 					this.mousePosY = Math.floor(c.height - (ev.clientY - rect.top) / (rect.bottom - rect.top) * c.height)
-					if (!ShaderBoy.isPlaying) ShaderBoy.forceFrame = true
 					ShaderBoy.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY]
 				}
 			}

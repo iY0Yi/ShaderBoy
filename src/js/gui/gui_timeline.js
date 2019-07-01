@@ -166,12 +166,14 @@ export default ShaderBoy.gui_timeline = {
         ofel = document.getElementById('tl-offset-frames')
         tfel = document.getElementById('tl-total-frames')
         handleRectObj = enel.children[0].getClientRects()
-        hw = ShaderBoy.style.buttonHeight//handleRectObj[0].width
+
+        const guiUnitSize = (window.innerWidth > 750) ? 45 : 35
+        hw = guiUnitSize
         hhw = hw * .5
 
         tlRect.minx = s2i(bsel.offsetLeft)
         tlRect.maxx = s2i(tlRect.minx + bsel.offsetWidth)
-        tlRect.width = window.innerWidth - ShaderBoy.style.buttonHeight * 2//s2i(bsel.offsetWidth)
+        tlRect.width = window.innerWidth - guiUnitSize * 2
 
         stel.style.left = tlRect.minx - hw + 'px'
         enel.style.left = tlRect.maxx + 'px'

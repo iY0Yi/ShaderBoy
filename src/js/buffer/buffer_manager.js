@@ -27,6 +27,7 @@ export default ShaderBoy.bufferManager = {
         // buffer ids for moving buffer to buffer
         this.currentBufferDataId = 0
 
+        ShaderBoy.buffers = {}
         ShaderBoy.buffers['Setting'] = new Buffer(false)
         ShaderBoy.buffers['Config'] = new Buffer(false)
         ShaderBoy.buffers['Common'] = new Buffer(false)
@@ -89,7 +90,6 @@ export default ShaderBoy.bufferManager = {
         if (ShaderBoy.buffers['BufferD'].active === true) ShaderBoy.activeBufferIds.push('BufferD')
         if (ShaderBoy.buffers['Image'].active === true) ShaderBoy.activeBufferIds.push('Image')
         if (ShaderBoy.buffers['Sound'].active === true) ShaderBoy.activeBufferIds.push('Sound')
-        console.log('ShaderBoy.activeBufferIds', ShaderBoy.activeBufferIds)
         this.currentBufferDataId = ShaderBoy.activeBufferIds.indexOf(currentBufName)
     },
 

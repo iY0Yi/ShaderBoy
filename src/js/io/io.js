@@ -37,7 +37,7 @@ export default ShaderBoy.io = {
 		this.ID_DIR_APP = ''
 		this.ID_DIR_SHADER = ''
 
-		if (ShaderBoy.runInDevMode)
+		if (ShaderBoy.isTrialMode)
 		{
 			console.log('devlopment mode...')
 			this.setupDevShader()

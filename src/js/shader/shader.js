@@ -7,8 +7,15 @@
 //                                           
 
 import ShaderBoy from '../shaderboy'
+import commands from '../commands'
+import io from '../io/io'
+import gui from '../gui/gui'
+import gui_header from '../gui/gui_header'
+import gui_timeline from '../gui/gui_timeline'
+import editor from '../editor/editor'
 
 let gl = null
+
 export default class Shader
 {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -95,15 +102,15 @@ export default class Shader
 			if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
 			{
 				this.errors = splitErrorMsg(gl.getShaderInfoLog(shader))
-				ShaderBoy.editor.updateErrorInfo(this.bufName, this.errors)
-				ShaderBoy.gui_header.setErrorOnly(this.bufName)
+				editor.updateErrorInfo(this.bufName, this.errors)
+				gui_header.setErrorOnly(this.bufName)
 				isCompiled = false
 			}
 			else
 			{
 				this.errors = []
-				ShaderBoy.editor.updateErrorInfo(this.bufName, this.errors)
-				ShaderBoy.gui_header.removeErrorOnly(this.bufName)
+				editor.updateErrorInfo(this.bufName, this.errors)
+				gui_header.removeErrorOnly(this.bufName)
 				isCompiled = true
 			}
 			return shader
@@ -130,10 +137,10 @@ export default class Shader
 		}
 		else
 		{
-			ShaderBoy.commands.stopTimeline()
-			if (!ShaderBoy.io.initLoading)
+			commands.stopTimeline()
+			if (!io.initLoading)
 			{
-				ShaderBoy.gui_header.setStatus('error', 'Compilation failed!', 0)
+				gui_header.setStatus('error', 'Compilation failed!', 0)
 			}
 		}
 	}
@@ -155,7 +162,7 @@ export default class Shader
 
 	setKnobsUniforms()
 	{
-		for (const knob of ShaderBoy.gui.knobs.knobs)
+		for (const knob of gui.knobs.knobs)
 		{
 			gl.uniform1f(gl.getUniformLocation(this.program, knob.name), (knob.value).toFixed(3))
 		}
@@ -163,9 +170,9 @@ export default class Shader
 
 	setMIDIUniforms()
 	{
-		for (const midiName in ShaderBoy.gui.midis)
+		for (const midiName in gui.midis)
 		{
-			const value = ShaderBoy.gui.midis[midiName]
+			const value = gui.midis[midiName]
 			gl.uniform1f(gl.getUniformLocation(this.program, midiName), value)
 		}
 	}
@@ -356,7 +363,7 @@ export default class Shader
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVBO)
 		gl.vertexAttribPointer(this.vertAttLocation, 2, gl.FLOAT, false, 0, 0)
 		gl.enableVertexAttribArray(this.vertAttLocation)
-		if (ShaderBoy.gui_timeline.offsetFrames >= ShaderBoy.gui_timeline.currentFrame) gl.clear(gl.COLOR_BUFFER_BIT)
+		if (gui_timeline.offsetFrames >= gui_timeline.currentFrame) gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, 6)
 	}
 
@@ -368,7 +375,7 @@ export default class Shader
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.triVBO)
 		gl.vertexAttribPointer(this.vertAttLocation, 2, gl.FLOAT, false, 0, 0)
 		gl.enableVertexAttribArray(this.vertAttLocation)
-		if (ShaderBoy.gui_timeline.offsetFrames >= ShaderBoy.gui_timeline.currentFrame) gl.clear(gl.COLOR_BUFFER_BIT)
+		if (gui_timeline.offsetFrames >= gui_timeline.currentFrame) gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
 }

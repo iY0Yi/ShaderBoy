@@ -64,7 +64,7 @@ export default ShaderBoy.gdrive = {
             document.getElementById('btn_authrise_later').onclick = () =>
             {
                 ShaderBoy.gui.hideAuth()
-                ShaderBoy.runInDevMode = true
+                ShaderBoy.isTrialMode = true
                 ShaderBoy.io.init()
             }
         }

@@ -143,7 +143,7 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     newShader()
     {
-        if (ShaderBoy.runInDevMode)
+        if (ShaderBoy.isTrialMode)
         {
             alert('Oops! You are in test mode. Please reload this page and authorize.')
             return
@@ -174,7 +174,7 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     forkShader()
     {
-        if (ShaderBoy.runInDevMode)
+        if (ShaderBoy.isTrialMode)
         {
             alert('Oops! You are in test mode. Please reload this page and authorize.')
             return
@@ -213,7 +213,7 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     saveShader()
     {
-        if (!ShaderBoy.runInDevMode)
+        if (!ShaderBoy.isTrialMode)
         {
             ShaderBoy.io.saveShader()
         }
@@ -226,7 +226,7 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     openShader()
     {
-        if (ShaderBoy.runInDevMode)
+        if (ShaderBoy.isTrialMode)
         {
             alert('Oops! You are in test mode. Please reload this page and authorize.')
             return
