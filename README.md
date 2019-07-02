@@ -58,25 +58,20 @@ You can install the app from [here](https://shaderboy.net/).
 | **Play/Pause** | ⌥+UP | ⌥+UP | ⌥+UP |
 | **Reset time** | ⌥+DOWN | ⌥+DOWN | ⌥+DOWN |
 | **Move to neighbor buffer** | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT |
-
 | **Search** | ctrl+F | ctrl+F | ⌘+F |
 | **Replace** | ctrl+H | ctrl+H | ⌘+H |
-
 | **Resolution** | ctrl+1-4 | ctrl+1-4 | ctrl+1-4 |
 | **Font size** | ctrl+-/+ | ctrl+⇧+⌥+-/+ | ⌘+⇧+⌥+-/+ |
-
 | **Hide/Show WebGL canvas** | ctrl+⇧+⌥+V | ctrl+⇧+⌥+V | ⌘+⇧+⌥+V |
 | **Hide/Show Code & All GUIs** | ctrl+⇧+⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
 | **Hide/Show Timeline** | --- | ctrl+⇧+⌥+T | ⌘+⇧+⌥+T |
 | **Hide/Show Knobs GUI** | --- | ctrl+⇧+⌥+D | ⌘+⇧+⌥+D |
 | **Hide/Show iChannel GUI** | ctrl+⇧+⌥+A | ctrl+⇧+⌥+A | ⌘+⇧+⌥+A |
 | **Hide/Show Recording GUI** | --- | ctrl+⇧+⌥+R | ⌘+⇧+⌥+R |
-
 | **Create a new shader** | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N |
 | **Fork a shader** | ctrl+⇧+⌥+F | ctrl+⇧+⌥+F | ⌘+⇧+⌥+F |
 | **Save shader files** | ctrl+S | ctrl +S | ⌘+S |
 | **Open shader** | ctrl+O | ctrl+O | ⌘+O |
-
 | **Mute/Unmute sound** | ctrl+M | ctrl+M | ⌥+M |
 | **Switch header info(FPS/shader name)** | ctrl+I | ctrl+I | ⌥+I |
 
