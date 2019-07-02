@@ -246,10 +246,8 @@ export default ShaderBoy.bufferManager = {
         const gl = ShaderBoy.gl
         const vertexCode = ShaderBoy.vsSource
 
-        if (ShaderBoy.buffers['Sound'].active && !ShaderBoy.soundRenderer.paused)
-        {
-            ShaderBoy.soundRenderer.stop()
-        }
+        const wasPlaying = ShaderBoy.isPlaying
+        ShaderBoy.commands.pauseTimeline()
 
         const uniformCode = this.getUniformCode()
         const commonCode = this.getCommonShaderCode()
@@ -264,13 +262,18 @@ export default ShaderBoy.bufferManager = {
                 if (ShaderBoy.buffers['Sound'].active)
                 {
                     ShaderBoy.soundRenderer.render()
-                    ShaderBoy.soundRenderer.restart()
                 }
 
-                if (ShaderBoy.io.initLoading !== true)
+                if (wasPlaying)
+                {
+                    ShaderBoy.commands.resumeTimeline()
+                }
+
+                if (!ShaderBoy.io.initLoading)
                 {
                     ShaderBoy.gui_header.setStatus('suc', 'Compiled.', 3000)
                 }
+
             }
         }
 
@@ -305,8 +308,6 @@ export default ShaderBoy.bufferManager = {
                             // 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
                             // 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
                         }
-
-
                     }
                     else
                     {

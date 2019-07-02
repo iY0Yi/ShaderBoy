@@ -25,11 +25,11 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     setPrevBuffer()
     {
-        let codeEl = document.getElementById('code')
+        const codeEl = document.getElementById('code')
         codeEl.classList.add('code-container-mov-l')
         setTimeout(() =>
         {
-            let codeEl = document.getElementById('code')
+            const codeEl = document.getElementById('code')
             codeEl.classList.remove('code-container-mov-l')
         }, 1000 * 0.2)
         console.log(codeEl.classList)
@@ -39,11 +39,11 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     setNextBuffer()
     {
-        let codeEl = document.getElementById('code')
+        const codeEl = document.getElementById('code')
         codeEl.classList.add('code-container-mov-l')
         setTimeout(() =>
         {
-            let codeEl = document.getElementById('code')
+            const codeEl = document.getElementById('code')
             codeEl.classList.remove('code-container-mov-l')
         }, 1000 * 0.2)
         console.log(codeEl.classList)
@@ -51,14 +51,49 @@ export default ShaderBoy.commands = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    pauseResumeTimeline()
+    {
+        if (!ShaderBoy.isCanvasHidden)
+        {
+            if (!ShaderBoy.isRecording)
+            {
+                ShaderBoy.isPlaying = !ShaderBoy.isPlaying
+                if (ShaderBoy.buffers['Sound'].active)
+                {
+                    ShaderBoy.soundRenderer.pause()
+                }
+            }
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     pauseTimeline()
     {
-        if (ShaderBoy.isRecording !== true)
+        if (!ShaderBoy.isCanvasHidden)
         {
-            ShaderBoy.isPlaying = !ShaderBoy.isPlaying
-            if (ShaderBoy.buffers['Sound'].active)
+            if (!ShaderBoy.isRecording)
             {
-                ShaderBoy.soundRenderer.pause()
+                ShaderBoy.isPlaying = false
+                if (ShaderBoy.buffers['Sound'].active)
+                {
+                    ShaderBoy.soundRenderer.stop()
+                }
+            }
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    playTimeline()
+    {
+        if (!ShaderBoy.isCanvasHidden)
+        {
+            if (!ShaderBoy.isRecording)
+            {
+                ShaderBoy.isPlaying = true
+                if (ShaderBoy.buffers['Sound'].active)
+                {
+                    ShaderBoy.soundRenderer.play()
+                }
             }
         }
     },
@@ -66,12 +101,15 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     resetTimeline()
     {
-        gui_timeline.reset()
-        if (ShaderBoy.isRecording !== true && ShaderBoy.isPlaying)
+        if (!ShaderBoy.isCanvasHidden)
         {
-            if (ShaderBoy.buffers['Sound'].active)
+            gui_timeline.reset()
+            if (ShaderBoy.isRecording !== true && ShaderBoy.isPlaying)
             {
-                ShaderBoy.soundRenderer.restart()
+                if (ShaderBoy.buffers['Sound'].active)
+                {
+                    ShaderBoy.soundRenderer.restart()
+                }
             }
         }
     },
@@ -79,13 +117,16 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     stopTimeline()
     {
-        ShaderBoy.isPlaying = false
-        gui_timeline.reset()
-        if (ShaderBoy.isRecording !== true)
+        if (!ShaderBoy.isCanvasHidden)
         {
-            if (ShaderBoy.buffers['Sound'].active)
+            ShaderBoy.isPlaying = false
+            gui_timeline.reset()
+            if (ShaderBoy.isRecording !== true)
             {
-                ShaderBoy.soundRenderer.stop()
+                if (ShaderBoy.buffers['Sound'].active)
+                {
+                    ShaderBoy.soundRenderer.stop()
+                }
             }
         }
     },
@@ -155,18 +196,18 @@ export default ShaderBoy.commands = {
             console.log(gui_panel_textform.result)
             ShaderBoy.io.newShader(gui_panel_textform.result)
         })
-        let textformEl = document.getElementById('gp-textarea')
-        let shaderlistEl = document.getElementById('gp-shader-list')
+        const textformEl = document.getElementById('gp-textarea')
+        const shaderlistEl = document.getElementById('gp-shader-list')
         if (textformEl.classList.contains('hide')) textformEl.classList.remove('hide')
         if (!shaderlistEl.classList.contains('hide')) shaderlistEl.classList.add('hide')
-        ShaderBoy.isPlaying = false
+        ShaderBoy.commands.pauseTimeline()
 
         ShaderBoy.editor.codemirror.display.input.blur()
         key('esc', () =>
         {
             document.getElementById("div-textarea").contentEditable = "false"
             gui_panel_textform.reset('', () => { })
-            ShaderBoy.isPlaying = true
+            ShaderBoy.commands.playTimeline()
             key.unbind('esc')
         })
     },
@@ -194,18 +235,18 @@ export default ShaderBoy.commands = {
             console.log(gui_panel_textform.result)
             ShaderBoy.io.newShader(gui_panel_textform.result, true)
         })
-        let textformEl = document.getElementById('gp-textarea')
-        let shaderlistEl = document.getElementById('gp-shader-list')
+        const textformEl = document.getElementById('gp-textarea')
+        const shaderlistEl = document.getElementById('gp-shader-list')
         if (textformEl.classList.contains('hide')) textformEl.classList.remove('hide')
         if (!shaderlistEl.classList.contains('hide')) shaderlistEl.classList.add('hide')
-        ShaderBoy.isPlaying = false
+        ShaderBoy.commands.pauseTimeline()
 
         ShaderBoy.editor.codemirror.display.input.blur()
         key('esc', () =>
         {
             document.getElementById("div-textarea").contentEditable = "false"
             gui_panel_textform.reset('', () => { })
-            ShaderBoy.isPlaying = true
+            ShaderBoy.commands.playTimeline()
             key.unbind('esc')
         })
     },
@@ -232,14 +273,23 @@ export default ShaderBoy.commands = {
             return
         }
 
+        const isPlaying = ShaderBoy.isPlaying
+        if (isPlaying)
+        {
+            ShaderBoy.commands.pause()
+        }
         gui_panel_shaderlist.show()
 
         key('esc', () =>
         {
-            let textformEl = document.getElementById('gp-textarea')
-            let shaderlistEl = document.getElementById('gp-shader-list')
+            const textformEl = document.getElementById('gp-textarea')
+            const shaderlistEl = document.getElementById('gp-shader-list')
             if (!textformEl.classList.contains('hide')) textformEl.classList.add('hide')
             if (!shaderlistEl.classList.contains('hide')) shaderlistEl.classList.add('hide')
+            if (isPlaying)
+            {
+                ShaderBoy.commands.pause()
+            }
             gui_panel_shaderlist.show()
             key.unbind('esc')
         })
@@ -254,7 +304,7 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     showKnobsPanel()
     {
-        if (!ShaderBoy.isConcentrating)
+        if (!ShaderBoy.isCanvasHidden)
         {
             document.getElementById('ctrl').classList.toggle('ctrl_hide')
             document.getElementById('ctrl-wrapper').classList.toggle('ctrl-wrapper_hide')
@@ -264,7 +314,7 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     showAssetsPanel()
     {
-        let leftSidebarEl = document.getElementById('gui-sidebar-left')
+        const leftSidebarEl = document.getElementById('gui-sidebar-left')
         if (leftSidebarEl.classList.contains('gsbl-container-hidden'))
         {
             leftSidebarEl.classList.remove('gsbl-container-hidden')
@@ -289,9 +339,9 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     showTimeline()
     {
-        if (!ShaderBoy.isConcentrating)
+        if (!ShaderBoy.isCanvasHidden)
         {
-            let tlel = document.getElementById('timeline')
+            const tlel = document.getElementById('timeline')
             tlel.classList.toggle('tl_hide')
             document.querySelector('.CodeMirror').classList.toggle('expand-height')
         }
@@ -300,182 +350,174 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     hideEditor()
     {
-        ShaderBoy.isEditorHide = !ShaderBoy.isEditorHide
-
-        this.hdrEl = document.getElementById('gui-header')
-        this.tlEl = document.getElementById('timeline')
-        this.codeEl = document.getElementById('code')
-        this.ctrlEl = document.getElementById('ctrl')
-        this.isHdrElHidden = false
-        this.isTlElHidden = false
-        this.isCodeElHidden = false
-        this.isCtrlElHidden = false
-
-        if (this.ctrlEl.classList.contains('ctrl_hide'))
+        if (!ShaderBoy.isCanvasHidden)
         {
-            this.isCtrlElHidden = true
-        }
-        this.ctrlEl.classList.add('ctrl_hide')
+            ShaderBoy.isEditorHidden = !ShaderBoy.isEditorHidden
 
-        let ms = (this.isCtrlElHidden) ? 0 : 400
-        setTimeout(() =>
-        {
-            if (this.hdrEl.classList.contains('hdr_hide'))
+            const hdrEl = document.getElementById('gui-header')
+            const tlEl = document.getElementById('timeline')
+            const codeEl = document.getElementById('code')
+            const ctrlEl = document.getElementById('ctrl')
+            ShaderBoy.isHeaderHidden = false
+            ShaderBoy.isTimelineHidden = false
+            ShaderBoy.isCodePaneHidden = false
+            ShaderBoy.isKnobsHidden = false
+
+            if (ctrlEl.classList.contains('ctrl_hide'))
             {
-                this.isHdrElHidden = true
+                ShaderBoy.isKnobsHidden = true
             }
-            this.hdrEl.classList.add('hdr_hide')
+            ctrlEl.classList.add('ctrl_hide')
 
-            if (this.tlEl.classList.contains('tl_hide'))
+            const ms = (ShaderBoy.isKnobsHidden) ? 0 : 400
+            setTimeout(() =>
             {
-                this.isTlElHidden = true
-            }
-            this.tlEl.classList.add('tl_hide')
-
-            if (this.codeEl.classList.contains('code_hide'))
-            {
-                this.isCodeElHidden = true
-            }
-            this.codeEl.classList.add('code_hide')
-
-            ShaderBoy.editor.codemirror.display.input.blur()
-
-            key('ctrl+1', () =>
-            {
-                ShaderBoy.renderScale = 1
-                ShaderBoy.bufferManager.setFBOsProps()
-                if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
-            })
-            key('ctrl+2', () =>
-            {
-                ShaderBoy.renderScale = 2
-                ShaderBoy.bufferManager.setFBOsProps()
-                if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
-            })
-            key('ctrl+3', () =>
-            {
-                ShaderBoy.renderScale = 3
-                ShaderBoy.bufferManager.setFBOsProps()
-                if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
-            })
-            key('ctrl+4', () =>
-            {
-                ShaderBoy.renderScale = 4
-                ShaderBoy.bufferManager.setFBOsProps()
-                if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
-            })
-            key('⌥+up', () =>
-            {
-                if (ShaderBoy.isRecording !== true)
+                if (hdrEl.classList.contains('hdr_hide'))
                 {
-                    ShaderBoy.isPlaying = !ShaderBoy.isPlaying
+                    ShaderBoy.isHeaderHidden = true
                 }
-            })
-            key('⌥+down', () =>
-            {
-                if (ShaderBoy.isRecording !== true)
-                {
-                }
-            })
+                hdrEl.classList.add('hdr_hide')
 
-            let hide = () =>
-            {
-                if (!this.isHdrElHidden)
+                if (tlEl.classList.contains('tl_hide'))
                 {
-                    this.hdrEl.classList.remove('hdr_hide')
+                    ShaderBoy.isTimelineHidden = true
                 }
+                tlEl.classList.add('tl_hide')
 
-                if (!this.isTlElHidden)
+                if (codeEl.classList.contains('code_hide'))
                 {
-                    this.tlEl.classList.remove('tl_hide')
+                    ShaderBoy.isCodePaneHidden = true
                 }
+                codeEl.classList.add('code_hide')
 
-                if (!this.isCodeElHidden)
-                {
-                    this.codeEl.classList.remove('code_hide')
-                }
+                ShaderBoy.editor.codemirror.display.input.blur()
 
-                if (!this.isCtrlElHidden)
+                key('ctrl+1', () =>
                 {
-                    let ms = 400
-                    setTimeout(() =>
+                    ShaderBoy.commands.setResolution1()
+                })
+                key('ctrl+2', () =>
+                {
+                    ShaderBoy.commands.setResolution2()
+                })
+                key('ctrl+3', () =>
+                {
+                    ShaderBoy.commands.setResolution3()
+                })
+                key('ctrl+4', () =>
+                {
+                    ShaderBoy.commands.setResolution4()
+                })
+                key('⌥+up', () =>
+                {
+                    ShaderBoy.commands.pauseResumeTimeline()
+
+                })
+                key('⌥+down', () =>
+                {
+                    ShaderBoy.commands.resetTimeline()
+                })
+
+                const hide = () =>
+                {
+                    if (!ShaderBoy.isHeaderHidden)
                     {
-                        this.ctrlEl.classList.remove('ctrl_hide')
-                    }, ms)
-                }
+                        hdrEl.classList.remove('hdr_hide')
+                    }
 
-                ShaderBoy.editor.codemirror.focus()
-                key.unbind('⌘+⇧+⌥+h', 'ctrl+⇧+⌥+h')
-                key.unbind('ctrl+1')
-                key.unbind('ctrl+2')
-                key.unbind('ctrl+3')
-                key.unbind('ctrl+4')
-                key.unbind('⌥+up')
-                key.unbind('⌥+down')
+                    if (!ShaderBoy.isTimelineHidden)
+                    {
+                        tlEl.classList.remove('tl_hide')
+                    }
+
+                    if (!ShaderBoy.isCodePaneHidden)
+                    {
+                        codeEl.classList.remove('code_hide')
+                    }
+
+                    if (!ShaderBoy.isKnobsHidden)
+                    {
+                        const ms = 400
+                        setTimeout(() =>
+                        {
+                            ctrlEl.classList.remove('ctrl_hide')
+                        }, ms)
+                    }
+
+                    ShaderBoy.editor.codemirror.focus()
+                    key.unbind('⌘+⇧+⌥+h', 'ctrl+⇧+⌥+h')
+                    key.unbind('ctrl+1')
+                    key.unbind('ctrl+2')
+                    key.unbind('ctrl+3')
+                    key.unbind('ctrl+4')
+                    key.unbind('⌥+up')
+                    key.unbind('⌥+down')
+                    if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
+                    {
+                        key.unbind('⌥+h')
+                    }
+                }
+                key('⌘+⇧+⌥+h', hide)
+                key('ctrl+⇧+⌥+h', hide)
                 if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
                 {
-                    key.unbind('⌥+h')
+                    key('⌥+h', hide)
                 }
             }
-            key('⌘+⇧+⌥+h', hide)
-            key('ctrl+⇧+⌥+h', hide)
-            if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
-            {
-                key('⌥+h', hide)
-            }
+                , ms)
         }
-            , ms)
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     hideCanvas()
     {
-        ShaderBoy.isConcentrating = !ShaderBoy.isConcentrating
+        const tlEl = document.getElementById('timeline')
+        const ctrlEl = document.getElementById('ctrl')
 
-        this.tlEl = document.getElementById('timeline')
-        this.ctrlEl = document.getElementById('ctrl')
-
-        if (ShaderBoy.isConcentrating)
+        if (!ShaderBoy.isCanvasHidden)
         {
-            ShaderBoy.isPlaying = false
-            ShaderBoy.isEditorHide = false
+            ShaderBoy.commands.pauseTimeline()
+            ShaderBoy.isEditorHidden = false
+
+            ShaderBoy.isKnobsHidden = false
+            ShaderBoy.isTimelineHidden = false
+
             ShaderBoy.canvas.style.opacity = '0.0'
             $('.cm-s-3024-monotone span').css('background', '#1e1e1e00')
             $('.cm-s-3024-monotone .CodeMirror-code').toggleClass('concentrating')
             $('.cm-s-3024-monotone').toggleClass('color')
 
-            this.isCtrlElHidden = false
-            this.isTlElHidden = false
-
-            if (this.ctrlEl.classList.contains('ctrl_hide'))
+            if (ctrlEl.classList.contains('ctrl_hide'))
             {
-                this.isCtrlElHidden = true
+                ShaderBoy.isKnobsHidden = true
             }
-            this.ctrlEl.classList.add('ctrl_hide')
+            ctrlEl.classList.add('ctrl_hide')
             document.getElementById('ctrl-wrapper').classList.add('ctrl-wrapper_hide')
 
-            if (this.tlEl.classList.contains('tl_hide'))
+            if (tlEl.classList.contains('tl_hide'))
             {
-                this.isTlElHidden = true
+                ShaderBoy.isTimelineHidden = true
             }
-            this.tlEl.classList.add('tl_hide')
+            tlEl.classList.add('tl_hide')
+            ShaderBoy.isCanvasHidden = true
         }
         else
         {
-            ShaderBoy.isPlaying = true
+            ShaderBoy.isCanvasHidden = false
+            ShaderBoy.commands.playTimeline()
             ShaderBoy.canvas.style.opacity = '1.0'
             $('.cm-s-3024-monotone span').css('background', '#1e1e1eFF')
             $('.cm-s-3024-monotone .CodeMirror-code').toggleClass('concentrating')
             $('.cm-s-3024-monotone').toggleClass('color')
 
-            if (!this.isTlElHidden)
+            if (!ShaderBoy.isTimelineHidden)
             {
-                this.tlEl.classList.remove('tl_hide')
+                tlEl.classList.remove('tl_hide')
             }
 
-            if (!this.isCtrlElHidden)
+            if (!ShaderBoy.isKnobsHidden)
             {
-                this.ctrlEl.classList.remove('ctrl_hide')
+                ctrlEl.classList.remove('ctrl_hide')
                 document.getElementById('ctrl-wrapper').classList.remove('ctrl-wrapper_hide')
             }
         }
@@ -484,131 +526,114 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     showRecordingHeader()
     {
-        this.recEl = document.getElementById('ghdr-rec-base')
-        this.tlEl = document.getElementById('timeline')
-        this.codeEl = document.getElementById('code')
-        this.ctrlEl = document.getElementById('ctrl')
-        document.getElementById('res-x').value = ShaderBoy.canvas.width
-        document.getElementById('res-y').value = ShaderBoy.canvas.height
-
-        this.isTlElHidden = false
-        this.isCodeElHidden = false
-        this.isCtrlElHidden = false
-        this.isPlaying = false
-        this.recEl.classList.remove('rec_hide')
-
-        if (this.ctrlEl.classList.contains('ctrl_hide'))
+        if (!ShaderBoy.isCanvasHidden)
         {
-            this.isCtrlElHidden = true
-        }
-        this.ctrlEl.classList.add('ctrl_hide')
+            const recEl = document.getElementById('ghdr-rec-base')
+            const tlEl = document.getElementById('timeline')
+            const codeEl = document.getElementById('code')
+            const ctrlEl = document.getElementById('ctrl')
+            document.getElementById('res-x').value = ShaderBoy.canvas.width
+            document.getElementById('res-y').value = ShaderBoy.canvas.height
 
-        let ms = (this.isCtrlElHidden) ? 0 : 400
+            let isTimelineHidden = false
+            let isCodePaneHidden = false
+            let isKnobsHidden = false
 
-        setTimeout(() =>
-        {
-            if (this.tlEl.classList.contains('tl_hide'))
+            recEl.classList.remove('rec_hide')
+
+            if (ctrlEl.classList.contains('ctrl_hide'))
             {
-                this.isTlElHidden = true
+                isKnobsHidden = true
             }
-            this.tlEl.classList.remove('tl_hide')
+            ctrlEl.classList.add('ctrl_hide')
 
-            if (this.codeEl.classList.contains('code_hide'))
-            {
-                this.isCodeElHidden = true
-            }
-            this.codeEl.classList.add('code_hide')
+            const ms = (isKnobsHidden) ? 0 : 400
 
-            ShaderBoy.editor.codemirror.display.input.blur()
-
-            let isPlaying = ShaderBoy.isPlaying
-            ShaderBoy.isPlaying = false
-            gui_timeline.reset()
-
-            if (ShaderBoy.buffers['Sound'].active)
+            setTimeout(() =>
             {
-                ShaderBoy.soundRenderer.stop()
-            }
-
-            key('ctrl+1', () =>
-            {
-                ShaderBoy.renderScale = 1
-                ShaderBoy.bufferManager.setFBOsProps()
-                if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
-            })
-            key('ctrl+2', () =>
-            {
-                ShaderBoy.renderScale = 2
-                ShaderBoy.bufferManager.setFBOsProps()
-                if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
-            })
-            key('ctrl+3', () =>
-            {
-                ShaderBoy.renderScale = 3
-                ShaderBoy.bufferManager.setFBOsProps()
-                if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
-            })
-            key('ctrl+4', () =>
-            {
-                ShaderBoy.renderScale = 4
-                ShaderBoy.bufferManager.setFBOsProps()
-                if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
-            })
-            key('⌥+up', () =>
-            {
-                if (ShaderBoy.isRecording !== true)
+                if (tlEl.classList.contains('tl_hide'))
                 {
-                    ShaderBoy.isPlaying = !ShaderBoy.isPlaying
+                    isTimelineHidden = true
                 }
-            })
-            key('⌥+down', () =>
-            {
-                if (ShaderBoy.isRecording !== true)
-                {
-                }
-            })
-            let toEditorMode = () =>
-            {
-                this.recEl.classList.add('rec_hide')
+                tlEl.classList.remove('tl_hide')
 
-                if (this.isTlElHidden)
+                if (codeEl.classList.contains('code_hide'))
                 {
-                    this.tlEl.classList.add('tl_hide')
+                    isCodePaneHidden = true
                 }
+                codeEl.classList.add('code_hide')
 
-                if (!this.isCodeElHidden)
-                {
-                    this.codeEl.classList.remove('code_hide')
-                }
+                ShaderBoy.editor.codemirror.display.input.blur()
 
-                if (!this.isCtrlElHidden)
+                const wasPlaying = ShaderBoy.isPlaying
+                ShaderBoy.commands.stopTimeline()
+
+                key('ctrl+1', () =>
                 {
-                    let ms = 400
-                    setTimeout(() =>
+                    ShaderBoy.commands.setResolution1()
+                })
+                key('ctrl+2', () =>
+                {
+                    ShaderBoy.commands.setResolution2()
+                })
+                key('ctrl+3', () =>
+                {
+                    ShaderBoy.commands.setResolution3()
+                })
+                key('ctrl+4', () =>
+                {
+                    ShaderBoy.commands.setResolution4()
+                })
+                key('⌥+up', () =>
+                {
+                    ShaderBoy.commands.pauseResumeTimeline()
+                })
+                key('⌥+down', () =>
+                {
+                    ShaderBoy.commands.resetTimeline()
+                })
+
+                const toEditorMode = () =>
+                {
+                    recEl.classList.add('rec_hide')
+
+                    if (isTimelineHidden)
                     {
-                        this.ctrlEl.classList.remove('ctrl_hide')
-                    }, ms)
+                        tlEl.classList.add('tl_hide')
+                    }
+
+                    if (!isCodePaneHidden)
+                    {
+                        codeEl.classList.remove('code_hide')
+                    }
+
+                    if (!isKnobsHidden)
+                    {
+                        const ms = 400
+                        setTimeout(() =>
+                        {
+                            ctrlEl.classList.remove('ctrl_hide')
+                        }, ms)
+                    }
+
+                    if (wasPlaying)
+                    {
+                        ShaderBoy.commands.resetTimeline()
+                    }
+
+                    ShaderBoy.editor.codemirror.focus()
+                    key.unbind('⌘+⇧+⌥+r', 'ctrl+⇧+⌥+r')
+                    key.unbind('ctrl+1')
+                    key.unbind('ctrl+2')
+                    key.unbind('ctrl+3')
+                    key.unbind('ctrl+4')
+                    key.unbind('⌥+up')
+                    key.unbind('⌥+down')
                 }
-
-                ShaderBoy.isPlaying = isPlaying
-
-                if (ShaderBoy.buffers['Sound'].active && isPlaying)
-                {
-                    ShaderBoy.soundRenderer.restart()
-                }
-
-                ShaderBoy.editor.codemirror.focus()
-                key.unbind('⌘+⇧+⌥+r', 'ctrl+⇧+⌥+r')
-                key.unbind('ctrl+1')
-                key.unbind('ctrl+2')
-                key.unbind('ctrl+3')
-                key.unbind('ctrl+4')
-                key.unbind('⌥+up')
-                key.unbind('⌥+down')
-            }
-            key('⌘+⇧+⌥+r', toEditorMode)
-            key('ctrl+⇧+⌥+r', toEditorMode)
-        }, ms)
+                key('⌘+⇧+⌥+r', toEditorMode)
+                key('ctrl+⇧+⌥+r', toEditorMode)
+            }, ms)
+        }
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

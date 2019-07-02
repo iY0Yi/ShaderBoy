@@ -13,13 +13,18 @@
 const ShaderBoy = {
     gl: null,
     glVersion: 0.0,
-    isTrialMode:false,
+
+    isTrialMode: false,
     isPlaying: false,
     isRecording: false,
-    isEditorHide: false,
-    isConcentrating: false,
-    needRecompile: false,
-    needStatusInfo: false,
+
+    isCanvasHidden: false,
+    isEditorHidden: false,
+    isHeaderHidden: false,
+    isCodePaneHidden: false,
+    isKnobsHidden: false,
+    isTimelineHidden: false,
+
     forceDraw: false,
     editingBuffer: '',
     vsSource: null,

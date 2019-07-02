@@ -26,7 +26,7 @@ export default ShaderBoy.editor_hotkeys = {
 		this.keys = {
 			'Alt-Right': commands.setPrevBuffer,
 			'Alt-Left': commands.setNextBuffer,
-			'Alt-Up': commands.pauseTimeline,
+			'Alt-Up': commands.pauseResumeTimeline,
 			'Alt-Down': commands.resetTimeline,
 			'Alt-Enter': commands.compileShader,
 
@@ -47,13 +47,13 @@ export default ShaderBoy.editor_hotkeys = {
 			[`Shift-${CMD}-Alt-_`]: commands.decTextSize,
 
 			[`${CMD}-I`]: commands.switchInfo,
+			[`${CMD}-M`]: commands.mute,
 			[`Shift-${CMD}-Alt-D`]: commands.showKnobsPanel,
 			[`Shift-${CMD}-Alt-A`]: commands.showAssetsPanel,
 			[`Shift-${CMD}-Alt-T`]: commands.showTimeline,
 			[`Shift-${CMD}-Alt-R`]: commands.showRecordingHeader,
 			[`Shift-${CMD}-Alt-H`]: commands.hideEditor,
 			[`Shift-${CMD}-Alt-V`]: commands.hideCanvas,
-			[`Shift-${CMD}-Alt-M`]: commands.mute,
 
 			[`Alt-${CMD}-F`]: commands.formatCode
 		}

@@ -123,7 +123,7 @@ export default ShaderBoy.io = {
 
 		ShaderBoy.editor.setBuffer('Image', true)
 
-		ShaderBoy.isPlaying = true
+		ShaderBoy.commands.playTimeline()
 
 		ShaderBoy.gui.hideAuth()
 
@@ -674,12 +674,8 @@ export default ShaderBoy.io = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	async loadShaderFiles(shaderName = '_default', initLoading = false)
 	{
-		if (ShaderBoy.buffers['Sound'].active === true)
-		{
-			ShaderBoy.soundRenderer.stop()
-		}
+		ShaderBoy.commands.stopTimeline()
 
-		// ShaderBoy.activeShaderName = shaderName
 		this.setActiveShaderName(shaderName)
 		this.initLoading = initLoading
 
@@ -700,6 +696,13 @@ export default ShaderBoy.io = {
 		{
 			await this.loadShaderCodes()
 
+			ShaderBoy.bufferManager.buildShaderFromBuffers(false)
+			ShaderBoy.gui_header.resetBtns(ShaderBoy.config.buffers)
+
+			ShaderBoy.bufferManager.setFBOsProps()
+			ShaderBoy.editor.setBuffer('Image', true)
+			ShaderBoy.bufferManager.compileShaders()
+
 			ShaderBoy.gui_header.setStatus('gsuc', 'Loaded.', 3000)
 			setTimeout(() =>
 			{
@@ -707,17 +710,10 @@ export default ShaderBoy.io = {
 				if (this.initLoading === true)
 				{
 					this.initLoading = false
-					ShaderBoy.isPlaying = true
+					ShaderBoy.commands.playTimeline()
 					ShaderBoy.update()
 				}
 			}, 3000)
-
-			ShaderBoy.bufferManager.buildShaderFromBuffers(false)
-			ShaderBoy.gui_header.resetBtns(ShaderBoy.config.buffers)
-
-			ShaderBoy.bufferManager.setFBOsProps()
-			ShaderBoy.editor.setBuffer('Image', true)
-			ShaderBoy.bufferManager.compileShaders()
 
 			if (this.isNewShader === true)
 			{

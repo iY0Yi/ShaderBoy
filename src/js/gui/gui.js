@@ -75,7 +75,7 @@ export default ShaderBoy.gui = {
 		mainEl.onmousedown = (ev) =>
 		{
 			if (ev.button == 2) return false
-			if (ShaderBoy.isEditorHide)
+			if (ShaderBoy.isEditorHidden)
 			{
 				let c = ShaderBoy.canvas
 				let rect = c.getBoundingClientRect()
@@ -90,7 +90,7 @@ export default ShaderBoy.gui = {
 
 		mainEl.onmouseup = (ev) =>
 		{
-			if (ShaderBoy.isEditorHide)
+			if (ShaderBoy.isEditorHidden)
 			{
 				this.mouseIsDown = false
 				this.mouseOriX = -Math.abs(this.mouseOriX)
@@ -101,7 +101,7 @@ export default ShaderBoy.gui = {
 
 		mainEl.onmousemove = (ev) =>
 		{
-			if (ShaderBoy.isEditorHide)
+			if (ShaderBoy.isEditorHidden)
 			{
 				if (this.mouseIsDown)
 				{

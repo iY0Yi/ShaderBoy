@@ -204,7 +204,7 @@ export default ShaderBoy.gui_header_rec = {
         ShaderBoy.bufferManager.setFBOsProps()
 
         ShaderBoy.isPlaying = true
-        ShaderBoy.isConcentrating = false
+        ShaderBoy.isCanvasHidden = false
 
         if (ShaderBoy.buffers['Sound'].active)
         {
@@ -238,13 +238,12 @@ export default ShaderBoy.gui_header_rec = {
         ShaderBoy.canvas.width = canvasWidth
         ShaderBoy.canvas.height = canvasHeight
         ShaderBoy.bufferManager.setFBOsProps()
-        ShaderBoy.isPlaying = true
         ShaderBoy.isRecording = false
         ShaderBoy.capture = null
-        if (ShaderBoy.buffers['Sound'].active)
-        {
-            ShaderBoy.soundRenderer.play()
-        }
+
+        ShaderBoy.commands.resetTimeline()
+        ShaderBoy.commands.playTimeline()
+
         ShaderBoy.gui_header.setStatus('suc', 'Recording has been completed.', 3000)
     },
 

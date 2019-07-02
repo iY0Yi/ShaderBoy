@@ -172,8 +172,6 @@ export default ShaderBoy.gui_panel_shaderlist = {
         containerEl.classList.toggle("gp-container-hidden")
         gpbaseEl.classList.toggle("gp-hidden")
 
-        ShaderBoy.isPlaying = false
-
         ShaderBoy.editor.codemirror.display.input.blur()
     }
 }
