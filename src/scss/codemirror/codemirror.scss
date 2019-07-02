@@ -10,6 +10,8 @@
     font-size: 18px;
     line-height: 1.1em;
 
+    transition: width $anm-middle;
+
     &.expand-height {
         height: calc(100% - 45px);
     }

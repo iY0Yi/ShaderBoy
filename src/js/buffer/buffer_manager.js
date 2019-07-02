@@ -266,7 +266,7 @@ export default ShaderBoy.bufferManager = {
 
                 if (wasPlaying)
                 {
-                    ShaderBoy.commands.resumeTimeline()
+                    ShaderBoy.commands.playTimeline()
                 }
 
                 if (!ShaderBoy.io.initLoading)

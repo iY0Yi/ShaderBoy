@@ -63,8 +63,8 @@ export default ShaderBoy.editor_hotkeys = {
 		{
 			this.keys['Alt-Space'] = commands.compileShader
 			this.keys['Alt-H'] = commands.hideEditor
-			this.keys[`${CMD}-+`] = commands.incTextSize
-			this.keys[`${CMD}--`] = commands.decTextSize
+			this.keys[`${CMD}-Alt-+`] = commands.incTextSize
+			this.keys[`${CMD}-Alt--`] = commands.decTextSize
 		}
 	}
 }

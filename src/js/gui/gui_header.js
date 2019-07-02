@@ -226,6 +226,42 @@ export default ShaderBoy.gui_header = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    showInfoName()
+    {
+        const fpsClassList = document.getElementById('fpscounter').classList
+        const nameClassList = document.getElementById('active-shader-name').classList
+
+        if (nameClassList.contains('hidden'))
+        {
+            fpsClassList.add('hide')
+            setTimeout(() =>
+            {
+                fpsClassList.add('hidden')
+                nameClassList.remove('hidden')
+                nameClassList.remove('hide')
+            }, 200)
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    showInfoFPS()
+    {
+        const fpsClassList = document.getElementById('fpscounter').classList
+        const nameClassList = document.getElementById('active-shader-name').classList
+
+        if (!nameClassList.contains('hidden'))
+        {
+            nameClassList.add('hide')
+            setTimeout(() =>
+            {
+                nameClassList.add('hidden')
+                fpsClassList.remove('hidden')
+                fpsClassList.remove('hide')
+            }, 200)
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     resetBtns(buffers)
     {
         ShaderBoy.gui_header.bufCount = -1

@@ -273,11 +273,8 @@ export default ShaderBoy.commands = {
             return
         }
 
-        const isPlaying = ShaderBoy.isPlaying
-        if (isPlaying)
-        {
-            ShaderBoy.commands.pause()
-        }
+        const wasPlaying = ShaderBoy.isPlaying
+        ShaderBoy.commands.pauseTimeline()
         gui_panel_shaderlist.show()
 
         key('esc', () =>
@@ -286,9 +283,9 @@ export default ShaderBoy.commands = {
             const shaderlistEl = document.getElementById('gp-shader-list')
             if (!textformEl.classList.contains('hide')) textformEl.classList.add('hide')
             if (!shaderlistEl.classList.contains('hide')) shaderlistEl.classList.add('hide')
-            if (isPlaying)
+            if (wasPlaying)
             {
-                ShaderBoy.commands.pause()
+                ShaderBoy.commands.playTimeline()
             }
             gui_panel_shaderlist.show()
             key.unbind('esc')
@@ -298,7 +295,22 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     switchInfo()
     {
-        ShaderBoy.gui_header.switchInfo()
+        if (!ShaderBoy.isCanvasHidden)
+        {
+            ShaderBoy.gui_header.switchInfo()
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    showInfoName()
+    {
+        ShaderBoy.gui_header.showInfoName()
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    showInfoFPS()
+    {
+        ShaderBoy.gui_header.showInfoFPS()
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -498,12 +510,20 @@ export default ShaderBoy.commands = {
             {
                 ShaderBoy.isTimelineHidden = true
             }
-            tlEl.classList.add('tl_hide')
+
+            if (!ShaderBoy.isTimelineHidden)
+            {
+                ShaderBoy.commands.showTimeline()
+            }
+
+            ShaderBoy.commands.showInfoName()
+
             ShaderBoy.isCanvasHidden = true
         }
         else
         {
             ShaderBoy.isCanvasHidden = false
+            ShaderBoy.commands.showInfoFPS()
             ShaderBoy.commands.playTimeline()
             ShaderBoy.canvas.style.opacity = '1.0'
             $('.cm-s-3024-monotone span').css('background', '#1e1e1eFF')
@@ -512,7 +532,7 @@ export default ShaderBoy.commands = {
 
             if (!ShaderBoy.isTimelineHidden)
             {
-                tlEl.classList.remove('tl_hide')
+                ShaderBoy.commands.showTimeline()
             }
 
             if (!ShaderBoy.isKnobsHidden)
