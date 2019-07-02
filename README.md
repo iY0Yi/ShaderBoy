@@ -71,7 +71,7 @@ You can install the app from [here](https://shaderboy.net/).
 | **Create a new shader** | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N |
 | **Fork a shader** | ctrl+⇧+⌥+F | ctrl+⇧+⌥+F | ⌘+⇧+⌥+F |
 | **Save shader files** | ctrl+S | ctrl +S | ⌘+S |
-| **Open shader** | ctrl+O | ctrl+O | ⌘+O |
+| **Open shader list** | ctrl+O | ctrl+O | ⌘+O |
 | **Mute/Unmute sound** | ctrl+M | ctrl+M | ⌥+M |
 | **Switch header info(FPS/shader name)** | ctrl+I | ctrl+I | ⌥+I |
 
