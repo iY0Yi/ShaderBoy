@@ -58,20 +58,27 @@ You can install the app from [here](https://shaderboy.net/).
 | **Play/Pause** | ⌥+UP | ⌥+UP | ⌥+UP |
 | **Reset time** | ⌥+DOWN | ⌥+DOWN | ⌥+DOWN |
 | **Move to neighbor buffer** | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT |
+
 | **Search** | ctrl+F | ctrl+F | ⌘+F |
 | **Replace** | ctrl+H | ctrl+H | ⌘+H |
+
 | **Resolution** | ctrl+1-4 | ctrl+1-4 | ctrl+1-4 |
-| **Go Fullscreen** | --- | ctrl+⇧+⌥+F | ⌘+⇧+⌥+F |
+| **Font size** | ctrl+-/+ | ctrl+⇧+⌥+-/+ | ⌘+⇧+⌥+-/+ |
+
 | **Hide/Show WebGL canvas** | ctrl+⇧+⌥+V | ctrl+⇧+⌥+V | ⌘+⇧+⌥+V |
-| **Mute/Unmute sound** | ctrl+M | ctrl+⇧+⌥+M | ctrl+⇧+⌥+M |
 | **Hide/Show Code & All GUIs** | ctrl+⇧+⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
 | **Hide/Show Timeline** | --- | ctrl+⇧+⌥+T | ⌘+⇧+⌥+T |
 | **Hide/Show Knobs GUI** | --- | ctrl+⇧+⌥+D | ⌘+⇧+⌥+D |
 | **Hide/Show iChannel GUI** | ctrl+⇧+⌥+A | ctrl+⇧+⌥+A | ⌘+⇧+⌥+A |
 | **Hide/Show Recording GUI** | --- | ctrl+⇧+⌥+R | ⌘+⇧+⌥+R |
-| **Save shader files** | ctrl+S | ctrl +S | ⌘+S |
+
 | **Create a new shader** | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N |
-| **Show shaders list** | ctrl+O | ctrl+O | ⌘+O |
+| **Fork a shader** | ctrl+⇧+⌥+F | ctrl+⇧+⌥+F | ⌘+⇧+⌥+F |
+| **Save shader files** | ctrl+S | ctrl +S | ⌘+S |
+| **Open shader** | ctrl+O | ctrl+O | ⌘+O |
+
+| **Mute/Unmute sound** | ctrl+M | ctrl+M | ⌥+M |
+| **Switch header info(FPS/shader name)** | ctrl+I | ctrl+I | ⌥+I |
 
 
 ##### *And some of Sublime Text bindings by Codemirror.
@@ -109,7 +116,7 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] supports MIDI controller :PC only
 - [X] GUI for Shader list
 - [X] GUI for iChannels
-- [ ] Auto completion
+- [X] Auto completion
 - [ ] Inlined Khronos doc
 - [ ] snippets for writing SDF(Signed Distance field)
 - [ ] Multiple editor pane
