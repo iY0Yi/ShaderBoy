@@ -1,3 +1,5 @@
+
+
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc00.jpg"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_sp00.jpg"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/titlelogo.jpg"></br>
@@ -89,8 +91,10 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] Shadertoy uniform variables
 - [X] Multipass shader
 - [X] Sound shader
+- [ ] Cubemap shader
 - [ ] Display number of chars
-- [ ] Official assets(textures)
+- [ ] Display compilation time
+- [ ] Official assets
 
 ### Supported Shadertoy Uniforms  
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
@@ -113,16 +117,17 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] GUI for iChannels
 - [X] Auto completion
 - [ ] Inlined Khronos doc
-- [ ] snippets for writing SDF(Signed Distance field)
+- [ ] Snippets for writing SDF(Signed Distance field)
 - [ ] Multiple editor pane
 - [ ] Insert value with inlined GUIs.(https://github.com/patriciogonzalezvivo/glslEditor)
 - [ ] Break point.(https://github.com/patriciogonzalezvivo/glslEditor)
   
 ### Other
-- [X] GoogleDrive integration
-- [X] Capturing shader to movie file.(WebM/PNG/JPG/GIF)
-- [X] Witout Google account(for testing)
-- [X] Themes for editor pane
+- [X] GoogleDrive
+- [X] Export Image shader(WebM/PNG/JPG/GIF)
+- [X] Export Sound shader(WAV)
+- [X] Witout Google account(Trial mode)
+- [X] Syntax highlight
 </br>
 </br>
 </br>
