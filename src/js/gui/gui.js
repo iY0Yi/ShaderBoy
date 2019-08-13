@@ -138,7 +138,8 @@ export default ShaderBoy.gui = {
 				ShaderBoy.bufferManager.setFBOsProps()
 				gui_timeline.onResize()
 				ShaderBoy.isPlaying = wasPlaying
-			} else
+			}
+			else
 			{
 				event.preventDefault()
 			}
