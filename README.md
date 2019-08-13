@@ -113,7 +113,7 @@ You can install the app from [here](https://shaderboy.net/).
   
 ### GUI/other usefuls
 - [X] Timeline GUI(frame based) :PC only
-- [X] x32 uniforms with GUI(knob style) :PC only
+- [X] x24 uniforms with GUI(knob style) :PC only
 - [X] supports MIDI controller :PC only
 - [X] GUI for Shader list
 - [X] GUI for iChannels
