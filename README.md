@@ -93,13 +93,10 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] Sound shader
 - [ ] Cubemap shader
 - [ ] Display number of chars
-<<<<<<< HEAD
 - [ ] Official assets(textures)
 - [ ] VR
-=======
 - [ ] Display compilation time
 - [ ] Official assets
->>>>>>> d5c194ee773b26b2ab6a0896acb2cfa198650fa9
 
 ### Supported Shadertoy Uniforms  
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
@@ -120,7 +117,7 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] supports MIDI controller :PC only
 - [X] GUI for Shader list
 - [X] GUI for iChannels
-- [X] Auto completion
+- [X] Auto completion(Builtins/User defined funcs, macros, and structs/)
 - [ ] Inlined Khronos doc
 - [ ] Snippets for writing SDF(Signed Distance field)
 - [ ] Multiple editor pane
