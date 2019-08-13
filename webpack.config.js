@@ -1,7 +1,8 @@
-const TerserPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin')
 
-var PRODUCTION = true;
-var SOURCE_MAP = false;
+const PRODUCTION = true
+const SOURCE_MAP = false
+
 module.exports = {
 
 	mode: (PRODUCTION) ? 'production' : 'development',
@@ -35,11 +36,19 @@ module.exports = {
 				test: /\.js$/,
 				use: "babel-loader",
 				exclude: /node_modules/
+			},
+			{
+				test: /\.worker\.js$/,
+				use: {
+					loader: 'worker-loader',
+					options: { name: 'worker.min.js' }
+				}
 			}
 		],
 	},
 
 	entry: './src/js/main.js',
+	// entry: { main: './src/js/main', worker: './src/js/workers/keyword.worker' },
 
 	optimization: {
 		minimizer: [
@@ -48,7 +57,7 @@ module.exports = {
 				sourceMap: SOURCE_MAP, // Must be set to true if using source-maps in production
 				terserOptions: {
 					compress: {
-						drop_console: PRODUCTION,
+						drop_console: !SOURCE_MAP,
 						ecma: 6,
 						unsafe_methods: PRODUCTION
 					},
@@ -60,7 +69,7 @@ module.exports = {
 	output:
 	{
 		path: __dirname + '/dest/js/',
-		publicPath: '/js/',
+		publicPath: ((PRODUCTION) ? '/app/' : '//') + '/js/',
 		filename: '[name].min.js'
 	},
 
@@ -76,4 +85,4 @@ module.exports = {
 	{
 		extensions: ['.js']
 	}
-};
+}

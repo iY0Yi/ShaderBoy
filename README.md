@@ -1,3 +1,5 @@
+
+
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc00.jpg"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_sp00.jpg"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/titlelogo.jpg"></br>
@@ -61,17 +63,19 @@ You can install the app from [here](https://shaderboy.net/).
 | **Search** | ctrl+F | ctrl+F | ⌘+F |
 | **Replace** | ctrl+H | ctrl+H | ⌘+H |
 | **Resolution** | ctrl+1-4 | ctrl+1-4 | ctrl+1-4 |
-| **Go Fullscreen** | --- | ctrl+⇧+⌥+F | ⌘+⇧+⌥+F |
+| **Font size** | ctrl+-/+ | ctrl+⇧+⌥+-/+ | ⌘+⇧+⌥+-/+ |
 | **Hide/Show WebGL canvas** | ctrl+⇧+⌥+V | ctrl+⇧+⌥+V | ⌘+⇧+⌥+V |
-| **Mute/Unmute sound** | ctrl+M | ctrl+⇧+⌥+M | ctrl+⇧+⌥+M |
 | **Hide/Show Code & All GUIs** | ctrl+⇧+⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
 | **Hide/Show Timeline** | --- | ctrl+⇧+⌥+T | ⌘+⇧+⌥+T |
 | **Hide/Show Knobs GUI** | --- | ctrl+⇧+⌥+D | ⌘+⇧+⌥+D |
 | **Hide/Show iChannel GUI** | ctrl+⇧+⌥+A | ctrl+⇧+⌥+A | ⌘+⇧+⌥+A |
 | **Hide/Show Recording GUI** | --- | ctrl+⇧+⌥+R | ⌘+⇧+⌥+R |
-| **Save shader files** | ctrl+S | ctrl +S | ⌘+S |
 | **Create a new shader** | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N |
-| **Show shaders list** | ctrl+O | ctrl+O | ⌘+O |
+| **Fork a shader** | ctrl+⇧+⌥+F | ctrl+⇧+⌥+F | ⌘+⇧+⌥+F |
+| **Save shader files** | ctrl+S | ctrl +S | ⌘+S |
+| **Open shader list** | ctrl+O | ctrl+O | ⌘+O |
+| **Mute/Unmute sound** | ctrl+M | ctrl+M | ⌥+M |
+| **Switch header info(FPS/shader name)** | ctrl+I | ctrl+I | ⌥+I |
 
 
 ##### *And some of Sublime Text bindings by Codemirror.
@@ -87,9 +91,15 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] Shadertoy uniform variables
 - [X] Multipass shader
 - [X] Sound shader
+- [ ] Cubemap shader
 - [ ] Display number of chars
+<<<<<<< HEAD
 - [ ] Official assets(textures)
 - [ ] VR
+=======
+- [ ] Display compilation time
+- [ ] Official assets
+>>>>>>> d5c194ee773b26b2ab6a0896acb2cfa198650fa9
 
 ### Supported Shadertoy Uniforms  
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
@@ -110,18 +120,19 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] supports MIDI controller :PC only
 - [X] GUI for Shader list
 - [X] GUI for iChannels
-- [ ] Auto completion
+- [X] Auto completion
 - [ ] Inlined Khronos doc
-- [ ] snippets for writing SDF(Signed Distance field)
+- [ ] Snippets for writing SDF(Signed Distance field)
 - [ ] Multiple editor pane
 - [ ] Insert value with inlined GUIs.(https://github.com/patriciogonzalezvivo/glslEditor)
 - [ ] Break point.(https://github.com/patriciogonzalezvivo/glslEditor)
   
 ### Other
-- [X] GoogleDrive integration
-- [X] Capturing shader to movie file.(WebM/PNG/JPG/GIF)
-- [X] Witout Google account(for testing)
-- [X] Themes for editor pane
+- [X] GoogleDrive
+- [X] Export Image shader(WebM/PNG/JPG/GIF)
+- [X] Export Sound shader(WAV)
+- [X] Witout Google account(Trial mode)
+- [X] Syntax highlight
 </br>
 </br>
 </br>
@@ -161,6 +172,7 @@ ShaderBoy depends on some awesome js libralies.</br>
 [CCapture.js](https://github.com/spite/ccapture.js)</br>
 [keymaster](https://github.com/madrobby/keymaster)</br>
 [css_browser_selector](https://github.com/rafaelp/css_browser_selector)</br>
+[![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
 </br>
 </br>
 </br>

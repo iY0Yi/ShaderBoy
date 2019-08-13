@@ -1,6 +1,4 @@
 
-uniform float iBlockOffset;
-uniform float iSampleRate;
 void main()
 {
     float t = iBlockOffset + ((gl_FragCoord.x-0.5) + (gl_FragCoord.y-0.5)*512.0)/iSampleRate;

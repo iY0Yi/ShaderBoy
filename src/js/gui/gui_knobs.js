@@ -1,25 +1,12 @@
-// comment out on codepen.
-import ShaderBoy from '../shaderboy';
-// import Vue from 'vue';
+import ShaderBoy from '../shaderboy'
 
-// comment out on ShaderBoy.
-// console.clear();
-// let ShaderBoy = {
-//     isPlaying: true,
-//     uniforms: {
-//         iTime: 0,
-//         iFrame: 0
-//     }
-// };
+export default ShaderBoy.gui_knobs = {
 
-let isTest = false; // set "true" on codepen.
-
-export default ShaderBoy.gui_knobs = { // comment out on codepen.
-    // ShaderBoy.gui_knobs = {  // comment out on ShaderBoy.
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     setup()
     {
-        ShaderBoy.gui.ctrl = { 'domElement': null };
-        ShaderBoy.gui.ctrl.domElement = document.getElementById('ctrl');
+        ShaderBoy.gui.ctrl = { 'domElement': null }
+        ShaderBoy.gui.ctrl.domElement = document.getElementById('ctrl')
         ShaderBoy.gui.knobs = new Vue({
             el: '#gui-panel-knob',
             data: {
@@ -59,49 +46,48 @@ export default ShaderBoy.gui_knobs = { // comment out on codepen.
                         { id: 23, name: 's7z', circle: null, value: 0, active: false },
                     ]
             },
+
             mounted()
             {
-                let knobs = document.getElementsByClassName("gui-knob comp");
-                console.log('knobs:: ', knobs);
-                this.precision = 360 * 5;
+                const knobs = document.getElementsByClassName("gui-knob comp")
+                this.precision = 360 * 5
                 for (let i = 0; i < knobs.length; i++)
                 {
-                    ShaderBoy.gui.knobUniformFS += 'uniform float ' + this.knobs[i].name + ';\n';
-                    let element = knobs[i].children[1];
-                    this.knobs[i].circle = element;
+                    ShaderBoy.gui.knobUniformFS += `uniform float ${this.knobs[i].name};\n`
+                    let element = knobs[i].children[1]
+                    this.knobs[i].circle = element
 
-                    knobs[i].onmousewheel = function (e)
+                    knobs[i].onmousewheel = (e) =>
                     {
-                        e.preventDefault();
-                        let velocity = 10;
+                        e.preventDefault()
+                        let velocity = 10
                         if (e.ctrlKey)
                         {
-                            velocity = 100;
+                            velocity = 100
                         }
                         if (e.altKey)
                         {
-                            velocity = 1;
+                            velocity = 1
                         }
 
                         if (ShaderBoy.gui.knobs.knobs[i].active === true)
                         {
-                            ShaderBoy.forceDraw = (ShaderBoy.isPlaying !== true);
-                            console.log(e);
-                            let delta = (e.deltaY < 0) ? 1 : -1;
-                            let deg = e.deltaY;
-                            ShaderBoy.gui.knobs.knobs[i].value += delta * velocity * (1 / ShaderBoy.gui.knobs.precision);// deg * 1 / ShaderBoy.gui.knobs.precision;
-                            ShaderBoy.gui.knobs.knobs[i].value = Math.max(ShaderBoy.gui.knobs.knobs[i].value, -1);
-                            ShaderBoy.gui.knobs.knobs[i].value = Math.min(ShaderBoy.gui.knobs.knobs[i].value, 1);
-                            ShaderBoy.gui.knobs.knobs[i].value = Number(ShaderBoy.gui.knobs.knobs[i].value.toFixed(3));
-                            element.style.transform = 'rotate(' + ShaderBoy.gui.knobs.knobs[i].value * ShaderBoy.gui.knobs.precision + 'deg)';
+                            ShaderBoy.forceDraw = (ShaderBoy.isPlaying !== true)
+                            const delta = (e.deltaY < 0) ? 1 : -1
+                            const deg = e.deltaY
+                            ShaderBoy.gui.knobs.knobs[i].value += delta * velocity * (1 / ShaderBoy.gui.knobs.precision)// deg * 1 / ShaderBoy.gui.knobs.precision
+                            ShaderBoy.gui.knobs.knobs[i].value = Math.max(ShaderBoy.gui.knobs.knobs[i].value, -1)
+                            ShaderBoy.gui.knobs.knobs[i].value = Math.min(ShaderBoy.gui.knobs.knobs[i].value, 1)
+                            ShaderBoy.gui.knobs.knobs[i].value = Number(ShaderBoy.gui.knobs.knobs[i].value.toFixed(3))
+                            element.style.transform = `rotate(${ShaderBoy.gui.knobs.knobs[i].value * ShaderBoy.gui.knobs.precision}deg)`
                         }
-                    };
+                    }
 
-                    knobs[i].onclick = function (e)
+                    knobs[i].onclick = (e) =>
                     {
-                        ShaderBoy.gui.knobs.knobs[i].active = !ShaderBoy.gui.knobs.knobs[i].active;
-                        ShaderBoy.gui.knobs.toggle(i, true);
-                    };
+                        ShaderBoy.gui.knobs.knobs[i].active = !ShaderBoy.gui.knobs.knobs[i].active
+                        ShaderBoy.gui.knobs.toggle(i, true)
+                    }
                 }
             },
             methods:
@@ -110,43 +96,38 @@ export default ShaderBoy.gui_knobs = { // comment out on codepen.
                 {
                     if (ShaderBoy.gui.knobs.knobs[id].active === false)
                     {
-                        ShaderBoy.gui.knobs.knobs[id].circle.style.transition = 'all 600ms ease-in-out';
-                        ShaderBoy.gui.knobs.knobs[id].circle.style.transform = 'rotate(0deg)';
-                        ShaderBoy.gui.knobs.knobs[id].circle.parentElement.style.transition = 'all 600ms ease-in-out';
+                        ShaderBoy.gui.knobs.knobs[id].circle.style.transition = 'all 600ms ease-in-out'
+                        ShaderBoy.gui.knobs.knobs[id].circle.style.transform = 'rotate(0deg)'
+                        ShaderBoy.gui.knobs.knobs[id].circle.parentElement.style.transition = 'all 600ms ease-in-out'
 
                         if (clicked)
                         {
-                            let bufnames = ['BufferA', 'BufferB', 'BufferC', 'BufferD', 'Image', 'Sound'];
+                            const bufnames = ['BufferA', 'BufferB', 'BufferC', 'BufferD', 'Image', 'Sound']
                             for (let j = 0; j < bufnames.length; j++)
                             {
-                                const name = bufnames[j];
+                                const name = bufnames[j]
                                 if (ShaderBoy.buffers[name].cm !== undefined)
                                 {
-                                    let shdrtxt = ShaderBoy.buffers[name].cm.getValue();
-                                    shdrtxt = shdrtxt.split(ShaderBoy.gui.knobs.knobs[id].name).join((ShaderBoy.gui.knobs.knobs[id].value).toFixed(3));
-                                    ShaderBoy.buffers[name].cm.setValue(shdrtxt);
+                                    let shdrtxt = ShaderBoy.buffers[name].cm.getValue()
+                                    shdrtxt = shdrtxt.split(ShaderBoy.gui.knobs.knobs[id].name).join((ShaderBoy.gui.knobs.knobs[id].value).toFixed(3))
+                                    ShaderBoy.buffers[name].cm.setValue(shdrtxt)
                                 }
                             }
                         }
                     }
                     else
                     {
-                        ShaderBoy.gui.knobs.knobs[id].circle.style.transition = 'all 0ms ease-in-out';
-                        ShaderBoy.gui.knobs.knobs[id].circle.style.transform = 'rotate(' + ShaderBoy.gui.knobs.knobs[id].value * ShaderBoy.gui.knobs.precision + 'deg)';
-                        ShaderBoy.gui.knobs.knobs[id].circle.parentElement.style.transition = 'all 600ms ease-in-out';
+                        ShaderBoy.gui.knobs.knobs[id].circle.style.transition = 'all 0ms ease-in-out'
+                        ShaderBoy.gui.knobs.knobs[id].circle.style.transform = `rotate(${ShaderBoy.gui.knobs.knobs[id].value * ShaderBoy.gui.knobs.precision}deg)`
+                        ShaderBoy.gui.knobs.knobs[id].circle.parentElement.style.transition = 'all 600ms ease-in-out'
                     }
                     if (clicked)
                     {
-                        ShaderBoy.gui.knobs.knobs[id].circle.parentElement.classList.toggle('active');
-                        ShaderBoy.gui.knobs.knobs[id].value = 0;
+                        ShaderBoy.gui.knobs.knobs[id].circle.parentElement.classList.toggle('active')
+                        ShaderBoy.gui.knobs.knobs[id].value = 0
                     }
                 }
             }
-        });
+        })
     }
-}
-
-if (isTest)
-{
-    ShaderBoy.gui_knobs.setup(true);
 }

@@ -17,12 +17,15 @@
     transition: all $anm-middle;
 
     &.hide {
+        display: flex;
         height: 0px;
         opacity: 0;
     }
 
     &.hidden {
         display: none;
+        height: 0px;
+        opacity: 0;
     }
 }
 

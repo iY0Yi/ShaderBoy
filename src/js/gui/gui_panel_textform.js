@@ -1,101 +1,79 @@
-import ShaderBoy from '../shaderboy'; // comment out on codepen.
-// comment out on ShaderBoy.
-// let ShaderBoy = {
-//     isPlaying: true,
-//     uniforms: {
-//         iTime: 0,
-//         iFrame: 0
-//     }
-// };
+import ShaderBoy from '../shaderboy'
 
-let isTest = false; // set "true" on codepen.
+export default ShaderBoy.gui_panel_textform = {
 
-export default ShaderBoy.gui_panel_textform = { // comment out on codepen.
-    // ShaderBoy.gui_panel_textform = {  // comment out on ShaderBoy.
     textarea: null,
     result: null,
     callback: null,
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     setup()
     {
-        this.textarea = document.getElementById('div-textarea');
+        this.textarea = document.getElementById('div-textarea')
 
-        this.textarea.onclick = function (e)
+        this.textarea.onclick = (e) =>
         {
-            e.stopPropagation();
+            e.stopPropagation()
         }
 
-        this.textarea.onkeydown = function (e)
+        this.textarea.onkeydown = (e) =>
         {
-            e.stopPropagation();
-            if (ShaderBoy.gui_panel_textform.textarea.innerText == "")
+            e.stopPropagation()
+            if (this.textarea.innerText == "")
             {
-                this.parentNode.classList.remove('dirty');
+                document.getElementById('textarea-container').classList.remove('dirty')
             }
             else
             {
-                this.parentNode.classList.add('dirty');
+                document.getElementById('textarea-container').classList.add('dirty')
             }
 
-            let characterCode = e.keyCode;
-            if (characterCode === 13)
+            if (e.keyCode === 13)
             {
-                let containerEl = document.getElementById('gui-panel');
-                let gpbaseEl = document.getElementById('gp-base');
-                containerEl.classList.toggle("gp-container-appear");
-                gpbaseEl.classList.toggle("gp-appear");
-                containerEl.classList.toggle("gp-container-hidden");
-                gpbaseEl.classList.toggle("gp-hidden");
-                let result = ShaderBoy.gui_panel_textform.textarea.innerText;
-                ShaderBoy.gui_panel_textform.result = result;
-                ShaderBoy.gui_panel_textform.textarea.innerText = '';
+                const containerEl = document.getElementById('gui-panel')
+                const gpbaseEl = document.getElementById('gp-base')
+                containerEl.classList.toggle("gp-container-appear")
+                gpbaseEl.classList.toggle("gp-appear")
+                containerEl.classList.toggle("gp-container-hidden")
+                gpbaseEl.classList.toggle("gp-hidden")
+                const result = this.textarea.innerText
+                this.result = result
+                this.textarea.innerText = ''
 
-                let textareaContainer = document.getElementById('textarea-container');
-                textareaContainer.classList.remove('dirty');
+                document.getElementById('textarea-container').classList.remove('dirty')
 
-                ShaderBoy.gui_panel_textform.callback();
-                return;
+                this.callback()
+                return
             }
         }
 
-        this.textarea.onkeyup = function (e)
+        this.textarea.onkeyup = (e) =>
         {
-            e.stopPropagation();
-
-            let characterCode = e.keyCode;
-            if (characterCode === 13)
+            e.stopPropagation()
+            if (e.keyCode === 13)
             {
-                let textareaContainer = document.getElementById('textarea-container');
-                textareaContainer.classList.remove('dirty');
-                ShaderBoy.gui_panel_textform.textarea.innerText = '';
+                document.getElementById('textarea-container').classList.remove('dirty')
+                this.textarea.innerText = ''
             }
-        };
+        }
     },
 
-    reset(name, callback)
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    reset(formName, shaderName, callback)
     {
-        let containerEl = document.getElementById('gui-panel');
-        let gpbaseEl = document.getElementById('gp-base');
-        containerEl.classList.toggle("gp-container-appear");
-        gpbaseEl.classList.toggle("gp-appear");
-        containerEl.classList.toggle("gp-container-hidden");
-        gpbaseEl.classList.toggle("gp-hidden");
-        let nameEl = document.getElementById('gp-formname');
-        nameEl.innerText = name;
-        this.callback = callback;
+        const containerEl = document.getElementById('gui-panel')
+        const gpbaseEl = document.getElementById('gp-base')
+        containerEl.classList.toggle("gp-container-appear")
+        gpbaseEl.classList.toggle("gp-appear")
+        containerEl.classList.toggle("gp-container-hidden")
+        gpbaseEl.classList.toggle("gp-hidden")
+        const formNameEl = document.getElementById('gp-formname')
+        this.textarea.innerText = shaderName
+        formNameEl.innerText = formName
+        this.callback = callback
+        if (shaderName !== '')
+        {
+            document.getElementById('textarea-container').classList.add('dirty')
+        }
     }
-};
-
-if (isTest)
-{
-    document.body.onclick = function (e)
-    {
-        e.stopPropagation();
-        let containerEl = document.getElementById('gui-panel');
-        let gpbaseEl = document.getElementById('gp-base');
-        containerEl.classList.toggle("gp-container-appear");
-        gpbaseEl.classList.toggle("gp-appear");
-        containerEl.classList.toggle("gp-container-hidden");
-        gpbaseEl.classList.toggle("gp-hidden");
-    };
-    ShaderBoy.gui_panel_textform.setup(true);
 }
