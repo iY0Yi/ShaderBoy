@@ -183,8 +183,8 @@ export default ShaderBoy.gui_sidebar_ichannels = {
             ShaderBoy.config.buffers[curBufName].iChannel[id].asset = bufName
 
             const drpdwn = document.querySelectorAll('.dropdown.ichannels-drpdwn')
-            ShaderBoy.config.buffers[curBufName].iChannel[id].filter = (drpdwn[0].childNodes[0].textContent === 'Filter') ? 'linear' : drpdwn[0].childNodes[0].textContent
-            ShaderBoy.config.buffers[curBufName].iChannel[id].wrap = (drpdwn[1].childNodes[0].textContent === 'Wrap') ? 'repeat' : drpdwn[1].childNodes[0].textContent
+            ShaderBoy.config.buffers[curBufName].iChannel[id].filter = (drpdwn[0].childNodes[0].textContent === 'Filter') ? 'nearest' : drpdwn[0].childNodes[0].textContent
+            ShaderBoy.config.buffers[curBufName].iChannel[id].wrap = (drpdwn[1].childNodes[0].textContent === 'Wrap') ? 'clamp' : drpdwn[1].childNodes[0].textContent
         }
         const curBufName = ShaderBoy.activeBufferIds[ShaderBoy.bufferManager.currentBufferDataId]
         setBufferById(curBufName, 0)
@@ -254,8 +254,8 @@ export default ShaderBoy.gui_sidebar_ichannels = {
                 const channelEl = document.getElementById(`ichannel${i}`)
                 channelEl.classList.add('null')
                 const drpdwn = document.querySelectorAll('.dropdown.ichannels-drpdwn')
-                drpdwn[0].childNodes[0].textContent = 'linear'
-                drpdwn[1].childNodes[0].textContent = 'repeat'
+                drpdwn[0].childNodes[0].textContent = 'nearest'
+                drpdwn[1].childNodes[0].textContent = 'clamp'
             }
         }
     }

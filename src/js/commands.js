@@ -190,11 +190,19 @@ export default ShaderBoy.commands = {
             return
         }
 
-        document.getElementById("div-textarea").contentEditable = "true"
+        // "Set focus on div contenteditable element":
+        // via: https://stackoverflow.com/questions/2388164/set-focus-on-div-contenteditable-element
+        const form = document.getElementById("div-textarea")
+        form.contentEditable = "true"
+        setTimeout(() =>
+        {
+            form.focus();
+        }, 0);
+
         gui_panel_textform.reset('New Shader Name', '', () =>
         {
             console.log(gui_panel_textform.result)
-            ShaderBoy.io.newShader(gui_panel_textform.result)
+            ShaderBoy.io.newShader(gui_panel_textform.result, false)
         })
         const textformEl = document.getElementById('gp-textarea')
         const shaderlistEl = document.getElementById('gp-shader-list')
@@ -403,33 +411,34 @@ export default ShaderBoy.commands = {
                 codeEl.classList.add('code_hide')
 
                 ShaderBoy.editor.codemirror.display.input.blur()
+                if(ShaderBoy.OS !== 'iPadOS')
+                {
+                    key('ctrl+1', () =>
+                    {
+                        ShaderBoy.commands.setResolution1()
+                    })
+                    key('ctrl+2', () =>
+                    {
+                        ShaderBoy.commands.setResolution2()
+                    })
+                    key('ctrl+3', () =>
+                    {
+                        ShaderBoy.commands.setResolution3()
+                    })
+                    key('ctrl+4', () =>
+                    {
+                        ShaderBoy.commands.setResolution4()
+                    })
+                    key('⌥+up', () =>
+                    {
+                        ShaderBoy.commands.pauseResumeTimeline()
 
-                key('ctrl+1', () =>
-                {
-                    ShaderBoy.commands.setResolution1()
-                })
-                key('ctrl+2', () =>
-                {
-                    ShaderBoy.commands.setResolution2()
-                })
-                key('ctrl+3', () =>
-                {
-                    ShaderBoy.commands.setResolution3()
-                })
-                key('ctrl+4', () =>
-                {
-                    ShaderBoy.commands.setResolution4()
-                })
-                key('⌥+up', () =>
-                {
-                    ShaderBoy.commands.pauseResumeTimeline()
-
-                })
-                key('⌥+down', () =>
-                {
-                    ShaderBoy.commands.resetTimeline()
-                })
-
+                    })
+                    key('⌥+down', () =>
+                    {
+                        ShaderBoy.commands.resetTimeline()
+                    })
+                }
                 const hide = () =>
                 {
                     if (!ShaderBoy.isHeaderHidden)
@@ -457,16 +466,21 @@ export default ShaderBoy.commands = {
                     }
 
                     ShaderBoy.editor.codemirror.focus()
-                    key.unbind('⌘+⇧+⌥+h', 'ctrl+⇧+⌥+h')
-                    key.unbind('ctrl+1')
-                    key.unbind('ctrl+2')
-                    key.unbind('ctrl+3')
-                    key.unbind('ctrl+4')
-                    key.unbind('⌥+up')
-                    key.unbind('⌥+down')
-                    if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
-                    {
-                        key.unbind('⌥+h')
+                    if(ShaderBoy.OS !== 'iPadOS'){
+                        key.unbind('⌘+⇧+⌥+h', 'ctrl+⇧+⌥+h')
+                        key.unbind('ctrl+1')
+                        key.unbind('ctrl+2')
+                        key.unbind('ctrl+3')
+                        key.unbind('ctrl+4')
+                        key.unbind('⌥+up')
+                        key.unbind('⌥+down')
+                        if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
+                        {
+                            key.unbind('⌥+h')
+                        }
+                    }
+                    else{
+                        key('⌘+⇧+⌥+h', ShaderBoy.commands.hideEditor)
                     }
                 }
                 key('⌘+⇧+⌥+h', hide)
@@ -588,30 +602,14 @@ export default ShaderBoy.commands = {
                 const wasPlaying = ShaderBoy.isPlaying
                 ShaderBoy.commands.stopTimeline()
 
-                key('ctrl+1', () =>
-                {
-                    ShaderBoy.commands.setResolution1()
-                })
-                key('ctrl+2', () =>
-                {
-                    ShaderBoy.commands.setResolution2()
-                })
-                key('ctrl+3', () =>
-                {
-                    ShaderBoy.commands.setResolution3()
-                })
-                key('ctrl+4', () =>
-                {
-                    ShaderBoy.commands.setResolution4()
-                })
-                key('⌥+up', () =>
-                {
-                    ShaderBoy.commands.pauseResumeTimeline()
-                })
-                key('⌥+down', () =>
-                {
-                    ShaderBoy.commands.resetTimeline()
-                })
+                if(ShaderBoy.OS !== 'iPadOS'){
+                    key('ctrl+1', ShaderBoy.commands.setResolution1)
+                    key('ctrl+2', ShaderBoy.commands.setResolution2)
+                    key('ctrl+3', ShaderBoy.commands.setResolution3)
+                    key('ctrl+4', ShaderBoy.commands.setResolution4)
+                    key('⌥+up', ShaderBoy.commands.pauseResumeTimeline)
+                    key('⌥+down', ShaderBoy.commands.resetTimeline)
+                }
 
                 const toEditorMode = () =>
                 {
@@ -642,13 +640,18 @@ export default ShaderBoy.commands = {
                     }
 
                     ShaderBoy.editor.codemirror.focus()
-                    key.unbind('⌘+⇧+⌥+r', 'ctrl+⇧+⌥+r')
-                    key.unbind('ctrl+1')
-                    key.unbind('ctrl+2')
-                    key.unbind('ctrl+3')
-                    key.unbind('ctrl+4')
-                    key.unbind('⌥+up')
-                    key.unbind('⌥+down')
+                    if(ShaderBoy.OS!=='iPadOS'){
+                        key.unbind('⌘+⇧+⌥+r', 'ctrl+⇧+⌥+r')
+                        key.unbind('ctrl+1')
+                        key.unbind('ctrl+2')
+                        key.unbind('ctrl+3')
+                        key.unbind('ctrl+4')
+                        key.unbind('⌥+up')
+                        key.unbind('⌥+down')
+                    }
+                    else{
+                        key('⌘+⇧+⌥+r', ShaderBoy.commands.showRecordingHeader)
+                    }
                 }
                 key('⌘+⇧+⌥+r', toEditorMode)
                 key('ctrl+⇧+⌥+r', toEditorMode)

@@ -15,13 +15,14 @@
 
 import ShaderBoy from '../shaderboy'
 import commands from '../commands'
+import key from 'keymaster'
 
 export default ShaderBoy.editor_hotkeys = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setup()
 	{
 		// Mapping
-		const CMD = (ShaderBoy.OS === 'MacOS' || ShaderBoy.OS === 'iOS') ? 'Cmd' : 'Ctrl'
+		const CMD = (ShaderBoy.OS === 'MacOS' || ShaderBoy.OS === 'iPadOS' || ShaderBoy.OS === 'iOS') ? 'Cmd' : 'Ctrl'
 
 		this.keys = {
 			'Alt-Right': commands.setPrevBuffer,
@@ -35,27 +36,46 @@ export default ShaderBoy.editor_hotkeys = {
 			'Ctrl-3': commands.setResolution3,
 			'Ctrl-4': commands.setResolution4,
 
-			[`Shift-${CMD}-Alt-N`]: commands.newShader,
-			[`Shift-${CMD}-Alt-F`]: commands.forkShader,
+			[`${CMD}-Shift-Alt-N`]: commands.newShader,
+			[`${CMD}-Shift-Alt-F`]: commands.forkShader,
 			[`${CMD}-S`]: commands.saveShader,
 			[`${CMD}-O`]: commands.openShader,
 
-			[`Shift-${CMD}-Alt-+`]: commands.incTextSize,
-			[`Shift-${CMD}-Alt-;`]: commands.incTextSize,
-			[`Shift-${CMD}-Alt-=`]: commands.incTextSize,
-			[`Shift-${CMD}-Alt--`]: commands.decTextSize,
-			[`Shift-${CMD}-Alt-_`]: commands.decTextSize,
+			[`${CMD}-Shift-Alt-+`]: commands.incTextSize,
+			[`${CMD}-Shift-Alt-;`]: commands.incTextSize,
+			[`${CMD}-Shift-Alt-=`]: commands.incTextSize,
+			[`${CMD}-Shift-Alt--`]: commands.decTextSize,
+			[`${CMD}-Shift-Alt-_`]: commands.decTextSize,
 
 			[`${CMD}-I`]: commands.switchInfo,
 			[`${CMD}-M`]: commands.mute,
-			[`Shift-${CMD}-Alt-D`]: commands.showKnobsPanel,
-			[`Shift-${CMD}-Alt-A`]: commands.showAssetsPanel,
-			[`Shift-${CMD}-Alt-T`]: commands.showTimeline,
-			[`Shift-${CMD}-Alt-R`]: commands.showRecordingHeader,
-			[`Shift-${CMD}-Alt-H`]: commands.hideEditor,
-			[`Shift-${CMD}-Alt-V`]: commands.hideCanvas,
+			[`${CMD}-Shift-Alt-D`]: commands.showKnobsPanel,
+			[`${CMD}-Shift-Alt-A`]: commands.showAssetsPanel,
+			[`${CMD}-Shift-Alt-T`]: commands.showTimeline,
+			[`${CMD}-Shift-Alt-R`]: commands.showRecordingHeader,
+			[`${CMD}-Shift-Alt-H`]: commands.hideEditor,
+			[`${CMD}-Shift-Alt-V`]: commands.hideCanvas,
 
 			[`Alt-${CMD}-F`]: commands.formatCode
+		}
+
+		if(ShaderBoy.OS === 'iPadOS')
+		{
+			key('⌘+⇧+⌥+n', commands.newShader)
+			key('⌘+⇧+⌥+f', commands.forkShader)
+
+			key('⌘+⇧+⌥+d', ShaderBoy.commands.showKnobsPanel)
+			key('⌘+⇧+⌥+a', ShaderBoy.commands.showAssetsPanel)
+			key('⌘+⇧+⌥+t', commands.showTimeline)
+			key('⌘+⇧+⌥+r', commands.showRecordingHeader)
+			key('⌘+⇧+⌥+h', commands.hideEditor)
+			key('⌘+⇧+⌥+v', commands.hideCanvas)
+
+			key('⌘+⇧+⌥++', commands.incTextSize)
+			key('⌘+⇧+⌥+;', commands.incTextSize)
+			key('⌘+⇧+⌥+=', commands.incTextSize)
+			key('⌘+⇧+⌥+-', commands.decTextSize)
+			key('⌘+⇧+⌥+_', commands.decTextSize)
 		}
 
 		// for Smartphone

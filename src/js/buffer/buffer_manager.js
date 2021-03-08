@@ -169,7 +169,7 @@ export default ShaderBoy.bufferManager = {
     createVertexShader()
     {
         if (ShaderBoy.glVersion === 2.0)
-            ShaderBoy.vsSource = ShaderBoy.shaderHeader[0] + "in vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }"
+            ShaderBoy.vsSource = ShaderBoy.shaderHeader[0] + "layout(location = 0) in vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }"
         else
             ShaderBoy.vsSource = ShaderBoy.shaderHeader[0] + "attribute vec2 pos; void main() { gl_Position = vec4(pos.xy,0.0,1.0); }"
     },
@@ -348,7 +348,7 @@ export default ShaderBoy.bufferManager = {
         const gl = ShaderBoy.gl
         gl.bindTexture(gl.TEXTURE_2D, texture)
 
-        if (filter === 'nearest')
+        if (ShaderBoy.OS === 'iPadOS' || ShaderBoy.OS === 'iOS' || filter === 'nearest')
         {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
@@ -389,15 +389,17 @@ export default ShaderBoy.bufferManager = {
     setRenderResolution(texture, canvasWidth, canvasHeight)
     {
         const gl = ShaderBoy.gl
+        const glFoTy = ShaderBoy.iFormatPI2GL( ShaderBoy.glTexConsts.TEXFMT.C4F32 );
+        
         gl.bindTexture(gl.TEXTURE_2D, texture)
-        if (ShaderBoy.glVersion === 2.0)
-        {
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, canvasWidth, canvasHeight, 0, gl.RGBA, gl.FLOAT, null)
-        }
-        else
-        {
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, canvasWidth, canvasHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null)
-        }
+        // if (ShaderBoy.glVersion === 2.0)
+        // {
+            gl.texImage2D(gl.TEXTURE_2D, 0, glFoTy.colorFormat, canvasWidth, canvasHeight, 0, glFoTy.external, glFoTy.precision, null)
+        // }
+        // else
+        // {
+        //     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, canvasWidth, canvasHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null)
+        // }
         gl.bindTexture(gl.TEXTURE_2D, null)
     },
 
@@ -418,8 +420,8 @@ export default ShaderBoy.bufferManager = {
                 for (const texture of buffer.textures)
                 {
                     this.setRenderResolution(texture, canvasWidth, canvasHeight)
-                    this.setSamplerFilter(texture, 'linear')
-                    this.setSamplerWrap(texture, 'repeat')
+                    this.setSamplerFilter(texture, 'nearest')
+                    this.setSamplerWrap(texture, 'clamp')
                 }
             }
         }
@@ -441,10 +443,11 @@ export default ShaderBoy.bufferManager = {
         gl.clear(gl.COLOR_BUFFER_BIT)
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
         this.setRenderResolution(this.tempTexture, 256, 256)
-        this.setSamplerFilter(this.tempTexture, 'linear')
-        this.setSamplerWrap(this.tempTexture, 'repeat')
+        this.setSamplerFilter(this.tempTexture, 'nearest')
+        this.setSamplerWrap(this.tempTexture, 'clamp')
         gl.bindTexture(gl.TEXTURE_2D, null)
 
+        const glFoTy = ShaderBoy.iFormatPI2GL( ShaderBoy.glTexConsts.TEXFMT.C4F32 );
         for (const name in ShaderBoy.buffers)
         {
             const buffer = ShaderBoy.buffers[name]
@@ -459,11 +462,11 @@ export default ShaderBoy.bufferManager = {
                     gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.framebuffer)
                     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, buffer.textures[i], 0)
                     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, canvasWidth, canvasHeight, 0, gl.RGBA, gl.FLOAT, null)
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
+                    gl.texImage2D(gl.TEXTURE_2D, 0, glFoTy.colorFormat, canvasWidth, canvasHeight, 0, glFoTy.external, glFoTy.precision, null)
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
                     // gl.clear(gl.COLOR_BUFFER_BIT)
                     gl.clearColor(0.0, 0.0, 0.0, 1.0)
                     gl.bindTexture(gl.TEXTURE_2D, null)

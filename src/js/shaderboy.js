@@ -51,24 +51,35 @@ const ShaderBoy = {
   // 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
   },
 
+
+  glTexConsts:{
+    CLEAR      :{ Color: 1, Zbuffer : 2, Stencil : 4 },
+    TEXFMT     :{ C4I8 : 0, C1I8 : 1, C1F16 : 2, C4F16 : 3, C1F32 : 4, C4F32 : 5, Z16 : 6, Z24 : 7, Z32 : 8, C3F32:9 },
+    TEXWRP     :{ CLAMP : 0, REPEAT : 1 },
+    BUFTYPE    :{ STATIC : 0, DYNAMIC : 1 },
+    PRIMTYPE   :{ POINTS : 0, LINES : 1, LINE_LOOP : 2, LINE_STRIP : 3, TRIANGLES : 4, TRIANGLE_STRIP : 5 },
+    RENDSTGATE :{ WIREFRAME : 0, FRONT_FACE : 1, CULL_FACE : 2, DEPTH_TEST : 3, ALPHA_TO_COVERAGE : 4 },
+    TEXTYPE    :{ T2D : 0, T3D : 1, CUBEMAP : 2 },
+    FILTER     :{ NONE : 0, LINEAR : 1, MIPMAP : 2, NONE_MIPMAP : 3 },
+    TYPE       :{ UINT8 : 0, UINT16 : 1, UINT32 : 2, FLOAT16: 3, FLOAT32 : 4, FLOAT64: 5 }
+  },
+
   detectOS() {
     // Detect your OS.
-    ShaderBoy.OS = 'Unknown OS'
-    if (navigator.appVersion.indexOf('Win') != -1)
-      ShaderBoy.OS = 'Windows'
-    if (navigator.appVersion.indexOf('Mac') != -1)
-      ShaderBoy.OS = 'MacOS'
-    if (navigator.appVersion.indexOf('X11') != -1)
-      ShaderBoy.OS = 'UNIX'
-    if (navigator.appVersion.indexOf('Linux') != -1)
-      ShaderBoy.OS = 'Linux'
-    if (navigator.userAgent.match(/iPhone|iPad|iPod/i))
-      ShaderBoy.OS = 'iOS'
-    if (navigator.userAgent.match(/Android/i))
-      ShaderBoy.OS = 'Android'
-    if (ShaderBoy.OS === 'Unknown OS') {
-      ShaderBoy.OS = 'Android'
+    ShaderBoy.OS = 'Android' // default
+    const ua = navigator.userAgent;
+    if (ua.indexOf('Windows') > -1) ShaderBoy.OS = 'Windows'
+    else if (ua.indexOf('iPhone') > -1) ShaderBoy.OS = 'iOS'
+    else if (ua.indexOf('iPad') > -1) ShaderBoy.OS = 'iPadOS'
+    else if (ua.indexOf('Mac') > -1){
+      if(!('ontouchend' in document)) ShaderBoy.OS = 'MacOS'
+      else ShaderBoy.OS = 'iPadOS'
     }
+    else if (ua.indexOf('X11') > -1) ShaderBoy.OS = 'UNIX'
+    else if (ua.indexOf('Linux') > -1) ShaderBoy.OS = 'Linux'
+    else if (ua.indexOf('Android') > -1) ShaderBoy.OS = 'Android'
+
+    console.log('OS: ', ShaderBoy.OS)
   },
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -82,30 +93,32 @@ const ShaderBoy = {
       depth: false,
       stencil: false,
       premultipliedAlpha: false,
-      antialias: true,
+      antialias: false,
       preserveDrawingBuffer: true,
       powerPreference: 'high-performance'
     } // 'low_power', 'high_performance', 'default'
 
     if (this.gl === null) {
       this.gl = this.canvas.getContext('webgl2', opts)
-      this.glVersion = 2.0
+      console.log('Your WebGL is webgl2.')
     }
-
+    
     if (this.gl === null) {
       this.gl = this.canvas.getContext('experimental-webgl2', opts)
-      this.glVersion = 2.0
+      console.log('Your WebGL is experimental-webgl2.')
     }
-
+    
     if (this.gl === null) {
       this.gl = this.canvas.getContext('webgl', opts)
-      this.glVersion = 1.0
+      console.log('Your WebGL is webgl.')
     }
-
+    
     if (this.gl === null) {
       this.gl = this.canvas.getContext('experimental-webgl', opts)
-      this.glVersion = 1.0
+      console.log('Your WebGL is experimental-webgl.')
     }
+    this.glVersion = !(this.gl instanceof WebGLRenderingContext) ? 2.0 : 1.0
+    console.log('WebGL version: ', this.glVersion)
   },
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -122,6 +135,10 @@ const ShaderBoy = {
       this.glExt.ShaderTextureLOD = true
       this.glExt.Anisotropic = this.gl.getExtension('EXT_texture_filter_anisotropic')
       this.glExt.RenderToFloat32F = this.gl.getExtension('EXT_color_buffer_float')
+      this.glExt.DebugShader = this.gl.getExtension('WEBGL_debug_shaders')
+      this.glExt.AsynchCompile = this.gl.getExtension('KHR_parallel_shader_compile')
+
+      this.gl.hint( this.gl.FRAGMENT_SHADER_DERIVATIVE_HINT, this.gl.NICEST)
     } else {
       this.glExt.Float32Textures = this.gl.getExtension('OES_texture_float')
       this.glExt.Float32Filter = this.gl.getExtension('OES_texture_float_linear')
@@ -133,7 +150,42 @@ const ShaderBoy = {
       this.glExt.ShaderTextureLOD = this.gl.getExtension('EXT_shader_texture_lod')
       this.glExt.Anisotropic = this.gl.getExtension('EXT_texture_filter_anisotropic')
       this.glExt.RenderToFloat32F = this.glExt.Float32Textures
+
+      if( this.glExt.Derivatives !== null) this.gl.hint( this.glExt.Derivatives.FRAGMENT_SHADER_DERIVATIVE_HINT_OES, this.gl.NICEST)
     }
+    console.log(this.glExt)
+  },
+  
+  iFormatPI2GL( format ){
+
+    if( this.glVersion === 2.0 )
+    {
+           if (format === this.glTexConsts.TEXFMT.C4I8)  return { colorFormat: this.gl.RGBA8,           external: this.gl.RGBA,             precision: this.gl.UNSIGNED_BYTE }
+      else if (format === this.glTexConsts.TEXFMT.C1I8)  return { colorFormat: this.gl.R8,              external: this.gl.RED,              precision: this.gl.UNSIGNED_BYTE }
+      else if (format === this.glTexConsts.TEXFMT.C1F16) return { colorFormat: this.gl.R16F,            external: this.gl.RED,              precision: this.gl.FLOAT }
+      else if (format === this.glTexConsts.TEXFMT.C4F16) return { colorFormat: this.gl.RGBA16F,         external: this.gl.RGBA,             precision: this.gl.FLOAT }
+      else if (format === this.glTexConsts.TEXFMT.C1F32) return { colorFormat: this.gl.R32F,            external: this.gl.RED,              precision: this.gl.FLOAT }
+      else if (format === this.glTexConsts.TEXFMT.C4F32) {
+        if(ShaderBoy.OS === 'iPadOS' || ShaderBoy.OS === 'iOS') return { colorFormat: this.gl.RGBA8,           external: this.gl.RGBA,             precision: this.gl.UNSIGNED_BYTE }
+        else return { colorFormat: this.gl.RGBA32F,         external: this.gl.RGBA,             precision: this.gl.FLOAT }
+      }
+      else if (format === this.glTexConsts.TEXFMT.C3F32) return { colorFormat: this.gl.RGB32F,          external: this.gl.RGB,              precision: this.gl.FLOAT }
+      else if (format === this.glTexConsts.TEXFMT.Z16)   return { colorFormat: this.gl.DEPTH_COMPONENT16, external: this.gl.DEPTH_COMPONENT,  precision: this.gl.UNSIGNED_SHORT }
+      else if (format === this.glTexConsts.TEXFMT.Z24)   return { colorFormat: this.gl.DEPTH_COMPONENT24, external: this.gl.DEPTH_COMPONENT,  precision: this.gl.UNSIGNED_SHORT }
+      else if (format === this.glTexConsts.TEXFMT.Z32)   return { colorFormat: this.gl.DEPTH_COMPONENT32F, external: this.gl.DEPTH_COMPONENT,  precision: this.gl.UNSIGNED_SHORT }
+    }
+    else
+    {
+           if (format === this.glTexConsts.TEXFMT.C4I8)  return { colorFormat: this.gl.RGBA,            external: this.gl.RGBA,            precision: this.gl.UNSIGNED_BYTE }
+      else if (format === this.glTexConsts.TEXFMT.C1I8)  return { colorFormat: this.gl.LUMINANCE,       external: this.gl.LUMINANCE,       precision: this.gl.UNSIGNED_BYTE }
+      else if (format === this.glTexConsts.TEXFMT.C1F16) return { colorFormat: this.gl.LUMINANCE,       external: this.gl.LUMINANCE,       precision: this.gl.FLOAT }
+      else if (format === this.glTexConsts.TEXFMT.C4F16) return { colorFormat: this.gl.RGBA,            external: this.gl.RGBA,            precision: this.gl.FLOAT }
+      else if (format === this.glTexConsts.TEXFMT.C1F32) return { colorFormat: this.gl.LUMINANCE,       external: this.gl.RED,             precision: this.gl.FLOAT }
+      else if (format === this.glTexConsts.TEXFMT.C4F32) return { colorFormat: this.gl.RGBA,            external: this.gl.RGBA,            precision: this.gl.FLOAT }
+      else if (format === this.glTexConsts.TEXFMT.Z16)   return { colorFormat: this.gl.DEPTH_COMPONENT, external: this.gl.DEPTH_COMPONENT, precision: this.gl.UNSIGNED_SHORT }
+    }
+
+      return null;
   },
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
