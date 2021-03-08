@@ -58,6 +58,7 @@ export default ShaderBoy.io = {
 		{
 			await this.loadShaderFiles(ShaderBoy.activeShaderName, true)
 			const thumbsInfo = await this.getThumbFileIds()
+			console.log('thumbsInfo: ', thumbsInfo)
 			gui_panel_shaderlist.setup(thumbsInfo)
 		}
 		else
@@ -474,7 +475,7 @@ export default ShaderBoy.io = {
 					{
 						if (file.name === 'thumb.png')
 						{
-							thumbsInfo.push({ name: data.shift().name, thumb: `https://drive.google.com/uc?id=${file.id}` })
+							thumbsInfo.push({ name: data.shift().name, thumb: `https://drive.google.com/uc?export=view&id=${file.id}&usp=sharing` })
 						}
 					}
 				}
@@ -487,18 +488,21 @@ export default ShaderBoy.io = {
 			{
 				const name = folderData.name
 
+				// Use Cache. Fast, but we can't get the latest thumbnails.
+				//-------------------------------------------------------------
 				let isExist = false
 				for (const loadedURL of loadedThumbURLs)
 				{
 					if (loadedURL.name === name)
 					{
-						thumbsInfo.push({ name: name, thumb: loadedURL.thumb })
-						isExist = true
-						break
+							thumbsInfo.push({ name: name, thumb: loadedURL.thumb })
+							isExist = true
+							break
 					}
 				}
-
+						
 				if (!isExist)
+				//-------------------------------------------------------------
 				{
 					const request = await gdrive.getFileInfoByName('thumb.png', folderData.id)
 					const res = request.result
@@ -506,7 +510,7 @@ export default ShaderBoy.io = {
 					{
 						if (file.name === 'thumb.png')
 						{
-							thumbsInfo.push({ name: name, thumb: `https://drive.google.com/uc?id=${file.id}` })
+							thumbsInfo.push({ name: name, thumb: `https://drive.google.com/uc?export=view&id=${file.id}&usp=sharing` })
 						}
 					}
 				}

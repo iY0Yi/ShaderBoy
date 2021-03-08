@@ -9,8 +9,12 @@ export default ShaderBoy.gui_panel_shaderlist = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     setup(list)
     {
+        console.log('gui_panel_shaderlist.setup(list)')
+
         const createShaderBtn = (shader) =>
         {
+            console.log('gui_panel_shaderlist.createShaderBtn(shader)')
+            console.log(shader)
             const btn = document.createElement('div')
             const btn_thumb = document.createElement('div')
             const btn_detector = document.createElement('div')
@@ -50,6 +54,16 @@ export default ShaderBoy.gui_panel_shaderlist = {
                     img.body.style.backgroundImage = `url("${img.src}")`
                     img.body.style.backgroundSize = '100% 100%'
                 }
+
+                img.onerror = (res)=>
+                {
+                    console.log(res)
+                    btn_thumb.style.backgroundImage = 'url("data:image/svg+xml;charset=utf8,%3Csvg%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2214.43px%22%20height%3D%2214.43px%22%20viewBox%3D%220%200%2014.43%2014.43%22%20style%3D%22enable-background%3Anew%200%200%2014.43%2014.43%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill-rule%3Aevenodd%3Bclip-rule%3Aevenodd%3Bfill%3A%23D8D5C4%3B%7D%3C%2Fstyle%3E%3Cdefs%3E%3C%2Fdefs%3E%3Cg%3E%20%3Cg%3E%20%3Cpath%20class%3D%22st0%22%20d%3D%22M7.21%2C0C3.23%2C0%2C0%2C3.23%2C0%2C7.21s3.23%2C7.21%2C7.21%2C7.21s7.21-3.23%2C7.21-7.21S11.2%2C0%2C7.21%2C0z%20M4.21%2C8.21%20c-0.55%2C0-1-0.45-1-1s0.45-1%2C1-1s1%2C0.45%2C1%2C1S4.77%2C8.21%2C4.21%2C8.21z%20M7.21%2C8.21c-0.55%2C0-1-0.45-1-1s0.45-1%2C1-1s1%2C0.45%2C1%2C1%20S7.77%2C8.21%2C7.21%2C8.21z%20M10.21%2C8.21c-0.55%2C0-1-0.45-1-1s0.45-1%2C1-1s1%2C0.45%2C1%2C1S10.77%2C8.21%2C10.21%2C8.21z%22%2F%3E%20%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E")'
+                    btn_thumb.style.backgroundSize = '16px 16px'
+                    btn_thumb.style.backgroundRepeat = 'no-repeat'
+                }
+
+                img.src = null;
                 img.src = shader.thumb
                 img.body = btn_thumb
             }
