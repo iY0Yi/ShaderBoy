@@ -21,62 +21,46 @@ export default ShaderBoy.editor_hotkeys = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setup()
 	{
-		// Mapping
-		const CMD = (ShaderBoy.OS === 'MacOS' || ShaderBoy.OS === 'iPadOS' || ShaderBoy.OS === 'iOS') ? 'Cmd' : 'Ctrl'
-
 		this.keys = {
-			'Alt-Right': commands.setPrevBuffer,
-			'Alt-Left': commands.setNextBuffer,
-			'Alt-Up': commands.pauseResumeTimeline,
-			'Alt-Down': commands.resetTimeline,
-			'Alt-Enter': commands.compileShader,
-
-			'Ctrl-1': commands.setResolution1,
-			'Ctrl-2': commands.setResolution2,
-			'Ctrl-3': commands.setResolution3,
-			'Ctrl-4': commands.setResolution4,
-
-			[`${CMD}-Shift-Alt-N`]: commands.newShader,
-			[`${CMD}-Shift-Alt-F`]: commands.forkShader,
-			[`${CMD}-S`]: commands.saveShader,
-			[`${CMD}-O`]: commands.openShader,
-
-			[`${CMD}-Shift-Alt-+`]: commands.incTextSize,
-			[`${CMD}-Shift-Alt-;`]: commands.incTextSize,
-			[`${CMD}-Shift-Alt-=`]: commands.incTextSize,
-			[`${CMD}-Shift-Alt--`]: commands.decTextSize,
-			[`${CMD}-Shift-Alt-_`]: commands.decTextSize,
-
-			[`${CMD}-I`]: commands.switchInfo,
-			[`${CMD}-M`]: commands.mute,
-			[`${CMD}-Shift-Alt-D`]: commands.showKnobsPanel,
-			[`${CMD}-Shift-Alt-A`]: commands.showAssetsPanel,
-			[`${CMD}-Shift-Alt-T`]: commands.showTimeline,
-			[`${CMD}-Shift-Alt-R`]: commands.showRecordingHeader,
-			[`${CMD}-Shift-Alt-H`]: commands.hideEditor,
-			[`${CMD}-Shift-Alt-V`]: commands.hideCanvas,
-
-			[`Alt-${CMD}-F`]: commands.formatCode
 		}
 
-		if(ShaderBoy.OS === 'iPadOS')
-		{
-			key('⌘+⇧+⌥+n', commands.newShader)
-			key('⌘+⇧+⌥+f', commands.forkShader)
-
-			key('⌘+⇧+⌥+d', ShaderBoy.commands.showKnobsPanel)
-			key('⌘+⇧+⌥+a', ShaderBoy.commands.showAssetsPanel)
-			key('⌘+⇧+⌥+t', commands.showTimeline)
-			key('⌘+⇧+⌥+r', commands.showRecordingHeader)
-			key('⌘+⇧+⌥+h', commands.hideEditor)
-			key('⌘+⇧+⌥+v', commands.hideCanvas)
-
-			key('⌘+⇧+⌥++', commands.incTextSize)
-			key('⌘+⇧+⌥+;', commands.incTextSize)
-			key('⌘+⇧+⌥+=', commands.incTextSize)
-			key('⌘+⇧+⌥+-', commands.decTextSize)
-			key('⌘+⇧+⌥+_', commands.decTextSize)
+		key.filter = function(event){
+			return true;
 		}
+
+		const CMD = (ShaderBoy.OS === 'MacOS' || ShaderBoy.OS === 'iPadOS' || ShaderBoy.OS === 'iOS') ? '⌘' : 'ctrl'
+
+		key('⌥+right', commands.setPrevBuffer)
+		key('⌥+left', commands.setNextBuffer)
+		key('⌥+up', commands.pauseResumeTimeline)
+		key('⌥+down', commands.resetTimeline)
+		key('⌥+enter', commands.compileShader)
+
+		key('ctrl+1', ()=>{commands.setResolution1(); return false})
+		key('ctrl+2', ()=>{commands.setResolution2(); return false})
+		key('ctrl+3', ()=>{commands.setResolution3(); return false})
+		key('ctrl+4', ()=>{commands.setResolution4(); return false})
+
+		key(`${CMD}+s`, ()=>{commands.saveShader(); return false})
+		key(`${CMD}+o`, ()=>{commands.openShader(); return false})
+		key(`${CMD}+i`, ()=>{commands.switchInfo(); return false})
+		key(`${CMD}+m`, ()=>{commands.mute(); return false})
+
+		key(`${CMD}++`, ()=>{commands.incTextSize(); return false})
+		key(`${CMD}+;`, ()=>{commands.incTextSize(); return false})
+		key(`${CMD}+=`, ()=>{commands.incTextSize(); return false})
+		key(`${CMD}+-`, ()=>{commands.decTextSize(); return false})
+		key(`${CMD}+_`, ()=>{commands.decTextSize(); return false})
+
+		key(`${CMD}+⇧+⌥+n`, commands.newShader)
+		key(`${CMD}+⇧+⌥+f`, commands.forkShader)
+
+		key(`${CMD}+⇧+⌥+d`, ShaderBoy.commands.showKnobsPanel)
+		key(`${CMD}+⇧+⌥+a`, ShaderBoy.commands.showAssetsPanel)
+		key(`${CMD}+⇧+⌥+t`, commands.showTimeline)
+		key(`${CMD}+⇧+⌥+r`, commands.showRecordingHeader)
+		key(`${CMD}+⇧+⌥+h`, commands.hideEditor)
+		key(`${CMD}+⇧+⌥+v`, commands.hideCanvas)
 
 		// for Smartphone
 		if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
