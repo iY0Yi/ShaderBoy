@@ -13,6 +13,7 @@ export default ShaderBoy.gui_midi = {
             navigator.requestMIDIAccess({
                 sysex: false
             }).then(this.onSuccess, this.onFailure)
+            console.warn("MIDI is supported in your browser")
         } else
         {
             console.warn("No MIDI support in your browser")
@@ -22,12 +23,13 @@ export default ShaderBoy.gui_midi = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     onSuccess(midi)
     {
+        console.log("ShaderBoy.gui_midi.onSuccess()")
         const allInputs = midi.inputs.values()
         // loop over all available inputs and listen for any MIDI input
         for (let input = allInputs.next(); input && !input.done; input = allInputs.next())
         {
             // when a MIDI value is received call the onMIDIMessage function
-            input.value.onmidimessage = ShaderBoy.gui.gotMessage
+            input.value.onmidimessage = ShaderBoy.gui_midi.gotMessage
         }
     },
 
@@ -40,6 +42,7 @@ export default ShaderBoy.gui_midi = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     gotMessage(e)
     {
+        console.log("ShaderBoy.gui_midi.gotMessage()")
         // "midigui" by pqml:
         // https://github.com/pqml/midigui/blob/b2739d972fa2522f988ea96e9ddc7fce2054c882/build/midigui.js
         const cmd = e.data[0] >> 4
