@@ -5,21 +5,15 @@
 //  | (_( )( (_) )| ( ) ( ) || ( ) ( ) |( (_| || ( ) |( (_| |\__, \
 //  (____/'`\___/'(_) (_) (_)(_) (_) (_)`\__,_)(_) (_)`\__,_)(____/
 
-import ShaderBoy from './shaderboy'
-import key from 'keymaster'
+import 'codemirror/addon/fold/brace-fold'
 import 'codemirror/addon/fold/foldcode'
 import 'codemirror/addon/fold/foldgutter'
-import 'codemirror/addon/fold/brace-fold'
 import $ from 'jquery'
-import CodeMirror from 'codemirror/lib/codemirror'
-import gui_header from './gui/gui_header'
-import gui_header_rec from './gui/gui_header_rec'
-import gui_timeline from './gui/gui_timeline'
-import gui_knobs from './gui/gui_knobs'
-import gui_midi from './gui/gui_midi'
+import key from 'keymaster'
 import gui_panel_shaderlist from './gui/gui_panel_shaderlist'
 import gui_panel_textform from './gui/gui_panel_textform'
-import gui_sidebar_ichannels from './gui/gui_sidebar_ichannels'
+import gui_timeline from './gui/gui_timeline'
+import ShaderBoy from './shaderboy'
 
 export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -372,7 +366,7 @@ export default ShaderBoy.commands = {
     {
         if (!ShaderBoy.isCanvasHidden)
         {
-            ShaderBoy.isEditorHidden = !ShaderBoy.isEditorHidden
+            ShaderBoy.isEditorHidden = true
 
             const hdrEl = document.getElementById('gui-header')
             const tlEl = document.getElementById('timeline')
@@ -383,115 +377,63 @@ export default ShaderBoy.commands = {
             ShaderBoy.isCodePaneHidden = false
             ShaderBoy.isKnobsHidden = false
 
-            if (ctrlEl.classList.contains('ctrl_hide'))
-            {
-                ShaderBoy.isKnobsHidden = true
-            }
+            ShaderBoy.isKnobsHidden = (ctrlEl.classList.contains('ctrl_hide'))
+                
             ctrlEl.classList.add('ctrl_hide')
 
             const ms = (ShaderBoy.isKnobsHidden) ? 0 : 400
             setTimeout(() =>
             {
-                if (hdrEl.classList.contains('hdr_hide'))
-                {
-                    ShaderBoy.isHeaderHidden = true
-                }
+                ShaderBoy.isHeaderHidden = (hdrEl.classList.contains('hdr_hide'))
                 hdrEl.classList.add('hdr_hide')
 
-                if (tlEl.classList.contains('tl_hide'))
-                {
-                    ShaderBoy.isTimelineHidden = true
-                }
+                ShaderBoy.isTimelineHidden = (tlEl.classList.contains('tl_hide'))
                 tlEl.classList.add('tl_hide')
 
-                if (codeEl.classList.contains('code_hide'))
-                {
-                    ShaderBoy.isCodePaneHidden = true
-                }
+                ShaderBoy.isCodePaneHidden = (codeEl.classList.contains('code_hide'))
                 codeEl.classList.add('code_hide')
 
                 ShaderBoy.editor.codemirror.display.input.blur()
-                if(ShaderBoy.OS !== 'iPadOS')
-                {
-                    key('ctrl+1', () =>
-                    {
-                        ShaderBoy.commands.setResolution1()
-                    })
-                    key('ctrl+2', () =>
-                    {
-                        ShaderBoy.commands.setResolution2()
-                    })
-                    key('ctrl+3', () =>
-                    {
-                        ShaderBoy.commands.setResolution3()
-                    })
-                    key('ctrl+4', () =>
-                    {
-                        ShaderBoy.commands.setResolution4()
-                    })
-                    key('⌥+up', () =>
-                    {
-                        ShaderBoy.commands.pauseResumeTimeline()
-
-                    })
-                    key('⌥+down', () =>
-                    {
-                        ShaderBoy.commands.resetTimeline()
-                    })
-                }
-                const hide = () =>
-                {
-                    if (!ShaderBoy.isHeaderHidden)
-                    {
-                        hdrEl.classList.remove('hdr_hide')
-                    }
-
-                    if (!ShaderBoy.isTimelineHidden)
-                    {
-                        tlEl.classList.remove('tl_hide')
-                    }
-
-                    if (!ShaderBoy.isCodePaneHidden)
-                    {
-                        codeEl.classList.remove('code_hide')
-                    }
-
-                    if (!ShaderBoy.isKnobsHidden)
-                    {
-                        const ms = 400
-                        setTimeout(() =>
-                        {
-                            ctrlEl.classList.remove('ctrl_hide')
-                        }, ms)
-                    }
-
-                    ShaderBoy.editor.codemirror.focus()
-                    if(ShaderBoy.OS !== 'iPadOS'){
-                        key.unbind('⌘+⇧+⌥+h', 'ctrl+⇧+⌥+h')
-                        key.unbind('ctrl+1')
-                        key.unbind('ctrl+2')
-                        key.unbind('ctrl+3')
-                        key.unbind('ctrl+4')
-                        key.unbind('⌥+up')
-                        key.unbind('⌥+down')
-                        if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
-                        {
-                            key.unbind('⌥+h')
-                        }
-                    }
-                    else{
-                        key('⌘+⇧+⌥+h', ShaderBoy.commands.hideEditor)
-                    }
-                }
-                key('⌘+⇧+⌥+h', hide)
-                key('ctrl+⇧+⌥+h', hide)
-                if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
-                {
-                    key('⌥+h', hide)
-                }
             }
-                , ms)
+            , ms)
+            key.setScope('editor_hidden');
         }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    showEditor()
+    {
+        const hdrEl = document.getElementById('gui-header')
+        const tlEl = document.getElementById('timeline')
+        const codeEl = document.getElementById('code')
+        const ctrlEl = document.getElementById('ctrl')
+        if (!ShaderBoy.isHeaderHidden)
+        {
+            hdrEl.classList.remove('hdr_hide')
+        }
+
+        if (!ShaderBoy.isTimelineHidden)
+        {
+            tlEl.classList.remove('tl_hide')
+        }
+
+        if (!ShaderBoy.isCodePaneHidden)
+        {
+            codeEl.classList.remove('code_hide')
+        }
+
+        if (!ShaderBoy.isKnobsHidden)
+        {
+            const ms = 400
+            setTimeout(() =>
+            {
+                ctrlEl.classList.remove('ctrl_hide')
+            }, ms)
+        }
+
+        ShaderBoy.isEditorHidden = false
+        ShaderBoy.editor.codemirror.focus()
+        key.setScope('default')
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -562,103 +504,91 @@ export default ShaderBoy.commands = {
     {
         if (!ShaderBoy.isCanvasHidden)
         {
+            const hdrEl = document.getElementById('gui-header')
             const recEl = document.getElementById('ghdr-rec-base')
             const tlEl = document.getElementById('timeline')
             const codeEl = document.getElementById('code')
             const ctrlEl = document.getElementById('ctrl')
+
+            ShaderBoy.isHeaderHidden = false
+            ShaderBoy.isTimelineHidden = false
+            ShaderBoy.isCodePaneHidden = false
+            ShaderBoy.isKnobsHidden = false
+
             document.getElementById('res-x').value = ShaderBoy.canvas.width
             document.getElementById('res-y').value = ShaderBoy.canvas.height
 
-            let isTimelineHidden = false
-            let isCodePaneHidden = false
-            let isKnobsHidden = false
-
             recEl.classList.remove('rec_hide')
 
-            if (ctrlEl.classList.contains('ctrl_hide'))
-            {
-                isKnobsHidden = true
-            }
+            ShaderBoy.isKnobsHidden = (ctrlEl.classList.contains('ctrl_hide'))
+            
             ctrlEl.classList.add('ctrl_hide')
 
-            const ms = (isKnobsHidden) ? 0 : 400
+            const ms = (ShaderBoy.isKnobsHidden) ? 0 : 400
 
             setTimeout(() =>
             {
-                if (tlEl.classList.contains('tl_hide'))
-                {
-                    isTimelineHidden = true
-                }
+                ShaderBoy.isHeaderHidden = (hdrEl.classList.contains('hdr_hide'))
+                ShaderBoy.isTimelineHidden = (tlEl.classList.contains('tl_hide'))
+                ShaderBoy.isCodePaneHidden = (codeEl.classList.contains('code_hide'))
+                
                 tlEl.classList.remove('tl_hide')
-
-                if (codeEl.classList.contains('code_hide'))
-                {
-                    isCodePaneHidden = true
-                }
                 codeEl.classList.add('code_hide')
+                // hdrEl.classList.add('hdr_hide')
 
                 ShaderBoy.editor.codemirror.display.input.blur()
 
-                const wasPlaying = ShaderBoy.isPlaying
+                ShaderBoy.wasPlaying = ShaderBoy.isPlaying
                 ShaderBoy.commands.stopTimeline()
-
-                if(ShaderBoy.OS !== 'iPadOS'){
-                    key('ctrl+1', ShaderBoy.commands.setResolution1)
-                    key('ctrl+2', ShaderBoy.commands.setResolution2)
-                    key('ctrl+3', ShaderBoy.commands.setResolution3)
-                    key('ctrl+4', ShaderBoy.commands.setResolution4)
-                    key('⌥+up', ShaderBoy.commands.pauseResumeTimeline)
-                    key('⌥+down', ShaderBoy.commands.resetTimeline)
-                }
-
-                const toEditorMode = () =>
-                {
-                    recEl.classList.add('rec_hide')
-
-                    if (isTimelineHidden)
-                    {
-                        tlEl.classList.add('tl_hide')
-                    }
-
-                    if (!isCodePaneHidden)
-                    {
-                        codeEl.classList.remove('code_hide')
-                    }
-
-                    if (!isKnobsHidden)
-                    {
-                        const ms = 400
-                        setTimeout(() =>
-                        {
-                            ctrlEl.classList.remove('ctrl_hide')
-                        }, ms)
-                    }
-
-                    if (wasPlaying)
-                    {
-                        ShaderBoy.commands.resetTimeline()
-                    }
-
-                    ShaderBoy.editor.codemirror.focus()
-                    if(ShaderBoy.OS!=='iPadOS'){
-                        key.unbind('⌘+⇧+⌥+r', 'ctrl+⇧+⌥+r')
-                        key.unbind('ctrl+1')
-                        key.unbind('ctrl+2')
-                        key.unbind('ctrl+3')
-                        key.unbind('ctrl+4')
-                        key.unbind('⌥+up')
-                        key.unbind('⌥+down')
-                    }
-                    else{
-                        key('⌘+⇧+⌥+r', ShaderBoy.commands.showRecordingHeader)
-                    }
-                }
-                key('⌘+⇧+⌥+r', toEditorMode)
-                key('ctrl+⇧+⌥+r', toEditorMode)
             }, ms)
+            key.setScope('rec_shown')
         }
     },
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    hideRecordingHeader()
+    {
+        const hdrEl = document.getElementById('gui-header')
+        const recEl = document.getElementById('ghdr-rec-base')
+        const tlEl = document.getElementById('timeline')
+        const codeEl = document.getElementById('code')
+        const ctrlEl = document.getElementById('ctrl')
+
+        recEl.classList.add('rec_hide')
+
+        // if (!ShaderBoy.isHeaderHidden)
+        // {
+        //     hdrEl.classList.remove('hdr_hide')
+        // }
+
+        if (!ShaderBoy.isCodePaneHidden)
+        {
+            codeEl.classList.remove('code_hide')
+        }
+
+        if (ShaderBoy.isTimelineHidden)
+        {
+            tlEl.classList.add('tl_hide')
+        }
+
+        if (!ShaderBoy.isKnobsHidden)
+        {
+            const ms = 400
+            setTimeout(() =>
+            {
+                ctrlEl.classList.remove('ctrl_hide')
+            }, ms)
+        }
+
+        if (ShaderBoy.wasPlaying)
+        {
+            ShaderBoy.commands.resetTimeline()
+        }
+
+        ShaderBoy.editor.codemirror.focus()
+        key.setScope('default')
+    },
+    
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     fullScreen()
     {

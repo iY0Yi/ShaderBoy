@@ -13,9 +13,9 @@
 //                                   ( )_| |      
 //                                   `\___/'      
 
-import ShaderBoy from '../shaderboy'
-import commands from '../commands'
 import key from 'keymaster'
+import commands from '../commands'
+import ShaderBoy from '../shaderboy'
 
 export default ShaderBoy.editor_hotkeys = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -36,31 +36,33 @@ export default ShaderBoy.editor_hotkeys = {
 		key('⌥+down', commands.resetTimeline)
 		key('⌥+enter', commands.compileShader)
 
-		key('ctrl+1', ()=>{commands.setResolution1(); return false})
-		key('ctrl+2', ()=>{commands.setResolution2(); return false})
-		key('ctrl+3', ()=>{commands.setResolution3(); return false})
-		key('ctrl+4', ()=>{commands.setResolution4(); return false})
+		key('ctrl+1', 'default', ()=>{commands.setResolution1(); return false})
+		key('ctrl+2', 'default', ()=>{commands.setResolution2(); return false})
+		key('ctrl+3', 'default', ()=>{commands.setResolution3(); return false})
+		key('ctrl+4', 'default', ()=>{commands.setResolution4(); return false})
 
-		key(`${CMD}+s`, ()=>{commands.saveShader(); return false})
-		key(`${CMD}+o`, ()=>{commands.openShader(); return false})
-		key(`${CMD}+i`, ()=>{commands.switchInfo(); return false})
-		key(`${CMD}+m`, ()=>{commands.mute(); return false})
+		key(`${CMD}+s`, 'default', ()=>{commands.saveShader(); return false})
+		key(`${CMD}+o`, 'default', ()=>{commands.openShader(); return false})
+		key(`${CMD}+i`, 'default', ()=>{commands.switchInfo(); return false})
+		key(`${CMD}+m`, 'default', ()=>{commands.mute(); return false})
 
-		key(`${CMD}++`, ()=>{commands.incTextSize(); return false})
-		key(`${CMD}+;`, ()=>{commands.incTextSize(); return false})
-		key(`${CMD}+=`, ()=>{commands.incTextSize(); return false})
-		key(`${CMD}+-`, ()=>{commands.decTextSize(); return false})
-		key(`${CMD}+_`, ()=>{commands.decTextSize(); return false})
+		key(`${CMD}++`, 'default', ()=>{commands.incTextSize(); return false})
+		key(`${CMD}+;`, 'default', ()=>{commands.incTextSize(); return false})
+		key(`${CMD}+=`, 'default', ()=>{commands.incTextSize(); return false})
+		key(`${CMD}+-`, 'default', ()=>{commands.decTextSize(); return false})
+		key(`${CMD}+_`, 'default', ()=>{commands.decTextSize(); return false})
 
-		key(`${CMD}+⇧+⌥+n`, commands.newShader)
-		key(`${CMD}+⇧+⌥+f`, commands.forkShader)
+		key(`${CMD}+⇧+⌥+n`, 'default', commands.newShader)
+		key(`${CMD}+⇧+⌥+f`, 'default', commands.forkShader)
 
-		key(`${CMD}+⇧+⌥+d`, ShaderBoy.commands.showKnobsPanel)
-		key(`${CMD}+⇧+⌥+a`, ShaderBoy.commands.showAssetsPanel)
-		key(`${CMD}+⇧+⌥+t`, commands.showTimeline)
-		key(`${CMD}+⇧+⌥+r`, commands.showRecordingHeader)
-		key(`${CMD}+⇧+⌥+h`, commands.hideEditor)
-		key(`${CMD}+⇧+⌥+v`, commands.hideCanvas)
+		key(`${CMD}+⇧+⌥+d`, 'default', commands.showKnobsPanel)
+		key(`${CMD}+⇧+⌥+a`, 'default', commands.showAssetsPanel)
+		key(`${CMD}+⇧+⌥+t`, 'default', commands.showTimeline)
+		key(`${CMD}+⇧+⌥+r`, 'default', commands.showRecordingHeader)
+		key(`${CMD}+⇧+⌥+r`, 'rec_shown', commands.hideRecordingHeader)
+		key(`${CMD}+⇧+⌥+h`, 'default', commands.hideEditor)
+		key(`${CMD}+⇧+⌥+h`, 'editor_hidden', commands.showEditor)
+		key(`${CMD}+⇧+⌥+v`, 'default', commands.hideCanvas)
 
 		// for Smartphone
 		if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
@@ -70,5 +72,7 @@ export default ShaderBoy.editor_hotkeys = {
 			this.keys[`${CMD}-Alt-+`] = commands.incTextSize
 			this.keys[`${CMD}-Alt--`] = commands.decTextSize
 		}
+
+		key.setScope('default');
 	}
 }
