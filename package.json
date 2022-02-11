@@ -35,7 +35,7 @@
 		"eslint": "^4.19.1",
 		"eslint-config-airbnb": "^2.0.0",
 		"jest": "^24.9.0",
-		"node-sass": "^4.14.0",
+		"node-sass": "^7.0.0",
 		"sass-loader": "^7.3.1",
 		"style-loader": "^0.23.1",
 		"terser-webpack-plugin": "^1.4.5",
