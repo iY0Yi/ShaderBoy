@@ -92,11 +92,11 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] Multipass shader
 - [X] Sound shader
 - [ ] Cubemap shader
-- [ ] Display number of chars
 - [ ] Official assets(textures)
-- [ ] VR
+- [ ] Official assets(sounds)
 - [ ] Display compilation time
-- [ ] Official assets
+- [ ] Display number of chars
+- [ ] VR
 
 ### Supported Shadertoy Uniforms  
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
@@ -118,6 +118,8 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] GUI for Shader list
 - [X] GUI for iChannels
 - [X] Auto completion(Builtins/User defined funcs, macros, and structs/)
+- [ ] User manual
+- [ ] Kindful GUIs
 - [ ] Inlined Khronos doc
 - [ ] Snippets for writing SDF(Signed Distance field)
 - [ ] Multiple editor pane
@@ -130,6 +132,8 @@ You can install the app from [here](https://shaderboy.net/).
 - [X] Export Sound shader(WAV)
 - [X] Witout Google account(Trial mode)
 - [X] Syntax highlight
+- [ ] Import/Exprt JSON (for Shadertoy unofficial plugin)
+- [ ] Direct import from Shadertoy URL
 </br>
 </br>
 </br>
