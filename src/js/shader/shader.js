@@ -1,18 +1,18 @@
-//   ___    _                 _              
-//  (  _`\ ( )               ( )             
-//  | (_(_)| |__     _ _    _| |   __   _ __ 
+//   ___    _                 _
+//  (  _`\ ( )               ( )
+//  | (_(_)| |__     _ _    _| |   __   _ __
 //  `\__ \ |  _ `\ /'_` ) /'_` | /'__`\( '__)
-//  ( )_) || | | |( (_| |( (_| |(  ___/| |   
-//  `\____)(_) (_)`\__,_)`\__,_)`\____)(_)   
-//                                           
+//  ( )_) || | | |( (_| |( (_| |(  ___/| |
+//  `\____)(_) (_)`\__,_)`\__,_)`\____)(_)
+//
 
-import ShaderBoy from '../shaderboy'
 import commands from '../commands'
-import io from '../io/io'
+import editor from '../editor/editor'
 import gui from '../gui/gui'
 import gui_header from '../gui/gui_header'
 import gui_timeline from '../gui/gui_timeline'
-import editor from '../editor/editor'
+import io from '../io/io'
+import ShaderBoy from '../shaderboy'
 
 let gl = null
 
@@ -71,10 +71,10 @@ export default class Shader
 		this.attributes = {}
 		this.uniforms = {}
 		this.uniformLocations = {}
-		gl.deleteProgram(this.program)
-		this.program = null
-		this.program = gl.createProgram()
-
+		// gl.deleteProgram(this.program)
+		// this.program = null
+		// this.program = gl.createProgram()
+		let pr = gl.createProgram()
 		const splitErrorMsg = (str) =>
 		{
 			let res = []
@@ -115,33 +115,54 @@ export default class Shader
 			}
 			return shader
 		}
-
+		// var ext = gl.getExtension('KHR_parallel_shader_compile')
+		// console.log('parlel: ', ext)
 		this.source = this.vertexSource + this.fragmentSource
-		gl.attachShader(this.program, compileSource(gl, gl.VERTEX_SHADER, this.vertexSource))
-		gl.attachShader(this.program, compileSource(gl, gl.FRAGMENT_SHADER, this.fragmentSource))
-		gl.linkProgram(this.program)
-		this.vertAttLocation = gl.getAttribLocation(this.program, 'pos')
-		gl.enableVertexAttribArray(this.vertAttLocation)
+		gl.attachShader(pr, compileSource(gl, gl.VERTEX_SHADER, this.vertexSource))
+		gl.attachShader(pr, compileSource(gl, gl.FRAGMENT_SHADER, this.fragmentSource))
+		gl.linkProgram(pr)
 
-		if (!gl.getProgramParameter(this.program, gl.LINK_STATUS))
-		{
-			// throw new Error(`link error: ${gl.getProgramInfoLog(this.program)}`)
+
+		let compiledCallback = ()=>{
+			this.program = pr
+			this.vertAttLocation = gl.getAttribLocation(pr, 'pos')
+			gl.enableVertexAttribArray(this.vertAttLocation)
+			if (isCompiled)
+			{
+				if (succeedCallback !== undefined)
+				{
+					succeedCallback()
+				}
+			}
+			else
+			{
+				commands.stopTimeline()
+				if (!io.initLoading)
+				{
+					gui_header.setStatus('error', 'Compilation failed!', 0)
+				}
+			}
 		}
 
-		if (isCompiled)
-		{
-			if (succeedCallback !== undefined)
-			{
-				succeedCallback()
-			}
+		if (ShaderBoy.glExt.AsynchCompile===null){
+			compiledCallback()
 		}
 		else
 		{
-			commands.stopTimeline()
-			if (!io.initLoading)
+			let checkCompilation = ()=>
 			{
-				gui_header.setStatus('error', 'Compilation failed!', 0)
+					if( gl.getProgramParameter(pr, ShaderBoy.glExt.AsynchCompile.COMPLETION_STATUS_KHR) === true )
+					{
+						compiledCallback()
+					}
+					else
+					{
+						console.log('loop....')
+						ShaderBoy.gui_header.setStatus('prgrs', 'Compiling...', 200)
+						setTimeout(checkCompilation, 10)
+					}
 			}
+			setTimeout(checkCompilation, 10)
 		}
 	}
 

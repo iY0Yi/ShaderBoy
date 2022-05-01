@@ -1,23 +1,23 @@
-//   ___             ___   ___                      
-//  (  _`\         /'___)/'___)                     
-//  | (_) ) _   _ | (__ | (__   __   _ __           
-//  |  _ <'( ) ( )| ,__)| ,__)/'__`\( '__)          
-//  | (_) )| (_) || |   | |  (  ___/| |             
-//  (____/'`\___/'(_)   (_)  `\____)(_)             
-//                                                  
-//  /'\_/`\                                         
-//  |     |   _ _   ___     _ _    __     __   _ __ 
+//   ___             ___   ___
+//  (  _`\         /'___)/'___)
+//  | (_) ) _   _ | (__ | (__   __   _ __
+//  |  _ <'( ) ( )| ,__)| ,__)/'__`\( '__)
+//  | (_) )| (_) || |   | |  (  ___/| |
+//  (____/'`\___/'(_)   (_)  `\____)(_)
+//
+//  /'\_/`\
+//  |     |   _ _   ___     _ _    __     __   _ __
 //  | (_) | /'_` )/' _ `\ /'_` ) /'_ `\ /'__`\( '__)
-//  | | | |( (_| || ( ) |( (_| |( (_) |(  ___/| |   
-//  (_) (_)`\__,_)(_) (_)`\__,_)`\__  |`\____)(_)   
-//                              ( )_) |             
-//                               \___/'             
+//  | | | |( (_| || ( ) |( (_| |( (_) |(  ___/| |
+//  (_) (_)`\__,_)(_) (_)`\__,_)`\__  |`\____)(_)
+//                              ( )_) |
+//                               \___/'
 
+import CodeMirror from 'codemirror/lib/codemirror'
+import Shader from '../shader/shader'
+import ShaderLib from '../shader/shaderlib'
 import ShaderBoy from '../shaderboy'
 import Buffer from './buffer'
-import ShaderLib from '../shader/shaderlib'
-import Shader from '../shader/shader'
-import CodeMirror from 'codemirror/lib/codemirror'
 
 export default ShaderBoy.bufferManager = {
 
@@ -247,7 +247,7 @@ export default ShaderBoy.bufferManager = {
         const vertexCode = ShaderBoy.vsSource
 
         const wasPlaying = ShaderBoy.isPlaying
-        ShaderBoy.commands.pauseTimeline()
+        if(ShaderBoy.glExt.AsynchCompile===null)ShaderBoy.commands.pauseTimeline()
 
         const uniformCode = this.getUniformCode()
         const commonCode = this.getCommonShaderCode()
@@ -264,7 +264,7 @@ export default ShaderBoy.bufferManager = {
                     ShaderBoy.soundRenderer.render()
                 }
 
-                if (wasPlaying)
+                if (ShaderBoy.glExt.AsynchCompile===null && wasPlaying)
                 {
                     ShaderBoy.commands.playTimeline()
                 }
@@ -390,7 +390,7 @@ export default ShaderBoy.bufferManager = {
     {
         const gl = ShaderBoy.gl
         const glFoTy = ShaderBoy.iFormatPI2GL( ShaderBoy.glTexConsts.TEXFMT.C4F32 );
-        
+
         gl.bindTexture(gl.TEXTURE_2D, texture)
         // if (ShaderBoy.glVersion === 2.0)
         // {
