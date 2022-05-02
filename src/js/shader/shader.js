@@ -115,8 +115,7 @@ export default class Shader
 			}
 			return shader
 		}
-		// var ext = gl.getExtension('KHR_parallel_shader_compile')
-		// console.log('parlel: ', ext)
+
 		this.source = this.vertexSource + this.fragmentSource
 		gl.attachShader(pr, compileSource(gl, gl.VERTEX_SHADER, this.vertexSource))
 		gl.attachShader(pr, compileSource(gl, gl.FRAGMENT_SHADER, this.fragmentSource))
@@ -124,11 +123,11 @@ export default class Shader
 
 
 		let compiledCallback = ()=>{
-			this.program = pr
-			this.vertAttLocation = gl.getAttribLocation(pr, 'pos')
-			gl.enableVertexAttribArray(this.vertAttLocation)
 			if (isCompiled)
 			{
+				this.program = pr
+				this.vertAttLocation = gl.getAttribLocation(pr, 'pos')
+				gl.enableVertexAttribArray(this.vertAttLocation)
 				if (succeedCallback !== undefined)
 				{
 					succeedCallback()
@@ -157,8 +156,7 @@ export default class Shader
 					}
 					else
 					{
-						console.log('loop....')
-						ShaderBoy.gui_header.setStatus('prgrs', 'Compiling...', 200)
+						ShaderBoy.gui_header.setStatus('prgrs', 'Compiling...', 0)
 						setTimeout(checkCompilation, 10)
 					}
 			}
