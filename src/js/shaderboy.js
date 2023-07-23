@@ -1,8 +1,8 @@
 //
 //
-//   ___    _                 _               ___                 
-//  (  _`\ ( )               ( )             (  _`\               
-//  | (_(_)| |__     _ _    _| |   __   _ __ | (_) )   _    _   _ 
+//   ___    _                 _               ___
+//  (  _`\ ( )               ( )             (  _`\
+//  | (_(_)| |__     _ _    _| |   __   _ __ | (_) )   _    _   _
 //  `\__ \ |  _ `\ /'_` ) /'_` | /'__`\( '__)|  _ <' /'_`\ ( ) ( )
 //  ( )_) || | | |( (_| |( (_| |(  ___/| |   | (_) )( (_) )| (_) |
 //  `\____)(_) (_)`\__,_)`\__,_)`\____)(_)   (____/'`\___/'`\__, |
@@ -102,17 +102,17 @@ const ShaderBoy = {
       this.gl = this.canvas.getContext('webgl2', opts)
       console.log('Your WebGL is webgl2.')
     }
-    
+
     if (this.gl === null) {
       this.gl = this.canvas.getContext('experimental-webgl2', opts)
       console.log('Your WebGL is experimental-webgl2.')
     }
-    
+
     if (this.gl === null) {
       this.gl = this.canvas.getContext('webgl', opts)
       console.log('Your WebGL is webgl.')
     }
-    
+
     if (this.gl === null) {
       this.gl = this.canvas.getContext('experimental-webgl', opts)
       console.log('Your WebGL is experimental-webgl.')
@@ -155,7 +155,7 @@ const ShaderBoy = {
     }
     console.log(this.glExt)
   },
-  
+
   iFormatPI2GL( format ){
 
     if( this.glVersion === 2.0 )

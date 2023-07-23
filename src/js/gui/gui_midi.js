@@ -113,18 +113,22 @@ export default ShaderBoy.gui_midi = {
             return a !== null
         })
 
-        ShaderBoy.gui.midis = null
-        ShaderBoy.gui.midiUniformFS = '\n'
+        const isInit = ShaderBoy.gui.midis===null
+        // ShaderBoy.gui.midis = {}
+        // ShaderBoy.gui.midis = null
+        // ShaderBoy.gui.midiUniformFS = '\n'
 
         if (midiUniformNames.length >= 0)
         {
-            ShaderBoy.gui.midis = {}
+            if(isInit) ShaderBoy.gui.midis = {}
 
             for (let i = 0; i < midiUniformNames.length; i++)
             {
                 const name = midiUniformNames[i]
-                ShaderBoy.gui.midis[name] = 0.0
-                ShaderBoy.gui.midiUniformFS += `uniform float ${name};\n`
+                if(isInit || ShaderBoy.gui.midis[name]===undefined){
+                    ShaderBoy.gui.midis[name] = 0.0
+                    ShaderBoy.gui.midiUniformFS += `uniform float ${name};\n`
+                }
             }
         }
     }

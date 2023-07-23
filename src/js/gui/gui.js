@@ -8,17 +8,17 @@
 //                   
 //                   
 
+import collectFPS from 'collect-fps'
 import ShaderBoy from '../shaderboy'
 import gui_header from './gui_header'
 import gui_header_rec from './gui_header_rec'
-import gui_timeline from './gui_timeline'
 import gui_knobs from './gui_knobs'
 import gui_midi from './gui_midi'
 import gui_panel_shaderlist from './gui_panel_shaderlist'
 import gui_panel_textform from './gui_panel_textform'
 import gui_sidebar_ichannels from './gui_sidebar_ichannels'
+import gui_timeline from './gui_timeline'
 
-import collectFPS from 'collect-fps'
 
 export default ShaderBoy.gui = {
 
@@ -36,8 +36,8 @@ export default ShaderBoy.gui = {
 		this.sldrs = []
 		this.knobs = null
 		this.midis = null
-		this.knobUniformFS = ''
-		this.midiUniformFS = ''
+		this.knobUniformFS = '\n'
+		this.midiUniformFS = '\n'
 
 		gui_header.setup()
 		gui_header_rec.setup()
@@ -77,6 +77,7 @@ export default ShaderBoy.gui = {
 			if (ev.button == 2) return false
 			if (ShaderBoy.isEditorHidden)
 			{
+				console.log('onmousedown')
 				let c = ShaderBoy.canvas
 				let rect = c.getBoundingClientRect()
 				this.mouseOriX = Math.floor((ev.clientX - rect.left) / (rect.right - rect.left) * c.width)
@@ -92,6 +93,7 @@ export default ShaderBoy.gui = {
 		{
 			if (ShaderBoy.isEditorHidden)
 			{
+				console.log('onmouseup')
 				this.mouseIsDown = false
 				this.mouseOriX = -Math.abs(this.mouseOriX)
 				this.mouseOriY = -Math.abs(this.mouseOriY)
@@ -103,6 +105,7 @@ export default ShaderBoy.gui = {
 		{
 			if (ShaderBoy.isEditorHidden)
 			{
+				console.log('onmousemove')
 				if (this.mouseIsDown)
 				{
 					let c = ShaderBoy.canvas
