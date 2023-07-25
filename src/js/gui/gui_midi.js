@@ -13,7 +13,7 @@ export default ShaderBoy.gui_midi = {
             navigator.requestMIDIAccess({
                 sysex: false
             }).then(this.onSuccess, this.onFailure)
-            console.warn("MIDI is supported in your browser")
+            console.log("MIDI is supported in your browser")
         } else
         {
             console.warn("No MIDI support in your browser")
