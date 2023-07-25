@@ -1,9 +1,9 @@
-//   ___        _     _                
-//  (  _`\     ( ) _ ( )_              
-//  | (_(_)   _| |(_)| ,_)   _    _ __ 
+//   ___        _     _
+//  (  _`\     ( ) _ ( )_
+//  | (_(_)   _| |(_)| ,_)   _    _ __
 //  |  _)_  /'_` || || |   /'_`\ ( '__)
-//  | (_( )( (_| || || |_ ( (_) )| |   
-//  (____/'`\__,_)(_)`\__)`\___/'(_)   
+//  | (_( )( (_| || || |_ ( (_) )| |
+//  (____/'`\__,_)(_)`\__)`\___/'(_)
 
 import ShaderBoy from '../shaderboy'
 import bufferManager from '../buffer/buffer_manager'
@@ -50,7 +50,7 @@ export default ShaderBoy.editor = {
         this.textArea.setAttribute('cols', '50')
         this.textArea.value = ''
 
-        this.textSize = (localStorage.textSize !== undefined) ? localStorage.textSize : 11
+        this.textSize = (localStorage.textSize !== undefined) ? localStorage.textSize : 9
         this.errorWidgets = []
 
         this.codemirror = CodeMirror(this.textArea, {
