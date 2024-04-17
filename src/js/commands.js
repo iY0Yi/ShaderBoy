@@ -1,6 +1,6 @@
-//   ___                                                   _       
-//  (  _`\                                                ( )      
-//  | ( (_)   _     ___ ___    ___ ___     _ _   ___     _| |  ___ 
+//   ___                                                   _
+//  (  _`\                                                ( )
+//  | ( (_)   _     ___ ___    ___ ___     _ _   ___     _| |  ___
 //  | |  _  /'_`\ /' _ ` _ `\/' _ ` _ `\ /'_` )/' _ `\ /'_` |/',__)
 //  | (_( )( (_) )| ( ) ( ) || ( ) ( ) |( (_| || ( ) |( (_| |\__, \
 //  (____/'`\___/'(_) (_) (_)(_) (_) (_)`\__,_)(_) (_)`\__,_)(____/
@@ -364,6 +364,7 @@ export default ShaderBoy.commands = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     hideEditor()
     {
+
         if (!ShaderBoy.isCanvasHidden)
         {
             ShaderBoy.isEditorHidden = true
@@ -378,7 +379,7 @@ export default ShaderBoy.commands = {
             ShaderBoy.isKnobsHidden = false
 
             ShaderBoy.isKnobsHidden = (ctrlEl.classList.contains('ctrl_hide'))
-                
+
             ctrlEl.classList.add('ctrl_hide')
 
             const ms = (ShaderBoy.isKnobsHidden) ? 0 : 400
@@ -521,7 +522,7 @@ export default ShaderBoy.commands = {
             recEl.classList.remove('rec_hide')
 
             ShaderBoy.isKnobsHidden = (ctrlEl.classList.contains('ctrl_hide'))
-            
+
             ctrlEl.classList.add('ctrl_hide')
 
             const ms = (ShaderBoy.isKnobsHidden) ? 0 : 400
@@ -531,7 +532,7 @@ export default ShaderBoy.commands = {
                 ShaderBoy.isHeaderHidden = (hdrEl.classList.contains('hdr_hide'))
                 ShaderBoy.isTimelineHidden = (tlEl.classList.contains('tl_hide'))
                 ShaderBoy.isCodePaneHidden = (codeEl.classList.contains('code_hide'))
-                
+
                 tlEl.classList.remove('tl_hide')
                 codeEl.classList.add('code_hide')
                 // hdrEl.classList.add('hdr_hide')
@@ -588,7 +589,7 @@ export default ShaderBoy.commands = {
         ShaderBoy.editor.codemirror.focus()
         key.setScope('default')
     },
-    
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     fullScreen()
     {
