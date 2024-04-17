@@ -1,18 +1,18 @@
-//   ___                         _          
-//  (  _`\                      (_ )        
-//  | ( (_)   _      _      __   | |    __  
+//   ___                         _
+//  (  _`\                      (_ )
+//  | ( (_)   _      _      __   | |    __
 //  | |___  /'_`\  /'_`\  /'_ `\ | |  /'__`\
 //  | (_, )( (_) )( (_) )( (_) | | | (  ___/
 //  (____/'`\___/'`\___/'`\__  |(___)`\____)
-//                       ( )_) |            
-//                        \___/'            
-//   ___                                    
-//  (  _`\        _                         
-//  | | ) | _ __ (_) _   _    __            
-//  | | | )( '__)| |( ) ( ) /'__`\          
-//  | |_) || |   | || \_/ |(  ___/          
-//  (____/'(_)   (_)`\___/'`\____)          
-//                                          
+//                       ( )_) |
+//                        \___/'
+//   ___
+//  (  _`\        _
+//  | | ) | _ __ (_) _   _    __
+//  | | | )( '__)| |( ) ( ) /'__`\
+//  | |_) || |   | || \_/ |(  ___/
+//  (____/'(_)   (_)`\___/'`\____)
+//
 
 import ShaderBoy from '../shaderboy'
 
@@ -44,9 +44,10 @@ export default ShaderBoy.gdrive = {
     {
         console.log('authResult', authResult)
 
-
         if (authResult.error)
         {
+            console.log(authResult.error)
+
             // No access token could be retrieved, show the button to start the authorization flow.
             console.log('No access token could be retrieved.')
             ShaderBoy.gui.showAuth()
@@ -74,7 +75,7 @@ export default ShaderBoy.gdrive = {
             console.log('Access token has been successfully retrieved.')
             ShaderBoy.gui_header.setStatus('gsuc', `Succeeded Authorizing.`, 3000)
             ShaderBoy.gui.hideAuth()
-            ShaderBoy.gdrive.refreshAccessToken(authResult) // Start 
+            ShaderBoy.gdrive.refreshAccessToken(authResult) // Start
 
             gapi.load("client", () =>
             {
