@@ -1,11 +1,10 @@
-const TerserPlugin = require('terser-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin');
 
-const PRODUCTION = true
-const SOURCE_MAP = false
+const PRODUCTION = true;
+const SOURCE_MAP = true;
 
 module.exports = {
-
-  mode: (PRODUCTION) ? 'production' : 'development',
+  mode: PRODUCTION ? 'production' : 'development',
 
   module: {
     rules: [
@@ -18,9 +17,6 @@ module.exports = {
             options: {
               url: false,
               sourceMap: SOURCE_MAP,
-              // 0 => no loaders (default);
-              // 1 => postcss-loader;
-              // 2 => postcss-loader, sass-loader
               importLoaders: 2
             },
           },
@@ -34,7 +30,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        use: "babel-loader",
+        use: 'babel-loader',
         exclude: /node_modules/
       },
       {
@@ -42,7 +38,7 @@ module.exports = {
         use: {
           loader: 'worker-loader',
           options: {
-            name: 'worker.min.js'
+            filename: '[name].worker.js'
           }
         }
       }
@@ -50,13 +46,11 @@ module.exports = {
   },
 
   entry: './src/js/main.js',
-  // entry: { main: './src/js/main', worker: './src/js/workers/keyword.worker' },
 
   optimization: {
     minimizer: [
       new TerserPlugin({
         extractComments: true,
-        sourceMap: SOURCE_MAP, // Must be set to true if using source-maps in production
         terserOptions: {
           compress: {
             drop_console: !SOURCE_MAP,
@@ -70,19 +64,25 @@ module.exports = {
 
   output: {
     path: __dirname + '/dest/js/',
-    publicPath: ((PRODUCTION) ? '/app/' : '/') + 'js/',
+    publicPath: (PRODUCTION ? '/app/' : '/') + 'js/',
     filename: '[name].min.js'
   },
 
-  devtool: (SOURCE_MAP) ? 'source-map' : 'none',
+  devtool: SOURCE_MAP ? 'source-map' : false,
+
   devServer: {
     port: 1414,
-    inline: true,
-    overlay: true,
-    contentBase: './dest',
+    static: {
+      directory: './dest',
+    },
+    client: {
+      overlay: true,
+    },
+    hot: true,
+    open: true
   },
 
   resolve: {
     extensions: ['.js']
   }
-}
+};
