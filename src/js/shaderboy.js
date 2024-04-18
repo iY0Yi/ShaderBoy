@@ -14,6 +14,9 @@ const ShaderBoy = {
   gl: null,
   glVersion: 0.0,
 
+  canvasWidth: 0,
+  canvasHeight: 0,
+
   isTrialMode: false,
   isPlaying: false,
   isRecording: false,
@@ -24,6 +27,7 @@ const ShaderBoy = {
   isCodePaneHidden: false,
   isKnobsHidden: false,
   isTimelineHidden: false,
+  isSplited: false,
 
   forceDraw: false,
   editingBuffer: '',
@@ -84,9 +88,10 @@ const ShaderBoy = {
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   getGL() {
-    ShaderBoy.canvas = document.getElementById('gl_canvas')
-    ShaderBoy.canvas.width = window.innerWidth
-    ShaderBoy.canvas.height = window.innerHeight
+
+    // ShaderBoy.canvas.width = window.innerWidth
+    // ShaderBoy.canvas.height = window.innerHeight
+    ShaderBoy.resetViewportSize()
 
     const opts = {
       alpha: false,
@@ -99,22 +104,22 @@ const ShaderBoy = {
     } // 'low_power', 'high_performance', 'default'
 
     if (this.gl === null) {
-      this.gl = this.canvas.getContext('webgl2', opts)
+      this.gl = ShaderBoy.canvas.getContext('webgl2', opts)
       console.log('Your WebGL is webgl2.')
     }
 
     if (this.gl === null) {
-      this.gl = this.canvas.getContext('experimental-webgl2', opts)
+      this.gl = ShaderBoy.canvas.getContext('experimental-webgl2', opts)
       console.log('Your WebGL is experimental-webgl2.')
     }
 
     if (this.gl === null) {
-      this.gl = this.canvas.getContext('webgl', opts)
+      this.gl = ShaderBoy.canvas.getContext('webgl', opts)
       console.log('Your WebGL is webgl.')
     }
 
     if (this.gl === null) {
-      this.gl = this.canvas.getContext('experimental-webgl', opts)
+      this.gl = ShaderBoy.canvas.getContext('experimental-webgl', opts)
       console.log('Your WebGL is experimental-webgl.')
     }
     this.glVersion = !(this.gl instanceof WebGLRenderingContext) ? 2.0 : 1.0

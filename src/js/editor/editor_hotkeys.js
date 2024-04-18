@@ -1,17 +1,17 @@
-//   ___        _     _                
-//  (  _`\     ( ) _ ( )_              
-//  | (_(_)   _| |(_)| ,_)   _    _ __ 
+//   ___        _     _
+//  (  _`\     ( ) _ ( )_
+//  | (_(_)   _| |(_)| ,_)   _    _ __
 //  |  _)_  /'_` || || |   /'_`\ ( '__)
-//  | (_( )( (_| || || |_ ( (_) )| |   
-//  (____/'`\__,_)(_)`\__)`\___/'(_)   
-//   _   _         _    _                         
-//  ( ) ( )       ( )_ ( )                        
-//  | |_| |   _   | ,_)| |/')    __   _   _   ___ 
+//  | (_( )( (_| || || |_ ( (_) )| |
+//  (____/'`\__,_)(_)`\__)`\___/'(_)
+//   _   _         _    _
+//  ( ) ( )       ( )_ ( )
+//  | |_| |   _   | ,_)| |/')    __   _   _   ___
 //  |  _  | /'_`\ | |  | , <   /'__`\( ) ( )/',__)
 //  | | | |( (_) )| |_ | |\`\ (  ___/| (_) |\__, \
 //  (_) (_)`\___/'`\__)(_) (_)`\____)`\__, |(____/
-//                                   ( )_| |      
-//                                   `\___/'      
+//                                   ( )_| |
+//                                   `\___/'
 
 import key from 'keymaster'
 import commands from '../commands'
@@ -63,6 +63,7 @@ export default ShaderBoy.editor_hotkeys = {
 		key(`${CMD}+⇧+⌥+h`, 'default', commands.hideEditor)
 		key(`${CMD}+⇧+⌥+h`, 'editor_hidden', commands.showEditor)
 		key(`${CMD}+⇧+⌥+v`, 'default', commands.hideCanvas)
+		key(`${CMD}+⇧+⌥+/`, 'default', commands.toggleSplitView)
 
 		// for Smartphone
 		if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')

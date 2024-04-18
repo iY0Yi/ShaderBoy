@@ -1,12 +1,12 @@
 //
-//                          
-//  /'\_/`\        _        
-//  |     |   _ _ (_)  ___  
+//
+//  /'\_/`\        _
+//  |     |   _ _ (_)  ___
 //  | (_) | /'_` )| |/' _ `\
 //  | | | |( (_| || || ( ) |
 //  (_) (_)`\__,_)(_)(_) (_)
-//                          
-//                          
+//
+//
 
 import ShaderBoy from './shaderboy'
 import io from './io/io'
@@ -52,7 +52,7 @@ ShaderBoy.init = () =>
 	}
 	else
 	{
-		throw new Error('Sorry! Your browser does not support WEBGL!')
+		throw new Error('Sorry! Your browser does not support WebGL!')
 	}
 }
 
@@ -91,6 +91,25 @@ ShaderBoy.update = () =>
 	}
 
 	gui.redraw()
+}
+
+ShaderBoy.resetViewportSize = () =>
+{
+	if(ShaderBoy !== undefined && ShaderBoy !== null)
+	{
+		ShaderBoy.canvas = document.getElementById('gl_canvas')
+		if(ShaderBoy.canvas && ShaderBoy.gl)
+		{
+			const style = window.getComputedStyle(ShaderBoy.canvas)
+			ShaderBoy.canvasWidth = parseInt(style.width, 10)
+			ShaderBoy.canvasHeight = parseInt(style.height, 10)
+			ShaderBoy.canvas.width = ShaderBoy.canvasWidth
+			ShaderBoy.canvas.height = ShaderBoy.canvasHeight
+			document.getElementById('res-x').value = ShaderBoy.canvasWidth
+			document.getElementById('res-y').value = ShaderBoy.canvasHeight
+			ShaderBoy.bufferManager.setFBOsProps()
+		}
+	}
 }
 
 // Entry point

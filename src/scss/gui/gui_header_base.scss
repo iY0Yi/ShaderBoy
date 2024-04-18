@@ -21,6 +21,11 @@
     }
 }
 
+#gui-header.splited{
+    left:50vw;
+    width:50vw;
+}
+
 %btn-interact {
     transition: all $anm-short;
     font-family: Muli, Arial, Helvetica, sans-serif;

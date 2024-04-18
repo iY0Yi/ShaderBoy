@@ -501,6 +501,17 @@ export default ShaderBoy.commands = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    toggleSplitView()
+    {
+        console.log('toggleSplitView()')
+        $('.cm-s-3024-monotone').toggleClass('color')
+        $('#gui-header').toggleClass('splited')
+        $('#gl_canvas').toggleClass('splited')
+        $('.code-container').toggleClass('splited')
+        ShaderBoy.isSplited = !ShaderBoy.isSplited
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     showRecordingHeader()
     {
         if (!ShaderBoy.isCanvasHidden)
@@ -516,8 +527,8 @@ export default ShaderBoy.commands = {
             ShaderBoy.isCodePaneHidden = false
             ShaderBoy.isKnobsHidden = false
 
-            document.getElementById('res-x').value = ShaderBoy.canvas.width
-            document.getElementById('res-y').value = ShaderBoy.canvas.height
+            document.getElementById('res-x').value = ShaderBoy.canvasWidth
+            document.getElementById('res-y').value = ShaderBoy.canvasHeight
 
             recEl.classList.remove('rec_hide')
 

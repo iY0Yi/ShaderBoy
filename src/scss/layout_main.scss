@@ -1,11 +1,25 @@
 @import 'base';
 
 #main {
+    text-align:left;
     position: relative;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
     display: block;
+}
+
+#gl_canvas{
+    width: 100vw;
+    height: 100vh;
+}
+
+#gl_canvas.splited{
+    width: 50vw;
+}
+
+#gl_snd_canvas{
+    display: none;
 }
 
 .gui {
@@ -36,6 +50,11 @@
     @include mq {
         top: $gui-size-unit-sp;
     }
+}
+
+.code-container.splited{
+    left:50vw;
+    width:50vw;
 }
 
 .code_hide {

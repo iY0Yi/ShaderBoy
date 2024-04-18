@@ -191,8 +191,8 @@ export default ShaderBoy.gui_header_rec = {
 
         ShaderBoy.gui_timeline.currentFrame = 0
 
-        ShaderBoy.canvas.width = config.resolution[0]
-        ShaderBoy.canvas.height = config.resolution[1]
+        ShaderBoy.canvasWidth = config.resolution[0]
+        ShaderBoy.canvasHeight = config.resolution[1]
         const timestamp = new Date().toISOString()
         config.name = `sb-image-${timestamp}`
 

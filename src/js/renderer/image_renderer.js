@@ -1,12 +1,12 @@
 //
-//   ___                      _                          
-//  |  _`\                   ( )                         
-//  | (_) )   __    ___     _| |   __   _ __   __   _ __ 
+//   ___                      _
+//  |  _`\                   ( )
+//  | (_) )   __    ___     _| |   __   _ __   __   _ __
 //  | ,  /  /'__`\/' _ `\ /'_` | /'__`\( '__)/'__`\( '__)
-//  | |\ \ (  ___/| ( ) |( (_| |(  ___/| |  (  ___/| |   
-//  (_) (_)`\____)(_) (_)`\__,_)`\____)(_)  `\____)(_)   
-//                                                       
-//                                                       
+//  | |\ \ (  ___/| ( ) |( (_| |(  ___/| |  (  ___/| |
+//  (_) (_)`\____)(_) (_)`\__,_)`\____)(_)  `\____)(_)
+//
+//
 
 import ShaderBoy from '../shaderboy'
 import bufferManager from '../buffer/buffer_manager'
@@ -15,10 +15,10 @@ export default ShaderBoy.imageRenderer = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	render()
 	{
+		ShaderBoy.resetViewportSize()
+
 		const gl = ShaderBoy.gl
-		const canvasWidth = (ShaderBoy.capture === null) ? gl.canvas.clientWidth : ShaderBoy.canvas.width
-		const canvasHeight = (ShaderBoy.capture === null) ? window.innerHeight : ShaderBoy.canvas.height
-		gl.viewport(0, 0, canvasWidth / ShaderBoy.renderScale, canvasHeight / ShaderBoy.renderScale)
+		gl.viewport(0, 0, ShaderBoy.canvasWidth / ShaderBoy.renderScale, ShaderBoy.canvasHeight / ShaderBoy.renderScale)
 
 		const len = ShaderBoy.activeBufferIds.length
 		for (const name of ShaderBoy.activeBufferIds)
@@ -68,7 +68,7 @@ export default ShaderBoy.imageRenderer = {
 
 		}
 
-		gl.viewport(0, 0, canvasWidth, canvasHeight)
+		gl.viewport(0, 0, ShaderBoy.canvasWidth, ShaderBoy.canvasHeight)
 		ShaderBoy.screenShader.begin()
 		ShaderBoy.screenShader.uniforms.iResolution = [ShaderBoy.uniforms.iResolution[0] * ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[1] * ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[2]]
 		ShaderBoy.screenShader.uniforms.frameTexture = 0

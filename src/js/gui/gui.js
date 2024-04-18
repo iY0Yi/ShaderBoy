@@ -1,12 +1,12 @@
 //
-//   ___    _   _  _ 
+//   ___    _   _  _
 //  (  _`\ ( ) ( )(_)
 //  | ( (_)| | | || |
 //  | |___ | | | || |
 //  | (_, )| (_) || |
 //  (____/'(_____)(_)
-//                   
-//                   
+//
+//
 
 import collectFPS from 'collect-fps'
 import ShaderBoy from '../shaderboy'
@@ -75,7 +75,7 @@ export default ShaderBoy.gui = {
 		mainEl.onmousedown = (ev) =>
 		{
 			if (ev.button == 2) return false
-			if (ShaderBoy.isEditorHidden)
+			if (ShaderBoy.isEditorHidden || ShaderBoy.isSplited)
 			{
 				console.log('onmousedown')
 				let c = ShaderBoy.canvas
@@ -91,7 +91,7 @@ export default ShaderBoy.gui = {
 
 		mainEl.onmouseup = (ev) =>
 		{
-			if (ShaderBoy.isEditorHidden)
+			if (ShaderBoy.isEditorHidden || ShaderBoy.isSplited)
 			{
 				console.log('onmouseup')
 				this.mouseIsDown = false
@@ -103,7 +103,7 @@ export default ShaderBoy.gui = {
 
 		mainEl.onmousemove = (ev) =>
 		{
-			if (ShaderBoy.isEditorHidden)
+			if (ShaderBoy.isEditorHidden || ShaderBoy.isSplited)
 			{
 				console.log('onmousemove')
 				if (this.mouseIsDown)
@@ -130,15 +130,9 @@ export default ShaderBoy.gui = {
 		{
 			if (!ShaderBoy.isRecording)
 			{
-				let wasPlaying = ShaderBoy.isPlaying
+				ShaderBoy.resetViewportSize()
+				const wasPlaying = ShaderBoy.isPlaying
 				ShaderBoy.isPlaying = false
-				let canvasWidth = Math.floor(((ShaderBoy.capture === null) ? window.innerWidth : 1920))
-				let canvasHeight = Math.floor(((ShaderBoy.capture === null) ? window.innerHeight : 1080))
-				ShaderBoy.canvas.width = canvasWidth
-				ShaderBoy.canvas.height = canvasHeight
-				document.getElementById('res-x').value = ShaderBoy.canvas.width
-				document.getElementById('res-y').value = ShaderBoy.canvas.height
-				ShaderBoy.bufferManager.setFBOsProps()
 				gui_timeline.onResize()
 				ShaderBoy.isPlaying = wasPlaying
 			}
