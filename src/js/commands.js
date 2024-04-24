@@ -509,6 +509,7 @@ export default ShaderBoy.commands = {
         $('#gl_canvas').toggleClass('splited')
         $('.code-container').toggleClass('splited')
         ShaderBoy.isSplited = !ShaderBoy.isSplited
+        ShaderBoy.resetViewportSize()
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -527,8 +528,8 @@ export default ShaderBoy.commands = {
             ShaderBoy.isCodePaneHidden = false
             ShaderBoy.isKnobsHidden = false
 
-            document.getElementById('res-x').value = ShaderBoy.canvasWidth
-            document.getElementById('res-y').value = ShaderBoy.canvasHeight
+            document.getElementById('res-x').value = ShaderBoy.canvas.width
+            document.getElementById('res-y').value = ShaderBoy.canvas.height
 
             recEl.classList.remove('rec_hide')
 

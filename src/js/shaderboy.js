@@ -28,6 +28,7 @@ const ShaderBoy = {
   isKnobsHidden: false,
   isTimelineHidden: false,
   isSplited: false,
+  isDirty: true,
 
   forceDraw: false,
   editingBuffer: '',
@@ -89,9 +90,10 @@ const ShaderBoy = {
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   getGL() {
 
-    // ShaderBoy.canvas.width = window.innerWidth
-    // ShaderBoy.canvas.height = window.innerHeight
-    ShaderBoy.resetViewportSize()
+    ShaderBoy.canvas = document.getElementById('gl_canvas')
+    ShaderBoy.canvas.width = window.innerWidth
+    ShaderBoy.canvas.height = window.innerHeight
+    // ShaderBoy.resetViewportSize()
 
     const opts = {
       alpha: false,
