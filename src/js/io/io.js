@@ -1,4 +1,4 @@
-//   _  _____ 
+//   _  _____
 //  (_)(  _  )
 //  | || ( ) |
 //  | || | | |
@@ -359,6 +359,7 @@ export default ShaderBoy.io = {
 
 		localforage.setItem('renderScale', ShaderBoy.renderScale, (error) => { if (error) { throw new Error(error) } })
 		localforage.setItem('textSize', ShaderBoy.editor.textSize, (error) => { if (error) { throw new Error(error) } })
+		localforage.setItem('isSplited', ShaderBoy.isSplited, (error) => { if (error) { throw new Error(error) } })
 
 		const promises = []
 		const saveBufferShader = (buffer, fileName) =>
@@ -471,7 +472,7 @@ export default ShaderBoy.io = {
 				for (const request of allRequests)
 				{
 					const res = request.result
-					for (const file of res.files) 
+					for (const file of res.files)
 					{
 						if (file.name === 'thumb.png')
 						{
@@ -500,13 +501,13 @@ export default ShaderBoy.io = {
 							break
 					}
 				}
-						
+
 				if (!isExist)
 				//-------------------------------------------------------------
 				{
 					const request = await gdrive.getFileInfoByName('thumb.png', folderData.id)
 					const res = request.result
-					for (const file of res.files) 
+					for (const file of res.files)
 					{
 						if (file.name === 'thumb.png')
 						{
@@ -551,6 +552,21 @@ export default ShaderBoy.io = {
 			}
 
 			ShaderBoy.editor.setTextSize(value)
+		})
+
+		localforage.getItem('isSplited', (error, value) =>
+		{
+			if (error)
+			{
+				throw new Error(error)
+			}
+
+			if (!value)
+			{
+				value = false
+			}
+
+			if(value) ShaderBoy.commands.toggleSplitView()
 		})
 
 		return Promise.resolve()
