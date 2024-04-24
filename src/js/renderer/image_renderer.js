@@ -10,15 +10,16 @@
 
 import ShaderBoy from '../shaderboy'
 import bufferManager from '../buffer/buffer_manager'
+import gui_keyboard from '../gui/gui_keyboard'
 
 export default ShaderBoy.imageRenderer = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	render()
 	{
-		ShaderBoy.resetViewportSize()
-
 		const gl = ShaderBoy.gl
-		gl.viewport(0, 0, ShaderBoy.canvasWidth / ShaderBoy.renderScale, ShaderBoy.canvasHeight / ShaderBoy.renderScale)
+		const canvasWidth = (ShaderBoy.capture === null) ? gl.canvas.clientWidth : ShaderBoy.canvas.width
+		const canvasHeight = (ShaderBoy.capture === null) ? window.innerHeight : ShaderBoy.canvas.height
+		gl.viewport(0, 0, canvasWidth / ShaderBoy.renderScale, canvasHeight / ShaderBoy.renderScale)
 
 		const len = ShaderBoy.activeBufferIds.length
 		for (const name of ShaderBoy.activeBufferIds)
@@ -42,16 +43,22 @@ export default ShaderBoy.imageRenderer = {
 			buffer.shader.uniforms.iChannel1 = 1
 			buffer.shader.uniforms.iChannel2 = 2
 			buffer.shader.uniforms.iChannel3 = 3
+			buffer.needSwap = false
 			for (let j = 0; j < 4; j++)
 			{
 				const iChannelSetting = buffer.iChannel[j]
 				let texture
 				if (iChannelSetting !== null)
 				{
-					buffer.needSwap = (name === iChannelSetting.asset)
-					texture = ShaderBoy.buffers[iChannelSetting.asset].textures[(buffer.needSwap) ? 1 : 0]
-					bufferManager.setSamplerFilter(texture, iChannelSetting.filter)
-					bufferManager.setSamplerWrap(texture, iChannelSetting.wrap)
+					if(iChannelSetting.asset==='Keyboard')
+					{
+						texture = gui_keyboard.keyboard.tex
+					}
+					else
+					{
+						buffer.needSwap = (name === iChannelSetting.asset)
+						texture = ShaderBoy.buffers[iChannelSetting.asset].textures[(buffer.needSwap) ? 1 : 0]
+					}
 				}
 				else
 				{
@@ -65,10 +72,9 @@ export default ShaderBoy.imageRenderer = {
 			buffer.shader.setShadetoyUniforms()
 			buffer.shader.drawTexture(buffer.framebuffer, buffer.textures[0])
 			buffer.shader.end()
-
 		}
 
-		gl.viewport(0, 0, ShaderBoy.canvasWidth, ShaderBoy.canvasHeight)
+		gl.viewport(0, 0, canvasWidth, canvasHeight)
 		ShaderBoy.screenShader.begin()
 		ShaderBoy.screenShader.uniforms.iResolution = [ShaderBoy.uniforms.iResolution[0] * ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[1] * ShaderBoy.renderScale, ShaderBoy.uniforms.iResolution[2]]
 		ShaderBoy.screenShader.uniforms.frameTexture = 0

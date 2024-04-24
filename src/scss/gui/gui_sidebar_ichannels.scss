@@ -296,6 +296,16 @@ select {
         }
     }
 
+    &.buf-keyboard {
+        background-image:url('data:image/svg+xml,<%3Fxml version="1.0" encoding="utf-8"%3F><!-- Generator: Adobe Illustrator 28.4.1, SVG Export Plug-In . SVG Version: 6.00 Build 0) --><svg version="1.1" id="レイヤー_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1366 768" style="enable-background:new 0 0 1366 768;" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:%23D8D4C5;}</style><g><rect x="451.14" y="253.38" class="st0" width="72.46" height="72.46"/><rect x="548.96" y="253.38" class="st0" width="72.46" height="72.46"/><rect x="646.77" y="253.38" class="st0" width="72.46" height="72.46"/><rect x="744.59" y="253.38" class="st0" width="72.46" height="72.46"/><rect x="842.4" y="253.38" class="st0" width="72.46" height="72.46"/><rect x="451.14" y="353.15" class="st0" width="72.46" height="72.46"/><rect x="548.96" y="353.15" class="st0" width="72.46" height="72.46"/><rect x="646.77" y="353.15" class="st0" width="72.46" height="72.46"/><rect x="744.59" y="353.15" class="st0" width="72.46" height="72.46"/><rect x="842.4" y="353.15" class="st0" width="72.46" height="72.46"/><rect x="451.14" y="452.92" class="st0" width="72.46" height="72.46"/><rect x="548.96" y="452.92" class="st0" width="72.46" height="72.46"/><rect x="646.77" y="452.92" class="st0" width="72.46" height="72.46"/><rect x="744.59" y="452.92" class="st0" width="72.46" height="72.46"/><rect x="842.4" y="452.92" class="st0" width="72.46" height="72.46"/></g><rect x="474.91" y="156.91" class="st0" width="24.92" height="72.46"/></svg>');
+        background-repeat: no-repeat;
+        background-position: center center;
+
+        @include mq {
+            background-size: 38%;
+        }
+    }
+
     &.buf-null {
         background-image: url('data:image/svg+xml;charset=utf8,%3Csvg%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2247.2px%22%20height%3D%2232.8px%22%20viewBox%3D%220%200%2047.2%2032.8%22%20style%3D%22enable-background%3Anew%200%200%2047.2%2032.8%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%232A2A2A%3B%7D%3C%2Fstyle%3E%3Cdefs%3E%3C%2Fdefs%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M44.8%2C4.8v25.6h-40v2.4h42.4v-28H44.8z%20M42.4%2C0H0v28h42.4V0z%20M26.3%2C15.22h-7.03v-1.63h7.03V15.22z%22%2F%3E%3C%2Fsvg%3E');
         background-repeat: no-repeat;
