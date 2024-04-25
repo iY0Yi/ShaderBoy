@@ -35,7 +35,7 @@ a {
 .logo {
     position: relative;
     width: 300px;
-    height: calc(300px*0.23);
+    height: calc(300px*.27);
     top: 5vh;
     opacity: 0;
     background-image: url(./img/sb_logo.svg);
