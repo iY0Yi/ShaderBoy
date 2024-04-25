@@ -415,8 +415,8 @@
 
 
 %notif-base {
-    // width: auto;
-    width: $gui-size-unit*3;
+    width: auto;
+    // width: $gui-size-unit*3;
     padding: 0px 15px;
 
     @include mq {
@@ -427,13 +427,13 @@
 .ghdr-notif {
     transition: all $anm-short;
     position: absolute;
-    left: 0;
+    right: $gui-size-unit*5;
 
     padding: 0px;
     display: flex;
     // display: inline-block;
-    // justify-content: flex-start;
-    justify-content: center;
+    justify-content: flex-start;
+    // justify-content: center;
     align-items: center;
     vertical-align: middle;
     // padding-bottom: 3px;
