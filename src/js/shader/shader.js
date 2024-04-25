@@ -210,6 +210,7 @@ export default class Shader
 		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel1'), 1)
 		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel2'), 2)
 		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel3'), 3)
+		gl.uniform1fv(gl.getUniformLocation(this.program, 'iWheel'), new Float32Array(this.uniforms.iWheel))
 	}
 
 	setShadetoySoundShaderUniforms()
@@ -217,8 +218,6 @@ export default class Shader
 		gl.uniform1f(gl.getUniformLocation(this.program, 'iBlockOffset'), this.uniforms.iBlockOffset)
 		gl.uniform1f(gl.getUniformLocation(this.program, 'iSampleRate'), this.uniforms.iSampleRate)
 	}
-
-
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setUniforms()

@@ -11,6 +11,7 @@
 import ShaderBoy from '../shaderboy'
 import bufferManager from '../buffer/buffer_manager'
 import gui_keyboard from '../gui/gui_keyboard'
+import gui_sidebar_ichannels from '../gui/gui_sidebar_ichannels'
 
 export default ShaderBoy.imageRenderer = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,6 +44,7 @@ export default ShaderBoy.imageRenderer = {
 			buffer.shader.uniforms.iChannel1 = 1
 			buffer.shader.uniforms.iChannel2 = 2
 			buffer.shader.uniforms.iChannel3 = 3
+			buffer.shader.uniforms.iWheel = ShaderBoy.uniforms.iWheel
 			buffer.needSwap = false
 			for (let j = 0; j < 4; j++)
 			{
@@ -53,6 +55,11 @@ export default ShaderBoy.imageRenderer = {
 					if(iChannelSetting.asset==='Keyboard')
 					{
 						texture = gui_keyboard.keyboard.tex
+					}
+					else
+					if(iChannelSetting.asset==='Font')
+					{
+						texture = gui_sidebar_ichannels.fontTexture
 					}
 					else
 					{

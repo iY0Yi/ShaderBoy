@@ -3,7 +3,7 @@ import ShaderBoy from '../shaderboy'
 export default ShaderBoy.gui_sidebar_ichannels = {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    bufClasses: ['buf-null', 'buf-a', 'buf-b', 'buf-c', 'buf-d', 'buf-keyboard'],
+    bufClasses: ['buf-null', 'buf-a', 'buf-b', 'buf-c', 'buf-d', 'buf-keyboard', 'buf-font'],
     panelClick(event)
     {
         const curBufName = ShaderBoy.activeBufferIds[ShaderBoy.bufferManager.currentBufferDataId]
@@ -34,6 +34,8 @@ export default ShaderBoy.gui_sidebar_ichannels = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     setup()
     {
+        this.fontTexture = ShaderBoy.loadTexture('/img/codepage12.png')
+
         const astpnls = document.querySelectorAll('.asset-panel')
         for (let i = 0; i < astpnls.length; i++)
         {
@@ -45,6 +47,7 @@ export default ShaderBoy.gui_sidebar_ichannels = {
                 astpnls[i].classList.remove('buf-d')
                 astpnls[i].classList.add('buf-null')
                 astpnls[i].classList.remove('buf-keyboard')
+                astpnls[i].classList.remove('buf-font')
             }
 
             astpnls[i].onclick = this.panelClick
@@ -182,6 +185,7 @@ export default ShaderBoy.gui_sidebar_ichannels = {
             if (bufClass === 'buf-c') bufName = 'BufferC'
             if (bufClass === 'buf-d') bufName = 'BufferD'
             if (bufClass === 'buf-keyboard') bufName = 'Keyboard'
+            if (bufClass === 'buf-font') bufName = 'Font'
             ShaderBoy.config.buffers[curBufName].iChannel[id].asset = bufName
 
             const drpdwn = document.querySelectorAll('.dropdown.ichannels-drpdwn')
@@ -212,6 +216,7 @@ export default ShaderBoy.gui_sidebar_ichannels = {
                 pnl.classList.remove('buf-d')
                 pnl.classList.remove('buf-null')
                 pnl.classList.remove('buf-keyboard')
+                pnl.classList.remove('buf-font')
                 pnl.onclick = this.panelClick
             }
 
@@ -227,6 +232,7 @@ export default ShaderBoy.gui_sidebar_ichannels = {
                 if (ichannelConfig[id].asset === 'BufferC') bufClass = 'buf-c'
                 if (ichannelConfig[id].asset === 'BufferD') bufClass = 'buf-d'
                 if (ichannelConfig[id].asset === 'Keyboard') bufClass = 'buf-keyboard'
+                if (ichannelConfig[id].asset === 'Font') bufClass = 'buf-font'
                 assetEl.classList.add(bufClass)
 
                 const drpdwn = document.querySelectorAll('.dropdown.ichannels-drpdwn')
@@ -254,8 +260,9 @@ export default ShaderBoy.gui_sidebar_ichannels = {
                 astpnls[i].classList.remove('buf-b')
                 astpnls[i].classList.remove('buf-c')
                 astpnls[i].classList.remove('buf-d')
-                astpnls[i].classList.add('buf-null')
                 astpnls[i].classList.remove('buf-keyboard')
+                astpnls[i].classList.remove('buf-font')
+                astpnls[i].classList.add('buf-null')
                 const channelEl = document.getElementById(`ichannel${i}`)
                 channelEl.classList.add('null')
                 const drpdwn = document.querySelectorAll('.dropdown.ichannels-drpdwn')

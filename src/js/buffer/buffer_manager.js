@@ -116,7 +116,7 @@ export default ShaderBoy.bufferManager = {
                         const newChannelSetting = ShaderBoy.config.buffers[name].iChannel[i]
                         if (newChannelSetting.asset !== null)
                         {
-                            const ASSETS_NAME = ['BufferA', 'BufferB', 'BufferC', 'BufferD', 'Keyboard']
+                            const ASSETS_NAME = ['BufferA', 'BufferB', 'BufferC', 'BufferD', 'Keyboard', 'Font']
                             if (ASSETS_NAME.indexOf(newChannelSetting.asset) >= 0)
                             {
                                 ShaderBoy.buffers[name].iChannel[i] = newChannelSetting
@@ -304,7 +304,8 @@ export default ShaderBoy.bufferManager = {
                             'iChannel1': 1,                               // input channel. XX = 2D/Cube
                             'iChannel2': 2,                               // input channel. XX = 2D/Cube
                             'iChannel3': 3,                               // input channel. XX = 2D/Cube
-                            'iSampleRate': 44100
+                            'iSampleRate': 44100,
+                            'iWheel': ShaderBoy.uniforms.iWheel          // wheel event [deltaX, cumulativeX, deltaY, cumulativeY, deltaZ, cumulativeZ]
                             // 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
                             // 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
                         }
