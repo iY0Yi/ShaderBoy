@@ -416,6 +416,7 @@
 
 %notif-base {
     width: auto;
+    // width: $gui-size-unit*3;
     padding: 0px 15px;
 
     @include mq {
@@ -432,6 +433,7 @@
     display: flex;
     // display: inline-block;
     justify-content: flex-start;
+    // justify-content: center;
     align-items: center;
     vertical-align: middle;
     // padding-bottom: 3px;

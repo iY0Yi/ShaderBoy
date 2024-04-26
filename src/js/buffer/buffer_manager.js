@@ -116,7 +116,7 @@ export default ShaderBoy.bufferManager = {
                         const newChannelSetting = ShaderBoy.config.buffers[name].iChannel[i]
                         if (newChannelSetting.asset !== null)
                         {
-                            const ASSETS_NAME = ['BufferA', 'BufferB', 'BufferC', 'BufferD']
+                            const ASSETS_NAME = ['BufferA', 'BufferB', 'BufferC', 'BufferD', 'Keyboard', 'Font']
                             if (ASSETS_NAME.indexOf(newChannelSetting.asset) >= 0)
                             {
                                 ShaderBoy.buffers[name].iChannel[i] = newChannelSetting
@@ -304,7 +304,8 @@ export default ShaderBoy.bufferManager = {
                             'iChannel1': 1,                               // input channel. XX = 2D/Cube
                             'iChannel2': 2,                               // input channel. XX = 2D/Cube
                             'iChannel3': 3,                               // input channel. XX = 2D/Cube
-                            'iSampleRate': 44100
+                            'iSampleRate': 44100,
+                            'iWheel': ShaderBoy.uniforms.iWheel          // wheel event [deltaX, cumulativeX, deltaY, cumulativeY, deltaZ, cumulativeZ]
                             // 'iChannelTime': [iTime, iTime, iTime, iTime],			 // channel playback time (in seconds)
                             // 'iChannelResolution':[iResolution, iResolution, iResolution, iResolution],    // channel resolution (in pixels)
                         }
@@ -406,8 +407,9 @@ export default ShaderBoy.bufferManager = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     setFBOsProps()
     {
-        const canvasWidth = Math.floor(ShaderBoy.canvasWidth / ShaderBoy.renderScale)
-        const canvasHeight = Math.floor(ShaderBoy.canvasHeight / ShaderBoy.renderScale)
+        const gl = ShaderBoy.gl
+        const canvasWidth = Math.floor(((ShaderBoy.capture === null) ? gl.canvas.clientWidth : ShaderBoy.canvas.width) / ShaderBoy.renderScale)
+        const canvasHeight = Math.floor(((ShaderBoy.capture === null) ? window.innerHeight : ShaderBoy.canvas.height) / ShaderBoy.renderScale)
         ShaderBoy.uniforms.iResolution[0] = canvasWidth
         ShaderBoy.uniforms.iResolution[1] = canvasHeight
 
@@ -429,14 +431,12 @@ export default ShaderBoy.bufferManager = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initFBOs()
     {
-        ShaderBoy.resetViewportSize()
-        const canvasWidth = Math.floor(ShaderBoy.canvasWidth / ShaderBoy.renderScale)
-        const canvasHeight = Math.floor(ShaderBoy.canvasHeight / ShaderBoy.renderScale)
+        const gl = ShaderBoy.gl
+        const canvasWidth = Math.floor(((ShaderBoy.capture === null) ? gl.canvas.clientWidth : ShaderBoy.canvas.width) / ShaderBoy.renderScale)
+        const canvasHeight = Math.floor(((ShaderBoy.capture === null) ? window.innerHeight : ShaderBoy.canvas.height) / ShaderBoy.renderScale)
         ShaderBoy.uniforms.iResolution[0] = canvasWidth
         ShaderBoy.uniforms.iResolution[1] = canvasHeight
 
-        // Just for Shadertoy compativility...
-        const gl = ShaderBoy.gl
         this.tempTexture = gl.createTexture()
         gl.bindTexture(gl.TEXTURE_2D, this.tempTexture)
         gl.clearColor(0.0, 0.0, 0.0, 1.0)

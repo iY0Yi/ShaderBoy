@@ -14,6 +14,7 @@ import gui_header from './gui_header'
 import gui_header_rec from './gui_header_rec'
 import gui_knobs from './gui_knobs'
 import gui_midi from './gui_midi'
+import gui_keyboard from './gui_keyboard'
 import gui_panel_shaderlist from './gui_panel_shaderlist'
 import gui_panel_textform from './gui_panel_textform'
 import gui_sidebar_ichannels from './gui_sidebar_ichannels'
@@ -43,6 +44,7 @@ export default ShaderBoy.gui = {
 		gui_header_rec.setup()
 		gui_knobs.setup()
 		gui_midi.setup()
+		gui_keyboard.setup()
 		gui_timeline.setup()
 		gui_panel_shaderlist.setup()
 		gui_panel_textform.setup()
@@ -71,53 +73,95 @@ export default ShaderBoy.gui = {
 		let scrollMul = 1
 		if (ShaderBoy.OS === 'Windows') { scrollMul = 100.0; }
 
-		let mainEl = document.getElementById('main')
-		mainEl.onmousedown = (ev) =>
+		function calcMouseX(ev){
+			let c = ShaderBoy.canvas
+			let rect = c.getBoundingClientRect()
+			return Math.floor((ev.clientX - rect.left) / (rect.right - rect.left) * c.width)
+		}
+
+		function calcMouseY(ev){
+			let c = ShaderBoy.canvas
+			let rect = c.getBoundingClientRect()
+			return Math.floor(c.height - (ev.clientY - rect.top) / (rect.bottom - rect.top) * c.height)
+		}
+
+		function onCanvas(ev){
+			const rect = ShaderBoy.canvas.getBoundingClientRect();
+			const mouseX = ev.clientX;
+			const mouseY = ev.clientY;
+
+			return (mouseX >= rect.left &&
+				mouseX <= rect.right &&
+				mouseY >= rect.top &&
+				mouseY <= rect.bottom)
+		}
+
+		document.onmousedown = (ev) =>
 		{
 			if (ev.button == 2) return false
-			if (ShaderBoy.isEditorHidden || ShaderBoy.isSplited)
+			if (ShaderBoy.isEditorHidden || (ShaderBoy.isSplited && onCanvas(ev)))
 			{
-				console.log('onmousedown')
-				let c = ShaderBoy.canvas
-				let rect = c.getBoundingClientRect()
-				this.mouseOriX = Math.floor((ev.clientX - rect.left) / (rect.right - rect.left) * c.width)
-				this.mouseOriY = Math.floor(c.height - (ev.clientY - rect.top) / (rect.bottom - rect.top) * c.height)
+				this.mouseIsDown = true
+				this.mouseOriX = calcMouseX(ev)
+				this.mouseOriY = calcMouseY(ev)
 				this.mousePosX = this.mouseOriX
 				this.mousePosY = this.mouseOriY
-				this.mouseIsDown = true
 				ShaderBoy.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY]
+				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 			}
 		}
 
-		mainEl.onmouseup = (ev) =>
+		document.onmouseup = (ev) =>
 		{
-			if (ShaderBoy.isEditorHidden || ShaderBoy.isSplited)
+			if (ShaderBoy.isEditorHidden || (ShaderBoy.isSplited && onCanvas(ev)))
 			{
-				console.log('onmouseup')
 				this.mouseIsDown = false
-				this.mouseOriX = -Math.abs(this.mouseOriX)
-				this.mouseOriY = -Math.abs(this.mouseOriY)
+				this.mouseOriX=Math.abs(this.mouseOriX)*-1
+				this.mouseOriY=Math.abs(this.mouseOriY)*-1
 				ShaderBoy.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY]
+				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 			}
 		}
 
-		mainEl.onmousemove = (ev) =>
+		document.onmousemove = (ev) =>
 		{
-			if (ShaderBoy.isEditorHidden || ShaderBoy.isSplited)
+			if (ShaderBoy.isEditorHidden || (ShaderBoy.isSplited && onCanvas(ev)))
 			{
-				console.log('onmousemove')
 				if (this.mouseIsDown)
 				{
-					let c = ShaderBoy.canvas
-					let rect = c.getBoundingClientRect()
-					this.mousePosX = Math.floor((ev.clientX - rect.left) / (rect.right - rect.left) * c.width)
-					this.mousePosY = Math.floor(c.height - (ev.clientY - rect.top) / (rect.bottom - rect.top) * c.height)
+					this.mousePosX = calcMouseX(ev)
+					this.mousePosY = calcMouseY(ev)
+					this.mouseOriX=Math.abs(this.mouseOriX)
+					this.mouseOriY=Math.abs(this.mouseOriY)*-1
 					ShaderBoy.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY]
+					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 				}
 			}
 		}
 
-		mainEl.contextmenu = (ev) =>
+		this.iWheelCumulative = [0,0,0]
+
+		document.addEventListener('wheel', (ev) =>
+		{
+			if (ShaderBoy.isEditorHidden || (ShaderBoy.isSplited && onCanvas(ev)))
+			{
+				this.iWheelCumulative[0] += ev.deltaX
+				this.iWheelCumulative[1] += ev.deltaY
+				this.iWheelCumulative[2] += ev.deltaZ
+
+				ShaderBoy.uniforms.iWheel = [
+					ev.deltaX,
+					this.iWheelCumulative[0],
+					ev.deltaY,
+					this.iWheelCumulative[1],
+					ev.deltaZ,
+					this.iWheelCumulative[2],
+				]
+				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
+			}
+		})
+
+		document.contextmenu = (ev) =>
 		{
 			ev.preventDefault()
 		}
@@ -131,10 +175,6 @@ export default ShaderBoy.gui = {
 			if (!ShaderBoy.isRecording)
 			{
 				ShaderBoy.resetViewportSize()
-				const wasPlaying = ShaderBoy.isPlaying
-				ShaderBoy.isPlaying = false
-				gui_timeline.onResize()
-				ShaderBoy.isPlaying = wasPlaying
 			}
 			else
 			{

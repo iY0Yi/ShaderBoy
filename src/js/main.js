@@ -15,6 +15,7 @@ import imageRenderer from './renderer/image_renderer'
 import soundRenderer from './renderer/sound_renderer'
 import gui_header from './gui/gui_header'
 import gui_header_rec from './gui/gui_header_rec'
+import gui_timeline from './gui/gui_timeline'
 import editor from './editor/editor'
 import bufferManager from './buffer/buffer_manager'
 import ShaderLib from './shader/shaderlib'
@@ -95,21 +96,26 @@ ShaderBoy.update = () =>
 
 ShaderBoy.resetViewportSize = () =>
 {
-	if(ShaderBoy !== undefined && ShaderBoy !== null)
-	{
-		ShaderBoy.canvas = document.getElementById('gl_canvas')
-		if(ShaderBoy.canvas && ShaderBoy.gl)
-		{
-			const style = window.getComputedStyle(ShaderBoy.canvas)
-			ShaderBoy.canvasWidth = parseInt(style.width, 10)
-			ShaderBoy.canvasHeight = parseInt(style.height, 10)
-			ShaderBoy.canvas.width = ShaderBoy.canvasWidth
-			ShaderBoy.canvas.height = ShaderBoy.canvasHeight
-			document.getElementById('res-x').value = ShaderBoy.canvasWidth
-			document.getElementById('res-y').value = ShaderBoy.canvasHeight
-			ShaderBoy.bufferManager.setFBOsProps()
-		}
+	let wasPlaying = ShaderBoy.isPlaying
+	ShaderBoy.isPlaying = false
+
+	const canvas = ShaderBoy.canvas
+	const style = window.getComputedStyle(canvas)
+	let canvasWidth = parseInt(style.width, 10)
+	let canvasHeight = parseInt(style.height, 10)
+
+	if(ShaderBoy.capture !== null){
+		canvasWidth = 1920
+		canvasHeight = 1080
 	}
+
+	ShaderBoy.canvas.width = canvasWidth
+	ShaderBoy.canvas.height = canvasHeight
+	document.getElementById('res-x').value = ShaderBoy.canvas.width
+	document.getElementById('res-y').value = ShaderBoy.canvas.height
+	ShaderBoy.bufferManager.setFBOsProps()
+	gui_timeline.onResize()
+	ShaderBoy.isPlaying = wasPlaying
 }
 
 // Entry point

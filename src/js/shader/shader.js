@@ -210,6 +210,7 @@ export default class Shader
 		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel1'), 1)
 		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel2'), 2)
 		gl.uniform1i(gl.getUniformLocation(this.program, 'iChannel3'), 3)
+		gl.uniform1fv(gl.getUniformLocation(this.program, 'iWheel'), new Float32Array(this.uniforms.iWheel))
 	}
 
 	setShadetoySoundShaderUniforms()
@@ -217,8 +218,6 @@ export default class Shader
 		gl.uniform1f(gl.getUniformLocation(this.program, 'iBlockOffset'), this.uniforms.iBlockOffset)
 		gl.uniform1f(gl.getUniformLocation(this.program, 'iSampleRate'), this.uniforms.iSampleRate)
 	}
-
-
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setUniforms()
@@ -320,52 +319,14 @@ export default class Shader
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setTextureSlot(id)
 	{
-		switch (id)
-		{
-			case 0:
-				gl.activeTexture(gl.TEXTURE0)
-				break
-			case 1:
-				gl.activeTexture(gl.TEXTURE1)
-				break
-			case 2:
-				gl.activeTexture(gl.TEXTURE2)
-				break
-			case 3:
-				gl.activeTexture(gl.TEXTURE3)
-				break
-			default:
-				gl.activeTexture(gl.TEXTURE0)
-				break
-		}
+		gl.activeTexture(gl.TEXTURE0+id)
 	}
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setTexture2d(id, texture)
 	{
-		switch (id)
-		{
-			case 0:
-				gl.activeTexture(gl.TEXTURE0)
-				gl.bindTexture(gl.TEXTURE_2D, texture)
-				break
-			case 1:
-				gl.activeTexture(gl.TEXTURE1)
-				gl.bindTexture(gl.TEXTURE_2D, texture)
-				break
-			case 2:
-				gl.activeTexture(gl.TEXTURE2)
-				gl.bindTexture(gl.TEXTURE_2D, texture)
-				break
-			case 3:
-				gl.activeTexture(gl.TEXTURE3)
-				gl.bindTexture(gl.TEXTURE_2D, texture)
-				break
-			default:
-				gl.activeTexture(gl.TEXTURE0)
-				gl.bindTexture(gl.TEXTURE_2D, texture)
-				break
-		}
+		gl.activeTexture(gl.TEXTURE0+id)
+		gl.bindTexture(gl.TEXTURE_2D, texture)
 	}
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
