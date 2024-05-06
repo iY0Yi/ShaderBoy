@@ -162,7 +162,7 @@ export default ShaderBoy.bufferManager = {
             commonCode = ShaderBoy.buffers['Common'].cm.getValue()
             ShaderBoy.shaderCommonLines = commonCode.split(/\n/).length - 1
         }
-        return commonCode
+        return commonCode + '\n'
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
