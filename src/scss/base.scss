@@ -48,7 +48,7 @@ $anm-long: 0.8s ease-in-out;
     background: transparent;
 }
 
-$breakpoint: 735px;
+$breakpoint: 1080px;
 
 @mixin mq {
     @media screen and (max-width: $breakpoint) {

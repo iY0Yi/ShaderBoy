@@ -30,12 +30,13 @@ a {
     -webkit-animation: fadein-base 3.0s ease 0.5s 1 forwards;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    text-align: center;
 }
 
 .logo {
     position: relative;
     width: 300px;
-    height: calc(300px*.27);
+    height: calc(300px*.254767362812831);
     top: 5vh;
     opacity: 0;
     background-image: url(./img/sb_logo.svg);
@@ -64,12 +65,12 @@ a {
 
 .discription {
     position: relative;
-    text-align: justify;
+    text-align: center;
     letter-spacing: 0.05px;
     text-justify: inter-word;
     line-height: 17px;
-    margin-top: 5px;
-    width: 293px;
+    margin-top: 15px;
+    width: 300px;
     height: 115px;
     font-size: 12px;
     opacity: 0;
@@ -199,10 +200,10 @@ a {
     background-size: 100%;
 }
 
-@media (orientation: landscape) and (max-width: 768px) {
+@media (orientation: landscape) and (max-width: 1080px) {
     .logo {
-        width: 35vw;
-        height: calc(35vw*0.223);
+        width: 33vw;
+        height: calc(33vw*0.254767362812831);
     }
 
     .discription {
@@ -227,8 +228,8 @@ a {
     .alert_ios {
         margin-top: 1.0vw;
         margin-left: 0.0vw;
-        display: flex;
-        text-align: justify;
+        display: block;
+        text-align: center;
         letter-spacing: 0.03vw;
         line-height: 2.2vw;
         font-size: 1.5vw;
@@ -246,14 +247,14 @@ a {
 
     .logo {
         width: 60vw;
-        height: calc(60vw*0.225);
+        height: calc(60vw*0.254767362812831);
     }
 
     .discription {
         letter-spacing: 0.03vw;
         line-height: 4vw;
         margin-top: 3vw;
-        width: 59vw;
+        width: 60vw;
         height: 35vw;
         font-size: 2.75vw;
     }
@@ -262,8 +263,8 @@ a {
         margin-top: -3.0vw;
         line-height: 3.5vw;
         margin-left: 0.0vw;
-        display: flex;
-        text-align: justify;
+        display: block;
+        text-align: center;
         letter-spacing: 0.03vw;
         font-size: 2.5vw;
         width: 59vw;

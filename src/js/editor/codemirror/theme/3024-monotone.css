@@ -12,7 +12,7 @@
     background: #00000000;
     color: #848484;
     letter-spacing: 0px;
-    line-height: 1.1;
+    line-height: .5;
 }
 
 /* .cm-s-3024-monotone div.CodeMirror-selected {
@@ -46,7 +46,7 @@
     letter-spacing: 0.0em; */
     /**/
     font-family: 'Overpass Mono', monospace;
-    line-height: 1.3;
+    line-height: 1;
     letter-spacing: 0.0em;
 
     /**/
@@ -150,6 +150,8 @@
 .cm-s-3024-monotone span.cm-def,
 .cm-s-3024-monotone span.cm-bracket,
 .cm-s-3024-monotone span.cm-tag,
+.cm-s-3024-monotone span.cm-tab,
+.cm-s-3024-monotone span.cm-meta,
 .cm-s-3024-monotone span.cm-link,
 .cm-s-3024-monotone span.cm-builtin {
     background: #1F1F1F00;
@@ -272,7 +274,7 @@
     background: #d8d4c555;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 1080px) {
     .cm-s-3024-monotone .CodeMirror-gutters {
         background: #1F1F1FDD;
     }
@@ -334,7 +336,7 @@
 .win .cm-s-3024-monotone .CodeMirror-line>span,
 .win .cm-s-3024-monotone .CodeMirror-line>span>span,
 .win .cm-s-3024-monotone .CodeMirror-line::after {
-    line-height: 1.1;
-    padding-top: 0.2em;
-    padding-bottom: 0.05em;
+    line-height: 1.255;
+    padding-top: 0em;
+    padding-bottom: 0em;
 }

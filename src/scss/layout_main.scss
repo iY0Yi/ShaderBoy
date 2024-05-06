@@ -3,19 +3,20 @@
 #main {
     text-align:left;
     position: relative;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     overflow: hidden;
     display: block;
+    // padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 #gl_canvas{
-    width: 100vw;
+    width: 100%;
     height: 100vh;
 }
 
 #gl_canvas.splited{
-    width: 50vw;
+    width: 50%;
 }
 
 #gl_snd_canvas{
@@ -41,7 +42,7 @@
     display: flex;
     overflow: hidden;
 
-    width: 100vw;
+    width: 100%;
 
     // transition: all $anm-middle;
 
