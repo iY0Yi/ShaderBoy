@@ -19,7 +19,7 @@ import gui_panel_shaderlist from './gui_panel_shaderlist'
 import gui_panel_textform from './gui_panel_textform'
 import gui_sidebar_ichannels from './gui_sidebar_ichannels'
 import gui_timeline from './gui_timeline'
-
+import commands from '../commands'
 
 export default ShaderBoy.gui = {
 
@@ -71,7 +71,7 @@ export default ShaderBoy.gui = {
 	setupMouse()
 	{
 		let scrollMul = 1
-		if (ShaderBoy.OS === 'Windows') { scrollMul = 100.0; }
+		if (ShaderBoy.OS === 'Windows') { scrollMul = 100.0 }
 
 		function calcMouseX(ev){
 			let c = ShaderBoy.canvas
@@ -86,9 +86,9 @@ export default ShaderBoy.gui = {
 		}
 
 		function onCanvas(ev){
-			const rect = ShaderBoy.canvas.getBoundingClientRect();
-			const mouseX = ev.clientX;
-			const mouseY = ev.clientY;
+			const rect = ShaderBoy.canvas.getBoundingClientRect()
+			const mouseX = ev.clientX
+			const mouseY = ev.clientY
 
 			return (mouseX >= rect.left &&
 				mouseX <= rect.right &&
@@ -96,48 +96,61 @@ export default ShaderBoy.gui = {
 				mouseY <= rect.bottom)
 		}
 
-		document.onmousedown = (ev) =>
-		{
+		function onMouseDown(ev){
 			if (ev.button == 2) return false
 			if (ShaderBoy.isEditorHidden || (ShaderBoy.isSplited && onCanvas(ev)))
 			{
-				this.mouseIsDown = true
-				this.mouseOriX = calcMouseX(ev)
-				this.mouseOriY = calcMouseY(ev)
-				this.mousePosX = this.mouseOriX
-				this.mousePosY = this.mouseOriY
-				ShaderBoy.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY]
+				const gui = ShaderBoy.gui
+				gui.mouseIsDown = true
+				gui.mouseOriX = calcMouseX(ev)
+				gui.mouseOriY = calcMouseY(ev)
+				gui.mousePosX = gui.mouseOriX
+				gui.mousePosY = gui.mouseOriY
+				ShaderBoy.uniforms.iMouse = [gui.mousePosX, gui.mousePosY, gui.mouseOriX, gui.mouseOriY]
 				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 			}
 		}
 
-		document.onmouseup = (ev) =>
-		{
+		function onMouseUp(ev){
 			if (ShaderBoy.isEditorHidden || (ShaderBoy.isSplited && onCanvas(ev)))
 			{
-				this.mouseIsDown = false
-				this.mouseOriX=Math.abs(this.mouseOriX)*-1
-				this.mouseOriY=Math.abs(this.mouseOriY)*-1
-				ShaderBoy.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY]
+				const gui = ShaderBoy.gui
+				gui.mouseIsDown = false
+				gui.mouseOriX=Math.abs(gui.mouseOriX)*-1
+				gui.mouseOriY=Math.abs(gui.mouseOriY)*-1
+				ShaderBoy.uniforms.iMouse = [gui.mousePosX, gui.mousePosY, gui.mouseOriX, gui.mouseOriY]
 				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 			}
 		}
 
-		document.onmousemove = (ev) =>
-		{
+		function onMouseUp(ev){
 			if (ShaderBoy.isEditorHidden || (ShaderBoy.isSplited && onCanvas(ev)))
 			{
-				if (this.mouseIsDown)
+				const gui = ShaderBoy.gui
+				if (gui.mouseIsDown)
 				{
-					this.mousePosX = calcMouseX(ev)
-					this.mousePosY = calcMouseY(ev)
-					this.mouseOriX=Math.abs(this.mouseOriX)
-					this.mouseOriY=Math.abs(this.mouseOriY)*-1
-					ShaderBoy.uniforms.iMouse = [this.mousePosX, this.mousePosY, this.mouseOriX, this.mouseOriY]
+					gui.mousePosX = calcMouseX(ev)
+					gui.mousePosY = calcMouseY(ev)
+					gui.mouseOriX=Math.abs(gui.mouseOriX)
+					gui.mouseOriY=Math.abs(gui.mouseOriY)*-1
+					ShaderBoy.uniforms.iMouse = [gui.mousePosX, gui.mousePosY, gui.mouseOriX, gui.mouseOriY]
 					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 				}
 			}
 		}
+
+		document.onmousedown = (ev) => {onMouseDown(ev)}
+		document.onmouseup = (ev) => {onMouseUp(ev)}
+		document.onmousemove = (ev) => {onMouseUp(ev)}
+
+		function touchToMouse(ev){
+			const touches = ev.changedTouches
+			return {'clientX': touches[0].pageX, 'clientY': touches[0].pageY}
+		}
+
+		document.addEventListener('touchstart', (ev) => {onMouseDown(touchToMouse(ev))})
+		document.addEventListener('touchend', (ev) => {onMouseUp(touchToMouse(ev))})
+		document.addEventListener('touchmove', (ev) => {onMouseUp(touchToMouse(ev))})
 
 		this.iWheelCumulative = [0,0,0]
 
@@ -160,6 +173,12 @@ export default ShaderBoy.gui = {
 				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
 			}
 		})
+
+		if(ShaderBoy.OS === 'Android')
+        {
+			document.addEventListener('touchend', commands.toggleFullscreen)
+			document.addEventListener('mouseup', commands.toggleFullscreen)
+        }
 
 		document.contextmenu = (ev) =>
 		{
