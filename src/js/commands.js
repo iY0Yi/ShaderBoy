@@ -215,6 +215,78 @@ export default ShaderBoy.commands = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    toggleFullscreen()
+    {
+        if(ShaderBoy.OS === 'Android')
+        {
+            if(!document.fullscreenElement) {
+                document.documentElement.requestFullscreen()
+            }
+        }
+        else
+        {
+            if(!document.fullscreenElement) {
+                document.documentElement.requestFullscreen()
+            }else if(document.exitFullscreen) {
+                document.exitFullscreen()
+            }
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    importShader()
+    {
+        if (ShaderBoy.isTrialMode)
+        {
+            alert('Oops! You are in test mode. Please reload this page and authorize.')
+            return
+        }
+
+        // "Set focus on div contenteditable element":
+        // via: https://stackoverflow.com/questions/2388164/set-focus-on-div-contenteditable-element
+        const form = document.getElementById("div-textarea")
+        form.contentEditable = "true"
+        setTimeout(() =>
+        {
+            form.focus();
+        }, 0);
+
+        gui_panel_textform.reset('Shader ID', '', () =>
+        {
+            console.log(gui_panel_textform.result)
+            const shaderID = gui_panel_textform.result;
+            const apiKey = 'fdrtwW';
+            const url = `https://www.shadertoy.com/api/v1/shaders/${shaderID}?key=${apiKey}`;
+            console.log('url: ', url)
+
+            fetch(url)
+                .then(response => response.json()) // レスポンスのJSONを解析
+                .then(data => {
+                    console.log(data); // 取得したシェーダのデータをコンソールに表示
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error); // エラーハンドリング
+                });
+
+            // ShaderBoy.io.newShader(gui_panel_textform.result, false)
+        })
+        const textformEl = document.getElementById('gp-textarea')
+        const shaderlistEl = document.getElementById('gp-shader-list')
+        if (textformEl.classList.contains('hide')) textformEl.classList.remove('hide')
+        if (!shaderlistEl.classList.contains('hide')) shaderlistEl.classList.add('hide')
+        ShaderBoy.commands.pauseTimeline()
+
+        ShaderBoy.editor.codemirror.display.input.blur()
+        key('esc', () =>
+        {
+            document.getElementById("div-textarea").contentEditable = "false"
+            gui_panel_textform.reset('', () => { })
+            ShaderBoy.commands.playTimeline()
+            key.unbind('esc')
+        })
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     forkShader()
     {
         if (ShaderBoy.isTrialMode)
