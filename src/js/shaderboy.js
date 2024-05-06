@@ -71,20 +71,20 @@ const ShaderBoy = {
 
   detectOS() {
     // Detect your OS.
-    ShaderBoy.OS = 'Android' // default
     const ua = navigator.userAgent;
-    if (ua.indexOf('Windows') > -1) ShaderBoy.OS = 'Windows'
-    else if (ua.indexOf('iPhone') > -1) ShaderBoy.OS = 'iOS'
-    else if (ua.indexOf('iPad') > -1) ShaderBoy.OS = 'iPadOS'
-    else if (ua.indexOf('Mac') > -1){
-      if(!('ontouchend' in document)) ShaderBoy.OS = 'MacOS'
-      else ShaderBoy.OS = 'iPadOS'
+    if (ua.indexOf('Windows') > -1) ShaderBoy.OS = 'Windows';
+    else if (ua.indexOf('Android') > -1) ShaderBoy.OS = 'Android';
+    else if (ua.indexOf('iPhone') > -1) ShaderBoy.OS = 'iOS';
+    else if (ua.indexOf('iPad') > -1) ShaderBoy.OS = 'iPadOS';
+    else if (ua.indexOf('Mac') > -1) {
+      if (!('ontouchend' in document)) ShaderBoy.OS = 'MacOS';
+      else ShaderBoy.OS = 'iPadOS';
     }
-    else if (ua.indexOf('X11') > -1) ShaderBoy.OS = 'UNIX'
-    else if (ua.indexOf('Linux') > -1) ShaderBoy.OS = 'Linux'
-    else if (ua.indexOf('Android') > -1) ShaderBoy.OS = 'Android'
+    else if (ua.indexOf('X11') > -1) ShaderBoy.OS = 'UNIX';
+    else if (ua.indexOf('Linux') > -1) ShaderBoy.OS = 'Linux';
+    else ShaderBoy.OS = 'Unknown';
 
-    console.log('OS: ', ShaderBoy.OS)
+    console.log('OS: ', ShaderBoy.OS);
   },
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
