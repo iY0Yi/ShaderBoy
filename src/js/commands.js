@@ -205,12 +205,12 @@ export default ShaderBoy.commands = {
         ShaderBoy.commands.pauseTimeline()
 
         ShaderBoy.editor.codemirror.display.input.blur()
-        key('esc', () =>
+        key('esc', 'default', () =>
         {
             document.getElementById("div-textarea").contentEditable = "false"
-            gui_panel_textform.reset('', () => { })
+            gui_panel_textform.reset('', '', () => { })
             ShaderBoy.commands.playTimeline()
-            key.unbind('esc')
+            key.unbind('esc', 'default')
         })
     },
 
@@ -277,12 +277,12 @@ export default ShaderBoy.commands = {
         ShaderBoy.commands.pauseTimeline()
 
         ShaderBoy.editor.codemirror.display.input.blur()
-        key('esc', () =>
+        key('esc', 'default', () =>
         {
             document.getElementById("div-textarea").contentEditable = "false"
             gui_panel_textform.reset('', () => { })
             ShaderBoy.commands.playTimeline()
-            key.unbind('esc')
+            key.unbind('esc', 'default')
         })
     },
 
@@ -316,12 +316,12 @@ export default ShaderBoy.commands = {
         ShaderBoy.commands.pauseTimeline()
 
         ShaderBoy.editor.codemirror.display.input.blur()
-        key('esc', () =>
+        key('esc', 'default', () =>
         {
             document.getElementById("div-textarea").contentEditable = "false"
             gui_panel_textform.reset('', () => { })
             ShaderBoy.commands.playTimeline()
-            key.unbind('esc')
+            key.unbind('esc', 'default')
         })
     },
 
@@ -351,7 +351,7 @@ export default ShaderBoy.commands = {
         ShaderBoy.commands.pauseTimeline()
         gui_panel_shaderlist.show()
 
-        key('esc', () =>
+        key('esc', 'default', () =>
         {
             const textformEl = document.getElementById('gp-textarea')
             const shaderlistEl = document.getElementById('gp-shader-list')
@@ -362,7 +362,7 @@ export default ShaderBoy.commands = {
                 ShaderBoy.commands.playTimeline()
             }
             gui_panel_shaderlist.show()
-            key.unbind('esc')
+            key.unbind('esc', 'default')
         })
     },
 
