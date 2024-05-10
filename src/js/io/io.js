@@ -57,9 +57,7 @@ export default ShaderBoy.io = {
 		if (isLoaded)
 		{
 			await this.loadShaderFiles(ShaderBoy.activeShaderName, true)
-			const thumbsInfo = await this.getThumbFileIds()
-			console.log('thumbsInfo: ', thumbsInfo)
-			gui_panel_shaderlist.setup(thumbsInfo)
+			await this.getThumbFiles()
 		}
 		else
 		{
@@ -287,8 +285,7 @@ export default ShaderBoy.io = {
 				this.isAppInit = false
 				await this.loadSetting()
 				await this.loadShaderFiles(ShaderBoy.activeShaderName, true)
-				const thumbURLs = await this.getThumbFileIds()
-				gui_panel_shaderlist.setup(thumbURLs)
+				await this.getThumbFiles()
 			}
 			else
 			{
@@ -439,86 +436,23 @@ export default ShaderBoy.io = {
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	async getThumbFileIds()
+	async getThumbFiles()
 	{
-		const thumbsInfo = []
-
-		const loadedThumbURLs = ShaderBoy.setting.shaders.thumbsURLs
-
 		const folderIds = ShaderBoy.setting.shaders.folderIds.concat()
-
-		if (loadedThumbURLs === undefined)
+		while (folderIds.length > 0)
 		{
-			console.log('Load thumbs: Promise.all')
-
-			const REQUEST_LIMIT = 3
-			while (folderIds.length > 0)
-			{
-				const promises = []
-				const data = []
-
-				for (let i = 0; i < REQUEST_LIMIT; i++)
-				{
-					data.push(folderIds.shift())
-					promises.push(gdrive.getFileInfoByName('thumb.png', data[i].id))
-					if (folderIds.length <= 0)
-					{
-						break
-					}
-				}
-
-				const allRequests = await Promise.all(promises)
-
-				for (const request of allRequests)
-				{
-					const res = request.result
-					for (const file of res.files)
-					{
-						if (file.name === 'thumb.png')
-						{
-							thumbsInfo.push({ name: data.shift().name, thumb: `https://drive.google.com/uc?export=view&id=${file.id}&usp=sharing` })
-						}
-					}
-				}
-			}
+			const shaderId = folderIds.shift()
+			const promise = gdrive.getFileInfoByName('thumb.png', shaderId.id)
+			const request = await promise
+			const file = request.result.files[0]
+			const res = await gdrive.getContentBody(file.id)
+			const imageType = res.headers['content-type'];
+			const base64 = window.btoa(res.body);
+			const dataURI = 'data:' + imageType + ';base64,' + base64
+			const shaderName = shaderId.name
+			gui_panel_shaderlist.addThumbBtn({ name: shaderName, thumb: `url("${dataURI}")`, modifiedTime: file.modifiedTime})
+			gui_panel_shaderlist.sort()
 		}
-		else
-		{
-			console.log('Load thumbs: loaded info')
-			for (const folderData of folderIds)
-			{
-				const name = folderData.name
-
-				// Use Cache. Fast, but we can't get the latest thumbnails.
-				//-------------------------------------------------------------
-				let isExist = false
-				for (const loadedURL of loadedThumbURLs)
-				{
-					if (loadedURL.name === name)
-					{
-							thumbsInfo.push({ name: name, thumb: loadedURL.thumb })
-							isExist = true
-							break
-					}
-				}
-
-				if (!isExist)
-				//-------------------------------------------------------------
-				{
-					const request = await gdrive.getFileInfoByName('thumb.png', folderData.id)
-					const res = request.result
-					for (const file of res.files)
-					{
-						if (file.name === 'thumb.png')
-						{
-							thumbsInfo.push({ name: name, thumb: `https://drive.google.com/uc?export=view&id=${file.id}&usp=sharing` })
-						}
-					}
-				}
-			}
-		}
-		ShaderBoy.setting.shaders.thumbsURLs = thumbsInfo.concat()
-		return thumbsInfo
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

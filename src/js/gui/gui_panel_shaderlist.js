@@ -3,6 +3,8 @@ import ShaderBoy from '../shaderboy'
 let panelEl = null
 let btns = []
 let list_local = []
+let shadernum = 0
+let sortBy = 'date'
 
 export default ShaderBoy.gui_panel_shaderlist = {
 
@@ -11,77 +13,11 @@ export default ShaderBoy.gui_panel_shaderlist = {
     {
         console.log('gui_panel_shaderlist.setup(list)')
 
-        const createShaderBtn = (shader) =>
-        {
-            console.log('gui_panel_shaderlist.createShaderBtn(shader)')
-            console.log(shader)
-            const btn = document.createElement('div')
-            const btn_thumb = document.createElement('div')
-            const btn_detector = document.createElement('div')
-            const btn_base = document.createElement('div')
-            const btn_hover = document.createElement('div')
-
-            const name_base = document.createElement('span')
-            const name_hover = document.createElement('span')
-
-            name_base.textContent = shader.name
-            name_hover.textContent = shader.name
-            btn_base.appendChild(name_base)
-            btn_hover.appendChild(name_hover)
-
-            btn.classList.add('btn')
-            btn.classList.add('show')
-            btn_thumb.classList.add('btn-thumb')
-            // btn_thumb.style.backgroundImage = shader.thumb
-            btn_detector.classList.add('btn-detector')
-            btn_base.classList.add('btn__base')
-            btn_hover.classList.add('btn__hover')
-            btn.appendChild(btn_thumb)
-            btn.appendChild(btn_base)
-            btn.appendChild(btn_hover)
-            btn.appendChild(btn_detector)
-            if (shader.thumb !== '')
-            {
-                const img = new Image()
-                img.onload = () =>
-                {
-                    const div = document.getElementById('gui-layer')
-                    const imgcon = document.createElement('div')
-                    div.appendChild(imgcon)
-                    imgcon.style.width = '0px'
-                    imgcon.style.height = '0px'
-                    imgcon.style.backgroundImage = `url("${img.src}")`
-                    img.body.style.backgroundImage = `url("${img.src}")`
-                    img.body.style.backgroundSize = '100% 100%'
-                }
-
-                img.onerror = (res)=>
-                {
-                    console.log(res)
-                    btn_thumb.style.backgroundImage = 'url("data:image/svg+xml;charset=utf8,%3Csvg%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2214.43px%22%20height%3D%2214.43px%22%20viewBox%3D%220%200%2014.43%2014.43%22%20style%3D%22enable-background%3Anew%200%200%2014.43%2014.43%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill-rule%3Aevenodd%3Bclip-rule%3Aevenodd%3Bfill%3A%23D8D5C4%3B%7D%3C%2Fstyle%3E%3Cdefs%3E%3C%2Fdefs%3E%3Cg%3E%20%3Cg%3E%20%3Cpath%20class%3D%22st0%22%20d%3D%22M7.21%2C0C3.23%2C0%2C0%2C3.23%2C0%2C7.21s3.23%2C7.21%2C7.21%2C7.21s7.21-3.23%2C7.21-7.21S11.2%2C0%2C7.21%2C0z%20M4.21%2C8.21%20c-0.55%2C0-1-0.45-1-1s0.45-1%2C1-1s1%2C0.45%2C1%2C1S4.77%2C8.21%2C4.21%2C8.21z%20M7.21%2C8.21c-0.55%2C0-1-0.45-1-1s0.45-1%2C1-1s1%2C0.45%2C1%2C1%20S7.77%2C8.21%2C7.21%2C8.21z%20M10.21%2C8.21c-0.55%2C0-1-0.45-1-1s0.45-1%2C1-1s1%2C0.45%2C1%2C1S10.77%2C8.21%2C10.21%2C8.21z%22%2F%3E%20%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E")'
-                    btn_thumb.style.backgroundSize = '16px 16px'
-                    btn_thumb.style.backgroundRepeat = 'no-repeat'
-                }
-
-                img.src = null;
-                img.src = shader.thumb
-                img.body = btn_thumb
-            }
-            else
-            {
-                btn_thumb.style.backgroundImage = 'url("data:image/svg+xml;charset=utf8,%3Csvg%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2214.43px%22%20height%3D%2214.43px%22%20viewBox%3D%220%200%2014.43%2014.43%22%20style%3D%22enable-background%3Anew%200%200%2014.43%2014.43%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill-rule%3Aevenodd%3Bclip-rule%3Aevenodd%3Bfill%3A%23D8D5C4%3B%7D%3C%2Fstyle%3E%3Cdefs%3E%3C%2Fdefs%3E%3Cg%3E%20%3Cg%3E%20%3Cpath%20class%3D%22st0%22%20d%3D%22M7.21%2C0C3.23%2C0%2C0%2C3.23%2C0%2C7.21s3.23%2C7.21%2C7.21%2C7.21s7.21-3.23%2C7.21-7.21S11.2%2C0%2C7.21%2C0z%20M4.21%2C8.21%20c-0.55%2C0-1-0.45-1-1s0.45-1%2C1-1s1%2C0.45%2C1%2C1S4.77%2C8.21%2C4.21%2C8.21z%20M7.21%2C8.21c-0.55%2C0-1-0.45-1-1s0.45-1%2C1-1s1%2C0.45%2C1%2C1%20S7.77%2C8.21%2C7.21%2C8.21z%20M10.21%2C8.21c-0.55%2C0-1-0.45-1-1s0.45-1%2C1-1s1%2C0.45%2C1%2C1S10.77%2C8.21%2C10.21%2C8.21z%22%2F%3E%20%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E")'
-                btn_thumb.style.backgroundSize = '16px 16px'
-                btn_thumb.style.backgroundRepeat = 'no-repeat'
-            }
-
-            return btn
-        }
-
-        let shadernum = 0
+        shadernum = 0
+        panelEl = document.getElementById('gp-shader-list')
         if (list === undefined)
         {
             shadernum = 12
-            panelEl = document.getElementById('gp-shader-list')
         }
         else
         {
@@ -93,82 +29,155 @@ export default ShaderBoy.gui_panel_shaderlist = {
             list_local = list
             btns = []
         }
+    },
 
-        for (let i = 0; i < shadernum; i++)
+    addThumbBtn(shader)
+    {
+        const btnEl = this.createShaderBtn(shader)
+        btnEl.setAttribute('name', shader.name)
+        btnEl.setAttribute('modifiedTime', shader.modifiedTime)
+        btns.push(btnEl)
+
+        btnEl.onclick = (e) =>
         {
-            const shader = (list === undefined) ? { name: 'Loading...', thumb: '' } : list[i]
-            const btnEl = createShaderBtn(shader)
-            btns.push(btnEl)
+            e.stopPropagation()
 
-            btnEl.onclick = (e) =>
+            let name = '_defaultShader'
+            name = e.target.parentElement.children[1].innerText
+
+            for (let i = 0; i < shadernum; i++)
             {
-                e.stopPropagation()
-
-                let name = '_defaultShader'
-                name = e.target.parentElement.children[1].innerText
-
-                for (let i = 0; i < shadernum; i++)
+                if (btns[i] == e.target.parentElement)
                 {
-                    if (btns[i] == e.target.parentElement)
+                    btns[i].classList.toggle('btn-activate')
+
+                    setTimeout(() =>
                     {
                         btns[i].classList.toggle('btn-activate')
-
-                        setTimeout(() =>
-                        {
-                            btns[i].classList.toggle('btn-activate')
-                        }, Math.floor(1000 * 0.8))
-                    }
-                    else
+                    }, Math.floor(1000 * 0.8))
+                }
+                else
+                {
+                    btns[i].classList.toggle('btn-hide')
+                    setTimeout(() =>
                     {
                         btns[i].classList.toggle('btn-hide')
-                        setTimeout(() =>
-                        {
-                            btns[i].classList.toggle('btn-hide')
-                        }, Math.floor(1000 * 0.8))
-                    }
+                    }, Math.floor(1000 * 0.8))
                 }
+            }
 
-                const containerEl = document.getElementById('gui-panel')
-                const gpbaseEl = document.getElementById('gp-base')
-                containerEl.classList.toggle("gp-container-appear")
-                gpbaseEl.classList.toggle("gp-appear")
+            const containerEl = document.getElementById('gui-panel')
+            const gpbaseEl = document.getElementById('gp-base')
+            containerEl.classList.toggle("gp-container-appear")
+            gpbaseEl.classList.toggle("gp-appear")
+            containerEl.classList.toggle("gp-container-hide")
+            gpbaseEl.classList.toggle("gp-hide")
+
+            setTimeout(() =>
+            {
                 containerEl.classList.toggle("gp-container-hide")
                 gpbaseEl.classList.toggle("gp-hide")
+                containerEl.classList.toggle("gp-container-hidden")
+                gpbaseEl.classList.toggle("gp-hidden")
+            }, Math.floor(1000 * 0.8))
 
-                setTimeout(() =>
-                {
-                    containerEl.classList.toggle("gp-container-hide")
-                    gpbaseEl.classList.toggle("gp-hide")
-                    containerEl.classList.toggle("gp-container-hidden")
-                    gpbaseEl.classList.toggle("gp-hidden")
-                }, Math.floor(1000 * 0.8))
-
-                ShaderBoy.io.loadShaderFiles(name)
-            }
-
-            btnEl.onmouseenter = (e) =>
-            {
-                if (e.target.classList.contains('hover') !== true)
-                {
-                    e.target.classList.toggle("hover")
-                }
-            }
-
-            btnEl.onmouseleave = (e) =>
-            {
-                if (e.target.classList.contains('hover'))
-                {
-                    e.target.classList.remove("hover")
-                }
-
-                if (e.target.classList.contains('pre-active'))
-                {
-                    e.target.classList.remove("pre-active")
-                    e.target.classList.toggle("active")
-                }
-            }
-            panelEl.appendChild(btnEl)
+            ShaderBoy.io.loadShaderFiles(name)
         }
+
+        btnEl.onmouseenter = (e) =>
+        {
+            if (e.target.classList.contains('hover') !== true)
+            {
+                e.target.classList.toggle("hover")
+            }
+        }
+
+        btnEl.onmouseleave = (e) =>
+        {
+            if (e.target.classList.contains('hover'))
+            {
+                e.target.classList.remove("hover")
+            }
+
+            if (e.target.classList.contains('pre-active'))
+            {
+                e.target.classList.remove("pre-active")
+                e.target.classList.toggle("active")
+            }
+        }
+        panelEl.appendChild(btnEl)
+    },
+
+    createShaderBtn(shader)
+    {
+        console.log('gui_panel_shaderlist.createShaderBtn(shader)')
+        console.log(shader)
+        const btn = document.createElement('div')
+        const btn_thumb = document.createElement('div')
+        const btn_detector = document.createElement('div')
+        const btn_base = document.createElement('div')
+        const btn_hover = document.createElement('div')
+
+        const name_base = document.createElement('span')
+        const name_hover = document.createElement('span')
+
+        name_base.textContent = shader.name
+        name_hover.textContent = shader.name
+        btn_base.appendChild(name_base)
+        btn_hover.appendChild(name_hover)
+
+        btn.classList.add('btn')
+        btn.classList.add('show')
+        btn_thumb.classList.add('btn-thumb')
+        btn_thumb.style.backgroundImage = 'url("data:image/svg+xml;charset=utf8,%3Csvg%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2214.43px%22%20height%3D%2214.43px%22%20viewBox%3D%220%200%2014.43%2014.43%22%20style%3D%22enable-background%3Anew%200%200%2014.43%2014.43%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill-rule%3Aevenodd%3Bclip-rule%3Aevenodd%3Bfill%3A%23D8D5C4%3B%7D%3C%2Fstyle%3E%3Cdefs%3E%3C%2Fdefs%3E%3Cg%3E%20%3Cg%3E%20%3Cpath%20class%3D%22st0%22%20d%3D%22M7.21%2C0C3.23%2C0%2C0%2C3.23%2C0%2C7.21s3.23%2C7.21%2C7.21%2C7.21s7.21-3.23%2C7.21-7.21S11.2%2C0%2C7.21%2C0z%20M4.21%2C8.21%20c-0.55%2C0-1-0.45-1-1s0.45-1%2C1-1s1%2C0.45%2C1%2C1S4.77%2C8.21%2C4.21%2C8.21z%20M7.21%2C8.21c-0.55%2C0-1-0.45-1-1s0.45-1%2C1-1s1%2C0.45%2C1%2C1%20S7.77%2C8.21%2C7.21%2C8.21z%20M10.21%2C8.21c-0.55%2C0-1-0.45-1-1s0.45-1%2C1-1s1%2C0.45%2C1%2C1S10.77%2C8.21%2C10.21%2C8.21z%22%2F%3E%20%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E")'
+        btn_thumb.style.backgroundSize = '16px 16px'
+        btn_thumb.style.backgroundRepeat = 'no-repeat'
+        btn_detector.classList.add('btn-detector')
+        btn_base.classList.add('btn__base')
+        btn_hover.classList.add('btn__hover')
+        btn.appendChild(btn_thumb)
+        btn.appendChild(btn_base)
+        btn.appendChild(btn_hover)
+        btn.appendChild(btn_detector)
+        if (shader.thumb !== '')
+        {
+            btn_thumb.style.backgroundImage = shader.thumb
+            btn_thumb.style.backgroundSize = '100% 100%'
+        }
+
+        return btn
+    },
+
+    sort()
+    {
+        console.log('sort(): ', this.sortBy)
+
+        const btns = Array.from(panelEl.children)
+
+        if(this.sortBy==='date')
+        {
+            btns.sort((a, b) =>
+            {
+                const timeA = new Date(a.getAttribute('modifiedTime'))
+                const timeB = new Date(b.getAttribute('modifiedTime'))
+                return timeB - timeA
+            })
+        }
+        else if(this.sortBy==='name')
+        {
+            btns.sort((a, b) => {
+                const nameA = a.getAttribute('name').toLowerCase()
+                const nameB = b.getAttribute('name').toLowerCase()
+                return nameA.localeCompare(nameB)
+            })
+        }
+
+        while (panelEl.firstChild) {
+            panelEl.removeChild(panelEl.firstChild)
+        }
+        btns.forEach(btn => {
+            panelEl.appendChild(btn)
+        })
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -185,6 +194,8 @@ export default ShaderBoy.gui_panel_shaderlist = {
         gpbaseEl.classList.toggle("gp-appear")
         containerEl.classList.toggle("gp-container-hidden")
         gpbaseEl.classList.toggle("gp-hidden")
+
+        this.sort()
 
         ShaderBoy.editor.codemirror.display.input.blur()
     }
