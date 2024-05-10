@@ -123,7 +123,7 @@ export default ShaderBoy.gui = {
 			}
 		}
 
-		function onMouseUp(ev){
+		function onMouseMove(ev){
 			if (ShaderBoy.isEditorHidden || (ShaderBoy.isSplited && onCanvas(ev)))
 			{
 				const gui = ShaderBoy.gui
@@ -141,7 +141,7 @@ export default ShaderBoy.gui = {
 
 		document.onmousedown = (ev) => {onMouseDown(ev)}
 		document.onmouseup = (ev) => {onMouseUp(ev)}
-		document.onmousemove = (ev) => {onMouseUp(ev)}
+		document.onmousemove = (ev) => {onMouseMove(ev)}
 
 		function touchToMouse(ev){
 			const touches = ev.changedTouches
@@ -150,7 +150,7 @@ export default ShaderBoy.gui = {
 
 		document.addEventListener('touchstart', (ev) => {onMouseDown(touchToMouse(ev))})
 		document.addEventListener('touchend', (ev) => {onMouseUp(touchToMouse(ev))})
-		document.addEventListener('touchmove', (ev) => {onMouseUp(touchToMouse(ev))})
+		document.addEventListener('touchmove', (ev) => {onMouseMove(touchToMouse(ev))})
 
 		this.iWheelCumulative = [0,0,0]
 
