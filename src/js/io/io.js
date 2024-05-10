@@ -663,13 +663,10 @@ export default ShaderBoy.io = {
 		const load = async (bufName) =>
 		{
 			ShaderBoy.buffers[bufName].active = ShaderBoy.config.buffers[bufName].active
-			if (ShaderBoy.buffers[bufName].active === true)
-			{
-				const fileName = ShaderBoy.buffers[bufName].fileName
-				const id = this.idList[fileName].id
-				const request = await gdrive.getContentBody(id)
-				ShaderBoy.buffers[bufName].cm = CodeMirror.Doc(request.body, 'x-shader/x-fragment')
-			}
+			const fileName = ShaderBoy.buffers[bufName].fileName
+			const id = this.idList[fileName].id
+			const request = await gdrive.getContentBody(id)
+			ShaderBoy.buffers[bufName].cm = CodeMirror.Doc(request.body, 'x-shader/x-fragment')
 			return Promise.resolve()
 		}
 
