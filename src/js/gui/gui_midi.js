@@ -87,7 +87,7 @@ export default ShaderBoy.gui_midi = {
         {
             ShaderBoy.gui.midis[data.name] = data.value
         }
-        ShaderBoy.forceDraw = (ShaderBoy.isPlaying !== true)
+        ShaderBoy.forceDraw = !ShaderBoy.isPlaying
 
         ShaderBoy.gui_header.setStatus('prgrs', `MIDI: ${data.name} = ${data.value}...`, 3000)
     },

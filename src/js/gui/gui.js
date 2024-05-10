@@ -107,7 +107,7 @@ export default ShaderBoy.gui = {
 				gui.mousePosX = gui.mouseOriX
 				gui.mousePosY = gui.mouseOriY
 				ShaderBoy.uniforms.iMouse = [gui.mousePosX, gui.mousePosY, gui.mouseOriX, gui.mouseOriY]
-				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
+				ShaderBoy.forceDraw = !ShaderBoy.isPlaying
 			}
 		}
 
@@ -119,7 +119,7 @@ export default ShaderBoy.gui = {
 				gui.mouseOriX=Math.abs(gui.mouseOriX)*-1
 				gui.mouseOriY=Math.abs(gui.mouseOriY)*-1
 				ShaderBoy.uniforms.iMouse = [gui.mousePosX, gui.mousePosY, gui.mouseOriX, gui.mouseOriY]
-				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
+				ShaderBoy.forceDraw = !ShaderBoy.isPlaying
 			}
 		}
 
@@ -134,7 +134,7 @@ export default ShaderBoy.gui = {
 					gui.mouseOriX=Math.abs(gui.mouseOriX)
 					gui.mouseOriY=Math.abs(gui.mouseOriY)*-1
 					ShaderBoy.uniforms.iMouse = [gui.mousePosX, gui.mousePosY, gui.mouseOriX, gui.mouseOriY]
-					if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
+					ShaderBoy.forceDraw = !ShaderBoy.isPlaying
 				}
 			}
 		}
@@ -170,7 +170,7 @@ export default ShaderBoy.gui = {
 					ev.deltaZ,
 					this.iWheelCumulative[2],
 				]
-				if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
+				ShaderBoy.forceDraw = !ShaderBoy.isPlaying
 			}
 		})
 

@@ -142,7 +142,7 @@ export default ShaderBoy.commands = {
     {
         ShaderBoy.renderScale = 1
         ShaderBoy.bufferManager.setFBOsProps()
-        if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
+        ShaderBoy.forceDraw = !ShaderBoy.isPlaying
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -150,7 +150,7 @@ export default ShaderBoy.commands = {
     {
         ShaderBoy.renderScale = 2
         ShaderBoy.bufferManager.setFBOsProps()
-        if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
+        ShaderBoy.forceDraw = !ShaderBoy.isPlaying
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -158,7 +158,7 @@ export default ShaderBoy.commands = {
     {
         ShaderBoy.renderScale = 3
         ShaderBoy.bufferManager.setFBOsProps()
-        if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
+        ShaderBoy.forceDraw = !ShaderBoy.isPlaying
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -166,7 +166,7 @@ export default ShaderBoy.commands = {
     {
         ShaderBoy.renderScale = 4
         ShaderBoy.bufferManager.setFBOsProps()
-        if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
+        ShaderBoy.forceDraw = !ShaderBoy.isPlaying
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

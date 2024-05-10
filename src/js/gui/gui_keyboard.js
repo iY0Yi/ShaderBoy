@@ -29,7 +29,7 @@ export default ShaderBoy.gui_keyboard = {
             {
                 if (ShaderBoy.isEditorHidden || ShaderBoy.isSplited){
                     this.setKeyDown( ev.keyCode )
-                    if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
+                    ShaderBoy.forceDraw = !ShaderBoy.isPlaying
                 }
             }
         }
@@ -42,7 +42,7 @@ export default ShaderBoy.gui_keyboard = {
                 console.log('onkeyup')
                 if (ShaderBoy.isEditorHidden || ShaderBoy.isSplited){
                     this.setKeyUp( ev.keyCode )
-                    if (ShaderBoy.isPlaying !== true) ShaderBoy.forceDraw = true
+                    ShaderBoy.forceDraw = !ShaderBoy.isPlaying
                 }
             }
         }

@@ -72,7 +72,7 @@ export default ShaderBoy.gui_knobs = {
 
                         if (ShaderBoy.gui.knobs.knobs[i].active === true)
                         {
-                            ShaderBoy.forceDraw = (ShaderBoy.isPlaying !== true)
+                            ShaderBoy.forceDraw = !ShaderBoy.isPlaying
                             const delta = (e.deltaY < 0) ? 1 : -1
                             const deg = e.deltaY
                             ShaderBoy.gui.knobs.knobs[i].value += delta * velocity * (1 / ShaderBoy.gui.knobs.precision)// deg * 1 / ShaderBoy.gui.knobs.precision

@@ -88,8 +88,14 @@ ShaderBoy.update = () =>
 	else if (ShaderBoy.forceDraw === true)
 	{
 		imageRenderer.render()
-		ShaderBoy.forceDraw = false
+		if(ShaderBoy.forceDrawnCount++>=2)
+		{
+			// idk why i have to draw 2 times to update viewport...
+			ShaderBoy.forceDraw = false
+			ShaderBoy.forceDrawnCount = 0
+		}
 	}
+
 
 	gui.redraw()
 }

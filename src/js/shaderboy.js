@@ -31,6 +31,7 @@ const ShaderBoy = {
   isDirty: true,
 
   forceDraw: false,
+  forceDrawnCount: 0,
   editingBuffer: '',
   vsSource: null,
   screenShader: null,

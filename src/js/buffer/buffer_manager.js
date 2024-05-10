@@ -149,7 +149,7 @@ export default ShaderBoy.bufferManager = {
             this.compileShaders()
         }
 
-        ShaderBoy.forceDraw = (ShaderBoy.isPlaying !== true)
+        ShaderBoy.forceDraw = !ShaderBoy.isPlaying
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
