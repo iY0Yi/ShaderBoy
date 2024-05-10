@@ -350,6 +350,8 @@ export default ShaderBoy.commands = {
         const wasPlaying = ShaderBoy.isPlaying
         ShaderBoy.commands.pauseTimeline()
         gui_panel_shaderlist.show()
+        key('d', 'default', ShaderBoy.commands.sortByDate)
+        key('n', 'default', ShaderBoy.commands.sortByName)
 
         key('esc', 'default', () =>
         {
@@ -362,8 +364,24 @@ export default ShaderBoy.commands = {
                 ShaderBoy.commands.playTimeline()
             }
             gui_panel_shaderlist.show()
+            key.unbind('d', 'default')
+            key.unbind('n', 'default')
             key.unbind('esc', 'default')
         })
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    sortByName()
+    {
+        ShaderBoy.gui_panel_shaderlist.sortBy = 'name'
+        ShaderBoy.gui_panel_shaderlist.sort()
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    sortByDate()
+    {
+        ShaderBoy.gui_panel_shaderlist.sortBy = 'date'
+        ShaderBoy.gui_panel_shaderlist.sort()
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
