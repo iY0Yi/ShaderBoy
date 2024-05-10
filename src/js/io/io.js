@@ -231,7 +231,7 @@ export default ShaderBoy.io = {
 	async createShaderFiles(id, isFork = false)
 	{
 		let request, res
-		ShaderBoy.gui_header.setStatus('prgrs', 'Create shader files...', 0)
+		ShaderBoy.gui_header.setStatus('prgrs', 'Creating shader files...', 0)
 		ShaderBoy.config = JSON.parse(ShaderBoy.buffers['Config'].cm.getValue())
 
 		let promises = []
