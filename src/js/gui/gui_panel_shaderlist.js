@@ -150,11 +150,11 @@ export default ShaderBoy.gui_panel_shaderlist = {
 
     sort()
     {
-        console.log('sort(): ', this.sortBy)
+        console.log('sort(): ', sortBy)
 
         const btns = Array.from(panelEl.children)
 
-        if(this.sortBy==='date')
+        if(sortBy==='date')
         {
             btns.sort((a, b) =>
             {
@@ -163,7 +163,7 @@ export default ShaderBoy.gui_panel_shaderlist = {
                 return timeB - timeA
             })
         }
-        else if(this.sortBy==='name')
+        else if(sortBy==='name')
         {
             btns.sort((a, b) => {
                 const nameA = a.getAttribute('name').toLowerCase()

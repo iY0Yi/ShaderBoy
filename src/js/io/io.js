@@ -203,7 +203,7 @@ export default ShaderBoy.io = {
 		for (const folder of res.files)
 		{
 			ShaderBoy.setting.shaders.names.push(folder.name)
-			ShaderBoy.setting.shaders.folderIds.push({ name: folder.name, id: folder.id })
+			ShaderBoy.setting.shaders.folderIds.push({ name: folder.name, id: folder.id, modifiedTime: folder.modifiedTime })
 		}
 
 		const settingText = JSON.stringify(ShaderBoy.setting, null, "\t")
@@ -438,7 +438,13 @@ export default ShaderBoy.io = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	async getThumbFiles()
 	{
-		const folderIds = ShaderBoy.setting.shaders.folderIds.concat()
+		let folderIds = ShaderBoy.setting.shaders.folderIds.concat()
+		folderIds.sort((a, b) =>
+		{
+			const timeA = new Date(a.modifiedTime)
+			const timeB = new Date(b.modifiedTime)
+			return timeB - timeA
+		})
 		while (folderIds.length > 0)
 		{
 			const shaderId = folderIds.shift()
