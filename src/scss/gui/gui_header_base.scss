@@ -11,12 +11,15 @@
     margin: 0px;
     transition: top $anm-middle;
 
+    padding: 0px;
+
     &.hdr_hide {
         top: -$gui-size-unit;
     }
 
     @include mq {
-        height: $gui-size-unit-sp;
+        overflow-x: scroll;
+        height: $gui-size-unit-sp*2;
         background: transparent;
     }
 }

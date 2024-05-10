@@ -10,27 +10,29 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    height: 100%;
+    height: $gui-size-unit;
     background: $col-bg;
+    // overflow-x: scroll;
 
     @include mq {
+        height: $gui-size-unit-sp;
         background: $col_bg-sp;
     }
 
     #buf-btns {
         display: flex;
         justify-content: flex-start;
-        height: 100%;
+        height: $gui-size-unit;
         width: $gui-size-unit*2*6+$gui-size-unit*3;
 
         @include mq {
+            height: $gui-size-unit-sp;
             width: $gui-size-unit-sp*2*6+$gui-size-unit-sp*3;
         }
 
         .ghdr-btn {
             text-align: center;
             color: $col-bg-bright-lighten;
-            height: 100%;
 
             &.btn-buf {
                 position: relative;

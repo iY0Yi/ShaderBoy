@@ -2,7 +2,8 @@
 
 // main
 ///////////////////////////////////////////////////
-
+$btn_basesize_pc:calc((100vw - 0px)/4);
+$btn_basesize_sp:calc((100vw - 0px)/4);
 %btn__base {
     position: absolute;
     align-items: center;
@@ -12,20 +13,24 @@
     // transition: all 1.5s ease-out;
     border-radius: 0px 0px 0px 0px;
     // height: 100%;
-    // width: calc((100vw - 110px)/4);
+    // width: $btn_basesize_pc;
+    @include mq {
+        font-size: 0.6rem;
+
+    }
 }
 
 .btn {
     // transform-origin: center top;
-    width: calc((100vw - 110px)/4);
-    height: calc(((100vw - 110px)/4) * 0.56 + 45px);
-
+    width: $btn_basesize_pc;
+    height: calc(($btn_basesize_pc) * 0.56 + 45px);
+    letter-spacing: 0.025rem;
     @include mq {
-        width: calc((100vw - 85px)/3);
-        height: calc(((100vw - 85px)/3) * 0.56 + 35px);
+        width: $btn_basesize_sp;
+        height: calc($btn_basesize_sp * 0.56 + 35px);
     }
 
-    margin: 5px;
+    margin: 0px;
     overflow: hidden;
     border-radius: 0px 0px;
     background: #0000FF01;
@@ -33,19 +38,19 @@
     font-family: 'Muli',
     sans-serif;
     font-weight: 700;
-    letter-spacing: 0.0em;
+
 
     &-thumb {
         position: absolute;
         align-items: center;
         display: flex;
         justify-content: center;
-        width: calc((100vw - 110px)/4);
-        height: calc(((100vw - 110px)/4) * 0.56);
+        width: $btn_basesize_pc;
+        height: calc(($btn_basesize_pc) * 0.56);
 
         @include mq {
-            width: calc((100vw - 85px)/3);
-            height: calc(((100vw - 85px)/3) * 0.56);
+            width: $btn_basesize_sp;
+            height: calc(($btn_basesize_sp) * 0.56);
         }
 
         background: #00FF0001;
@@ -58,12 +63,12 @@
 
     &-detector {
         @extend %btn__base;
-        width: calc((100vw - 110px)/4);
-        height: calc(((100vw - 110px)/4) * 0.56 + 45px);
+        width: $btn_basesize_pc;
+        height: calc(($btn_basesize_pc) * 0.56 + 45px);
 
         @include mq {
-            width: calc((100vw - 85px)/3);
-            height: calc(((100vw - 85px)/3) * 0.56 + 35px);
+            width: $btn_basesize_sp;
+            height: calc(($btn_basesize_sp) * 0.56 + 35px);
         }
 
         background: #FF000001;
@@ -72,17 +77,17 @@
 
     &__base {
         @extend %btn__base;
-        width: calc((100vw - 110px)/4);
+        width: $btn_basesize_pc;
         height: $gui-size-unit;
         background: $col-bg;
         color: $col-frnt;
         overflow: hidden;
-        margin-top: calc(((100vw - 110px)/4) * 0.56);
+        margin-top: calc(($btn_basesize_pc) * 0.56);
 
         @include mq {
-            width: calc((100vw - 85px)/3);
+            width: $btn_basesize_sp;
             height: $gui-size-unit-sp;
-            margin-top: calc(((100vw - 85px)/3) * 0.56);
+            margin-top: calc(($btn_basesize_sp) * 0.56);
         }
 
         z-index: 1;
@@ -93,27 +98,30 @@
             display: flex;
             justify-content: center;
             position: absolute;
-            top: -1px;
+            top: -.5rem;
             left: 0;
             right: auto;
             height: 100%;
-            width: 100%;
+            width: $btn_basesize_pc;
+            @include mq {
+                width: $btn_basesize_sp;
+            }
         }
     }
 
     &__hover {
         @extend %btn__base;
-        width: calc((100vw - 110px)/4);
+        width: $btn_basesize_pc;
         height: $gui-size-unit;
         background: $col-frnt;
         color: $col-bg;
         overflow: hidden;
-        margin-top: calc(((100vw - 110px)/4) * 0.56);
+        margin-top: calc(($btn_basesize_pc) * 0.56);
 
         @include mq {
-            // width: calc((100vw - 85px)/3);
+            // width: $btn_basesize_sp;
             height: $gui-size-unit-sp;
-            margin-top: calc(((100vw - 85px)/3) * 0.56);
+            margin-top: calc(($btn_basesize_sp) * 0.56);
         }
 
         transition: all $anm-middle;
@@ -125,14 +133,14 @@
             display: flex;
             justify-content: center;
             position: absolute;
-            top: -1px;
+            top: -.5rem;
             left: 0;
             right: auto;
             height: 100%;
-            width: calc((100vw - 110px)/4);
+            width: $btn_basesize_pc;
 
             @include mq {
-                width: calc((100vw - 85px)/3);
+                width: $btn_basesize_sp;
             }
         }
     }
@@ -157,10 +165,10 @@
         .btn__hover {
             right: auto;
             left: 10;
-            width: calc((100vw - 110px)/4);
+            width: $btn_basesize_pc;
 
             @include mq {
-                width: calc((100vw - 85px)/3);
+                width: $btn_basesize_sp;
             }
 
             transition: all $anm-short;
@@ -191,10 +199,10 @@
                 left: 0;
                 right: auto;
                 height: 100%;
-                width: calc((100vw - 110px)/4);
+                width: $btn_basesize_pc;
 
                 @include mq {
-                    width: calc((100vw - 85px)/3);
+                    width: $btn_basesize_sp;
                 }
             }
         }
@@ -202,10 +210,10 @@
         .btn__hover {
             transition: all $anm-short;
             z-index: 1;
-            width: calc((100vw - 110px)/4);
+            width: $btn_basesize_pc;
 
             @include mq {
-                width: calc((100vw - 85px)/3);
+                width: $btn_basesize_sp;
             }
 
             span {
