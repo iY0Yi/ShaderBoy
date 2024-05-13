@@ -89,7 +89,7 @@
 }
 
 .cm-s-3024-night span.cm-comment {
-    color: #d8d4c588;
+    color: #928374;
     background: #1F1F1F00;
 }
 
@@ -155,19 +155,19 @@
 
 @media screen and (max-width: 1080px) {
     .cm-s-3024-night .CodeMirror-gutters {
-        background: #1F1F1FAA;
+        background: #1F1F1F00;
     }
     .cm-s-3024-night .CodeMirror-line::after {
-        background-color: #1F1F1FAA;
+        background-color: #1F1F1F00;
     }
     .cm-s-3024-night span {
-        background: #1F1F1FAA;
+        background-color: #1F1F1F00;
     }
     .cm-s-3024-night .CodeMirror-linenumber {
-        color: #d8d4c588;
+        color: #928374;
     }
     .cm-s-3024-night span.cm-bracket {
-        color: #d8d4c588;
+        color: #928374;
     }
     .CodeMirror-foldgutter {
         opacity: 0.0;

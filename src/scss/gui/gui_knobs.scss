@@ -57,7 +57,7 @@
     height: $gui-size-unit;
     font-size: 12px;
     margin: 0px;
-    background: $col_bg;
+    // background: $col_bg;
     // border: $col_bg 1px solid;
     // border-radius: 3px;
     transition: all $anm-middle;
@@ -160,7 +160,7 @@ svg {
     margin: 0px;
     margin-top: 2px;
     margin-left: $gui-size-unit*0.5 - 6px;
-    background: #00000000;
+    // background: #00000000;
     cursor: none;
     transform-origin: 50% 50%;
 }
