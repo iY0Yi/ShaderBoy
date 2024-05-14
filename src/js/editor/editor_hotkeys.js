@@ -24,8 +24,8 @@ export default ShaderBoy.editor_hotkeys = {
 		this.keys = {
 		}
 
-		key.filter = function(event){
-			return true;
+		key.filter = function(evt){
+			return true
 		}
 
 		key('⌥+right', 'default', ()=>{commands.setPrevBuffer(); return false})
@@ -66,15 +66,41 @@ export default ShaderBoy.editor_hotkeys = {
 		key('ctrl+⇧+⌥+, ⌘+⇧+⌥+,', 'default', commands.toggleSplitView)
 		key('ctrl+⇧+⌥+., ⌘+⇧+⌥+.', 'default', commands.toggleFullscreen)
 
-		// for Smartphone
-		if (ShaderBoy.OS === 'iOS' || ShaderBoy.OS === 'Android')
+
+		if (ShaderBoy.OS === 'Android')
 		{
-			this.keys['Alt-Space'] = commands.compileShader
-			this.keys['Alt-H'] = commands.hideEditor
-			this.keys['ctrl-Alt-+, ⌘-Alt-+'] = commands.incTextSize
-			this.keys['ctrl-Alt--, ⌘-Alt--'] = commands.decTextSize
+			let defaultPasted = false;
+
+			ShaderBoy.editor.codemirror.on("paste", function()
+			{
+				defaultPasted = true
+			})
+
+			key('ctrl+v', function(event, handler)
+			{
+				if (navigator.clipboard && navigator.clipboard.readText && !defaultPasted)
+				{
+					navigator.clipboard.readText().then(clipText =>
+						{
+							const doc = ShaderBoy.editor.codemirror.getDoc()
+							const cursor = doc.getCursor()
+							doc.replaceRange(clipText, cursor)
+						})
+				}
+				event.preventDefault()
+				return false
+			})
+
+			ShaderBoy.editor.codemirror.on("inputRead", function()
+			{
+				if (defaultPasted)
+				{
+					defaultPasted = false
+				}
+			})
+
 		}
 
-		key.setScope('default');
+		key.setScope('default')
 	}
 }

@@ -41,9 +41,6 @@ export default ShaderBoy.editor = {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     init()
     {
-        editor_hint.setup()
-        editor_hotkeys.setup()
-
         this.domElement = document.getElementById('code')
         this.textArea = document.getElementById('editor')
         this.textArea.setAttribute('rows', '200')
@@ -85,6 +82,9 @@ export default ShaderBoy.editor = {
 
         this.codemirror.parent = this
         this.setTextSize(this.textSize)
+
+        editor_hint.setup()
+        editor_hotkeys.setup()
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
