@@ -24,35 +24,18 @@
 .cm-s-3024-monotone .CodeMirror-line>span>span {
     margin: 0px;
     padding: 0px;
-    font-feature-settings: "palt";
-    /**/
-    /* font-family: 'Cutive Mono', monospace;
-    line-height: 1.1;
-    letter-spacing: -0.08em; */
-    /**/
-    /* font-family: 'PT Mono', monospace;
-    letter-spacing: 0.09em; */
-    /**/
-    /* font-family: 'Space Mono', monospace;
-    line-height: 1.4;
-    letter-spacing: -0.03em; */
-    /**/
-    /* font-family: 'IBM Plex Mono', monospace;
-    line-height: 1.4;
-    letter-spacing: 0.0em; */
-    /**/
-    /* font-family: 'Ubuntu Mono', monospace;
-    line-height: 1.1;
-    letter-spacing: 0.0em; */
-    /**/
+    /* font-family: 'Cutive Mono', monospace; */
+    /* font-family: 'PT Mono', monospace; */
+    /* font-family: 'Space Mono', monospace; */
+    /* font-family: 'IBM Plex Mono', monospace; */
+    /* font-family: 'Ubuntu Mono', monospace; */
+    /* font-family: 'Overpass Mono', monospace; */
+    /* font-family: "Fragment Mono", monospace; */
+    /* font-family: 'Nova Mono', monospace; */
     font-family: 'Overpass Mono', monospace;
+    font-weight: 600;
     line-height: 1;
     letter-spacing: 0.0em;
-
-    /**/
-    /* font-family: 'Nova Mono', monospace;
-    line-height: 1.1;
-    letter-spacing: 0.0em; */
 }
 
 

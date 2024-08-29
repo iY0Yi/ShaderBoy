@@ -267,7 +267,8 @@
 
 .CodeMirror-hints {
     position: absolute;
-    font-family: 'Overpass Mono', monospace;
+    // font-family: 'Overpass Mono', monospace;
+    font-family: "Fragment Mono", monospace;
     font-size: 14px;
     z-index: 100;
     overflow: hidden;
