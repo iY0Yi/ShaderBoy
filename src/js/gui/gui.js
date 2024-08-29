@@ -157,20 +157,20 @@ export default ShaderBoy.gui = {
 		document.addEventListener('wheel', (ev) =>
 		{
 			if (ShaderBoy.isEditorHidden || (ShaderBoy.isSplited && onCanvas(ev)))
-			{
-				this.iWheelCumulative[0] += ev.deltaX
-				this.iWheelCumulative[1] += ev.deltaY
-				this.iWheelCumulative[2] += ev.deltaZ
+				{
+					this.iWheelCumulative[0] += ev.deltaX*.01
+					this.iWheelCumulative[1] += ev.deltaY*.01
+					// this.iWheelCumulative[2] += ev.deltaZ*.1
 
-				ShaderBoy.uniforms.iWheel = [
-					ev.deltaX,
-					this.iWheelCumulative[0],
-					ev.deltaY,
-					this.iWheelCumulative[1],
-					ev.deltaZ,
-					this.iWheelCumulative[2],
-				]
-				ShaderBoy.forceDraw = !ShaderBoy.isPlaying
+					ShaderBoy.uniforms.iWheel = [
+						ev.deltaX,
+						this.iWheelCumulative[0],
+						ev.deltaY,
+						this.iWheelCumulative[1],
+						// ev.deltaZ,
+						// this.iWheelCumulative[2],
+					]
+					ShaderBoy.forceDraw = !ShaderBoy.isPlaying
 			}
 		})
 

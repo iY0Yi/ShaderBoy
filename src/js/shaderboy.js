@@ -48,6 +48,7 @@ const ShaderBoy = {
     'iFrameRate': 0, // shader playback frame
     'iDate': 0, // (year, month, day, time in seconds)
     'iMouse': [0, 0, 0, 0], // mouse pixel coords. xy: current (if MLB down), zw: click
+    'iWheel': [0, 0, 0, 0], // mouse wheel
     'iChannel0': 0, // input channel. XX = 2D/Cube
     'iChannel1': 1, // input channel. XX = 2D/Cube
     'iChannel2': 2, // input channel. XX = 2D/Cube

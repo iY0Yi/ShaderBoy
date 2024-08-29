@@ -6,6 +6,7 @@ uniform float     iFrameRate;            // shader playback frame
 uniform float     iChannelTime[4];       // channel playback time (in seconds)
 uniform vec3      iChannelResolution[4]; // channel resolution (in pixels)
 uniform vec4      iMouse;                // mouse pixel coords. xy: current (if MLB down), zw: click
+uniform vec4      iWheel;                // mouse wheel.
 uniform sampler2D iChannel0;             // input channel. XX = 2D/Cube
 uniform sampler2D iChannel1;             // input channel. XX = 2D/Cube
 uniform sampler2D iChannel2;             // input channel. XX = 2D/Cube
