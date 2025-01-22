@@ -352,7 +352,6 @@ export default ShaderBoy.commands = {
         gui_panel_shaderlist.show()
         key('d', 'default', ShaderBoy.commands.sortByDate)
         key('n', 'default', ShaderBoy.commands.sortByName)
-
         key('esc', 'default', () =>
         {
             const textformEl = document.getElementById('gp-textarea')

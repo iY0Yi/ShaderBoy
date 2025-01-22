@@ -1,3 +1,4 @@
+import key from 'keymaster'
 import ShaderBoy from '../shaderboy'
 
 let panelEl = null
@@ -79,6 +80,10 @@ export default ShaderBoy.gui_panel_shaderlist = {
                 containerEl.classList.toggle("gp-container-hidden")
                 gpbaseEl.classList.toggle("gp-hidden")
             }, Math.floor(1000 * 0.8))
+
+            key.unbind('d', 'default')
+            key.unbind('n', 'default')
+            key.unbind('esc', 'default')
 
             ShaderBoy.io.loadShaderFiles(name)
         }
@@ -196,6 +201,7 @@ export default ShaderBoy.gui_panel_shaderlist = {
 
         this.sort()
 
-        ShaderBoy.editor.codemirror.display.input.blur()
+        // Comment out to keep the virtual keyboard.
+        // ShaderBoy.editor.codemirror.display.input.blur()
     }
 }
