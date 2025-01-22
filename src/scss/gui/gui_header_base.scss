@@ -18,8 +18,8 @@
     }
 
     @include mq {
-        overflow-x: scroll;
-        height: $gui-size-unit-sp*2;
+        overflow-x: visible;
+        height: $gui-size-unit-sp;
         background: transparent;
     }
 }

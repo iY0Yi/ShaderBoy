@@ -480,6 +480,9 @@
         background-image: url('');
         background-repeat: no-repeat;
         background-position: center center;
+        @include mq {
+            top: calc(100vh - 35px);
+        }
     }
 
     &.notif-error {
