@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<keyboard bottom_row="false" width="22" name="ShaderBoy" script="latin">
+  <row>
+    <key shift="0.5" key0="loc end"/>
+    <key key0="1"/>
+    <key key0="2"/>
+    <key key0="3"/>
+    <key key0="4"/>
+    <key key0="5"/>
+    <key shift="9" key0="6"/>
+    <key key0="7"/>
+    <key key0="8"/>
+    <key key0="9"/>
+    <key key0="0"/>
+    <key key0="." key2=","/>
+  </row>
+  <row>
+    <key key0="esc"/>
+    <key key0="!" key1="%"/>
+    <key key0="q"/>
+    <key key0="w"/>
+    <key key0="e"/>
+    <key key0="r"/>
+    <key key0="t"/>
+    <key shift="8" key0="y"/>
+    <key key0="u"/>
+    <key key0="i"/>
+    <key key0="o"/>
+    <key key0="p"/>
+    <key width="2" key0="backspace" key2="delete"/>
+  </row>
+  <row>
+    <key width="1.5" key0="shift"/>
+    <key key0="_" key1="^"/>
+    <key key0="|" key1="&amp;"/>
+    <key key0="a"/>
+    <key key0="s" key1="["/>
+    <key key0="d" key1="&lt;"/>
+    <key key0="f" key1="{"/>
+    <key key0="g" key1="("/>
+    <key width="1.5" shift="1.75" key0="up"/>
+    <key shift="1.75" key0="h" key2=")"/>
+    <key key0="j" key2="}"/>
+    <key key0="k" key2=">"/>
+    <key key0="l" key2="]"/>
+    <key key0="="/>
+    <key key0="+" key2="-"/>
+    <key key0="*" key2="/"/>
+    <key width="1.5" key0=";" key2=":"/>
+  </row>
+  <row>
+    <key width="1.5" key0="ctrl"/>
+    <key width="1.5" key0="alt"/>
+    <key key0="z"/>
+    <key key0="x"/>
+    <key key0="c"/>
+    <key key0="v"/>
+    <key width="1.5" key0="space" key1="tab"/>
+    <key width="1.5" shift="0.25" key0="left" key1="home"/>
+    <key width="1.5" key0="down"/>
+    <key width="1.5" key0="right" key4="end"/>
+    <key width="1.5" shift="0.25" key0="space" key2="tab"/>
+    <key key0="b"/>
+    <key key0="n"/>
+    <key key0="m"/>
+    <key key0=","/>
+    <key key0="."/>
+    <key width="2" key0="enter"/>
+  </row>
+</keyboard>
