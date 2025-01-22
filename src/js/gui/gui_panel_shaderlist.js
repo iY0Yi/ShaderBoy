@@ -41,11 +41,10 @@ export default ShaderBoy.gui_panel_shaderlist = {
         btnEl.onclick = (e) =>
         {
             e.stopPropagation()
-
-            let name = '_defaultShader'
-            name = e.target.parentElement.children[1].innerText
-
-            for (let i = 0; i < shadernum; i++)
+            const targetBtn = e.target.closest('.btn')
+            const name = targetBtn.getAttribute('name')
+            const btnNum = btns.length;
+            for (let i = 0; i < btnNum; i++)
             {
                 if (btns[i] == e.target.parentElement)
                 {
