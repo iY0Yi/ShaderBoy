@@ -83,8 +83,15 @@ export default ShaderBoy.editor_hotkeys = {
 					navigator.clipboard.readText().then(clipText =>
 						{
 							const doc = ShaderBoy.editor.codemirror.getDoc()
-							const cursor = doc.getCursor()
-							doc.replaceRange(clipText, cursor)
+							if (doc.somethingSelected())
+							{
+								doc.replaceSelection(clipText)
+							}
+							else
+							{
+								const cursor = doc.getCursor()
+								doc.replaceRange(clipText, cursor)
+							}
 						})
 				}
 				event.preventDefault()
