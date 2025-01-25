@@ -191,7 +191,7 @@ export default ShaderBoy.commands = {
         setTimeout(() =>
         {
             form.focus();
-        }, 0);
+        }, 0)
 
         gui_panel_textform.reset('New Shader Name', '', () =>
         {
