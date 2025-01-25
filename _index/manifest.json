@@ -2,10 +2,10 @@
     "name": "ShaderBoy",
     "short_name": "ShaderBoy",
     "description": "A shader editor for mobile devices with keyboard.",
-    "scope": "/",
+    "scope": "/app/",
     "theme_color": "#1F1F1F",
     "background_color": "#1F1F1F",
-    "start_url": "https://shaderboy.net/app/",
+    "start_url": "/app/",
     "display": "standalone",
     "orientation": "landscape",
     "icons": [

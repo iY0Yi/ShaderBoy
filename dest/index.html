@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<!-- <meta name="viewport" content="width=device-width,initial-scale=1"> -->
 	<meta name="viewport" content="width=device-width; initial-scale=1; viewport-fit=cover" />
-	<link rel="manifest" href="../manifest.json?version=2.1">
+	<link rel="manifest" href="/manifest.json">
 	<link rel="shortcut icon" href="../img/icons/favicon.ico">
 	<link rel="icon" type="image/png" sizes="16x16" href="../img/icons/favicon-16x16.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="../img/icons/favicon-32x32.png">
@@ -39,20 +39,13 @@
 	<meta name="twitter:player" content="@iy0yi">
 
 	<script>
-		if ('serviceWorker' in navigator)
-		{
-			navigator.serviceWorker
-				.register('./serviceworker.js')
-				.then(function (registration)
-				{
-					console.log(
-						'Service Worker registration successful with scope: ',
-						registration.scope
-					);
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('/serviceworker.js')
+				.then((registration) => {
+					console.log('Service Worker registered with scope:', registration.scope);
 				})
-				.catch(function (err)
-				{
-					console.log('Service Worker registration failed: ', err);
+				.catch((error) => {
+					console.error('Service Worker registration failed:', error);
 				});
 		}
 	</script>
