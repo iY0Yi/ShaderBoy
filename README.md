@@ -12,7 +12,7 @@ The smartphone version consists of a minimal GUI element that assumes the use of
 ShaderBoy uses Google Drive to store your shaders. From any device on which you log in with your Google account, you can continue coding the shader that you last edited.
 
 Enjoy ShaderBoy!
-##### *This is not an official Shadertoy application.* 
+##### *This is not an official Shadertoy application.*
 ##### *Bug reports, feature requests, and [🍺](https://www.paypal.me/atsushihashimoto/5USD) are welcome.*
 ##### *iOS ver is WIP. There are many bugs yet. (especially Keymaps, CSS)
 
@@ -23,7 +23,7 @@ Enjoy ShaderBoy!
 </br>
 
 # App
-ShaderBoy is a *PWA(Progressive Web Apps).*  
+ShaderBoy is a *PWA(Progressive Web Apps).*
 You can install the app from [here](https://shaderboy.net/).
 ##### *[Howto: Install Progressive Web App (PWA) natively on Windows/macOS via Chrome Browser](https://medium.com/@dhormale/install-pwa-on-windows-desktop-via-google-chrome-browser-6907c01eebe4)
 
@@ -45,7 +45,7 @@ You can install the app from [here](https://shaderboy.net/).
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc06.jpg"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc07.jpg"></br>
 </br>
-</br> 
+</br>
 </br>
 </br>
 </br>
@@ -53,30 +53,42 @@ You can install the app from [here](https://shaderboy.net/).
 </br>
 
 # Keymaps
-  
+
 |   | Smartphone | Windows | Mac |
 |:---|:---|:---|:---|
-| **Compile** | ⌥+ENTER(SPACE) | ⌥+ENTER | ⌥+ENTER |
-| **Play/Pause** | ⌥+UP | ⌥+UP | ⌥+UP |
-| **Reset time** | ⌥+DOWN | ⌥+DOWN | ⌥+DOWN |
+| **Compile** | ⌥+ENTER | ⌥+ENTER | ⌥+ENTER |
+| **Play/Pause** | ctrl+⇧+UP | ctrl+⇧+UP | ctrl+⇧+UP |
+| **Reset time** | ctrl+⇧+DOWN | ctrl+⇧+DOWN | ctrl+⇧+DOWN |
 | **Move to neighbor buffer** | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT | ⌥+LEFT/RIGHT |
-| **Search** | ctrl+F | ctrl+F | ⌘+F |
-| **Replace** | ctrl+H | ctrl+H | ⌘+H |
 | **Resolution** | ctrl+1-4 | ctrl+1-4 | ctrl+1-4 |
-| **Font size** | ctrl+-/+ | ctrl+⇧+⌥+-/+ | ⌘+⇧+⌥+-/+ |
-| **Hide/Show WebGL canvas** | ctrl+⇧+⌥+V | ctrl+⇧+⌥+V | ⌘+⇧+⌥+V |
-| **Hide/Show Code & All GUIs** | ctrl+⇧+⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
-| **Hide/Show Timeline** | --- | ctrl+⇧+⌥+T | ⌘+⇧+⌥+T |
-| **Hide/Show Knobs GUI** | --- | ctrl+⇧+⌥+D | ⌘+⇧+⌥+D |
-| **Hide/Show iChannel GUI** | ctrl+⇧+⌥+A | ctrl+⇧+⌥+A | ⌘+⇧+⌥+A |
-| **Hide/Show Recording GUI** | --- | ctrl+⇧+⌥+R | ⌘+⇧+⌥+R |
-| **Create a new shader** | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N |
-| **Fork a shader** | ctrl+⇧+⌥+F | ctrl+⇧+⌥+F | ⌘+⇧+⌥+F |
-| **Save shader files** | ctrl+S | ctrl +S | ⌘+S |
-| **Open shader list** | ctrl+O | ctrl+O | ⌘+O |
-| **Mute/Unmute sound** | ctrl+M | ctrl+M | ⌥+M |
-| **Switch header info(FPS/shader name)** | ctrl+I | ctrl+I | ⌥+I |
+| **Save shader** | ctrl+S | ctrl+S | ⌘+S |
+| **Open shader** | ctrl+O | ctrl+O | ⌘+O |
+| **Switch Info** | ctrl+⇧+I | ctrl+⇧+I | ⌘+⇧+I |
+| **Mute/Unmute** | ctrl+M | ctrl+M | ⌘+M |
+| **New shader** | ctrl+⇧+⌥+N | ctrl+⇧+⌥+N | ⌘+⇧+⌥+N |
+| **Import shader** | ctrl+⇧+⌥+I | ctrl+⇧+⌥+I | ⌘+⇧+⌥+I |
+| **Fork shader** | ctrl+⇧+⌥+F | ctrl+⇧+⌥+F | ⌘+⇧+⌥+F |
+| **Show/Hide Knobs** | ctrl+⇧+⌥+D | ctrl+⇧+⌥+D | ⌘+⇧+⌥+D |
+| **Show/Hide Assets** | ctrl+⇧+⌥+A | ctrl+⇧+⌥+A | ⌘+⇧+⌥+A |
+| **Show/Hide Timeline** | ctrl+⇧+⌥+T | ctrl+⇧+⌥+T | ⌘+⇧+⌥+T |
+| **Show/Hide Recording** | ctrl+⇧+⌥+R | ctrl+⇧+⌥+R | ⌘+⇧+⌥+R |
+| **Show/Hide Editor** | ctrl+⇧+⌥+H | ctrl+⇧+⌥+H | ⌘+⇧+⌥+H |
+| **Show/Hide Canvas** | ctrl+⇧+⌥+V | ctrl+⇧+⌥+V | ⌘+⇧+⌥+V |
+| **Toggle Split View** | ctrl+⇧+⌥+, | ctrl+⇧+⌥+, | ⌘+⇧+⌥+, |
+| **Increase Font Size** | ctrl++ | ctrl++ | ⌘++ |
+| **Decrease Font Size** | ctrl+- | ctrl+- | ⌘+- |
 
+# Inline GUI Controls
+
+| Target | Action | Result |
+|:---|:---|:---|
+| **Number** | Double-click | Show float slider |
+| **vec2 string** | Double-click | Show 2D pad GUI |
+| **vec3 string/color marker** | Double-click | Show HSV slider |
+| **Inside GUI area** | Double-click | Confirm adjustment |
+| **Outside GUI area** | Double-click | Cancel adjustment |
+
+Note: The inline GUI controls provide quick access to value adjustments directly in the code editor. Double-clicking specific elements will open their respective control interfaces, and you can either confirm or cancel your adjustments using double-clicks.
 
 ##### *And some of Sublime Text bindings by Codemirror.
 </br>
@@ -86,7 +98,7 @@ You can install the app from [here](https://shaderboy.net/).
 </br>
 
 # Features
-  
+
 ### Compatibility
 - [X] Shadertoy uniform variables
 - [X] Multipass shader
@@ -98,7 +110,7 @@ You can install the app from [here](https://shaderboy.net/).
 - [ ] Display number of chars
 - [ ] VR
 
-### Supported Shadertoy Uniforms  
+### Supported Shadertoy Uniforms
 - [X] uniform vec3      **iResolution;**           *// viewport resolution (in pixels)*
 - [X] uniform float     **iTime;**                 *// shader playback time (in seconds)*
 - [X] uniform float     **iTimeDelta;**            *// render time (in seconds)*
@@ -110,7 +122,7 @@ You can install the app from [here](https://shaderboy.net/).
 - [ ] uniform vec3      **iChannelResolution[4];** *// channel resolution (in pixels)*
 - [X] uniform samplerXX **iChannel0..3;**          *// input channel. XX = 2D/Cube*
 - [X] uniform float     **iSampleRate;**           *// sound sample rate (i.e., 44100)*
-  
+
 ### GUI/other usefuls
 - [X] Timeline GUI(frame based) :PC only
 - [X] x24 uniforms with GUI(knob style) :PC only
@@ -123,9 +135,9 @@ You can install the app from [here](https://shaderboy.net/).
 - [ ] Inlined Khronos doc
 - [ ] Snippets for writing SDF(Signed Distance field)
 - [ ] Multiple editor pane
-- [ ] Insert value with inlined GUIs.(https://github.com/patriciogonzalezvivo/glslEditor)
+- [X] Insert value with inlined GUIs.(https://github.com/patriciogonzalezvivo/glslEditor)
 - [ ] Break point.(https://github.com/patriciogonzalezvivo/glslEditor)
-  
+
 ### Other
 - [X] GoogleDrive
 - [X] Export Image shader(WebM/PNG/JPG/GIF)
@@ -142,12 +154,12 @@ You can install the app from [here](https://shaderboy.net/).
 
 # Build Your ShaderBoy
 ### Install dependencies
-If you want have your own ShaderBoy,  
-Clone this repo and install dependencies.  
+If you want have your own ShaderBoy,
+Clone this repo and install dependencies.
 ```
 $ npm install
 ```
-  
+
 ### Build
 You then set up a local host for development.
 ```
@@ -157,10 +169,10 @@ or to build,
 ```
 $ npm run build
 ```
-  
+
 ### Upload
-And upload files in "dest" directory to your server.  
-That's it! Good luck!  
+And upload files in "dest" directory to your server.
+That's it! Good luck!
 </br>
 </br>
 </br>
