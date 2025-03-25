@@ -254,6 +254,14 @@ $btn_basesize_sp:calc((100vw - 0px)/4);
     }
 }
 
+.btn-thumb {
+    position: relative;
+}
+
+.btn-name {
+    font-weight: 500;
+}
+
 .btn-hide {
     // transform-origin: center top;
     animation: anm-btn-hide 0.4s both;

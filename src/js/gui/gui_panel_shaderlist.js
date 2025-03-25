@@ -34,10 +34,31 @@ export default ShaderBoy.gui_panel_shaderlist = {
 
     addThumbBtn(shader)
     {
-        const btnEl = this.createShaderBtn(shader)
+        const btnEl = document.createElement('div')
+        btnEl.className = 'btn'
         btnEl.setAttribute('name', shader.name)
-        btnEl.setAttribute('modifiedTime', shader.modifiedTime)
-        btns.push(btnEl)
+
+        if (shader.folderId) {
+            btnEl.setAttribute('folderId', shader.folderId)
+        }
+
+        const btn_thumb = document.createElement('div')
+        btn_thumb.className = 'btn-thumb'
+
+        // 初期プレースホルダー画像（またはロード中インジケータ）
+        if (shader.thumb) {
+            btn_thumb.style.backgroundImage = shader.thumb
+        } else {
+            // プレースホルダーのサムネイル画像
+            btn_thumb.style.backgroundImage = 'url("/img/loading-thumbnail.svg")'
+        }
+
+        const btn_name = document.createElement('div')
+        btn_name.className = 'btn-name'
+        btn_name.textContent = shader.name
+
+        btnEl.appendChild(btn_thumb)
+        btnEl.appendChild(btn_name)
 
         btnEl.onclick = (e) =>
         {
@@ -47,21 +68,21 @@ export default ShaderBoy.gui_panel_shaderlist = {
             const btnNum = btns.length;
             for (let i = 0; i < btnNum; i++)
             {
-                if (btns[i] == e.target.parentElement)
+                if (btns[i].el == e.target.parentElement)
                 {
-                    btns[i].classList.toggle('btn-activate')
+                    btns[i].el.classList.toggle('btn-activate')
 
                     setTimeout(() =>
                     {
-                        btns[i].classList.toggle('btn-activate')
+                        btns[i].el.classList.toggle('btn-activate')
                     }, Math.floor(1000 * 0.8))
                 }
                 else
                 {
-                    btns[i].classList.toggle('btn-hide')
+                    btns[i].el.classList.toggle('btn-hide')
                     setTimeout(() =>
                     {
-                        btns[i].classList.toggle('btn-hide')
+                        btns[i].el.classList.toggle('btn-hide')
                     }, Math.floor(1000 * 0.8))
                 }
             }
@@ -110,6 +131,12 @@ export default ShaderBoy.gui_panel_shaderlist = {
             }
         }
         panelEl.appendChild(btnEl)
+
+        btns.push({
+            el: btnEl,
+            name: shader.name,
+            modifiedTime: shader.modifiedTime
+        })
     },
 
     createShaderBtn(shader)
@@ -200,8 +227,61 @@ export default ShaderBoy.gui_panel_shaderlist = {
         gpbaseEl.classList.toggle("gp-hidden")
 
         this.sort()
+    },
 
-        // Comment out to keep the virtual keyboard.
-        // ShaderBoy.editor.codemirror.display.input.blur()
+    // サムネイル更新用の新しいメソッド
+    updateThumb(folderId, thumbUrl) {
+        const btnEl = panelEl.querySelector(`.btn[folderId="${folderId}"]`);
+        if (btnEl) {
+            const thumbEl = btnEl.querySelector('.btn-thumb');
+            if (thumbEl) {
+                thumbEl.style.backgroundImage = thumbUrl;
+            }
+        }
+    },
+
+    // 可視サムネイルの読み込み優先処理
+    loadVisibleThumbnailsFirst() {
+        // すでにリストに表示されているフォルダID一覧を取得
+        const visibleFolderIds = [];
+        const viewportHeight = window.innerHeight;
+        const panelRect = panelEl.getBoundingClientRect();
+
+        // 画面内または近い位置にあるボタンのみを選択
+        btns.forEach(btn => {
+            const btnRect = btn.el.getBoundingClientRect();
+            // 要素が画面内か、画面から200px以内にある場合
+            if (btnRect.bottom >= -200 && btnRect.top <= viewportHeight + 200) {
+                const folderId = btn.el.getAttribute('folderId');
+                if (folderId) {
+                    visibleFolderIds.push({
+                        id: folderId,
+                        name: btn.name,
+                        distance: Math.abs(btnRect.top - (viewportHeight/2)) // 画面中央からの距離
+                    });
+                }
+            }
+        });
+
+        // 画面中央に近い順にソート
+        visibleFolderIds.sort((a, b) => a.distance - b.distance);
+
+        // この順序をio.jsに渡して優先的に読み込めるようにする
+        return visibleFolderIds;
+    },
+
+    // スクロールイベントリスナーを設定
+    setupScrollListener() {
+        let scrollTimeout;
+        panelEl.addEventListener('scroll', () => {
+            // スクロール中は連続して呼ばれないようにデバウンス
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const visibleIds = this.loadVisibleThumbnailsFirst();
+                if (visibleIds.length > 0 && typeof ShaderBoy.io.prioritizeThumbnails === 'function') {
+                    ShaderBoy.io.prioritizeThumbnails(visibleIds);
+                }
+            }, 100);
+        });
     }
 }
