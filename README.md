@@ -78,6 +78,10 @@ You can install the app from [here](https://shaderboy.net/).
 | **Increase Font Size** | ctrl++ | ctrl++ | ⌘++ |
 | **Decrease Font Size** | ctrl+- | ctrl+- | ⌘+- |
 
+Note:ShaderBoy uses Monaco Editor (the same editor that powers VS Code), so you can use all the standard VS Code keyboard shortcuts and features.
+
+
+
 # Inline GUI Controls
 
 | Target | Action | Result |
