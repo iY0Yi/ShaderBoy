@@ -11,6 +11,9 @@ import editor from '../editor/editor'
 import gui from '../gui/gui'
 import gui_header from '../gui/gui_header'
 import gui_timeline from '../gui/gui_timeline'
+import gui_inline_1f from '../gui/gui_inline_1f'
+import gui_inline_2f from '../gui/gui_inline_2f'
+import gui_inline_col from '../gui/gui_inline_col'
 import io from '../io/io'
 import ShaderBoy from '../shaderboy'
 
@@ -64,6 +67,10 @@ export default class Shader
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	compile(succeedCallback)
 	{
+		// フラグメントシェーダーのコードを処理
+		this.fragmentSource = gui_inline_1f.insertUniform(this.fragmentSource)
+		this.fragmentSource = gui_inline_2f.insertUniform(this.fragmentSource)
+		this.fragmentSource = gui_inline_col.insertUniform(this.fragmentSource)
 		this.fragmentSource = this.fragmentSource.replace('　', ' ')
 		this.fragmentSource = this.fragmentSource.replace('	', ' ')
 		this.fragmentSource = this.fragmentSource.replace(/[^\x00-\x7F]/g, '')
@@ -121,13 +128,13 @@ export default class Shader
 		gl.attachShader(pr, compileSource(gl, gl.FRAGMENT_SHADER, this.fragmentSource))
 		gl.linkProgram(pr)
 
-
 		let compiledCallback = ()=>{
 			if (isCompiled)
 			{
 				this.program = pr
 				this.vertAttLocation = gl.getAttribLocation(pr, 'pos')
 				gl.enableVertexAttribArray(this.vertAttLocation)
+
 				if (succeedCallback !== undefined)
 				{
 					succeedCallback()
@@ -185,6 +192,13 @@ export default class Shader
 		{
 			gl.uniform1f(gl.getUniformLocation(this.program, knob.name), (knob.value).toFixed(3))
 		}
+	}
+
+	setSliderUniforms()
+	{
+		gl.uniform1f(gl.getUniformLocation(this.program, gui_inline_1f.name), gui_inline_1f.offset)
+		gl.uniform2f(gl.getUniformLocation(this.program, gui_inline_2f.name), gui_inline_2f.offsetX, gui_inline_2f.offsetY)
+		gl.uniform3f(gl.getUniformLocation(this.program, gui_inline_col.name), gui_inline_col.offsetR, gui_inline_col.offsetG, gui_inline_col.offsetB)
 	}
 
 	setMIDIUniforms()
@@ -313,6 +327,7 @@ export default class Shader
 				throw new Error(`attempted to set uniform "${name}" to invalid value ${value}`)
 			}
 		}
+
 		return this
 	}
 

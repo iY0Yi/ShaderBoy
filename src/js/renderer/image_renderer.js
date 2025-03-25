@@ -75,6 +75,7 @@ export default ShaderBoy.imageRenderer = {
 				gl.bindTexture(gl.TEXTURE_2D, texture)
 			}
 			buffer.shader.setKnobsUniforms()
+			buffer.shader.setSliderUniforms()
 			buffer.shader.setMIDIUniforms()
 			buffer.shader.setShadetoyUniforms()
 			buffer.shader.drawTexture(buffer.framebuffer, buffer.textures[0])

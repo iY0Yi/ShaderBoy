@@ -1,16 +1,16 @@
-//   ___                             _                   
-//  (  _`\                          ( )                  
-//  | (_(_)   _    _   _   ___     _| |                  
-//  `\__ \  /'_`\ ( ) ( )/' _ `\ /'_` |                  
-//  ( )_) |( (_) )| (_) || ( ) |( (_| |                  
-//  `\____)`\___/'`\___/'(_) (_)`\__,_)                  
-//   ___                      _                          
-//  |  _`\                   ( )                         
-//  | (_) )   __    ___     _| |   __   _ __   __   _ __ 
+//   ___                             _
+//  (  _`\                          ( )
+//  | (_(_)   _    _   _   ___     _| |
+//  `\__ \  /'_`\ ( ) ( )/' _ `\ /'_` |
+//  ( )_) |( (_) )| (_) || ( ) |( (_| |
+//  `\____)`\___/'`\___/'(_) (_)`\__,_)
+//   ___                      _
+//  |  _`\                   ( )
+//  | (_) )   __    ___     _| |   __   _ __   __   _ __
 //  | ,  /  /'__`\/' _ `\ /'_` | /'__`\( '__)/'__`\( '__)
-//  | |\ \ (  ___/| ( ) |( (_| |(  ___/| |  (  ___/| |   
-//  (_) (_)`\____)(_) (_)`\__,_)`\____)(_)  `\____)(_)   
-//                                                       
+//  | |\ \ (  ___/| ( ) |( (_| |(  ___/| |  (  ___/| |
+//  (_) (_)`\____)(_) (_)`\__,_)`\____)(_)  `\____)(_)
+//
 
 import ShaderBoy from '../shaderboy'
 import gui_timeline from '../gui/gui_timeline'
@@ -89,7 +89,7 @@ export default ShaderBoy.soundRenderer = {
     destroyContext()
     {
         console.log('soundRenderer.destroyContext')
-        if (this.mPlayNode !== null) 
+        if (this.mPlayNode !== null)
         {
             this.mPlayNode.stop()
             this.mPlayNode.disconnect()
@@ -229,6 +229,7 @@ export default ShaderBoy.soundRenderer = {
             shader.uniforms.iSampleRate = this.mSampleRate
             shader.uniforms.iBlockOffset = off / this.mSampleRate
             shader.setKnobsUniforms()
+            shader.setSliderUniforms()
             shader.setMIDIUniforms()
             shader.setShadetoySoundShaderUniforms()
             shader.drawTexture(this.framebuffer, this.texture)
