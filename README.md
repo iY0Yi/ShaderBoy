@@ -1,8 +1,8 @@
 
 
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/titlelogo.jpg"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc00.jpg"></br>
 <img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_sp00.jpg"></br>
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/titlelogo.jpg"></br>
 <strong>ShaderBoy</strong> is a simple text editor that lets you write <a href="https://www.shadertoy.com/"><em>Shadertoy</em></a> shaders more comfortably, anytime, anywhere. I like writing shaders for Shadertoy, or analyzing other people's esoteric shaders, and I created this especially because I wanted to do that on my smartphone. Whether you're traveling by train or plane, staying in the toilet, fishing or camping, you can write a shader anywhere and anytime.
 Your power to go.</br>
 
@@ -27,25 +27,6 @@ ShaderBoy is a *PWA(Progressive Web Apps).*
 You can install the app from [here](https://shaderboy.net/).
 ##### *[Howto: Install Progressive Web App (PWA) natively on Windows/macOS via Chrome Browser](https://medium.com/@dhormale/install-pwa-on-windows-desktop-via-google-chrome-browser-6907c01eebe4)
 
-</br>
-</br>
-</br>
-</br>
-</br>
-
-# Screenshots
-
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc00.jpg"></br>
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_sp00.jpg"></br>
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc01.jpg"></br>
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc02.jpg"></br>
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc03.jpg"></br>
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc04.jpg"></br>
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc05.jpg"></br>
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc06.jpg"></br>
-<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc07.jpg"></br>
-</br>
-</br>
 </br>
 </br>
 </br>
@@ -150,6 +131,25 @@ Note: The inline GUI controls provide quick access to value adjustments directly
 - [X] Syntax highlight
 - [ ] Import/Exprt JSON (for Shadertoy unofficial plugin)
 - [ ] Direct import from Shadertoy URL
+</br>
+</br>
+</br>
+</br>
+</br>
+
+# Screenshots
+
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc00.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_sp00.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc01.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc02.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc03.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc04.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc05.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc06.jpg"></br>
+<img src="https://github.com/iY0Yi/ShaderBoy/blob/master/asset/screenshots/sb_v2_capture_pc07.jpg"></br>
+</br>
+</br>
 </br>
 </br>
 </br>
