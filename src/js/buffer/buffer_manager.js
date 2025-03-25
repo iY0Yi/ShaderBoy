@@ -13,11 +13,12 @@
 //                              ( )_) |
 //                               \___/'
 
-import CodeMirror from 'codemirror/lib/codemirror'
+// import CodeMirror from 'codemirror/lib/codemirror'
 import Shader from '../shader/shader'
 import ShaderLib from '../shader/shaderlib'
 import ShaderBoy from '../shaderboy'
 import Buffer from './buffer'
+import * as monaco from 'monaco-editor'
 
 export default ShaderBoy.bufferManager = {
 
@@ -28,15 +29,15 @@ export default ShaderBoy.bufferManager = {
         this.currentBufferDataId = 0
 
         ShaderBoy.buffers = {}
-        ShaderBoy.buffers['Setting'] = new Buffer(false)
-        ShaderBoy.buffers['Config'] = new Buffer(false)
-        ShaderBoy.buffers['Common'] = new Buffer(false)
-        ShaderBoy.buffers['Sound'] = new Buffer(false)
-        ShaderBoy.buffers['BufferA'] = new Buffer(true)
-        ShaderBoy.buffers['BufferB'] = new Buffer(true)
-        ShaderBoy.buffers['BufferC'] = new Buffer(true)
-        ShaderBoy.buffers['BufferD'] = new Buffer(true)
-        ShaderBoy.buffers['Image'] = new Buffer(true)
+        ShaderBoy.buffers['Setting'] = new Buffer('Setting', false)
+        ShaderBoy.buffers['Config'] = new Buffer('Config', false)
+        ShaderBoy.buffers['Common'] = new Buffer('Common', false)
+        ShaderBoy.buffers['Sound'] = new Buffer('Sound', false)
+        ShaderBoy.buffers['BufferA'] = new Buffer('BufferA', true)
+        ShaderBoy.buffers['BufferB'] = new Buffer('BufferB', true)
+        ShaderBoy.buffers['BufferC'] = new Buffer('BufferC', true)
+        ShaderBoy.buffers['BufferD'] = new Buffer('BufferD', true)
+        ShaderBoy.buffers['Image'] = new Buffer('Image', true)
 
         this.initBufferDoc('Config')
         this.initBufferDoc('Common')
@@ -72,9 +73,13 @@ export default ShaderBoy.bufferManager = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    initBufferDoc(name)
-    {
-        ShaderBoy.buffers[name].cm = CodeMirror.Doc(ShaderLib.shader[name], 'x-shader/x-fragment')
+    // CodeMirror.Docの代わりにモナコモデルを使用するための修正
+    initBufferDoc(name) {
+        // 初期値設定
+        if (ShaderBoy.editor.models) {
+            ShaderBoy.editor.models[name] = monaco.editor.createModel(ShaderLib.shader[name], 'glsl')
+        }
+
         ShaderBoy.buffers[name].errorWidgets = []
     },
 
@@ -147,9 +152,10 @@ export default ShaderBoy.bufferManager = {
         if (needCompile)
         {
             this.compileShaders()
+        }else{
+            ShaderBoy.forceDraw = !ShaderBoy.isPlaying
         }
 
-        ShaderBoy.forceDraw = !ShaderBoy.isPlaying
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -159,7 +165,7 @@ export default ShaderBoy.bufferManager = {
         ShaderBoy.shaderCommonLines = 0
         if (ShaderBoy.buffers['Common'].active === true)
         {
-            commonCode = ShaderBoy.buffers['Common'].cm.getValue()
+            commonCode = ShaderBoy.buffers['Common'].getValue()
             ShaderBoy.shaderCommonLines = commonCode.split(/\n/).length - 1
         }
         return commonCode + '\n'
@@ -195,13 +201,15 @@ export default ShaderBoy.bufferManager = {
 
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getUniformCode()
-    {
+    getUniformCode() {
         ShaderBoy.gui_midi.collectUniforms()
         const uniformCode =
             ShaderLib.shader.uniformFS +
             ShaderBoy.gui.knobUniformFS +
-            ShaderBoy.gui.midiUniformFS
+            ShaderBoy.gui.midiUniformFS +
+            ShaderBoy.gui.inline1fUniformFS +
+            ShaderBoy.gui.inline2fUniformFS +
+            ShaderBoy.gui.inline3fUniformFS
 
         ShaderBoy.shaderUniformsLines = uniformCode.split(/\n/).length - 1
         return uniformCode
@@ -214,7 +222,10 @@ export default ShaderBoy.bufferManager = {
         const uniformCode =
             ShaderLib.shader.soundUniformFS +
             ShaderBoy.gui.knobUniformFS +
-            ShaderBoy.gui.midiUniformFS
+            ShaderBoy.gui.midiUniformFS +
+            ShaderBoy.gui.inline1fUniformFS +
+            ShaderBoy.gui.inline2fUniformFS +
+            ShaderBoy.gui.inline3fUniformFS
 
         ShaderBoy.shaderSoundUniformsLines = uniformCode.split(/\n/).length - 1
         return uniformCode
@@ -226,7 +237,7 @@ export default ShaderBoy.bufferManager = {
         return ShaderBoy.shaderHeader[1] +
             uniformCode +
             commonCode +
-            buffer.cm.getValue() +
+            buffer.getValue() +
             ShaderLib.shader.commonfooterFS
     },
 
@@ -236,7 +247,7 @@ export default ShaderBoy.bufferManager = {
         return ShaderBoy.shaderHeader[1] +
             uniformCode +
             commonCode +
-            buffer.cm.getValue() +
+            buffer.getValue() +
             ShaderLib.shader.soundfooterFS
     },
 
@@ -274,6 +285,7 @@ export default ShaderBoy.bufferManager = {
                     ShaderBoy.gui_header.setStatus('suc', 'Compiled.', 3000)
                 }
 
+                ShaderBoy.forceDraw = !ShaderBoy.isPlaying
             }
         }
 

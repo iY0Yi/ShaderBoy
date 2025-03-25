@@ -8,11 +8,12 @@
 import ShaderBoy from '../shaderboy'
 import ShaderLib from '../shader/shaderlib'
 import gdrive from './gdrive'
-import CodeMirror from 'codemirror/lib/codemirror'
+// import CodeMirror from 'codemirror/lib/codemirror'
 import localforage from 'localforage'
 import gui_timeline from '../gui/gui_timeline'
 import gui_panel_shaderlist from '../gui/gui_panel_shaderlist'
 import Hermite_class from 'hermite-resize'
+import * as monaco from 'monaco-editor'
 
 export default ShaderBoy.io = {
 
@@ -79,19 +80,7 @@ export default ShaderBoy.io = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	setupDevShader(withError = false)
 	{
-		ShaderBoy.config = JSON.parse(ShaderBoy.buffers['Config'].cm.getValue())
-		if (!withError)
-		{
-			ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(ShaderLib.shader['Setting'], 'x-shader/x-fragment')
-		}
-		ShaderBoy.buffers['Config'].cm = CodeMirror.Doc(ShaderLib.shader['Config'], 'x-shader/x-fragment')
-		ShaderBoy.buffers['Common'].cm = CodeMirror.Doc(ShaderLib.shader['Common'], 'x-shader/x-fragment')
-		ShaderBoy.buffers['BufferA'].cm = CodeMirror.Doc(ShaderLib.shader['BufferA'], 'x-shader/x-fragment')
-		ShaderBoy.buffers['BufferB'].cm = CodeMirror.Doc(ShaderLib.shader['BufferB'], 'x-shader/x-fragment')
-		ShaderBoy.buffers['BufferC'].cm = CodeMirror.Doc(ShaderLib.shader['BufferC'], 'x-shader/x-fragment')
-		ShaderBoy.buffers['BufferD'].cm = CodeMirror.Doc(ShaderLib.shader['BufferD'], 'x-shader/x-fragment')
-		ShaderBoy.buffers['Image'].cm = CodeMirror.Doc(ShaderLib.shader['Image'], 'x-shader/x-fragment')
-		ShaderBoy.buffers['Sound'].cm = CodeMirror.Doc(ShaderLib.shader['Sound'], 'x-shader/x-fragment')
+		ShaderBoy.config = JSON.parse(ShaderBoy.buffers['Config'].getValue())
 
 		ShaderBoy.buffers['Common'].active = ShaderBoy.config.buffers['Common'].active
 		ShaderBoy.buffers['BufferA'].active = ShaderBoy.config.buffers['BufferA'].active
@@ -206,8 +195,6 @@ export default ShaderBoy.io = {
 			ShaderBoy.setting.shaders.folderIds.push({ name: folder.name, id: folder.id, modifiedTime: folder.modifiedTime })
 		}
 
-		const settingText = JSON.stringify(ShaderBoy.setting, null, "\t")
-		ShaderBoy.buffers['Setting'].cm = CodeMirror.Doc(settingText, 'x-shader/x-fragment')
 		return Promise.resolve(true)
 	},
 
@@ -232,7 +219,7 @@ export default ShaderBoy.io = {
 	{
 		let request, res
 		ShaderBoy.gui_header.setStatus('prgrs', 'Creating shader files...', 0)
-		ShaderBoy.config = JSON.parse(ShaderBoy.buffers['Config'].cm.getValue())
+		ShaderBoy.config = JSON.parse(ShaderBoy.buffers['Config'].getValue())
 
 		let promises = []
 
@@ -243,13 +230,13 @@ export default ShaderBoy.io = {
 				gdrive.createTextFile(id, 'config.json', JSON.stringify(ShaderBoy.config, null, "\t")),
 				gdrive.createTextFile(id, '_guiknobs.json', JSON.stringify({ 'show': ShaderBoy.gui.knobs.show, 'knobs': ShaderBoy.gui.knobs.knobs })),
 				gdrive.createTextFile(id, '_guitimeline.json', JSON.stringify(gui_timeline.guidata, null, "\t")),
-				gdrive.createTextFile(id, 'common.fs', ShaderBoy.buffers['Common'].cm.getValue()),
-				gdrive.createTextFile(id, 'buf_a.fs', ShaderBoy.buffers['BufferA'].cm.getValue()),
-				gdrive.createTextFile(id, 'buf_b.fs', ShaderBoy.buffers['BufferB'].cm.getValue()),
-				gdrive.createTextFile(id, 'buf_c.fs', ShaderBoy.buffers['BufferC'].cm.getValue()),
-				gdrive.createTextFile(id, 'buf_d.fs', ShaderBoy.buffers['BufferD'].cm.getValue()),
-				gdrive.createTextFile(id, 'main.fs', ShaderBoy.buffers['Image'].cm.getValue()),
-				gdrive.createTextFile(id, 'sound.fs', ShaderBoy.buffers['Sound'].cm.getValue())
+				gdrive.createTextFile(id, 'common.fs', ShaderBoy.buffers['Common'].getValue()),
+				gdrive.createTextFile(id, 'buf_a.fs', ShaderBoy.buffers['BufferA'].getValue()),
+				gdrive.createTextFile(id, 'buf_b.fs', ShaderBoy.buffers['BufferB'].getValue()),
+				gdrive.createTextFile(id, 'buf_c.fs', ShaderBoy.buffers['BufferC'].getValue()),
+				gdrive.createTextFile(id, 'buf_d.fs', ShaderBoy.buffers['BufferD'].getValue()),
+				gdrive.createTextFile(id, 'main.fs', ShaderBoy.buffers['Image'].getValue()),
+				gdrive.createTextFile(id, 'sound.fs', ShaderBoy.buffers['Sound'].getValue())
 			]
 		}
 		else
@@ -361,7 +348,7 @@ export default ShaderBoy.io = {
 		const promises = []
 		const saveBufferShader = (buffer, fileName) =>
 		{
-			if (buffer.active) promises.push(gdrive.saveTextFile(fileName, this.idList[fileName].id, buffer.cm.getValue()))
+			if (buffer.active) promises.push(gdrive.saveTextFile(fileName, this.idList[fileName].id, buffer.getValue()))
 		}
 
 		promises.push(this.saveThumbFile('thumb.png', ShaderBoy.canvas, this.ID_DIR_SHADER))
@@ -445,20 +432,104 @@ export default ShaderBoy.io = {
 			const timeB = new Date(b.modifiedTime)
 			return timeB - timeA
 		})
-		while (folderIds.length > 0)
-		{
-			const shaderId = folderIds.shift()
-			const promise = gdrive.getFileInfoByName('thumb.png', shaderId.id)
-			const request = await promise
-			const file = request.result.files[0]
-			const res = await gdrive.getContentBody(file.id)
-			const imageType = res.headers['content-type'];
-			const base64 = window.btoa(res.body);
-			const dataURI = 'data:' + imageType + ';base64,' + base64
-			const shaderName = shaderId.name
-			gui_panel_shaderlist.addThumbBtn({ name: shaderName, thumb: `url("${dataURI}")`, modifiedTime: file.modifiedTime})
-			gui_panel_shaderlist.sort()
+
+		// まずシェーダリストだけを先に表示（サムネイルなし）
+		folderIds.forEach(shaderId => {
+			gui_panel_shaderlist.addThumbBtn({
+				name: shaderId.name,
+				thumb: null,
+				modifiedTime: shaderId.modifiedTime,
+				folderId: shaderId.id
+			})
+		})
+
+		// リストをソート
+		gui_panel_shaderlist.sort()
+
+		// スクロールリスナーを設定
+		gui_panel_shaderlist.setupScrollListener()
+
+		// 初期の可視フォルダIDを取得
+		this.priorityFolderIds = gui_panel_shaderlist.loadVisibleThumbnailsFirst().map(item => item.id)
+
+		// 進捗表示
+		const totalCount = folderIds.length
+		// if (totalCount > 0) {
+		// 	ShaderBoy.gui_header.setStatus('prgrs', `Loading thumbnails (0/${totalCount})...`, 0)
+		// }
+
+		// 処理済みフォルダIDを追跡
+		const processedIds = new Set()
+		const BATCH_SIZE = 8
+
+		// サムネイル読み込み処理のメインループ
+		while (processedIds.size < totalCount) {
+			// 優先フォルダIDから未処理のものを抽出
+			const priorityBatch = this.priorityFolderIds
+				.filter(id => !processedIds.has(id))
+				.slice(0, BATCH_SIZE)
+
+			// 残りのフォルダIDからバッチサイズまで埋める
+			let currentBatch = priorityBatch.slice()
+
+			if (currentBatch.length < BATCH_SIZE) {
+				const remainingIds = folderIds
+					.filter(item => !processedIds.has(item.id) && !priorityBatch.includes(item.id))
+					.slice(0, BATCH_SIZE - currentBatch.length)
+					.map(item => item.id)
+
+				currentBatch = currentBatch.concat(remainingIds)
+			}
+
+			// バッチが空なら終了
+			if (currentBatch.length === 0) break
+
+			// 並列でサムネイルを取得
+			const promises = currentBatch.map(async (id) => {
+				const folderItem = folderIds.find(item => item.id === id)
+				if (!folderItem) return { id, thumb: null }
+
+				try {
+					const request = await gdrive.getFileInfoByName('thumb.png', id)
+					const file = request.result.files[0]
+					if (!file) return { id, thumb: null }
+
+					const res = await gdrive.getContentBody(file.id)
+					const imageType = res.headers['content-type']
+					const base64 = window.btoa(res.body)
+					const dataURI = 'data:' + imageType + ';base64,' + base64
+
+					return {
+						id,
+						thumb: `url("${dataURI}")`
+					}
+				} catch (error) {
+					console.warn(`Failed to load thumbnail for ${folderItem.name}:`, error)
+					return { id, thumb: null }
+				}
+			})
+
+			// バッチの結果を処理
+			const results = await Promise.all(promises)
+			results.forEach(result => {
+				processedIds.add(result.id)
+				if (result.thumb) {
+					gui_panel_shaderlist.updateThumb(result.id, result.thumb)
+				}
+			})
+
+			// 進捗を更新
+			// ShaderBoy.gui_header.setStatus('prgrs', `Loading thumbnails (${processedIds.size}/${totalCount})...`, 0)
+
+			// UIを更新する余裕を与える
+			await new Promise(resolve => setTimeout(resolve, 0))
+
+			// 優先IDリストを再取得（ユーザーがスクロールした場合に備えて）
+			this.priorityFolderIds = gui_panel_shaderlist.loadVisibleThumbnailsFirst().map(item => item.id)
 		}
+
+		// 完了したらステータスを更新
+		ShaderBoy.gui_header.setStatus('gsuc', `Loaded ${totalCount} shaders.`, 3000)
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -621,15 +692,22 @@ export default ShaderBoy.io = {
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	async setShaderConfig()
-	{
-		const id = this.idList['config.json'].id
-		const request = await gdrive.getContentBody(id)
-		ShaderBoy.buffers['Config'].cm = CodeMirror.Doc(request.body, 'x-shader/x-fragment')
-		const configObj = await this.versionCompatibilityFallback(JSON.parse(request.body))
-		ShaderBoy.config = configObj
-		return
-	},
+	// 例：setShaderConfig()メソッドの修正
+    async setShaderConfig() {
+        const id = this.idList['config.json'].id
+        const request = await gdrive.getContentBody(id)
+
+        // CodeMirror.Docの代わりにMonacoモデル経由で操作
+        if (!ShaderBoy.editor.models['Config']) {
+            ShaderBoy.editor.models['Config'] = monaco.editor.createModel(request.body, 'glsl')
+        } else {
+            ShaderBoy.editor.models['Config'].setValue(request.body)
+        }
+
+        const configObj = await this.versionCompatibilityFallback(JSON.parse(request.body))
+        ShaderBoy.config = configObj
+        return
+    },
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	async loadGUIdata()
@@ -658,15 +736,21 @@ export default ShaderBoy.io = {
 	},
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	async loadShaderCodes()
-	{
-		const load = async (bufName) =>
-		{
+	// loadShaderCodes()メソッドの修正
+	async loadShaderCodes() {
+		const load = async (bufName) => {
 			ShaderBoy.buffers[bufName].active = ShaderBoy.config.buffers[bufName].active
 			const fileName = ShaderBoy.buffers[bufName].fileName
 			const id = this.idList[fileName].id
 			const request = await gdrive.getContentBody(id)
-			ShaderBoy.buffers[bufName].cm = CodeMirror.Doc(request.body, 'x-shader/x-fragment')
+
+			// CodeMirror.Docの代わりにMonacoモデルを使用
+			if (!ShaderBoy.editor.models[bufName]) {
+				ShaderBoy.editor.models[bufName] = monaco.editor.createModel(request.body, 'glsl')
+			} else {
+				ShaderBoy.editor.models[bufName].setValue(request.body)
+			}
+
 			return Promise.resolve()
 		}
 
@@ -735,5 +819,11 @@ export default ShaderBoy.io = {
 		{
 			throw new Error(error)
 		}
-	}
+	},
+
+	prioritizeThumbnails(visibleFolderIds) {
+		// すでに処理中のサムネイル読み込みを中断するわけではなく、
+		// 次のバッチで優先的に読み込む対象を設定する
+		this.priorityFolderIds = visibleFolderIds.map(item => item.id);
+	},
 }

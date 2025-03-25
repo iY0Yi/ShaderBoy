@@ -14,12 +14,8 @@
 
 import ShaderBoy from '../shaderboy'
 import Worker from '../workers/keyword.worker'
-
 import $ from 'jquery'
-
-import 'codemirror/addon/hint/show-hint'
-import 'codemirror/addon/dialog/dialog'
-import CodeMirror from 'codemirror/lib/codemirror'
+import * as monaco from 'monaco-editor'
 
 // Module Private
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,14 +76,37 @@ export default ShaderBoy.editor_hint = {
     {
         let docLinesStr = ''
         const curBufName = ShaderBoy.activeBufferIds[ShaderBoy.bufferManager.currentBufferDataId]
+
+        // Common バッファの内容を取得
         if (curBufName !== 'Common' && ShaderBoy.buffers['Common'].active)
         {
-            docLinesStr += ShaderBoy.buffers['Common'].cm.getValue()
+            // バッファの実装に合わせて値を取得
+            docLinesStr += ShaderBoy.buffers['Common'].getValue()
         }
-        docLinesStr += ShaderBoy.editor.codemirror.doc.getValue()
-        const curLineInfo = ShaderBoy.editor.codemirror.doc.lineInfo(ShaderBoy.editor.codemirror.getCursor().line)
-        if (!curLineInfo.text.match(/\}/g)) docLinesStr = docLinesStr.replace(curLineInfo.text, '')
-        this.keywordWorker.postMessage(JSON.stringify({ name: 'syncUserDict', content: { dictName: ShaderBoy.editingBuffer, strCode: docLinesStr } }, null, "\t"))
+
+        // 現在のエディタの内容を取得
+        docLinesStr += ShaderBoy.editor._monaco.getModel().getValue()
+
+        // 現在の行を取得してフィルタリング
+        const position = ShaderBoy.editor._monaco.getPosition();
+        if (position) {
+            const lineNumber = position.lineNumber;
+            const model = ShaderBoy.editor._monaco.getModel();
+            if (model) {
+                const lineContent = model.getLineContent(lineNumber);
+                if (!lineContent.match(/\}/g)) {
+                    docLinesStr = docLinesStr.replace(lineContent, '');
+                }
+            }
+        }
+
+        this.keywordWorker.postMessage(JSON.stringify({
+            name: 'syncUserDict',
+            content: {
+                dictName: ShaderBoy.editingBuffer,
+                strCode: docLinesStr
+            }
+        }, null, "\t"))
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -145,51 +164,51 @@ export default ShaderBoy.editor_hint = {
 
             const hintFunction = (cm, data, completion) =>
             {
-                const getText = (completion) =>
-                {
-                    if (typeof completion == "string") return completion
-                    else return completion.text
-                }
-                cm.replaceRange(getText(completion), completion.from || data.from, completion.to || data.to, "complete")
+                // const getText = (completion) =>
+                // {
+                //     if (typeof completion == "string") return completion
+                //     else return completion.text
+                // }
+                // cm.replaceRange(getText(completion), completion.from || data.from, completion.to || data.to, "complete")
 
-                data.from.ch += chOffset
-                cm.setCursor(data.from)
+                // data.from.ch += chOffset
+                // cm.setCursor(data.from)
 
-                const to = new CodeMirror.Pos(data.from.line, data.from.ch + tabFollowWordsStrLen[0])
-                tabFollowWordsStrLen.shift()
-                cm.setSelection(data.from, to)
+                // const to = new CodeMirror.Pos(data.from.line, data.from.ch + tabFollowWordsStrLen[0])
+                // tabFollowWordsStrLen.shift()
+                // cm.setSelection(data.from, to)
 
-                if (tabFollowWordsStrLen.length >= 0)
-                {
-                    ShaderBoy.editor_hotkeys.keys.Tab = (cm) =>
-                    {
-                        const cur = cm.getCursor()
+                // if (tabFollowWordsStrLen.length >= 0)
+                // {
+                //     ShaderBoy.editor_hotkeys.keys.Tab = (cm) =>
+                //     {
+                //         const cur = cm.getCursor()
 
-                        const from = new CodeMirror.Pos(cur.line, cur.ch + offset)
-                        const to = new CodeMirror.Pos(cur.line, cur.ch + offset + tabFollowWordsStrLen[0])
-                        tabFollowWordsStrLen.shift()
-                        cm.setCursor(new CodeMirror.Pos(cur.line, cur.ch + 2))
-                        cm.setSelection(from, to)
-                        offset = 2
+                //         const from = new CodeMirror.Pos(cur.line, cur.ch + offset)
+                //         const to = new CodeMirror.Pos(cur.line, cur.ch + offset + tabFollowWordsStrLen[0])
+                //         tabFollowWordsStrLen.shift()
+                //         cm.setCursor(new CodeMirror.Pos(cur.line, cur.ch + 2))
+                //         cm.setSelection(from, to)
+                //         offset = 2
 
-                        if (tabFollowWordsStrLen.length <= 0)
-                        {
-                            ShaderBoy.editor_hotkeys.keys.Tab = (cm) =>
-                            { //tab as space
-                                if (cm.somethingSelected())
-                                {
-                                    cm.indentSelection("add")
-                                } else
-                                {
-                                    cm.replaceSelection(cm.getOption("indentWithTabs") ? "\t" :
-                                        Array(cm.getOption("indentUnit") + 1).join(" "), "end", "+input")
-                                }
-                            }
-                            cm.setOption("extraKeys", ShaderBoy.editor_hotkeys.keys)
-                        }
-                    }
-                    cm.setOption("extraKeys", ShaderBoy.editor_hotkeys.keys)
-                }
+                //         if (tabFollowWordsStrLen.length <= 0)
+                //         {
+                //             ShaderBoy.editor_hotkeys.keys.Tab = (cm) =>
+                //             { //tab as space
+                //                 if (cm.somethingSelected())
+                //                 {
+                //                     cm.indentSelection("add")
+                //                 } else
+                //                 {
+                //                     cm.replaceSelection(cm.getOption("indentWithTabs") ? "\t" :
+                //                         Array(cm.getOption("indentUnit") + 1).join(" "), "end", "+input")
+                //                 }
+                //             }
+                //             cm.setOption("extraKeys", ShaderBoy.editor_hotkeys.keys)
+                //         }
+                //     }
+                //     cm.setOption("extraKeys", ShaderBoy.editor_hotkeys.keys)
+                // }
             }
             return hintFunction
         }
@@ -213,30 +232,19 @@ export default ShaderBoy.editor_hint = {
             this.hintList[i].hint = this.setSnippet(filteredRenderWords[i])
         }
 
-        CodeMirror.showHint(
-            this.workingCm,
-            () =>
-            {
-                const cur = ShaderBoy.editor_hint.workingCm.getCursor()
-                const token = ShaderBoy.editor_hint.workingCm.getTokenAt(cur)
-                const start = token.start
-                const end = cur.ch
-                const ch = cur.ch
-                const line = cur.line
+        // MonacoエディタでのコードスニペットとCode Actionsの表示
+        if (this.workingCm && ShaderBoy.editor._monaco) {
+            // Monaco向けの補完候補表示
+            const position = this.workingCm.getPosition()
+            if (position) {
+                // Monacoではコンテンツウィジェットを使った独自UIも可能だが
+                // 今回は組み込み補完機能のトリガーを使用
+                ShaderBoy.editor._monaco.trigger('editor', 'editor.action.triggerSuggest', {})
 
-                const isPeriod = () => { return ShaderBoy.editor_hint.curWord === '.' ? 1 : 0 }
-
-                return {
-                    list: ShaderBoy.editor_hint.hintList,
-                    from: CodeMirror.Pos(line, ch - token.string.length + isPeriod()),
-                    to: CodeMirror.Pos(line, end)
-                }
-            },
-            {
-                completeSingle: false,
-                alignWithWord: true
+                // ここで補完候補のリストをMonaco用に変換・登録することも可能
+                // 完全な実装では、monaco.languages.registerCompletionItemProviderを使用
             }
-        )
+        }
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -245,28 +253,40 @@ export default ShaderBoy.editor_hint = {
         return (cm) =>
         {
             ShaderBoy.gui_header.setDirty(true)
-            ShaderBoy.editor_hint.curCur = cm.getCursor()
-            ShaderBoy.editor_hint.curToken = cm.getTokenAt(ShaderBoy.editor_hint.curCur)
-            ShaderBoy.editor_hint.curStart = ShaderBoy.editor_hint.curToken.start
-            ShaderBoy.editor_hint.curEnd = ShaderBoy.editor_hint.curCur.ch
-            ShaderBoy.editor_hint.curCh = ShaderBoy.editor_hint.curCur.ch
-            ShaderBoy.editor_hint.curLine = ShaderBoy.editor_hint.curCur.line
-            ShaderBoy.editor_hint.curWord = ShaderBoy.editor_hint.curToken.string.replace(/\s/g, "").trim()
 
-            const preCh = ShaderBoy.editor_hint.curCh - ShaderBoy.editor_hint.curWord.length
-            const line = ShaderBoy.editor_hint.curLine
-            const prePos = new CodeMirror.Pos(line, preCh)
-            const preToken = cm.getTokenAt(prePos)
-            const preWord = preToken.string
-            const isAfterDot = preWord === '.'
+            // MonacoエディタからカーソルとトークンのInformation
+            const monaco_cm = ShaderBoy.editor._monaco
+            if (!monaco_cm) return
 
-            if ((ShaderBoy.editor_hint.curWord.match(/[a-zA-Z_-]{2,}/) && !isAfterDot) || ShaderBoy.editor_hint.curWord === '.')
-            {
-                ShaderBoy.editor_hint.syncUserDict()
+            const position = monaco_cm.getPosition()
+            if (!position) return
 
-                // Start filtering with Worker...
-                ShaderBoy.editor_hint.workingCm = cm
-                ShaderBoy.editor_hint.filterDictByWord()
+            this.curCur = position
+            this.curCh = position.column
+            this.curLine = position.lineNumber
+
+            // モデルからトークン情報を取得
+            const model = monaco_cm.getModel()
+            if (!model) return
+
+            const wordAtPosition = model.getWordAtPosition(position)
+            this.curWord = wordAtPosition ? wordAtPosition.word : ''
+
+            // モデルの現在の行を取得
+            const lineContent = model.getLineContent(position.lineNumber)
+
+            // ドット演算子の検出
+            const isDot = lineContent.substring(0, position.column - 1).endsWith('.')
+            if (isDot) {
+                this.curWord = '.'
+            }
+
+            if ((this.curWord.match(/[a-zA-Z_-]{2,}/) && !isDot) || this.curWord === '.') {
+                this.syncUserDict()
+
+                // 作業中のエディタはMonacoインスタンス
+                this.workingCm = monaco_cm
+                this.filterDictByWord()
             }
         }
     }

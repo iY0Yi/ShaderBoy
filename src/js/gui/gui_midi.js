@@ -100,7 +100,7 @@ export default ShaderBoy.gui_midi = {
         {
             if (name !== 'Config' && name !== 'Setting' && ShaderBoy.buffers[name].active)
             {
-                const srctxt = ShaderBoy.buffers[name].cm.getValue()
+                const srctxt = ShaderBoy.buffers[name].getValue()
                 let midi_c = srctxt.match(/midi_c\d+/g)
                 midiUniformNames = midiUniformNames.concat(midi_c)
                 let midi_n = srctxt.match(/midi_n\d+/g)

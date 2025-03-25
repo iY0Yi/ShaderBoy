@@ -88,13 +88,13 @@ export default ShaderBoy.gui_keyboard = {
                 }
             }
         }
-
-        document.onkeydown = (ev) =>
+        const canvas = document.getElementById("gl_canvas");
+        canvas.onkeydown = (ev) =>
         {
             console.log('document.onkeydown')
             if(ev.keyCode===229) return; // for Android
             isNativeKeyCode = true
-            const onEditor = document.activeElement === ShaderBoy.editor.codemirror.getInputField()
+            const onEditor = document.activeElement === ShaderBoy.editor.getDomNode()
             if(!onEditor)
             {
                 if (ShaderBoy.isEditorHidden || ShaderBoy.isSplited){
@@ -105,11 +105,11 @@ export default ShaderBoy.gui_keyboard = {
             }
         }
 
-        document.onkeyup = (ev)=>
+        canvas.onkeyup = (ev)=>
         {
             console.log('document.onkeyup')
             if(ev.keyCode===229) return; // for Android
-            const onEditor = document.activeElement === ShaderBoy.editor.codemirror.getInputField()
+            const onEditor = document.activeElement === ShaderBoy.editor.getDomNode()
             if(!onEditor)
             {
                 if (ShaderBoy.isEditorHidden || ShaderBoy.isSplited){

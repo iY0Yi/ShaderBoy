@@ -106,12 +106,9 @@ export default ShaderBoy.gui_knobs = {
                             for (let j = 0; j < bufnames.length; j++)
                             {
                                 const name = bufnames[j]
-                                if (ShaderBoy.buffers[name].cm !== undefined)
-                                {
-                                    let shdrtxt = ShaderBoy.buffers[name].cm.getValue()
-                                    shdrtxt = shdrtxt.split(ShaderBoy.gui.knobs.knobs[id].name).join((ShaderBoy.gui.knobs.knobs[id].value).toFixed(3))
-                                    ShaderBoy.buffers[name].cm.setValue(shdrtxt)
-                                }
+                                let shdrtxt = ShaderBoy.buffers[name].getValue()
+                                shdrtxt = shdrtxt.split(ShaderBoy.gui.knobs.knobs[id].name).join((ShaderBoy.gui.knobs.knobs[id].value).toFixed(3))
+                                ShaderBoy.buffers[name].setValue(shdrtxt)
                             }
                         }
                     }

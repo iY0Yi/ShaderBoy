@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"start": "cross-env NODE_ENV_PRODUCTION=NO NODE_ENV_SOURCE_MAP=YES webpack serve --mode development --hot --open",
+		"start": "cross-env NODE_ENV_PRODUCTION=NO NODE_ENV_SOURCE_MAP=YES webpack serve --hot --open",
 		"build-sourcemap": "cross-env NODE_ENV_PRODUCTION=YES NODE_ENV_SOURCE_MAP=YES webpack --config webpack.config.js",
 		"build": "cross-env NODE_ENV_PRODUCTION=YES NODE_ENV_SOURCE_MAP=NO webpack --config webpack.config.js",
 		"test": "jest"
@@ -54,6 +54,7 @@
 		"jquery": "3.6.0",
 		"keymaster": "1.6.2",
 		"localforage": "1.9.0",
+		"monaco-editor": "^0.52.2",
 		"normalize.css": "8.0.1",
 		"vue": "2.6.12"
 	}

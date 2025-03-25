@@ -5,9 +5,9 @@
 //  | (_( )( (_) )| ( ) ( ) || ( ) ( ) |( (_| || ( ) |( (_| |\__, \
 //  (____/'`\___/'(_) (_) (_)(_) (_) (_)`\__,_)(_) (_)`\__,_)(____/
 
-import 'codemirror/addon/fold/brace-fold'
-import 'codemirror/addon/fold/foldcode'
-import 'codemirror/addon/fold/foldgutter'
+// import 'codemirror/addon/fold/brace-fold'
+// import 'codemirror/addon/fold/foldcode'
+// import 'codemirror/addon/fold/foldgutter'
 import $ from 'jquery'
 import key from 'keymaster'
 import gui_panel_shaderlist from './gui/gui_panel_shaderlist'
@@ -204,7 +204,12 @@ export default ShaderBoy.commands = {
         if (!shaderlistEl.classList.contains('hide')) shaderlistEl.classList.add('hide')
         ShaderBoy.commands.pauseTimeline()
 
-        ShaderBoy.editor.codemirror.display.input.blur()
+        const editorDomNode = ShaderBoy.editor._monaco.getDomNode();
+        if (editorDomNode) {
+            editorDomNode.blur();
+            document.body.focus();
+        }
+
         key('esc', 'default', () =>
         {
             document.getElementById("div-textarea").contentEditable = "false"
@@ -276,7 +281,12 @@ export default ShaderBoy.commands = {
         if (!shaderlistEl.classList.contains('hide')) shaderlistEl.classList.add('hide')
         ShaderBoy.commands.pauseTimeline()
 
-        ShaderBoy.editor.codemirror.display.input.blur()
+        const editorDomNode = ShaderBoy.editor._monaco?.getDomNode();
+        if (editorDomNode) {
+            editorDomNode.blur();
+            document.body.focus();
+        }
+
         key('esc', 'default', () =>
         {
             document.getElementById("div-textarea").contentEditable = "false"
@@ -315,7 +325,12 @@ export default ShaderBoy.commands = {
         if (!shaderlistEl.classList.contains('hide')) shaderlistEl.classList.add('hide')
         ShaderBoy.commands.pauseTimeline()
 
-        ShaderBoy.editor.codemirror.display.input.blur()
+        const editorDomNode = ShaderBoy.editor._monaco?.getDomNode();
+        if (editorDomNode) {
+            editorDomNode.blur();
+            document.body.focus();
+        }
+
         key('esc', 'default', () =>
         {
             document.getElementById("div-textarea").contentEditable = "false"
@@ -446,7 +461,7 @@ export default ShaderBoy.commands = {
         {
             const tlel = document.getElementById('timeline')
             tlel.classList.toggle('tl_hide')
-            document.querySelector('.CodeMirror').classList.toggle('expand-height')
+            // document.querySelector('.CodeMirror').classList.toggle('expand-height')
         }
     },
 
@@ -483,7 +498,11 @@ export default ShaderBoy.commands = {
                 ShaderBoy.isCodePaneHidden = (codeEl.classList.contains('code_hide'))
                 codeEl.classList.add('code_hide')
 
-                ShaderBoy.editor.codemirror.display.input.blur()
+                const editorDomNode = ShaderBoy.editor._monaco?.getDomNode();
+                if (editorDomNode) {
+                    editorDomNode.blur();
+                    document.body.focus();
+                }
             }
             , ms)
             key.setScope('editor_hidden');
@@ -522,7 +541,10 @@ export default ShaderBoy.commands = {
         }
 
         ShaderBoy.isEditorHidden = false
-        ShaderBoy.editor.codemirror.focus()
+        const editorDomNode = ShaderBoy.editor._monaco.getDomNode();
+        if (editorDomNode) {
+            editorDomNode.focus();
+        }
         key.setScope('default')
     },
 
@@ -541,9 +563,9 @@ export default ShaderBoy.commands = {
             ShaderBoy.isTimelineHidden = false
 
             ShaderBoy.canvas.style.opacity = '0.0'
-            $('.cm-s-3024-monotone span').css('background', '#1e1e1e00')
-            $('.cm-s-3024-monotone .CodeMirror-code').toggleClass('concentrating')
-            $('.cm-s-3024-monotone').toggleClass('color')
+            // $('.cm-s-3024-monotone span').css('background', '#1e1e1e00')
+            // $('.cm-s-3024-monotone .CodeMirror-code').toggleClass('concentrating')
+            // $('.cm-s-3024-monotone').toggleClass('color')
 
             if (ctrlEl.classList.contains('ctrl_hide'))
             {
@@ -572,9 +594,9 @@ export default ShaderBoy.commands = {
             ShaderBoy.commands.showInfoFPS()
             ShaderBoy.commands.playTimeline()
             ShaderBoy.canvas.style.opacity = '1.0'
-            $('.cm-s-3024-monotone span').css('background', '#1e1e1eFF')
-            $('.cm-s-3024-monotone .CodeMirror-code').toggleClass('concentrating')
-            $('.cm-s-3024-monotone').toggleClass('color')
+            // $('.cm-s-3024-monotone span').css('background', '#1e1e1eFF')
+            // $('.cm-s-3024-monotone .CodeMirror-code').toggleClass('concentrating')
+            // $('.cm-s-3024-monotone').toggleClass('color')
 
             if (!ShaderBoy.isTimelineHidden)
             {
@@ -593,11 +615,11 @@ export default ShaderBoy.commands = {
     toggleSplitView()
     {
         console.log('toggleSplitView()')
-        $('.cm-s-3024-monotone').toggleClass('color')
         $('#gui-header').toggleClass('splited')
         $('#gl_canvas').toggleClass('splited')
         $('.code-container').toggleClass('splited')
         ShaderBoy.isSplited = !ShaderBoy.isSplited
+        ShaderBoy.editor.setTheme(ShaderBoy.isSplited)
         ShaderBoy.resetViewportSize()
     },
 
@@ -638,7 +660,11 @@ export default ShaderBoy.commands = {
                 codeEl.classList.add('code_hide')
                 // hdrEl.classList.add('hdr_hide')
 
-                ShaderBoy.editor.codemirror.display.input.blur()
+                const editorDomNode = ShaderBoy.editor._monaco?.getDomNode();
+                if (editorDomNode) {
+                    editorDomNode.blur();
+                    document.body.focus();
+                }
 
                 ShaderBoy.wasPlaying = ShaderBoy.isPlaying
                 ShaderBoy.commands.stopTimeline()
@@ -687,7 +713,12 @@ export default ShaderBoy.commands = {
             ShaderBoy.commands.resetTimeline()
         }
 
-        ShaderBoy.editor.codemirror.focus()
+        const editorDomNode = ShaderBoy.editor._monaco?.getDomNode();
+        if (editorDomNode) {
+            editorDomNode.blur();
+            document.body.focus();
+        }
+
         key.setScope('default')
     },
 
