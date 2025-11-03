@@ -46,9 +46,6 @@
 	},
 	"dependencies": {
 		"ccapture.js": "1.1.0",
-		"cm-show-invisibles": "2.0.2",
-		"codemirror": "5.59.4",
-		"codemirror-formatting": "1.0.0",
 		"collect-fps": "2.0.0",
 		"hermite-resize": "git+https://github.com/viliusle/Hermite-resize.git",
 		"jquery": "3.6.0",

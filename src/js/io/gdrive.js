@@ -213,8 +213,57 @@ export default ShaderBoy.gdrive = {
             q: `trashed=false and mimeType='application/vnd.google-apps.folder' and name='${name}'`,
             spaces: "drive"
         })
-        if (callback) { request.execute(callback) }
-        return request
+
+        // オリジナルのコールバックがあれば保存
+        const originalCallback = callback;
+
+        // エラーハンドリングを追加したラッパーコールバック
+        const safeCallback = (response) => {
+            // responseとresult、filesが存在するか確認
+            if (!response) {
+                console.error('getFolderByName: Empty response received');
+                response = { result: { files: [] } };
+            }
+
+            if (!response.result) {
+                console.error('getFolderByName: Response missing result property');
+                response.result = { files: [] };
+            }
+
+            if (!response.result.files) {
+                console.error('getFolderByName: Response missing files property');
+                response.result.files = [];
+            }
+
+            // オリジナルのコールバックがあれば呼び出す
+            if (originalCallback) {
+                originalCallback(response);
+            }
+        };
+
+        if (callback) {
+            request.execute(safeCallback);
+        }
+
+        // Promiseを返す場合の対応
+        const originalPromise = request;
+        return {
+            ...originalPromise,
+            execute: (cb) => originalPromise.execute(cb ? safeCallback : cb),
+            then: (onFulfilled, onRejected) => {
+                return originalPromise.then(
+                    (response) => {
+                        // responseの安全性チェック
+                        if (!response) response = { result: { files: [] } };
+                        if (!response.result) response.result = { files: [] };
+                        if (!response.result.files) response.result.files = [];
+
+                        return onFulfilled ? onFulfilled(response) : response;
+                    },
+                    onRejected
+                );
+            }
+        };
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -228,8 +277,40 @@ export default ShaderBoy.gdrive = {
             spaces: "drive"
         })
 
-        if (callback) { request.execute(callback) }
-        return request
+        // 安全なレスポンス処理
+        const safeCallback = (response) => {
+            if (!response) response = { result: { files: [] } };
+            if (!response.result) response.result = { files: [] };
+            if (!response.result.files) response.result.files = [];
+
+            if (callback) callback(response);
+        };
+
+        if (callback) { request.execute(safeCallback) }
+
+        // 安全なPromiseを返す
+        const originalPromise = request;
+        return {
+            ...originalPromise,
+            execute: (cb) => originalPromise.execute(cb ?
+                ((resp) => {
+                    if (!resp) resp = { result: { files: [] } };
+                    if (!resp.result) resp.result = { files: [] };
+                    if (!resp.result.files) resp.result.files = [];
+                    cb(resp);
+                }) : cb),
+            then: (onFulfilled, onRejected) => {
+                return originalPromise.then(
+                    (response) => {
+                        if (!response) response = { result: { files: [] } };
+                        if (!response.result) response.result = { files: [] };
+                        if (!response.result.files) response.result.files = [];
+                        return onFulfilled ? onFulfilled(response) : response;
+                    },
+                    onRejected
+                );
+            }
+        };
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -244,8 +325,41 @@ export default ShaderBoy.gdrive = {
             q: `trashed=false and '${folderId}' in parents and name='${name}'`,
             spaces: "drive"
         })
-        if (callback) { request.execute(callback) }
-        return request
+
+        // 安全なレスポンス処理
+        const safeCallback = (response) => {
+            if (!response) response = { result: { files: [] } };
+            if (!response.result) response.result = { files: [] };
+            if (!response.result.files) response.result.files = [];
+
+            if (callback) callback(response);
+        };
+
+        if (callback) { request.execute(safeCallback) }
+
+        // 安全なPromiseを返す
+        const originalPromise = request;
+        return {
+            ...originalPromise,
+            execute: (cb) => originalPromise.execute(cb ?
+                ((resp) => {
+                    if (!resp) resp = { result: { files: [] } };
+                    if (!resp.result) resp.result = { files: [] };
+                    if (!resp.result.files) resp.result.files = [];
+                    cb(resp);
+                }) : cb),
+            then: (onFulfilled, onRejected) => {
+                return originalPromise.then(
+                    (response) => {
+                        if (!response) response = { result: { files: [] } };
+                        if (!response.result) response.result = { files: [] };
+                        if (!response.result.files) response.result.files = [];
+                        return onFulfilled ? onFulfilled(response) : response;
+                    },
+                    onRejected
+                );
+            }
+        };
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -259,8 +373,40 @@ export default ShaderBoy.gdrive = {
             spaces: "drive"
         })
 
-        if (callback) { request.execute(callback) }
-        return request
+        // 安全なレスポンス処理
+        const safeCallback = (response) => {
+            if (!response) response = { result: { files: [] } };
+            if (!response.result) response.result = { files: [] };
+            if (!response.result.files) response.result.files = [];
+
+            if (callback) callback(response);
+        };
+
+        if (callback) { request.execute(safeCallback) }
+
+        // 安全なPromiseを返す
+        const originalPromise = request;
+        return {
+            ...originalPromise,
+            execute: (cb) => originalPromise.execute(cb ?
+                ((resp) => {
+                    if (!resp) resp = { result: { files: [] } };
+                    if (!resp.result) resp.result = { files: [] };
+                    if (!resp.result.files) resp.result.files = [];
+                    cb(resp);
+                }) : cb),
+            then: (onFulfilled, onRejected) => {
+                return originalPromise.then(
+                    (response) => {
+                        if (!response) response = { result: { files: [] } };
+                        if (!response.result) response.result = { files: [] };
+                        if (!response.result.files) response.result.files = [];
+                        return onFulfilled ? onFulfilled(response) : response;
+                    },
+                    onRejected
+                );
+            }
+        };
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -270,7 +416,135 @@ export default ShaderBoy.gdrive = {
             fileId: id,
             alt: 'media'
         })
-        if (callback) { request.execute(callback) }
-        return request
-    }
+
+        // 安全なレスポンス処理
+        const safeCallback = (response) => {
+            if (!response) {
+                console.error('getContentBody: Empty response received');
+                response = { body: '', headers: {} };
+            }
+
+            if (!response.body) {
+                console.warn('getContentBody: Response missing body property');
+                response.body = '';
+            }
+
+            if (!response.headers) {
+                response.headers = {};
+            }
+
+            if (callback) callback(response);
+        };
+
+        if (callback) { request.execute(safeCallback) }
+
+        // 安全なPromiseを返す
+        const originalPromise = request;
+        return {
+            ...originalPromise,
+            execute: (cb) => originalPromise.execute(cb ?
+                ((resp) => {
+                    if (!resp) resp = { body: '', headers: {} };
+                    if (!resp.body) resp.body = '';
+                    if (!resp.headers) resp.headers = {};
+                    cb(resp);
+                }) : cb),
+            then: (onFulfilled, onRejected) => {
+                return originalPromise.then(
+                    (response) => {
+                        if (!response) response = { body: '', headers: {} };
+                        if (!response.body) response.body = '';
+                        if (!response.headers) response.headers = {};
+                        return onFulfilled ? onFulfilled(response) : response;
+                    },
+                    onRejected
+                );
+            }
+        };
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    getFileInfoByFileId(fileId, callback)
+    {
+        const request = gapi.client.drive.files.get({
+            fileId: fileId,
+            fields: "id, name, mimeType, parents, modifiedTime"
+        });
+
+        // 安全なレスポンス処理
+        const safeCallback = (response) => {
+            if (!response) {
+                console.warn('getFileInfoByFileId: Empty response received');
+                response = { result: { id: fileId, name: null } };
+            }
+
+            if (callback) callback(response);
+        };
+
+        if (callback) { request.execute(safeCallback) }
+
+        // 安全なPromiseを返す
+        const originalPromise = request;
+        return {
+            ...originalPromise,
+            execute: (cb) => originalPromise.execute(cb ?
+                ((resp) => {
+                    if (!resp) resp = { result: { id: fileId, name: null } };
+                    cb(resp);
+                }) : cb),
+            then: (onFulfilled, onRejected) => {
+                return originalPromise.then(
+                    (response) => {
+                        if (!response) response = { result: { id: fileId, name: null } };
+                        return onFulfilled ? onFulfilled(response) : response;
+                    },
+                    onRejected
+                );
+            }
+        };
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    deleteFileOrFolder(fileId, callback)
+    {
+        const request = gapi.client.drive.files.delete({
+            fileId: fileId
+        });
+
+        // 安全なレスポンス処理
+        const safeCallback = (response) => {
+            // Google Drive API v3 の delete は成功時に空のレスポンスを返す
+            if (response && response.error) {
+                console.error('deleteFileOrFolder: Error received', response.error);
+            }
+            if (callback) callback(response);
+        };
+
+        if (callback) { request.execute(safeCallback) }
+
+        // 安全なPromiseを返す
+        const originalPromise = request;
+        return {
+            ...originalPromise,
+            execute: (cb) => originalPromise.execute(cb ?
+                ((resp) => {
+                    if (resp && resp.error) {
+                        console.error('deleteFileOrFolder execute: Error received', resp.error);
+                    }
+                    cb(resp);
+                }) : cb),
+            then: (onFulfilled, onRejected) => {
+                return originalPromise.then(
+                    (response) => {
+                        // 成功時は空レスポンスが通常
+                        if (response && response.error) {
+                             console.error('deleteFileOrFolder then: Error received', response.error);
+                        }
+                        return onFulfilled ? onFulfilled(response) : response;
+                    },
+                    onRejected
+                );
+            }
+        };
+    },
 }

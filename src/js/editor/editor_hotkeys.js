@@ -69,6 +69,12 @@ export default ShaderBoy.editor_hotkeys = {
       commands.saveShader();
       return false;
     });
+
+    key("ctrl+⇧+s, ⌘+⇧+s", "default", () => {
+      commands.getShareableLink();
+      return false;
+    });
+
     key("ctrl+o, ⌘+o", "default", () => {
       commands.openShader();
       return false;
@@ -106,7 +112,7 @@ export default ShaderBoy.editor_hotkeys = {
     key("ctrl+⇧+⌥+n, ⌘+⇧+⌥+n", "default", commands.newShader);
     key("ctrl+⇧+⌥+i, ⌘+⇧+⌥+i", "default", commands.importShader);
     key("ctrl+⇧+⌥+f, ⌘+⇧+⌥+f", "default", commands.forkShader);
-
+    key("ctrl+⇧+⌥+x, ⌘+⇧+⌥+x", "default", commands.deleteCurrentShader);
     key("ctrl+⇧+⌥+d, ⌘+⇧+⌥+d", "default", commands.showKnobsPanel);
     key("ctrl+⇧+⌥+a, ⌘+⇧+⌥+a", "default", commands.showAssetsPanel);
     key("ctrl+⇧+⌥+t, ⌘+⇧+⌥+t", "default", commands.showTimeline);

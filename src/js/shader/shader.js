@@ -102,6 +102,16 @@ export default class Shader
 
 		const compileSource = (gl, type, source) =>
 		{
+			// ★★★ デバッグログを削除 ★★★
+			// const shaderTypeName = type === gl.VERTEX_SHADER ? 'Vertex' : 'Fragment';
+			// const bufferName = this.bufName || (shaderTypeName === 'Fragment' ? ShaderBoy.editingBuffer : 'Screen'); // バッファ名を特定
+			// console.log(`--- Compiling ${shaderTypeName} Shader (${bufferName}) ---`);
+			// // console.log("First 100 chars:\n", source.substring(0, 100)); // 先頭100文字のログはコメントアウト
+			// if (type === gl.FRAGMENT_SHADER) {
+			// 	console.log("Full Fragment Source:\n", source); // ★★★ フラグメントシェーダの全ソースを出力 ★★★
+			// }
+			// ★★★ ここまで ★★★
+
 			const shader = gl.createShader(type)
 			gl.shaderSource(shader, source)
 			gl.compileShader(shader)
@@ -358,7 +368,7 @@ export default class Shader
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVBO)
 		gl.vertexAttribPointer(this.vertAttLocation, 2, gl.FLOAT, false, 0, 0)
 		gl.enableVertexAttribArray(this.vertAttLocation)
-		if (gui_timeline.offsetFrames >= gui_timeline.currentFrame) gl.clear(gl.COLOR_BUFFER_BIT)
+		if (gui_timeline.currentFrame === gui_timeline.offsetFrames && this.bufName !== 'Image') gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, 6)
 	}
 
@@ -370,7 +380,7 @@ export default class Shader
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.triVBO)
 		gl.vertexAttribPointer(this.vertAttLocation, 2, gl.FLOAT, false, 0, 0)
 		gl.enableVertexAttribArray(this.vertAttLocation)
-		if (gui_timeline.offsetFrames >= gui_timeline.currentFrame) gl.clear(gl.COLOR_BUFFER_BIT)
+		if (gui_timeline.currentFrame === gui_timeline.offsetFrames && this.bufName !== 'Image') gl.clear(gl.COLOR_BUFFER_BIT)
 		gl.drawArrays(gl.TRIANGLES, 0, 3)
 	}
 }

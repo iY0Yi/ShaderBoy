@@ -1,10 +1,10 @@
-//   ___    _                 _               _         _     
-//  (  _`\ ( )               ( )             ( )     _ ( )    
-//  | (_(_)| |__     _ _    _| |   __   _ __ | |    (_)| |_   
-//  `\__ \ |  _ `\ /'_` ) /'_` | /'__`\( '__)| |  _ | || '_`\ 
+//   ___    _                 _               _         _
+//  (  _`\ ( )               ( )             ( )     _ ( )
+//  | (_(_)| |__     _ _    _| |   __   _ __ | |    (_)| |_
+//  `\__ \ |  _ `\ /'_` ) /'_` | /'__`\( '__)| |  _ | || '_`\
 //  ( )_) || | | |( (_| |( (_| |(  ___/| |   | |_( )| || |_) )
 //  `\____)(_) (_)`\__,_)`\__,_)`\____)(_)   (____/'(_)(_,__/'
-//                                                            
+//
 
 const ShaderLib = {
 	shader: {},
@@ -58,7 +58,7 @@ const ShaderLib = {
 		for (const shaderfile of ref)
 		{
 			let name = shaderfile.name
-			let url = window.location.href + shaderfile.url
+			let url = shaderfile.url
 			this.loadTextFile(name, url)
 		}
 	}

@@ -1,0 +1,119 @@
+{
+    "name": "ShaderBoy Dark",
+    "type": "dark",
+    "colors": {
+        "editor.background": "#00000000",
+        "editor.foreground": "#848484",
+        "editor.selectionBackground": "#D4BE9444",
+        "editor.lineHighlightBackground": "#D4BE9422",
+        "editorCursor.foreground": "#D4BE94",
+        "editorWhitespace.foreground": "#3B3B3B",
+        "editorLineNumber.foreground": "#555555",
+        "editorLineNumber.activeForeground": "#D4BE94",
+        "editor.selectionHighlightBackground": "#D4BE9444",
+        "editor.findMatchBackground": "#D4BE9466",
+        "editor.findMatchHighlightBackground": "#D4BE9444",
+        "editorOverviewRuler.background": "#252525",
+        "minimapSlider.background": "#252525",
+        "scrollbar.shadow": "#00000000",
+        "focusBorder": "#00000000",
+        "editorFocus.border": "#00000000",
+        "editor.focusBorder": "#00000000",
+        "inputOption.activeBorder": "#00000000",
+        "list.focusBorder": "#00000000",
+        "list.activeSelectionBorder": "#00000000",
+        "editor.selectionBorder": "#00000000"
+    },
+    "tokenColors": [
+        {
+            "name": "Comments",
+            "scope": ["comment"],
+            "settings": {
+                "foreground": "#7F776AAA",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Keywords",
+            "scope": [
+                "keyword",
+                "keyword.control",
+                "keyword.type",
+                "keyword.struct",
+                "keyword.function",
+                "keyword.storage"
+            ],
+            "settings": {
+                "foreground": "#D4BE94"
+            }
+        },
+        {
+            "name": "Variables",
+            "scope": [
+                "variable",
+                "variable.predefined",
+                "identifier"
+            ],
+            "settings": {
+                "foreground": "#D4BE94"
+            }
+        },
+        {
+            "name": "Functions",
+            "scope": [
+                "user.function",
+                "struct.name"
+            ],
+            "settings": {
+                "foreground": "#D4BE94",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Strings",
+            "scope": ["string"],
+            "settings": {
+                "foreground": "#D4BE94"
+            }
+        },
+        {
+            "name": "Numbers",
+            "scope": [
+                "number",
+                "number.float",
+                "number.hex",
+                "number.octal"
+            ],
+            "settings": {
+                "foreground": "#D4BE94"
+            }
+        },
+        {
+            "name": "Operators",
+            "scope": ["operator"],
+            "settings": {
+                "foreground": "#D4BE9483"
+            }
+        },
+        {
+            "name": "Preprocessor",
+            "scope": ["preprocessor"],
+            "settings": {
+                "foreground": "#D4BE94"
+            }
+        },
+        {
+            "name": "Delimiters",
+            "scope": [
+                "delimiter",
+                "delimiter.square",
+                "delimiter.curly",
+                "delimiter.parenthesis",
+                "delimiter.angle"
+            ],
+            "settings": {
+                "foreground": "#555555"
+            }
+        }
+    ]
+}

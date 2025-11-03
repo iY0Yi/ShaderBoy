@@ -73,7 +73,7 @@ vec2 inst2(float nn,float no,float of,float t,float bt,float pan,int i){
 	return inst(nn+of,t,bt,pan,i)+inst(no+of,t,bt+1.0,pan,i);//plays new note and tail of last note
 }
 
-vec2 mainSound(float time)
+vec2 mainSound(int samp, float time)
 {
 	float tim=time*bps;
 	float b=floor(tim);

@@ -165,7 +165,7 @@ export default ShaderBoy.gui_inline_col = {
           flex-direction: row;
           align-items: center;
           margin-top: 0px;
-          background: #262525;
+          background: #252525;
           border-radius: 0px;
           padding: 0px;
           text-align: center;

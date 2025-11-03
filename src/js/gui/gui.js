@@ -66,11 +66,24 @@ export default ShaderBoy.gui = {
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   setupFPSCounter() {
-    //FPS counter
+    // 通常のFPS測定（ブラウザ制限あり）
     ShaderBoy.io.lastFPS = collectFPS();
+
+    // 理論上のFPS計算用の変数を初期化
+    ShaderBoy.theoreticalFPS = 0;
+    ShaderBoy.renderTime = 0;
+
     setInterval(() => {
+      // 通常のFPS更新
       ShaderBoy.uniforms.iFrameRate = ShaderBoy.io.lastFPS();
       ShaderBoy.io.lastFPS = collectFPS();
+
+      // FPS表示を更新
+      if (document.getElementById('cntr_fps')) {
+        document.getElementById('cntr_fps').textContent =
+          // `${ShaderBoy.uniforms.iFrameRate.toFixed(1)} (GPU: ${ShaderBoy.theoreticalFPS.toFixed(2)}ms)`;
+          `${ShaderBoy.uniforms.iFrameRate.toFixed(1)}`;
+      }
     }, 1000);
   },
 
@@ -200,10 +213,10 @@ export default ShaderBoy.gui = {
         // this.iWheelCumulative[2] += ev.deltaZ*.1
 
         ShaderBoy.uniforms.iWheel = [
-          ev.deltaX,
           this.iWheelCumulative[0],
-          ev.deltaY,
           this.iWheelCumulative[1],
+          ev.deltaX,
+          ev.deltaY,
           // ev.deltaZ,
           // this.iWheelCumulative[2],
         ];
@@ -245,7 +258,7 @@ export default ShaderBoy.gui = {
     loadingClassList.add("loading-hide");
     setTimeout(() => {
       loadingClassList.add("loading-hidden");
-    }, 400);
+    }, 100);
   },
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -267,7 +280,7 @@ export default ShaderBoy.gui = {
     authClassList.add("hide");
     setTimeout(() => {
       authClassList.add("hidden");
-    }, 400);
+    }, 100);
   },
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

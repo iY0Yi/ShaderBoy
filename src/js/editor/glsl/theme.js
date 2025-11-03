@@ -10,35 +10,35 @@ export default ShaderBoy.theme = {
             inherit: false,
             rules: [
                 // 基本スタイル - 背景色を設定
-                { token: '', foreground: '848484', background: '262525' },
+                { token: '', foreground: '848484', background: '252525' },
 
                 // それぞれのトークンタイプに背景色を設定（キーポイント）
-                { token: 'comment', foreground: '7F776AAA', fontStyle: 'italic', background: '262525' },
-                { token: 'keyword', foreground: 'D4BE94', background: '262525' },
-                { token: 'keyword.control', foreground: 'D4BE94', background: '262525' },
-                { token: 'keyword.type', foreground: 'D4BE94a6', background: '262525' },
-                { token: 'keyword.struct', foreground: 'D4BE94', background: '262525' },
-                { token: 'keyword.function', foreground: 'D4BE94', background: '262525' },
-                { token: 'keyword.storage', foreground: 'D4BE94', background: '262525' },
-                { token: 'variable', foreground: 'D4BE94', background: '262525' },
-                { token: 'variable.predefined', foreground: 'D4BE94', background: '262525' },
-                { token: 'identifier', foreground: '848484', background: '262525' },
-                { token: 'user.function', foreground: 'D4BE94', fontStyle: 'bold', background: '262525' },
-                { token: 'struct.name', foreground: 'D4BE94', fontStyle: 'bold', background: '262525' },
-                { token: 'string', foreground: 'D4BE94', background: '262525' },
-                { token: 'constant', foreground: 'D4BE94', background: '262525' },
-                { token: 'constant.language.boolean', foreground: 'D4BE94', background: '262525' },
-                { token: 'number', foreground: 'D4BE94', background: '262525' },
-                { token: 'number.float', foreground: 'D4BE94', background: '262525' },
-                { token: 'number.hex', foreground: 'D4BE94', background: '262525' },
-                { token: 'number.octal', foreground: 'D4BE94', background: '262525' },
-                { token: 'operator', foreground: 'D4BE9483', background: '262525' },
-                { token: 'preprocessor', foreground: 'D4BE94', background: '262525' },
-                { token: 'delimiter', foreground: '555555', background: '262525' },
-                { token: 'delimiter.square', foreground: '555555', background: '262525' },
-                { token: 'delimiter.curly', foreground: '555555', background: '262525' },
-                { token: 'delimiter.parenthesis', foreground: '555555', background: '262525' },
-                { token: 'delimiter.angle', foreground: '555555', background: '262525' },
+                { token: 'comment', foreground: '7F776AAA', fontStyle: 'italic', background: '252525' },
+                { token: 'keyword', foreground: 'D4BE94', background: '252525' },
+                { token: 'keyword.control', foreground: 'D4BE94', background: '252525' },
+                { token: 'keyword.type', foreground: 'D4BE94a6', background: '252525' },
+                { token: 'keyword.struct', foreground: 'D4BE94', background: '252525' },
+                { token: 'keyword.function', foreground: 'D4BE94', background: '252525' },
+                { token: 'keyword.storage', foreground: 'D4BE94', background: '252525' },
+                { token: 'variable', foreground: 'D4BE94', background: '252525' },
+                { token: 'variable.predefined', foreground: 'D4BE94', background: '252525' },
+                { token: 'identifier', foreground: '848484', background: '252525' },
+                { token: 'user.function', foreground: 'D4BE94', fontStyle: 'bold', background: '252525' },
+                { token: 'struct.name', foreground: 'D4BE94', fontStyle: 'bold', background: '252525' },
+                { token: 'string', foreground: 'D4BE94', background: '252525' },
+                { token: 'constant', foreground: 'D4BE94', background: '252525' },
+                { token: 'constant.language.boolean', foreground: 'D4BE94', background: '252525' },
+                { token: 'number', foreground: 'D4BE94', background: '252525' },
+                { token: 'number.float', foreground: 'D4BE94', background: '252525' },
+                { token: 'number.hex', foreground: 'D4BE94', background: '252525' },
+                { token: 'number.octal', foreground: 'D4BE94', background: '252525' },
+                { token: 'operator', foreground: 'D4BE9483', background: '252525' },
+                { token: 'preprocessor', foreground: 'D4BE94', background: '252525' },
+                { token: 'delimiter', foreground: '555555', background: '252525' },
+                { token: 'delimiter.square', foreground: '555555', background: '252525' },
+                { token: 'delimiter.curly', foreground: '555555', background: '252525' },
+                { token: 'delimiter.parenthesis', foreground: '555555', background: '252525' },
+                { token: 'delimiter.angle', foreground: '555555', background: '252525' },
             ],
             colors: {
                 // エディタ背景は transparent のままにする
@@ -65,8 +65,8 @@ export default ShaderBoy.theme = {
                 'editor.selectionBorder': '#00000000',
 
                 // 概要ルーラー関連
-                'editorOverviewRuler.background': '#262525',
-                'minimapSlider.background': '#262525',
+                'editorOverviewRuler.background': '#252525',
+                'minimapSlider.background': '#252525',
 
                 // すでに設定しているスクロールバー関連
                 'scrollbar.shadow': '#00000000',
@@ -118,6 +118,13 @@ export default ShaderBoy.theme = {
 
                 // プリプロセッサ
                 { token: 'preprocessor', foreground: 'D4BE94' },  // 紫
+
+                // 括弧類
+                { token: 'delimiter', foreground: '555555' },
+                { token: 'delimiter.square', foreground: '555555' },
+                { token: 'delimiter.curly', foreground: '555555' },
+                { token: 'delimiter.parenthesis', foreground: '555555' },
+                { token: 'delimiter.angle', foreground: '555555' },
             ],
             colors: {
                 // エディタの色設定（モノクロームと同じ）
@@ -143,15 +150,15 @@ export default ShaderBoy.theme = {
                 'editor.selectionBorder': '#00000000',
                 'minimap.background': '#00000000',
 
-                'scrollbar.shadow': '#262525',              // スクロールバーの影（透明に）
-                'scrollbarSlider.background': '#262525',    // スクロールバーの背景（半透明）
-                'scrollbarSlider.hoverBackground': '#262525', // ホバー時の背景
-                'scrollbarSlider.activeBackground': '#262525', // ドラッグ時の背景
-                // 'editorGutter.background': '#262525',
+                'scrollbar.shadow': '#252525',              // スクロールバーの影（透明に）
+                'scrollbarSlider.background': '#252525',    // スクロールバーの背景（半透明）
+                'scrollbarSlider.hoverBackground': '#252525', // ホバー時の背景
+                'scrollbarSlider.activeBackground': '#252525', // ドラッグ時の背景
+                // 'editorGutter.background': '#252525',
 
                 // 概要ルーラー関連
-                'editorOverviewRuler.background': '#262525',
-                // 'minimapSlider.background': '#262525',
+                'editorOverviewRuler.background': '#252525',
+                // 'minimapSlider.background': '#252525',
             }
         });
         console.log('カラーテーマを定義しました');
@@ -204,12 +211,12 @@ export default ShaderBoy.theme = {
 
             /* 行番号部分の背景も合わせる */
             .monaco-editor.shaderboy-monotone-theme .margin-view-overlays .line-numbers {
-                background-color: #262525 !important;
+                background-color: #252525 !important;
             }
 
             .monaco-editor .sticky-widget {
                 box-shadow: none;
-                background-color: #262525;
+                background-color: #252525;
             }
 
             /* フォーカス時の青い境界線を完全に削除 */
@@ -284,7 +291,7 @@ export default ShaderBoy.theme = {
                 font-family: "Fragment Mono", monospace;
                 font-size: 14px;
                 color: #D8D4C5;
-                background-color: #262525;
+                background-color: #252525;
             }
 
             /* メディアクエリ対応 */
@@ -370,14 +377,14 @@ export default ShaderBoy.theme = {
 
             .error-item {
                 padding: 4px 8px;
-                color: #262525;
+                color: #252525;
                 cursor: pointer;
                 font-size: 15px;
                 line-height: 1.1;
                 font-weight: 700;
                 text-align: left;
                 background-color: #fe8565;
-                border-radius: 20px;
+                border-radius: 0px;
                 margin-bottom: 2px;
             }
 
@@ -398,7 +405,7 @@ export default ShaderBoy.theme = {
                 vertical-align: middle !important;
                 margin-left: 0px;
                 margin-right: 4px;
-                margin-bottom: 4px;
+                margin-bottom: 2px;
             }
 
             .error-element {
@@ -434,19 +441,19 @@ export default ShaderBoy.theme = {
 
             /* スクロールバー領域の背景色を修正 */
             .monaco-editor .scrollbar {
-                background-color: #262525 !important;
+                background-color: #252525 !important;
             }
 
             /* 右端のスクロールバー背景 */
             .monaco-scrollable-element > .scrollbar.vertical,
             .monaco-scrollable-element > .scrollbar.vertical .slider-container {
-                background-color: #262525 !important;
+                background-color: #252525 !important;
             }
 
             /* 下部のスクロールバー背景 */
             .monaco-scrollable-element > .scrollbar.horizontal,
             .monaco-scrollable-element > .scrollbar.horizontal .slider-container {
-                background-color: #262525 !important;
+                background-color: #252525 !important;
             }
 
             /* スクロールバー周辺の影を削除 */
@@ -456,7 +463,7 @@ export default ShaderBoy.theme = {
 
             /* デコレーションマージンの背景色（行番号がある左側部分など） */
             .monaco-editor .margin {
-                background-color: #262525 !important;
+                background-color: #252525 !important;
             }
 
             /* CSSカスタム変数でテーマの状態を管理 */
@@ -491,7 +498,7 @@ export default ShaderBoy.theme = {
 
             /* モノトーンテーマ専用のスタイル */
             .monaco-editor.vs-dark[data-theme='shaderboy-monotone'] .view-line {
-                background-color: #262525 !important;
+                background-color: #252525 !important;
             }
 
             .monaco-editor.vs-dark[data-theme='shaderboy-color'] .view-line {
@@ -553,7 +560,8 @@ export default ShaderBoy.theme = {
                 folding: true,
                 fixedOverflowWidgets: false,
                 lineDecorationsWidth: 0,
-                scrollBeyondLastLine: false,
+                scrollBeyondLastLine: true,
+                minimap: { enabled: true },
             });
             console.log('テーマと設定を適用しました');
 

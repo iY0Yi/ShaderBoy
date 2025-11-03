@@ -50,7 +50,7 @@ float att(float t){
 	a+=amp(t,14.0);
 	return a;
 }
-vec2 mainSound(float time)
+vec2 mainSound(int samp, float time)
 {
 	float tim=time*bps,T=time*PI;
 	float EMinor=sin(T*E1)+sin(T*G1)+sin(T*B1)+sin(T*2.0*D1)+sin(T*2.0*E1);

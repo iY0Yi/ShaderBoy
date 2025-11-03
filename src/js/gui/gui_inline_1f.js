@@ -35,7 +35,7 @@ export default ShaderBoy.gui_inline_1f = {
             .inline_1f-container {
                 height: 45px;
                 margin-top: 0px;
-                background: #262525;
+                background: #252525;
                 border-radius: 0px;
                 padding: 20px;
                 width: 400px;
@@ -557,8 +557,12 @@ export default ShaderBoy.gui_inline_1f = {
       editor.removeContentWidget(this._widget);
       this._widget = null;
 
-      // 再コンパイルをトリガー
+      // 再コンパイルを確実にトリガー
       ShaderBoy.forceCompile = true;
+      console.log('GUI変更破棄: floatエディタからコンパイルを直接トリガー');
+      // ShaderBoy.bufferManager.compileShaders();
+
+      // e.preventDefault();
     };
 
     // 領域内のダブルクリック/タップで確定
@@ -755,6 +759,11 @@ export default ShaderBoy.gui_inline_1f = {
       editor.removeContentWidget(this._widget);
       this._widget = null;
     }
+
+    // 再コンパイルを確実にトリガー
+    ShaderBoy.forceCompile = true;
+    console.log('GUI変更破棄: floatエディタからコンパイルを直接トリガー');
+    // ShaderBoy.bufferManager.compileShaders();
 
     console.log("float editor closed successfully");
   },

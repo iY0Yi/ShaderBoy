@@ -17,6 +17,9 @@ export default ShaderBoy.imageRenderer = {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	render()
 	{
+		// レンダリング時間の測定開始
+		const startTime = performance.now();
+
 		const gl = ShaderBoy.gl
 		const canvasWidth = (ShaderBoy.capture === null) ? gl.canvas.clientWidth : ShaderBoy.canvas.width
 		const canvasHeight = (ShaderBoy.capture === null) ? window.innerHeight : ShaderBoy.canvas.height
@@ -95,11 +98,33 @@ export default ShaderBoy.imageRenderer = {
 
 		gl.flush()
 
+		// GPU処理完了を待って正確な時間を取得
+		if (gl.finish) {
+			gl.finish();
+		}
+
 		for (const name of ShaderBoy.activeBufferIds)
 		{
 			if (ShaderBoy.buffers[name].isRenderable && ShaderBoy.buffers[name].needSwap)
 			{
 				ShaderBoy.buffers[name].textures.reverse()
+			}
+		}
+
+		// レンダリング時間の測定終了と理論上のFPS計算
+		const endTime = performance.now();
+		const renderTime = endTime - startTime;
+
+		// 極端に短いレンダリング時間（0.5ms未満）は不正確な可能性があるため無視
+		if (renderTime >= 1.) {
+			// 移動平均フィルターを適用して値を安定させる
+			const alpha = 0.5; // 新しい値の重み（0.0〜1.0）
+			ShaderBoy.renderTime = ShaderBoy.renderTime * (1 - alpha) + renderTime * alpha;
+
+			// 理論上のFPS計算（1秒 / レンダリング時間）
+			if (ShaderBoy.renderTime > 0) {
+				// FPSではなく、直接レンダリング時間(ms)を格納
+				ShaderBoy.theoreticalFPS = ShaderBoy.renderTime;
 			}
 		}
 	}

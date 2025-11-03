@@ -57,10 +57,14 @@ ShaderBoy.update = () => {
   gui.update();
 
   if(ShaderBoy.forceCompile) {
-    ShaderBoy.bufferManager.compileShaders()
+    if (ShaderBoy.bufferManager) {
+      ShaderBoy.bufferManager.compileShaders();
+    } else {
+      console.warn('bufferManagerが初期化されていません');
+    }
     ShaderBoy.forceCompile = false;
     ShaderBoy.forceDraw = true;
-  }else {
+  } else {
     if (ShaderBoy.isPlaying) {
       imageRenderer.render();
 
@@ -79,11 +83,17 @@ ShaderBoy.update = () => {
     } else {
       if (ShaderBoy.forceDraw === true) {
         imageRenderer.render();
-        console.log(
-          "ShaderBoy.glExt.AsynchCompile: ",
-          ShaderBoy.glExt.AsynchCompile
-        );
-        if (ShaderBoy.glExt.AsynchCompile) {
+
+        if (ShaderBoy.glExt) {
+          console.log(
+            "ShaderBoy.glExt.AsynchCompile: ",
+            ShaderBoy.glExt.AsynchCompile || false
+          );
+          if (ShaderBoy.glExt.AsynchCompile) {
+            ShaderBoy.forceDraw = false;
+          }
+        } else {
+          console.warn('glExtが初期化されていません');
           ShaderBoy.forceDraw = false;
         }
 
@@ -165,5 +175,25 @@ window.onload = () => {
 
   document.getElementById("shaderboy").style.display = "inline";
   gui_header.setStatus("prgrs", "Loading...", 0);
+
+  let targetShaderId = null;
+
+  // URLからシェーダーIDを取得（ハッシュパラメータ）
+  const hashParams = new URLSearchParams(window.location.hash.substring(1));
+  if (hashParams.has('id')) {
+    targetShaderId = hashParams.get('id');
+  }
+
+  // URLからシェーダーIDを取得（クエリパラメータ）
+  if (!targetShaderId) {
+    const queryParams = new URLSearchParams(window.location.search);
+    if (queryParams.has('id')) {
+      targetShaderId = queryParams.get('id');
+    }
+  }
+
+  // グローバルに設定
+  ShaderBoy.targetShaderId = targetShaderId;
+
   ShaderLib.loadShadersFiles(ShaderList, ShaderBoy.init);
 };

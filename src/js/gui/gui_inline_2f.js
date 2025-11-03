@@ -38,7 +38,7 @@ export default ShaderBoy.gui_inline_2f = {
                 /* vec2エディタコンテナ */
                 .inline_2f-editor-container {
                     margin-top: 0px;
-                    background: #262525;
+                    background: #252525;
                     border-radius: 0px;
                     padding: 12.5px;
                     box-shadow: 0px 0.2px 0.2px hsl(0deg 3% 4% / 0.63),
@@ -58,7 +58,7 @@ export default ShaderBoy.gui_inline_2f = {
                 .inline_2f-pad {
                     width: 270px;
                     height: 270px;
-                    background: #262525;
+                    background: #252525;
                     border-radius: 0px;
                     position: relative;
                     border: 0px;

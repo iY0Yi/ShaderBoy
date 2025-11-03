@@ -314,7 +314,10 @@ export default ShaderBoy.commands = {
             form.focus();
         }, 0);
 
-        gui_panel_textform.reset('Fork:', `${ShaderBoy.activeShaderName}:Forked`, () =>
+        // フォーク元の名前として現在のシェーダー名を使用する
+        const shaderName = ShaderBoy.currentShaderName || ShaderBoy.activeShaderName;
+
+        gui_panel_textform.reset('Fork:', `${shaderName}:Forked`, () =>
         {
             console.log(gui_panel_textform.result)
             ShaderBoy.io.newShader(gui_panel_textform.result, true)
@@ -766,5 +769,67 @@ export default ShaderBoy.commands = {
         }
         const range = getSelectedRange()
         cm.autoFormatRange(range.from, range.to)
-    }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    getShareableLink() {
+        // 現在のシェーダIDを取得する
+        if(ShaderBoy.activeShaderName && ShaderBoy.activeShaderName !== '_default') {
+            (async () => {
+                try {
+                    // シェーダのフォルダIDを取得
+                    const folderId = await ShaderBoy.io.getShaderFolder(ShaderBoy.activeShaderName);
+
+                    if(folderId) {
+                        // 共有可能なURLを生成
+                        const url = `${window.location.origin}${window.location.pathname}?id=${folderId}`;
+
+                        // クリップボードにコピー
+                        navigator.clipboard.writeText(url).then(() => {
+                            ShaderBoy.gui_header.setStatus('gsuc', 'Sharable link copied!', 3000);
+                        }).catch(err => {
+                            console.error('クリップボードへのコピーに失敗しました:', err);
+                            ShaderBoy.gui_header.setStatus('error', 'Failed to copy to clipboard', 3000);
+                            // コピーに失敗した場合はプロンプト表示
+                            prompt('Please copy this link:', url);
+                        });
+                    } else {
+                        ShaderBoy.gui_header.setStatus('error', 'Shader ID not found', 3000);
+                    }
+                } catch(error) {
+                    console.error('シェーダID取得エラー:', error);
+                    ShaderBoy.gui_header.setStatus('error', 'Failed to get shader ID', 3000);
+                }
+            })();
+        } else {
+            ShaderBoy.gui_header.setStatus('error', 'Cannot create shared link for default shader', 3000);
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    deleteCurrentShader() {
+        if (ShaderBoy.isTrialMode) {
+            alert('Oops! You are in test mode. Please reload this page and authorize.');
+            return;
+        }
+
+        const shaderNameToDelete = ShaderBoy.currentShaderName;
+        if (shaderNameToDelete === '_default') {
+            ShaderBoy.gui_header.setStatus('error', 'Default shader cannot be deleted.', 3000);
+            return;
+        }
+
+        // 確認ダイアログを表示
+        if (confirm(`Are you sure you want to delete the shader "${shaderNameToDelete}"? This action cannot be undone.`)) {
+            console.log(`削除コマンド実行: ${shaderNameToDelete}`);
+            // ShaderBoy.io.deleteShader を非同期で呼び出す
+            ShaderBoy.io.deleteShader(shaderNameToDelete).catch(error => {
+                console.error("シェーダー削除コマンド中にエラーが発生しました:", error);
+                // 必要に応じてユーザーに追加のエラーメッセージを表示
+                ShaderBoy.gui_header.setStatus('error', 'An error occurred while deleting the shader.', 5000);
+            });
+        } else {
+            console.log('シェーダー削除がキャンセルされました。');
+        }
+    },
 }

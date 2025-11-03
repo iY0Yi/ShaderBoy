@@ -53,7 +53,7 @@ export default ShaderBoy.editor = {
       scrollBeyondLastLine: true,
       scrollBeyondLastColumn: 10, // 水平方向にも余裕を持たせる
       minimap: {
-        enabled: false, // ミニマップを有効化
+        enabled: true, // ミニマップを無効化
         side: "right", // 右側に表示
         showSlider: "mouseover", // マウスオーバー時にスライダー表示
         renderCharacters: false, // 文字はレンダリングしない
@@ -65,7 +65,7 @@ export default ShaderBoy.editor = {
       insertSpaces: true,
       wordWrap: "off",
       folding: true,
-      matchBrackets: "near",
+      // matchBrackets: "near",
       renderWhitespace: "all",
       cursorBlinking: "phase",
       cursorStyle: "line",
@@ -76,7 +76,7 @@ export default ShaderBoy.editor = {
       lineDecorationsWidth: 0,
       glyphMargin: false,
       renderLineHighlight: "line",
-      bracketPairColorization: { enabled: false }, // 括弧ペアの色分けを無効化
+      "bracketPairColorization.enabled": false,
       links: true,
       contextmenu: true,
       mouseWheelZoom: true,
@@ -102,9 +102,10 @@ export default ShaderBoy.editor = {
     setTimeout(() => {
       this._monaco.updateOptions({
         scrollBeyondLastLine: true,
-        scrollBeyondLastColumn: 10,
+        scrollBeyondLastColumn: 40,
         matchBrackets: { beforeCursor: true, afterCursor: false },
-        bracketPairColorization: { enabled: false }, // 括弧ペアの色分けを無効化
+        "bracketPairColorization.enabled": false,
+        minimap: { enabled: true } // ミニマップを確実に無効化
       });
       // レイアウトの再計算を強制
       this._monaco.layout();
@@ -235,9 +236,10 @@ export default ShaderBoy.editor = {
     // エディタにフォーカス
     this._monaco.focus();
 
-    if (!this._isMinimapEnabled) {
-      this.enableMinimap();
-    }
+    // ミニマップは無効のままにする
+    // if (!this._isMinimapEnabled) {
+    //   this.enableMinimap();
+    // }
 
     return this._monaco;
   },
@@ -423,12 +425,13 @@ export default ShaderBoy.editor = {
         startLineNumber: err.lineNum,
         startColumn: 1,
         endLineNumber: err.lineNum,
-        endColumn: 1000,
-        // カスタムタグを追加して識別しやすくする
-        tags: ["custom-error"],
-        // カスタムプロパティを追加
-        customColor: "#fe8565",
+        endColumn: 1000
       });
+    }
+
+    // マーカーをモデルに設定
+    if (this.models[bufName]) {
+      monaco.editor.setModelMarkers(this.models[bufName], "glsl", markers);
     }
   },
 
