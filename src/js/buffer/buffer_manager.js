@@ -242,12 +242,73 @@ export default ShaderBoy.bufferManager = {
     },
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    extractShaderDirectives(source)
+    {
+        const directives = {}
+        const lines = source.split(/\r?\n/)
+        const sanitized = []
+
+        const atPattern = /^\s*@([a-zA-Z0-9_\-]+)\s*:\s*(.+)\s*$/
+        const pragmaPattern = /^\s*#pragma\s+([a-zA-Z0-9_\-]+)(?:\s+(.+))?\s*$/
+
+        for (const line of lines)
+        {
+            const atMatch = line.match(atPattern)
+            if (atMatch)
+            {
+                directives[atMatch[1].toLowerCase()] = (atMatch[2] || '').trim()
+                continue
+            }
+
+            const pragmaMatch = line.match(pragmaPattern)
+            if (pragmaMatch)
+            {
+                directives[pragmaMatch[1].toLowerCase()] = (pragmaMatch[2] || '').trim()
+                continue
+            }
+
+            sanitized.push(line)
+        }
+
+        return {
+            directives,
+            source: sanitized.join('\n')
+        }
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    resolveRealtimeDirective(directives)
+    {
+        if (!directives.realtime) return true
+        const value = directives.realtime.toLowerCase()
+        if (value === 'false' || value === '0' || value === 'off' || value === 'no')
+        {
+            return false
+        }
+        return true
+    },
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     getSoundFragmentCode(buffer, uniformCode, commonCode)
     {
+        const originalSource = buffer.getValue()
+        const { directives, source } = this.extractShaderDirectives(originalSource)
+        const isRealtime = this.resolveRealtimeDirective(directives)
+
+        if (ShaderBoy.buffers['Sound'])
+        {
+            ShaderBoy.buffers['Sound'].isRealtime = isRealtime
+        }
+
+        if (ShaderBoy.soundRenderer && typeof ShaderBoy.soundRenderer.updateRealtimePreference === 'function')
+        {
+            ShaderBoy.soundRenderer.updateRealtimePreference(isRealtime)
+        }
+
         return ShaderBoy.shaderHeader[1] +
             uniformCode +
             commonCode +
-            buffer.getValue() +
+            source +
             ShaderLib.shader.soundfooterFS
     },
 
@@ -338,7 +399,8 @@ export default ShaderBoy.bufferManager = {
                         buffer.shader.bufName = name
                         buffer.shader.uniforms = {
                             'iBlockOffset': 0,
-                            'iSampleRate': 0
+                            'iSampleRate': 0,
+                            'iSoundTexSize': 0
                         }
                     }
                     else

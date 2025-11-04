@@ -1,7 +1,7 @@
 
 void main()
 {
-    float sampleIndex = (gl_FragCoord.x - 0.5) + (gl_FragCoord.y - 0.5) * 512.0;
+    float sampleIndex = (gl_FragCoord.x - 0.5) + (gl_FragCoord.y - 0.5) * iSoundTexSize;
     int samp = int(iBlockOffset * iSampleRate + sampleIndex);
     float t = iBlockOffset + sampleIndex / iSampleRate;
     vec2 y = mainSound(samp, t);

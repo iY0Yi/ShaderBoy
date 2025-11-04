@@ -241,6 +241,7 @@ export default class Shader
 	{
 		gl.uniform1f(gl.getUniformLocation(this.program, 'iBlockOffset'), this.uniforms.iBlockOffset)
 		gl.uniform1f(gl.getUniformLocation(this.program, 'iSampleRate'), this.uniforms.iSampleRate)
+		gl.uniform1f(gl.getUniformLocation(this.program, 'iSoundTexSize'), this.uniforms.iSoundTexSize)
 	}
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
