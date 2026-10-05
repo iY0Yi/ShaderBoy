@@ -86,7 +86,7 @@ export default ShaderBoy.syntax = {
 
                 comment: [
                     [/[^/*]+/, 'comment'],
-                    [/\/\*/, 'comment', '@push'], // 入れ子コメント
+                    // GLSLのブロックコメントは入れ子にせず、最初の */ で終了する。
                     [/\*\//, 'comment', '@pop'],
                     [/[/*]/, 'comment']
                 ],

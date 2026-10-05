@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>GLSL comment highlighting regression</title>
+<style>
+    body { background: #202020; color: #eee; font: 16px sans-serif; margin: 24px; }
+    #editor { height: 360px; border: 1px solid #666; }
+    pre { line-height: 1.6; }
+</style>
+<h1>GLSL comment highlighting regression</h1>
+<p>Serve the repository root and open /__tests__/syntax.html.</p>
+<pre id="results">Running...</pre>
+<div id="editor"></div>
+<script src="../node_modules/monaco-editor/min/vs/loader.js"></script>
+<script>
+require.config({ paths: { vs: '../node_modules/monaco-editor/min/vs' } });
+require(['vs/editor/editor.main'], async () => {
+    try {
+        // Register the application's actual language rules without starting ShaderBoy.
+        const response = await fetch('../src/js/editor/glsl/syntax.js', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Failed to load syntax: ${response.status}`);
+        const source = (await response.text())
+            .replace(/^import .*;\r?\n/gm, '')
+            .replace('export default ', '');
+        const shaderBoy = {};
+        new Function('monaco', 'ShaderBoy', source)(monaco, shaderBoy);
+        shaderBoy.syntax.init();
+
+        const cases = [
+            ['ordinary multiline', '/*\n comment\n*/ float sameLine;\nfloat nextLine;'],
+            ['documentation multiline', '/**\n comment\n**/ float sameLine;\nfloat nextLine;'],
+            ['empty comment', '/**/ float sameLine;\nfloat nextLine;'],
+            ['extra stars', '/*****\n comment\n*****/ float sameLine;\nfloat nextLine;'],
+            ['opening marker inside comment', '/**\n /* text\n**/ float sameLine;\nfloat nextLine;'],
+            ['slash before closing stars', '/*\n /**/ float sameLine;\nfloat nextLine;'],
+            ['separate blocks', '/* one */ /* two */ float sameLine;\nfloat nextLine;'],
+            ['line comment', '// /* ignored\nfloat nextLine;'],
+            ['unclosed comment', '/**\nfloat stillComment;', true],
+        ];
+        const results = cases.map(([name, code, unclosed]) => {
+            const lines = code.split('\n');
+            const tokens = monaco.editor.tokenize(code, 'glsl');
+            const passed = lines.every((line, index) => {
+                const offset = line.indexOf('float');
+                if (offset < 0) return true;
+                const token = tokens[index].filter(item => item.offset <= offset).pop();
+                return token && token.type === (unclosed ? 'comment.glsl' : 'keyword.type.glsl');
+            });
+            return `${passed ? 'PASS' : 'FAIL'} ${name}`;
+        });
+        document.getElementById('results').textContent = results.join('\n');
+        monaco.editor.create(document.getElementById('editor'), {
+            value: '/**\n * A comment containing /* another opening marker\n **/ float sameLine = 1.0;\nfloat nextLine = 2.0;\n\n/** A normal documentation comment **/\nvec3 color = vec3(1.0);',
+            language: 'glsl', theme: 'vs-dark', fontSize: 18,
+            minimap: { enabled: false }, automaticLayout: true,
+        });
+    } catch (error) {
+        document.getElementById('results').textContent = `ERROR ${error.stack}`;
+    }
+});
+</script>
+</html>
