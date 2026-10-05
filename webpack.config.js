@@ -1,4 +1,5 @@
 const TerserPlugin = require('terser-webpack-plugin');
+const theme = require('./webpack.theme');
 
 const PRODUCTION = process.env.NODE_ENV_PRODUCTION === 'YES';
 const SOURCE_MAP = process.env.NODE_ENV_SOURCE_MAP === 'YES';
@@ -24,6 +25,7 @@ module.exports = {
             loader: 'sass-loader',
             options: {
               sourceMap: SOURCE_MAP,
+              additionalData: theme.sassAdditionalData,
             }
           }
         ],
@@ -46,6 +48,8 @@ module.exports = {
   },
 
   entry: './src/js/main.js',
+
+  plugins: theme.plugins,
 
   optimization: {
     minimizer: [

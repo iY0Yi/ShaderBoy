@@ -1,4 +1,9 @@
-@import 'theme-default';
+// $col-* はビルド時に src/themes/<SB_THEME>.json から注入される (webpack.theme.js)
+
+// data URI 内の SVG fill 用 ("#" を "%23" にエスケープ)
+@function url-hex($c) {
+    @return '%23' + str-slice(ie-hex-str($c), 4);
+}
 
 $gui-z-index:1000;
 $gui-size-unit:45px;

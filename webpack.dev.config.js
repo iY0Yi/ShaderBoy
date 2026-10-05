@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const theme = require('./webpack.theme');
 
 module.exports = {
   mode: 'development',
@@ -22,6 +23,7 @@ module.exports = {
             loader: 'sass-loader',
             options: {
               sourceMap: true,
+              additionalData: theme.sassAdditionalData,
             }
           }
         ],
@@ -54,6 +56,7 @@ module.exports = {
   devtool: 'source-map',
 
   plugins: [
+    ...theme.plugins,
     new webpack.DefinePlugin({
       'process.env.DEVELOPMENT': JSON.stringify(true),
       'process.env.BUILD_TIMESTAMP': JSON.stringify(new Date().getTime()),

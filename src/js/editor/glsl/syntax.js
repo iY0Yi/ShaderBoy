@@ -131,42 +131,6 @@ export default ShaderBoy.syntax = {
             ]
         });
 
-        // カラーテーマの設定
-        monaco.editor.defineTheme('glsl-dark', {
-            base: 'vs-dark',
-            inherit: true,
-            rules: [
-                { token: 'comment', foreground: '608B4E', fontStyle: 'italic' },
-                { token: 'preprocessor', foreground: 'BD63C5' },
-                { token: 'keyword.type', foreground: '569CD6' },
-                { token: 'keyword.control', foreground: 'C586C0' },
-                { token: 'keyword.storage', foreground: '4EC9B0' },
-                { token: 'keyword.function', foreground: 'DCDCAA' },
-                { token: 'constant.language.boolean', foreground: '569CD6' },
-                { token: 'variable.predefined', foreground: '9CDCFE' },
-                { token: 'number', foreground: 'B5CEA8' },
-                { token: 'number.float', foreground: 'B5CEA8' },
-                { token: 'number.hex', foreground: 'B5CEA8' },
-                { token: 'number.octal', foreground: 'B5CEA8' },
-                { token: 'string', foreground: 'CE9178' },
-                { token: 'string.escape', foreground: 'D7BA7D' },
-                { token: 'operator', foreground: 'D4D4D4' },
-                // ユーザー定義関数のハイライト
-                { token: 'user.function', foreground: '4EC9B0', fontStyle: 'bold' },
-                // struct名のハイライト
-                { token: 'struct.name', foreground: '4EC9B0', fontStyle: 'bold' },
-                { token: 'keyword.struct', foreground: 'C586C0' },
-            ],
-            colors: {
-                'editor.foreground': '#D4D4D4',
-                'editor.background': '#1E1E1E',
-                'editor.selectionBackground': '#264F78',
-                'editor.lineHighlightBackground': '#2D2D30',
-                'editorCursor.foreground': '#AEAFAD',
-                'editorWhitespace.foreground': '#3B3B3B'
-            }
-        });
-
         // コード補完機能のセットアップ
         monaco.languages.setLanguageConfiguration('glsl', {
             comments: {

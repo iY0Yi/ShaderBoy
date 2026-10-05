@@ -1,8 +1,10 @@
 {
 	"scripts": {
 		"start": "cross-env NODE_ENV_PRODUCTION=NO NODE_ENV_SOURCE_MAP=YES webpack serve --hot --open",
+		"start:dark": "cross-env SB_THEME=dark NODE_ENV_PRODUCTION=NO NODE_ENV_SOURCE_MAP=YES webpack serve --hot --open",
 		"build-sourcemap": "cross-env NODE_ENV_PRODUCTION=YES NODE_ENV_SOURCE_MAP=YES webpack --config webpack.config.js",
 		"build": "cross-env NODE_ENV_PRODUCTION=YES NODE_ENV_SOURCE_MAP=NO webpack --config webpack.config.js",
+		"build:dark": "cross-env SB_THEME=dark NODE_ENV_PRODUCTION=YES NODE_ENV_SOURCE_MAP=NO webpack --config webpack.config.js",
 		"test": "jest"
 	},
 	"babel": {
