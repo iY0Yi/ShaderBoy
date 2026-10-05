@@ -4,7 +4,7 @@
 <title>GLSL comment highlighting regression</title>
 <style>
     body { background: #202020; color: #eee; font: 16px sans-serif; margin: 24px; }
-    #editor { height: 360px; border: 1px solid #666; }
+    #editor { height: 520px; border: 1px solid #666; }
     pre { line-height: 1.6; }
 </style>
 <h1>GLSL comment highlighting regression</h1>
@@ -26,6 +26,26 @@ require(['vs/editor/editor.main'], async () => {
         new Function('monaco', 'ShaderBoy', source)(monaco, shaderBoy);
         shaderBoy.syntax.init();
 
+        const reportedCode = `    /*
+    return smin(smin(smin(SPH(i,f,vec3(0,0,0)),
+                          SPH(i,f,vec3(0,0,1)),G1),
+                     smin(SPH(i,f,vec3(0,1,0)),
+                          SPH(i,f,vec3(0,1,1)),G1),G1),
+                smin(smin(SPH(i,f,vec3(1,0,0)),
+                          SPH(i,f,vec3(1,0,1)),G1),
+                     smin(SPH(i,f,vec3(1,1,0)),
+                          SPH(i,f,vec3(1,1,1)),G1),G1),G1);
+    //*/
+
+    return smax(smax(smax(SPH(i,f,vec3(0,0,0)),
+                      SPH(i,f,vec3(0,0,1)),G1),
+                 smax(SPH(i,f,vec3(0,1,0)),
+                      SPH(i,f,vec3(0,1,1)),G1),G1),
+            smax(smax(SPH(i,f,vec3(1,0,0)),
+                      SPH(i,f,vec3(1,0,1)),G1),
+                 smax(SPH(i,f,vec3(1,1,0)),
+                      SPH(i,f,vec3(1,1,1)),G1),G1),G1);`;
+
         const cases = [
             ['ordinary multiline', '/*\n comment\n*/ float sameLine;\nfloat nextLine;'],
             ['documentation multiline', '/**\n comment\n**/ float sameLine;\nfloat nextLine;'],
@@ -35,6 +55,8 @@ require(['vs/editor/editor.main'], async () => {
             ['slash before closing stars', '/*\n /**/ float sameLine;\nfloat nextLine;'],
             ['separate blocks', '/* one */ /* two */ float sameLine;\nfloat nextLine;'],
             ['line comment', '// /* ignored\nfloat nextLine;'],
+            ['toggle closing marker', '/*\n comment\n//*/ float sameLine;\nfloat nextLine;'],
+            ['toggle disabled', '///*\nfloat activeLine;\n//*/\nfloat nextLine;'],
             ['unclosed comment', '/**\nfloat stillComment;', true],
         ];
         const results = cases.map(([name, code, unclosed]) => {
@@ -48,9 +70,21 @@ require(['vs/editor/editor.main'], async () => {
             });
             return `${passed ? 'PASS' : 'FAIL'} ${name}`;
         });
+        const reportedTokens = monaco.editor.tokenize(reportedCode, 'glsl');
+        const reportedPassed = reportedCode.split('\n').every((line, index) =>
+            reportedTokens[index].every((token, tokenIndex, tokens) => {
+                // Ignore indentation and the blank line; inspect the entire shader body.
+                const next = tokens[tokenIndex + 1];
+                const text = line.slice(token.offset, next ? next.offset : line.length);
+                if (!text.trim()) return true;
+                const inComment = token.type === 'comment.glsl';
+                return index <= 9 ? inComment : !inComment;
+            })
+        );
+        results.push(`${reportedPassed ? 'PASS' : 'FAIL'} reported smin/smax shader`);
         document.getElementById('results').textContent = results.join('\n');
         monaco.editor.create(document.getElementById('editor'), {
-            value: '/**\n * A comment containing /* another opening marker\n **/ float sameLine = 1.0;\nfloat nextLine = 2.0;\n\n/** A normal documentation comment **/\nvec3 color = vec3(1.0);',
+            value: reportedCode,
             language: 'glsl', theme: 'vs-dark', fontSize: 18,
             minimap: { enabled: false }, automaticLayout: true,
         });
