@@ -70,7 +70,7 @@
     font-family: "Muli", sans-serif;
     font-size: 0.6em;
     line-height: $gui-size-unit;
-    color: #555555;
+    color: $col-frnt-dim;
 }
 
 .knob-name-raw {
@@ -88,7 +88,7 @@
         margin: 0px;
         font-family: "Muli", sans-serif;
         font-size: 0.6em;
-        color: #555555;
+        color: $col-frnt-dim;
     }
 }
 

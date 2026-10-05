@@ -28,6 +28,11 @@ import "normalize.css";
 // import "./editor/codemirror/lib/codemirror.css";
 import "../scss/main.scss";
 // import "./editor/codemirror/theme/3024-monotone.css";
+import palette from "./palette";
+
+document
+  .querySelector('meta[name="theme-color"]')
+  .setAttribute("content", palette.ui["col-bg"]);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ShaderBoy.init = () => {

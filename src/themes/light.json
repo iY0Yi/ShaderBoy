@@ -1,0 +1,27 @@
+{
+    "name": "light",
+    "ui": {
+        "col-bg": "#F1F0E9",
+        "col-bg-bright": "#E7E5DB",
+        "col-bg-bright-darken": "#DDDACE",
+        "col-bg-bright-lighten": "#A8A79E",
+        "col-bg-dark": "#F1F0E9",
+        "col-bg-subtle": "#E4E2D7",
+        "col-bg-sp": "#F1F0E9",
+        "col-frnt": "#393a34",
+        "col-frnt-bright": "#1f201b",
+        "col-frnt-dark": "#898a82",
+        "col-frnt-dim": "#A8A79E",
+        "col-frnt-dark-sp": "#393a3488",
+        "col-frnt-dark-darken-sp": "#393a3433",
+        "col-on-accent": "#F1F0E9",
+        "col-error": "#ab5959",
+        "col-gsuc": "#296aa3",
+        "col-suc": "#1e754f",
+        "col-wrn": "#a65e2b",
+        "col-record": "#c44b4b"
+    },
+    "editor": {
+        "textBg": "rgba(241, 240, 233, 0.95)"
+    }
+}

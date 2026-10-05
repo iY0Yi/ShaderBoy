@@ -47,7 +47,6 @@ export default ShaderBoy.editor = {
     const editorOptions = {
       value: "", // 初期値は空
       language: "glsl", // GLSL言語指定
-      theme: "shaderboy-color", // ここで直接テーマを指定
       fontSize: this.textSize,
       lineNumbers: true,
       scrollBeyondLastLine: true,
@@ -85,11 +84,10 @@ export default ShaderBoy.editor = {
     };
 
     this._monaco = monaco.editor.create(this.textArea, editorOptions);
-    monaco.editor.setTheme(false);
     this.createErrorPanel();
     this.setTextSize(this.textSize);
 
-    theme.applyTheme(this._monaco, false);
+    theme.applyTheme(this._monaco, { split: false });
     editor_hotkeys.setup();
     gui_inline_1f.register(this._monaco);
     gui_inline_2f.register(this._monaco);
@@ -143,8 +141,8 @@ export default ShaderBoy.editor = {
     return this;
   },
 
-  setTheme(isMonotone = false) {
-    theme.applyTheme(this._monaco, isMonotone);
+  setTheme(isSplit) {
+    theme.applyTheme(this._monaco, { split: isSplit });
     return this;
   },
 

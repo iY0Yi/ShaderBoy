@@ -62,6 +62,8 @@
 	<script src="./manup.js"></script>
 
 	<script src="./js/css_browser_selector.js"></script>
+	<!-- --sb-bg / --sb-fg (ビルド時のテーマから webpack が出力) -->
+	<link rel="stylesheet" href="./js/theme.css">
 
 	<title>ShaderBoy</title>
 	<meta name="description" content="ShaderBoy is a simple text editor that lets you write Shadertoy shaders more comfortably, anytime, anywhere. Whether you're
@@ -82,13 +84,13 @@
 			/* position: relative; */
 			position: fixed;
 			font-family: Muli, Arial, Helvetica, sans-serif;
-			color: #d8d4c5FF;
+			color: var(--sb-fg);
 			width: 100%;
 			height: 100%;
 			border: 0;
 			padding: 0;
 			margin: 0;
-			background: #262525;
+			background: var(--sb-bg);
 			background-size: cover;
 			-webkit-text-size-adjust: 100%;
 			display: block;
@@ -100,7 +102,7 @@
 
 		.cvr-loading {
 			z-index: 9999;
-			background: #262525;
+			background: var(--sb-bg);
 			position: absolute;
 			margin: 0px;
 			top: 0px;
@@ -125,8 +127,12 @@
 
 		.logo-sb {
 			display: inline-flex;
-			fill: #d8d4c5FF;
 			width: 300px;
+			aspect-ratio: 896.6 / 228.4;
+			/* SVG の fill はファイルに固定されているため、マスクにしてテーマ色で塗る */
+			background-color: var(--sb-fg);
+			-webkit-mask: url(../img/sb_logo.svg) center / contain no-repeat;
+			mask: url(../img/sb_logo.svg) center / contain no-repeat;
 			opacity: 0;
 			transition: all .8s ease-in-out;
 		}
@@ -148,7 +154,7 @@
 			width: 400px;
 			height: 300px;
 			z-index: 999999;
-			background: #d8d4c5FF;
+			background: var(--sb-fg);
 			border: none;
 			-ms-zoom: 0.65;
 			-moz-transform: scale(0.65);
@@ -159,16 +165,18 @@
 			-webkit-transform-origin: 0 0;
 		}
 	</style>
-	<script>
-		function loadImage()
-		{
-			document.getElementById('logo-sb').classList.add('show-logo');
-		}
-	</script>
 	<div id="cvr-loading" style="z-index: 10000;" class="cvr-loading">
 		<div id="ghdr-notif" style="z-index: 10001; position:absolute; right:0px;" class="ghdr-notif in-panel noselect"></div>
-		<img id="logo-sb" onload="loadImage()" class="logo-sb" src="../img/sb_logo.svg" />
+		<div id="logo-sb" class="logo-sb"></div>
 	</div>
+	<script>
+		(function ()
+		{
+			const logo = new Image();
+			logo.onload = () => document.getElementById('logo-sb').classList.add('show-logo');
+			logo.src = '../img/sb_logo.svg';
+		})();
+	</script>
 	<!-- <iframe id="DocFrame" src="https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/acosh.xhtml"></iframe> -->
 	<div id="shaderboy" style="display:none;">
 		<!-- comment out here for viewer mode -->
